@@ -355,7 +355,7 @@ export async function PATCH(req: Request) {
           discount: discountNum,
           tipAmount: tipNum,
           finalAmount: finalTotal,
-          cashierName: cashierName || "كاشير صالون صدام",
+          cashierName: cashierName || "كاشير مجموعة الباشا VIP",
           notes: notes || null,
           endTime,
         },

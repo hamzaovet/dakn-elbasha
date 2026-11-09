@@ -99,13 +99,15 @@ async function seed() {
   });
   console.log("✅ Branches seeded: دقن الباشا (01210103025) + حمام الباشا (01556782015)");
 
-  // 3. Users
+  // 3. System Users & Staff Accounts (14 Full Accounts)
+  // Clean users first (except keep owner / GM)
   await prisma.user.upsert({
     where: { username: "maestro" },
     update: {
       passwordHash: "password123",
       pin: "157230",
       role: "owner",
+      name: "أ / حمزة عباس (المايسترو - المالك)",
     },
     create: {
       name: "أ / حمزة عباس (المايسترو - المالك)",
@@ -125,6 +127,7 @@ async function seed() {
       passwordHash: "password123",
       pin: "157230",
       role: "general_manager",
+      name: "كابتن الباشا (المدير العام للمجموعة)",
     },
     create: {
       name: "كابتن الباشا (المدير العام للمجموعة)",
@@ -138,6 +141,52 @@ async function seed() {
     },
   });
 
+  // Branch Managers (مدير كل فرع)
+  const managerDakn = await prisma.user.upsert({
+    where: { username: "manager-dakn" },
+    update: {
+      passwordHash: "password123",
+      pin: "157230",
+      phone: "01210103025",
+      branchId: daknBranch.id,
+      role: "manager",
+      name: "أ / أحمد عبد الرحيم (مدير فرع صالون دقن الباشا)",
+    },
+    create: {
+      name: "أ / أحمد عبد الرحيم (مدير فرع صالون دقن الباشا)",
+      username: "manager-dakn",
+      passwordHash: "password123",
+      pin: "157230",
+      phone: "01210103025",
+      role: "manager",
+      branchId: daknBranch.id,
+      isActive: true,
+    },
+  });
+
+  const managerHammam = await prisma.user.upsert({
+    where: { username: "manager-hammam" },
+    update: {
+      passwordHash: "password123",
+      pin: "157230",
+      phone: "01556782015",
+      branchId: hammamBranch.id,
+      role: "manager",
+      name: "أ / ندى المحمدي (مديرة فرع حمام الباشا VIP)",
+    },
+    create: {
+      name: "أ / ندى المحمدي (مديرة فرع حمام الباشا VIP)",
+      username: "manager-hammam",
+      passwordHash: "password123",
+      pin: "157230",
+      phone: "01556782015",
+      role: "manager",
+      branchId: hammamBranch.id,
+      isActive: true,
+    },
+  });
+
+  // Cashiers (كاشير كل فرع)
   await prisma.user.upsert({
     where: { username: "cashier-dakn" },
     update: {
@@ -145,6 +194,8 @@ async function seed() {
       pin: "1234",
       phone: "01210103025",
       branchId: daknBranch.id,
+      role: "cashier",
+      name: "كاشير دقن الباشا (رجالي)",
     },
     create: {
       name: "كاشير دقن الباشا (رجالي)",
@@ -165,6 +216,8 @@ async function seed() {
       pin: "1234",
       phone: "01556782015",
       branchId: hammamBranch.id,
+      role: "cashier",
+      name: "كاشير حمام الباشا (حريمي)",
     },
     create: {
       name: "كاشير حمام الباشا (حريمي)",
@@ -177,7 +230,131 @@ async function seed() {
       isActive: true,
     },
   });
-  console.log("✅ Users seeded (Owner, GM, 2 Cashiers)");
+
+  // Specialist Accounts (أكواد وحسابات المتخصصين)
+  // Men Specialist Users
+  const userHossam = await prisma.user.upsert({
+    where: { username: "spec-hossam" },
+    update: { passwordHash: "password123", pin: "1234", branchId: daknBranch.id, role: "specialist" },
+    create: {
+      name: "كابتن حسام الباشا",
+      username: "spec-hossam",
+      passwordHash: "password123",
+      pin: "1234",
+      phone: "01210103021",
+      role: "specialist",
+      branchId: daknBranch.id,
+      isActive: true,
+    },
+  });
+
+  const userEslam = await prisma.user.upsert({
+    where: { username: "spec-eslam" },
+    update: { passwordHash: "password123", pin: "1234", branchId: daknBranch.id, role: "specialist" },
+    create: {
+      name: "كابتن إسلام سيف",
+      username: "spec-eslam",
+      passwordHash: "password123",
+      pin: "1234",
+      phone: "01210103022",
+      role: "specialist",
+      branchId: daknBranch.id,
+      isActive: true,
+    },
+  });
+
+  const userKareem = await prisma.user.upsert({
+    where: { username: "spec-kareem" },
+    update: { passwordHash: "password123", pin: "1234", branchId: daknBranch.id, role: "specialist" },
+    create: {
+      name: "كابتن كريم عبد العزيز",
+      username: "spec-kareem",
+      passwordHash: "password123",
+      pin: "1234",
+      phone: "01210103023",
+      role: "specialist",
+      branchId: daknBranch.id,
+      isActive: true,
+    },
+  });
+
+  const userZeyad = await prisma.user.upsert({
+    where: { username: "spec-zeyad" },
+    update: { passwordHash: "password123", pin: "1234", branchId: daknBranch.id, role: "specialist" },
+    create: {
+      name: "كابتن زياد المغربي",
+      username: "spec-zeyad",
+      passwordHash: "password123",
+      pin: "1234",
+      phone: "01210103024",
+      role: "specialist",
+      branchId: daknBranch.id,
+      isActive: true,
+    },
+  });
+
+  // Women Specialist Users
+  const userAmina = await prisma.user.upsert({
+    where: { username: "spec-amina" },
+    update: { passwordHash: "password123", pin: "1234", branchId: hammamBranch.id, role: "specialist" },
+    create: {
+      name: "مدام أمينة المغربية",
+      username: "spec-amina",
+      passwordHash: "password123",
+      pin: "1234",
+      phone: "01556782016",
+      role: "specialist",
+      branchId: hammamBranch.id,
+      isActive: true,
+    },
+  });
+
+  const userMarwa = await prisma.user.upsert({
+    where: { username: "spec-marwa" },
+    update: { passwordHash: "password123", pin: "1234", branchId: hammamBranch.id, role: "specialist" },
+    create: {
+      name: "أ/ مروة فؤاد",
+      username: "spec-marwa",
+      passwordHash: "password123",
+      pin: "1234",
+      phone: "01556782017",
+      role: "specialist",
+      branchId: hammamBranch.id,
+      isActive: true,
+    },
+  });
+
+  const userYasmin = await prisma.user.upsert({
+    where: { username: "spec-yasmin" },
+    update: { passwordHash: "password123", pin: "1234", branchId: hammamBranch.id, role: "specialist" },
+    create: {
+      name: "أ/ ياسمين الشريف",
+      username: "spec-yasmin",
+      passwordHash: "password123",
+      pin: "1234",
+      phone: "01556782018",
+      role: "specialist",
+      branchId: hammamBranch.id,
+      isActive: true,
+    },
+  });
+
+  const userSara = await prisma.user.upsert({
+    where: { username: "spec-sara" },
+    update: { passwordHash: "password123", pin: "1234", branchId: hammamBranch.id, role: "specialist" },
+    create: {
+      name: "أ/ سارة نور",
+      username: "spec-sara",
+      passwordHash: "password123",
+      pin: "1234",
+      phone: "01556782019",
+      role: "specialist",
+      branchId: hammamBranch.id,
+      isActive: true,
+    },
+  });
+
+  console.log("✅ 14 Users seeded (Owner, GM, 2 Branch Managers, 2 Cashiers, 8 Specialists)");
 
   // 4. Specialists (Men for Dakn El Basha, Women for Hammam El Basha)
   await prisma.specialist.deleteMany({});
@@ -192,6 +369,7 @@ async function seed() {
       branchId: daknBranch.id,
       rating: 4.95,
       photo: "/dakn-hero.jpg",
+      userId: userHossam.id,
     },
     {
       name: "كابتن إسلام سيف",
@@ -202,6 +380,7 @@ async function seed() {
       branchId: daknBranch.id,
       rating: 4.9,
       photo: "/services/service-styling.webp",
+      userId: userEslam.id,
     },
     {
       name: "كابتن كريم عبد العزيز",
@@ -212,6 +391,7 @@ async function seed() {
       branchId: daknBranch.id,
       rating: 4.88,
       photo: "/dakn-logo.jpg",
+      userId: userKareem.id,
     },
     {
       name: "كابتن زياد المغربي",
@@ -222,6 +402,7 @@ async function seed() {
       branchId: daknBranch.id,
       rating: 4.98,
       photo: "/offers/dakn-white-friday-600.jpg",
+      userId: userZeyad.id,
     },
   ];
 
@@ -239,6 +420,7 @@ async function seed() {
         status: "AVAILABLE",
         statusReason: "جاهز ومتاح لاستقبال الزبائن على الكرسي 🟢",
         isActive: true,
+        userId: s.userId,
       },
     });
   }
@@ -254,6 +436,7 @@ async function seed() {
       branchId: hammamBranch.id,
       rating: 4.99,
       photo: "/ladies/specialist-amina.jpg",
+      userId: userAmina.id,
     },
     {
       name: "أ/ مروة فؤاد",
@@ -264,6 +447,7 @@ async function seed() {
       branchId: hammamBranch.id,
       rating: 4.92,
       photo: "/ladies/specialist-marwa.jpg",
+      userId: userMarwa.id,
     },
     {
       name: "أ/ ياسمين الشريف",
@@ -274,6 +458,7 @@ async function seed() {
       branchId: hammamBranch.id,
       rating: 4.89,
       photo: "/ladies/specialist-yasmin.jpg",
+      userId: userYasmin.id,
     },
     {
       name: "أ/ سارة نور",
@@ -284,6 +469,7 @@ async function seed() {
       branchId: hammamBranch.id,
       rating: 4.96,
       photo: "/ladies/specialist-sara.jpg",
+      userId: userSara.id,
     },
   ];
 
@@ -301,6 +487,7 @@ async function seed() {
         status: "AVAILABLE",
         statusReason: "جاهزة ومتاحة لاستقبال العميلات في السبا 🌸",
         isActive: true,
+        userId: s.userId,
       },
     });
   }

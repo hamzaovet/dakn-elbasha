@@ -51,7 +51,7 @@ export async function POST(req: Request) {
     // Check User Active Status
     if (!user.isActive) {
       return NextResponse.json(
-        { success: false, error: "تم تعطيل هذا الحساب من قِبل إدارة صالون صدام" },
+        { success: false, error: "تم تعطيل هذا الحساب من قِبل إدارة مجموعة الباشا VIP" },
         { status: 403 }
       );
     }

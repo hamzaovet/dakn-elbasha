@@ -70,7 +70,7 @@ export default function SpecialistChairPage() {
   // Check Auth on Mount
   useEffect(() => {
     try {
-      const saved = localStorage.getItem("saddam_staff_user");
+      const saved = localStorage.getItem("basha_staff_user") || localStorage.getItem("saddam_staff_user");
       if (!saved) {
         router.push("/login");
         return;
@@ -408,6 +408,7 @@ export default function SpecialistChairPage() {
   };
 
   const handleLogout = () => {
+    localStorage.removeItem("basha_staff_user");
     localStorage.removeItem("saddam_staff_user");
     router.push("/login");
   };
@@ -433,7 +434,7 @@ export default function SpecialistChairPage() {
           <div className="w-12 h-12 rounded-2xl overflow-hidden border-2 border-amber-400 bg-black shrink-0">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
-              src={specialist?.photo || "/logo.jpg"}
+              src={specialist?.photo || "/dakn-logo.jpg"}
               alt={specialist?.name || "Specialist"}
               className="w-full h-full object-cover"
             />

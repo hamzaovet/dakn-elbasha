@@ -90,7 +90,7 @@ export async function POST(req: Request) {
     const chatMsg = await prisma.chatMessage.create({
       data: {
         sender: sender || "CUSTOMER",
-        senderName: senderName?.trim() || (sender === "SALON" ? "إدارة صالون صدام" : "عميل VIP"),
+        senderName: senderName?.trim() || (sender === "SALON" ? "إدارة مجموعة الباشا VIP" : "عميل VIP"),
         message: message.trim(),
         customerId: customerId || null,
         customerName: customerName?.trim() || "عميل VIP",

@@ -222,27 +222,27 @@ model SpecialistLedger {
 // ----------------------------------------------------
 model SystemSettings {
   id              String             @id @default("default-settings")
-  salonNameAr     String             @default("صالون حلاقة صدام")
-  salonNameEn     String             @default("SADDAM BARBER SHOP")
-  logoUrl         String             @default("/logo.jpg")
+  salonNameAr     String             @default("مجموعة صالونات وسبا الباشا VIP")
+  salonNameEn     String             @default("EL BASHA LUXURY SALON & SPA")
+  logoUrl         String             @default("/dakn-logo.jpg")
   systemLocked    Boolean            @default(false)
   lockMessage     String             @default("النظام مغلق مؤقتاً لأعمال الصيانة والتحديث.")
-  hadayekPhone    String             @default("01121537537")
-  nasrCityPhone   String             @default("01121537537")
-  hotline         String             @default("01121537537")
-  whatsappNumber  String             @default("01121537537")
-  facebookUrl     String             @default("https://www.facebook.com/SaddamSalon/")
+  hadayekPhone    String             @default("01210103025")
+  nasrCityPhone   String             @default("01556782015")
+  hotline         String             @default("01210103025")
+  whatsappNumber  String             @default("01210103025")
+  facebookUrl     String             @default("https://www.facebook.com/DaknElbashaSalon")
   instagramUrl    String?
-  defaultOpenHour String             @default("12:00 PM")
-  defaultCloseHour String            @default("02:00 AM")
+  defaultOpenHour String             @default("11:00 AM")
+  defaultCloseHour String            @default("01:00 AM")
   
   // Weekly Day Off & Booking Policies
   weeklyDayOff    String             @default("MONDAY") // MONDAY, TUESDAY, WEDNESDAY, THURSDAY, FRIDAY, SATURDAY, SUNDAY, NONE
   isDayOffEnabled Boolean            @default(true)
-  dayOffMessage   String             @default("عفواً، صالون صدام في عطلة أسبوعية يوم الإثنين - نتشرف بحجز موعدكم طوال باقي أيام الأسبوع ✂️")
+  dayOffMessage   String             @default("عفواً، صالونات وسبا الباشا في عطلة أسبوعية يوم الإثنين - نتشرف بحجز موعدكم طوال باقي أيام الأسبوع ✂️")
   bookingSlotInterval Int            @default(30) // in minutes
   reminderMinutesBefore Int          @default(15) // reminder 15 min before
-  receiptFooterNotes String          @default("شكراً لزيارتكم صالون صدام الملكي 👑 تجربة استثنائية لأناقة الرجل")
+  receiptFooterNotes String          @default("شكراً لزيارتكم مجموعة صالونات وسبا الباشا VIP 👑 تجربة ملوكية استثنائية")
   
   updatedAt       DateTime           @updatedAt
 }
@@ -280,7 +280,7 @@ model ChatMessage {
   customerPhone   String?
   bookingId       String?
   sender          String             // "CUSTOMER" or "SALON"
-  senderName      String             @default("خدمة عملاء صدام")
+  senderName      String             @default("خدمة عملاء مجموعة الباشا VIP")
   message         String
   isRead          Boolean            @default(false)
   createdAt       DateTime           @default(now())

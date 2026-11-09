@@ -10,8 +10,15 @@ export async function GET() {
       settings = await prisma.systemSettings.create({
         data: {
           id: "default-settings",
-          salonNameAr: "صالون حلاقة صدام",
-          salonNameEn: "SADDAM BARBER SHOP",
+          salonNameAr: "مجموعة صالونات وسبا الباشا VIP (دقن الباشا & حمام الباشا)",
+          salonNameEn: "EL BASHA LUXURY SALON & SPA",
+          logoUrl: "/dakn-logo.jpg",
+          hadayekPhone: "01210103025",
+          nasrCityPhone: "01556782015",
+          hotline: "01210103025",
+          whatsappNumber: "01210103025",
+          facebookUrl: "https://www.facebook.com/DaknElbashaSalon",
+          instagramUrl: "https://www.facebook.com/hammam.elbasha1/",
         },
       });
     }
@@ -49,17 +56,20 @@ export async function PATCH(req: Request) {
       },
       create: {
         id: "default-settings",
-        salonNameAr: body.salonNameAr || "صالون حلاقة صدام",
-        salonNameEn: body.salonNameEn || "SADDAM BARBER SHOP",
+        salonNameAr: body.salonNameAr || "مجموعة صالونات وسبا الباشا VIP (دقن الباشا & حمام الباشا)",
+        salonNameEn: body.salonNameEn || "EL BASHA LUXURY SALON & SPA",
+        logoUrl: body.logoUrl || "/dakn-logo.jpg",
         systemLocked: Boolean(body.systemLocked),
         lockMessage: body.lockMessage || "النظام مغلق مؤقتاً لأعمال الصيانة والتطوير الدوري.",
         weeklyDayOff: body.weeklyDayOff || "MONDAY",
         isDayOffEnabled: body.isDayOffEnabled !== undefined ? Boolean(body.isDayOffEnabled) : true,
-        dayOffMessage: body.dayOffMessage || "عفواً، صالون صدام في عطلة أسبوعية يوم الإثنين - نتشرف بحجز موعدكم طوال باقي أيام الأسبوع ✂️",
-        hotline: body.hotline || "01121537537",
-        hadayekPhone: body.hadayekPhone || "01121537537",
-        nasrCityPhone: body.nasrCityPhone || "01121537537",
-        whatsappNumber: body.whatsappNumber || "01121537537",
+        dayOffMessage: body.dayOffMessage || "عفواً، صالونات وسبا الباشا في عطلة أسبوعية يوم الإثنين - نتشرف بحجز موعدكم طوال باقي أيام الأسبوع ✂️",
+        hotline: body.hotline || "01210103025",
+        hadayekPhone: body.hadayekPhone || "01210103025",
+        nasrCityPhone: body.nasrCityPhone || "01556782015",
+        whatsappNumber: body.whatsappNumber || "01210103025",
+        facebookUrl: body.facebookUrl || "https://www.facebook.com/DaknElbashaSalon",
+        instagramUrl: body.instagramUrl || "https://www.facebook.com/hammam.elbasha1/",
       },
     });
 

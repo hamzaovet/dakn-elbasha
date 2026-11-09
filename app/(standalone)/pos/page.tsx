@@ -103,7 +103,7 @@ export default function CashierPosPage() {
   // Check Auth
   useEffect(() => {
     try {
-      const saved = localStorage.getItem("saddam_staff_user");
+      const saved = localStorage.getItem("basha_staff_user") || localStorage.getItem("saddam_staff_user");
       if (!saved) {
         router.push("/login");
         return;
@@ -499,7 +499,7 @@ export default function CashierPosPage() {
           paymentMethod,
           discount: discountAmount,
           tipAmount,
-          cashierName: currentUser?.name || "كاشير صالون صدام",
+          cashierName: currentUser?.name || "كاشير مجموعة الباشا VIP",
         }),
       });
 
@@ -524,6 +524,7 @@ export default function CashierPosPage() {
   };
 
   const handleLogout = () => {
+    localStorage.removeItem("basha_staff_user");
     localStorage.removeItem("saddam_staff_user");
     router.push("/login");
   };
@@ -562,7 +563,7 @@ export default function CashierPosPage() {
         <div className="flex items-center gap-3">
           <div className="w-11 h-11 rounded-2xl overflow-hidden border-2 border-amber-400 bg-black shrink-0">
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="/logo.jpg" alt="Logo" className="w-full h-full object-cover" />
+            <img src="/dakn-logo.jpg" alt="Logo" className="w-full h-full object-cover" />
           </div>
           <div>
             <div className="flex items-center gap-2">
@@ -1108,7 +1109,7 @@ export default function CashierPosPage() {
                   <div className="flex items-center gap-3">
                     <div className="w-12 h-12 rounded-xl overflow-hidden border border-amber-400 bg-black shrink-0">
                       {/* eslint-disable-next-line @next/next/no-img-element */}
-                      <img src={spec.photo || "/logo.jpg"} alt={spec.name} className="w-full h-full object-cover" />
+                      <img src={spec.photo || "/dakn-logo.jpg"} alt={spec.name} className="w-full h-full object-cover" />
                     </div>
                     <div>
                       <div className="flex items-center gap-2">
@@ -1442,7 +1443,7 @@ export default function CashierPosPage() {
             <div className="flex justify-between">
               <span>المتخصص والكرسي:</span>
               <strong className="text-right">
-                {lastPrintedTicket.specialist?.name || "كابتن صدام"} • كرسي #{lastPrintedTicket.chairNumber || 1}
+                {lastPrintedTicket.specialist?.name || "كابتن الباشا"} • كرسي #{lastPrintedTicket.chairNumber || 1}
               </strong>
             </div>
             <div className="flex justify-between">
@@ -1501,12 +1502,12 @@ export default function CashierPosPage() {
           </div>
 
           <div className="text-center text-[10px] space-y-1 pt-1.5 border-t border-black">
-            <p className="font-bold">{settings?.receiptFooterNotes || "شكراً لزيارتكم صالون صدام الملكي 👑"}</p>
+            <p className="font-bold">{settings?.receiptFooterNotes || "شكراً لزيارتكم مجموعة صالونات وسبا الباشا VIP 👑"}</p>
             <p className="font-mono font-black text-[11px]">
-              خدمة العملاء والحجز: {settings?.hotline || "01121537537"}
+              خدمة العملاء والحجز: 01210103025 - 01556782015
             </p>
             <p className="text-[9px] text-gray-700">
-              📍 حدائق القبة: 87 شارع مصر والسودان • 📍 مدينة نصر: 28 شارع مصطفى حمام
+              📍 دقن الباشا (رجالي): 73 ترعة الجبل • 📍 حمام الباشا (حريمي): 84 ترعة الجبل كينج بارك مول
             </p>
           </div>
         </div>

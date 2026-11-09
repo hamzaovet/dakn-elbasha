@@ -47,6 +47,7 @@ export default function StaffLoginPage() {
 
       const data = await res.json();
       if (data.success && data.user) {
+        localStorage.setItem("basha_staff_user", JSON.stringify(data.user));
         localStorage.setItem("saddam_staff_user", JSON.stringify(data.user));
 
         // Route based on role

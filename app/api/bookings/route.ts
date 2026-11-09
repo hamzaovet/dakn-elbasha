@@ -77,7 +77,7 @@ export async function POST(req: Request) {
             success: false,
             error:
               settings.dayOffMessage ||
-              "عفواً، صالون صدام في عطلة أسبوعية يوم الإثنين - نتشرف بحجز موعدكم طوال باقي أيام الأسبوع ✂️",
+              "عفواً، صالونات وسبا الباشا في عطلة أسبوعية يوم الإثنين - نتشرف بحجز موعدكم طوال باقي أيام الأسبوع ✂️",
           },
           { status: 400 }
         );
@@ -173,8 +173,8 @@ export async function PATCH(req: Request) {
     if (notifyCustomer && booking.customer?.phone) {
       const msgText =
         status === "CANCELLED"
-          ? `عفواً يا فندم، تم إلغاء حجزك رقم (#${booking.bookingNumber}) في صالون صدام (${booking.branch?.name}). سبب الإلغاء: ${notes || "عدم توفر موعد متاح"}. نتشرف باختيار موعد بديل في أي وقت 💈`
-          : `👑 مرحباً بك يا فندم! بخصوص حجزك في صالون صدام (#${booking.bookingNumber})، تم تأكيد وتعديل موعد الحضور إلى: يوم (${booking.bookingDate}) الساعة (${booking.timeSlot}) ⏰ بفرع (${booking.branch?.name})${booking.specialist ? ` مع ${booking.specialist.name}` : ""}. ننتظر تشريفك لتجربة استثنائية!`;
+          ? `عفواً يا فندم، تم إلغاء حجزك رقم (#${booking.bookingNumber}) في مجموعة الباشا VIP (${booking.branch?.name}). سبب الإلغاء: ${notes || "عدم توفر موعد متاح"}. نتشرف باختيار موعد بديل في أي وقت 👑`
+          : `👑 مرحباً بك يا فندم! بخصوص حجزك في مجموعة الباشا VIP (#${booking.bookingNumber})، تم تأكيد وتعديل موعد الحضور إلى: يوم (${booking.bookingDate}) الساعة (${booking.timeSlot}) ⏰ بفرع (${booking.branch?.name})${booking.specialist ? ` مع ${booking.specialist.name}` : ""}. ننتظر تشريفك لتجربة ملكية استثنائية!`;
 
       await prisma.chatMessage.create({
         data: {

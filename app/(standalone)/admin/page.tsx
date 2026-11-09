@@ -303,7 +303,7 @@ export default function AdminPage() {
   // Check Auth
   useEffect(() => {
     try {
-      const saved = localStorage.getItem("saddam_staff_user");
+      const saved = localStorage.getItem("basha_staff_user") || localStorage.getItem("saddam_staff_user");
       if (!saved) {
         router.push("/login");
         return;
@@ -364,7 +364,9 @@ export default function AdminPage() {
 
   const isBookingMuted = (bookingId: string) => {
     try {
-      const saved = JSON.parse(localStorage.getItem("saddam_muted_bookings") || "[]");
+      const saved = JSON.parse(
+        localStorage.getItem("basha_muted_bookings") || localStorage.getItem("saddam_muted_bookings") || "[]"
+      );
       return saved.includes(bookingId);
     } catch {
       return false;
@@ -375,10 +377,12 @@ export default function AdminPage() {
     const id = bookingIdToMute || alarmBooking?.id;
     if (id) {
       try {
-        const saved = JSON.parse(localStorage.getItem("saddam_muted_bookings") || "[]");
+        const saved = JSON.parse(
+        localStorage.getItem("basha_muted_bookings") || localStorage.getItem("saddam_muted_bookings") || "[]"
+      );
         if (!saved.includes(id)) {
           saved.push(id);
-          localStorage.setItem("saddam_muted_bookings", JSON.stringify(saved.slice(-50)));
+          localStorage.setItem("basha_muted_bookings", JSON.stringify(saved.slice(-50)));
         }
       } catch {}
       lastAcknowledgedBookingId.current = id;
@@ -991,7 +995,7 @@ export default function AdminPage() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           sender: "SALON",
-          senderName: `${currentUser?.name || "إدارة صالون صدام"} 👑`,
+          senderName: `${currentUser?.name || "إدارة مجموعة الباشا VIP"} 👑`,
           message: text,
           customerPhone: activeChatCustomer.customerPhone,
           customerId: activeChatCustomer.customerId,
@@ -1484,6 +1488,7 @@ export default function AdminPage() {
   };
 
   const handleLogout = () => {
+    localStorage.removeItem("basha_staff_user");
     localStorage.removeItem("saddam_staff_user");
     router.push("/login");
   };
@@ -1550,7 +1555,7 @@ export default function AdminPage() {
         <div className="flex items-center gap-3">
           <div className="w-10 h-10 rounded-2xl overflow-hidden border border-amber-400 shadow-md bg-black">
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="/logo.jpg" alt="Logo" className="w-full h-full object-cover" />
+            <img src={settingsForm.logoUrl || "/dakn-logo.jpg"} alt="Logo" className="w-full h-full object-cover" />
           </div>
           <div>
             <div className="flex items-center gap-2">
@@ -1726,7 +1731,7 @@ export default function AdminPage() {
             {/* Quick Links & Shortcuts */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               <div className="p-5 rounded-3xl bg-[#12121a] border border-white/5 space-y-3">
-                <h4 className="font-black text-sm text-amber-400">📍 فروع صدام المفعّلة:</h4>
+                <h4 className="font-black text-sm text-amber-400">📍 فروع مجموعة الباشا المفعّلة:</h4>
                 <div className="space-y-2 text-xs">
                   {branches.map((b) => (
                     <div key={b.id} className="p-2.5 rounded-xl bg-white/5 border border-white/5 space-y-1">
@@ -3892,8 +3897,24 @@ export default function AdminPage() {
                       <td className="p-3.5 font-black text-white">{u.name}</td>
                       <td className="p-3.5 font-mono text-amber-300 font-bold">{u.username}</td>
                       <td className="p-3.5 font-bold">
-                        <span className="py-0.5 px-2 rounded-lg bg-white/5 text-[10px] text-slate-300">
-                          {u.role}
+                        <span className={`py-1 px-2.5 rounded-lg text-[10px] font-black border ${
+                          u.role === "owner"
+                            ? "bg-amber-500/20 text-amber-300 border-amber-500/40"
+                            : u.role === "general_manager"
+                            ? "bg-purple-500/20 text-purple-300 border-purple-500/40"
+                            : u.role === "manager"
+                            ? "bg-blue-500/20 text-blue-300 border-blue-500/40"
+                            : u.role === "cashier"
+                            ? "bg-emerald-500/20 text-emerald-300 border-emerald-500/40"
+                            : "bg-pink-500/20 text-pink-300 border-pink-500/40"
+                        }`}>
+                          {u.role === "owner" && "المالك (Maestro) 👑"}
+                          {u.role === "general_manager" && "المدير العام 🏢"}
+                          {u.role === "manager" && "مدير فرع 👔"}
+                          {u.role === "cashier" && "كاشير POS 💳"}
+                          {u.role === "specialist" && "متخصص / خبيرة ✂️"}
+                          {u.role === "worker" && "عامل ضيافة ☕"}
+                          {!["owner", "general_manager", "manager", "cashier", "specialist", "worker"].includes(u.role) && u.role}
                         </span>
                       </td>
                       <td className="p-3.5 text-slate-400">{u.branchName}</td>
@@ -4131,42 +4152,42 @@ export default function AdminPage() {
                       />
                     </div>
                     <div>
-                      <label className="text-slate-300 font-bold block mb-1">هاتف فرع حدائق القبة:</label>
+                      <label className="text-slate-300 font-bold block mb-1">هاتف صالون دقن الباشا (رجالي):</label>
                       <input
                         type="text"
                         value={settingsForm.hadayekPhone}
                         onChange={(e) => setSettingsForm({ ...settingsForm, hadayekPhone: e.target.value })}
-                        placeholder="01121537537"
+                        placeholder="01210103025"
                         className="w-full py-2 px-3 rounded-xl bg-black/60 border border-white/10 text-white font-mono focus:border-amber-400"
                       />
                     </div>
                     <div>
-                      <label className="text-slate-300 font-bold block mb-1">هاتف فرع مدينة نصر (عباس العقاد):</label>
+                      <label className="text-slate-300 font-bold block mb-1">هاتف حمام الباشا (حريمي وسبا):</label>
                       <input
                         type="text"
                         value={settingsForm.nasrCityPhone}
                         onChange={(e) => setSettingsForm({ ...settingsForm, nasrCityPhone: e.target.value })}
-                        placeholder="01121537537"
+                        placeholder="01556782015"
                         className="w-full py-2 px-3 rounded-xl bg-black/60 border border-white/10 text-white font-mono focus:border-amber-400"
                       />
                     </div>
                     <div>
-                      <label className="text-slate-300 font-bold block mb-1">رابط صفحة الفيسبوك الرسمية:</label>
+                      <label className="text-slate-300 font-bold block mb-1">رابط فيسبوك دقن الباشا (رجالي):</label>
                       <input
                         type="text"
                         value={settingsForm.facebookUrl}
                         onChange={(e) => setSettingsForm({ ...settingsForm, facebookUrl: e.target.value })}
-                        placeholder="https://www.facebook.com/SaddamSalon/"
+                        placeholder="https://www.facebook.com/DaknElbashaSalon"
                         className="w-full py-2 px-3 rounded-xl bg-black/60 border border-white/10 text-sky-400 font-mono text-[11px] focus:border-amber-400"
                       />
                     </div>
                     <div>
-                      <label className="text-slate-300 font-bold block mb-1">رابط الإنستغرام الرسمي:</label>
+                      <label className="text-slate-300 font-bold block mb-1">رابط فيسبوك حمام الباشا (حريمي وسبا):</label>
                       <input
                         type="text"
                         value={settingsForm.instagramUrl}
                         onChange={(e) => setSettingsForm({ ...settingsForm, instagramUrl: e.target.value })}
-                        placeholder="https://www.instagram.com/saddamsalon/"
+                        placeholder="https://www.facebook.com/hammam.elbasha1/"
                         className="w-full py-2 px-3 rounded-xl bg-black/60 border border-white/10 text-pink-400 font-mono text-[11px] focus:border-amber-400"
                       />
                     </div>
@@ -4345,7 +4366,7 @@ export default function AdminPage() {
                       onChange={(e) =>
                         setSettingsForm({ ...settingsForm, receiptFooterNotes: e.target.value })
                       }
-                      placeholder="شكراً لزيارتكم صالون صدام الملكي 👑 تجربة استثنائية لأناقة الرجل"
+                      placeholder="شكراً لزيارتكم مجموعة صالونات وسبا الباشا VIP 👑 تجربة ملكية استثنائية"
                       className="w-full py-2 px-3 rounded-xl bg-black/60 border border-white/10 text-amber-300 text-xs focus:border-amber-400 leading-relaxed"
                     />
                     <p className="text-[10px] text-slate-500">
@@ -4444,7 +4465,7 @@ export default function AdminPage() {
                   required
                   value={specForm.name}
                   onChange={(e) => setSpecForm({ ...specForm, name: e.target.value })}
-                  placeholder="مثال: كابتن صدام"
+                  placeholder="مثال: كابتن حسام الباشا أو مدام أمينة المغربية"
                   className="w-full py-2 px-3 rounded-xl bg-black/60 border border-white/10 text-white focus:outline-none focus:border-amber-400"
                 />
               </div>
@@ -4664,7 +4685,7 @@ export default function AdminPage() {
                     <option value="general_manager">المدير العام</option>
                     <option value="manager">مدير فرع</option>
                     <option value="cashier">كاشير نقطة البيع POS</option>
-                    <option value="specialist">متخصص حلاقة (كرسي)</option>
+                    <option value="specialist">متخصص / خبيرة (حلاقة أو سبا)</option>
                     <option value="worker">عامل صالون وضيافة</option>
                   </select>
                 </div>
@@ -5146,7 +5167,7 @@ export default function AdminPage() {
         <div className="fixed inset-0 z-50 overflow-y-auto bg-black/85 backdrop-blur-md flex items-center justify-center p-4 font-sans" dir="rtl">
           <div className="relative w-full max-w-sm bg-[#12121a] border border-amber-500/40 rounded-3xl p-6 shadow-2xl space-y-4">
             <div className="flex items-center justify-between border-b border-white/10 pb-3">
-              <h3 className="text-sm font-black text-white">إضافة فرع جديد لصالون صدام</h3>
+              <h3 className="text-sm font-black text-white">إضافة فرع جديد لمجموعة الباشا</h3>
               <button onClick={() => setShowBranchModal(false)} className="text-slate-400 hover:text-white">✕</button>
             </div>
 
@@ -5248,7 +5269,7 @@ export default function AdminPage() {
                     <option value="STYLING">تصفيف شعر وواكس ومات (STYLING)</option>
                     <option value="BEARD_CARE">عناية باللحية وزيوت وسيروم (BEARD_CARE)</option>
                     <option value="SKIN_CARE">عناية بالبشرة وماسكات وغسول (SKIN_CARE)</option>
-                    <option value="PERFUMES">عطور رجالي صدام VIP أو دي بارفيوم (PERFUMES)</option>
+                    <option value="PERFUMES">عطور رجالية ومخمرية نسائية VIP (PERFUMES)</option>
                   </optgroup>
                   <optgroup label="💈 خامات ومستلزمات تشغيل الصالون">
                     <option value="SUPPLIES">خامات حلاقة وتشغيل (شفرات، قطن، فازلين، شمع)</option>
