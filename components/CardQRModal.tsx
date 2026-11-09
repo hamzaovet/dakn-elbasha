@@ -15,9 +15,9 @@ interface CardQRModalProps {
 export default function CardQRModal({
   isOpen,
   onClose,
-  hadayekPhone = "01061301780",
+  hadayekPhone = "01210103025",
   nasrCityPhone = "01556782015",
-  hotline = "19555",
+  hotline = "01210103025",
 }: CardQRModalProps) {
   const [webQr, setWebQr] = useState<string>("");
   const [appQr, setAppQr] = useState<string>("");

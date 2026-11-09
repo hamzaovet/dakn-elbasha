@@ -43,7 +43,7 @@ async function sendOtpEmail(toEmail: string, code: string, customerName: string)
           </div>
 
           <div style="margin-top: 25px; font-size: 11px; color: #a1a1aa; border-top: 1px solid rgba(212, 175, 55, 0.2); padding-top: 15px;">
-            <p style="margin: 5px 0;">🎩 فرع صالون دقن الباشا (رجالي): 73 ترعة الجبل، أمام مستشفى سان بول • 01061301780</p>
+            <p style="margin: 5px 0;">🎩 فرع صالون دقن الباشا (رجالي): 73 ترعة الجبل، أمام مستشفى سان بول • 01210103025</p>
             <p style="margin: 5px 0;">👑 فرع حمام الباشا (حريمي وسبا): 84 ترعة الجبل، كينج بارك مول • 01556782015</p>
           </div>
         </div>

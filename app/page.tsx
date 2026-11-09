@@ -1045,11 +1045,11 @@ export default function HomePage() {
               </span>
             </div>
             <a
-              href={`tel:${isWomen ? "01556782015" : "01061301780"}`}
+              href={`tel:${isWomen ? "01556782015" : "01210103025"}`}
               className={`py-2 px-4 rounded-2xl ${isWomen ? "bg-rose-500/20 text-rose-300 border-rose-500/30" : "bg-amber-500/20 text-amber-300 border-amber-500/30"} border font-mono font-bold flex items-center gap-2 hover:scale-105 transition`}
             >
               <Phone className="w-3.5 h-3.5" />
-              <span>{isWomen ? "01556782015" : "01061301780"}</span>
+              <span>{isWomen ? "01556782015" : "01210103025"}</span>
             </a>
             <a
               href={isWomen ? "https://www.facebook.com/hammam.elbasha1/" : "https://www.facebook.com/DaknElbashaSalon"}
@@ -2053,7 +2053,7 @@ export default function HomePage() {
 
             <div className={`flex items-center gap-2 text-xs font-mono font-bold ${themeAccentText}`}>
               <Phone className="w-4 h-4" />
-              <span>هاتف الحجز المباشر: {isWomen ? "01556782015" : "01061301780"}</span>
+              <span>هاتف الحجز المباشر: {isWomen ? "01556782015" : "01210103025"}</span>
             </div>
           </div>
 
@@ -2068,7 +2068,7 @@ export default function HomePage() {
             <div className="p-3 rounded-2xl bg-white/5 border border-amber-500/20 space-y-1">
               <strong className="text-amber-300 block font-black">📍 فرع صالون دقن الباشا (رجالي VIP):</strong>
               <p className="text-slate-300">73 شارع ترعة الجبل، أمام مستشفى سان بول، حدائق القبة، القاهرة</p>
-              <p className="font-mono text-amber-300 font-bold">هاتف وواتساب: 01061301780</p>
+              <p className="font-mono text-amber-300 font-bold">هاتف وواتساب: 01210103025</p>
             </div>
 
             {/* Women Branch */}
@@ -2143,9 +2143,9 @@ export default function HomePage() {
       <CardQRModal
         isOpen={showQrModal}
         onClose={() => setShowQrModal(false)}
-        hadayekPhone={settings?.hadayekPhone || "01061301780"}
+        hadayekPhone={settings?.hadayekPhone || "01210103025"}
         nasrCityPhone={settings?.nasrCityPhone || "01556782015"}
-        hotline={settings?.hotline || "19555"}
+        hotline={settings?.hotline || "01210103025"}
       />
 
       {/* ─────────────────────────────────────────────────────────────

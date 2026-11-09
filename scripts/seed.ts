@@ -25,13 +25,17 @@ async function seed() {
       salonNameAr: "مجموعة صالونات وسبا الباشا VIP (دقن الباشا & حمام الباشا)",
       salonNameEn: "EL BASHA LUXURY SALON & SPA",
       logoUrl: "/dakn-logo.jpg",
-      hadayekPhone: "01061301780",
+      hadayekPhone: "01210103025",
       nasrCityPhone: "01556782015",
-      hotline: "19555",
-      whatsappNumber: "01061301780",
+      hotline: "01210103025",
+      whatsappNumber: "01210103025",
       facebookUrl: "https://www.facebook.com/DaknElbashaSalon",
+      instagramUrl: "https://www.facebook.com/hammam.elbasha1/",
       defaultOpenHour: "11:00 AM",
       defaultCloseHour: "01:00 AM",
+      weeklyDayOff: "MONDAY",
+      isDayOffEnabled: true,
+      dayOffMessage: "عفواً، صالونات وسبا الباشا في عطلة أسبوعية يوم الإثنين - نتشرف بحجز موعدكم طوال باقي أيام الأسبوع ✂️",
     },
     create: {
       id: "default-settings",
@@ -40,13 +44,17 @@ async function seed() {
       logoUrl: "/dakn-logo.jpg",
       systemLocked: false,
       lockMessage: "النظام مغلق مؤقتاً لأعمال الصيانة والتطوير الدوري.",
-      hadayekPhone: "01061301780",
+      hadayekPhone: "01210103025",
       nasrCityPhone: "01556782015",
-      hotline: "19555",
-      whatsappNumber: "01061301780",
+      hotline: "01210103025",
+      whatsappNumber: "01210103025",
       facebookUrl: "https://www.facebook.com/DaknElbashaSalon",
+      instagramUrl: "https://www.facebook.com/hammam.elbasha1/",
       defaultOpenHour: "11:00 AM",
       defaultCloseHour: "01:00 AM",
+      weeklyDayOff: "MONDAY",
+      isDayOffEnabled: true,
+      dayOffMessage: "عفواً، صالونات وسبا الباشا في عطلة أسبوعية يوم الإثنين - نتشرف بحجز موعدكم طوال باقي أيام الأسبوع ✂️",
     },
   });
   console.log("✅ System Settings seeded");
@@ -57,15 +65,15 @@ async function seed() {
     update: {
       name: "فرع صالون دقن الباشا (رجالي VIP)",
       address: "73 شارع ترعة الجبل، أمام مستشفى سان بول، حدائق القبة، القاهرة",
-      phone: "01061301780",
-      whatsapp: "01061301780",
+      phone: "01210103025",
+      whatsapp: "01210103025",
     },
     create: {
       name: "فرع صالون دقن الباشا (رجالي VIP)",
       code: "BR-DAKN-MEN",
       address: "73 شارع ترعة الجبل، أمام مستشفى سان بول، حدائق القبة، القاهرة",
-      phone: "01061301780",
-      whatsapp: "01061301780",
+      phone: "01210103025",
+      whatsapp: "01210103025",
       googleMapsUrl: "https://maps.google.com/?q=73+Teraet+El+Gabal+Hadayek+El+Kobba+Cairo",
       isActive: true,
     },
@@ -89,7 +97,7 @@ async function seed() {
       isActive: true,
     },
   });
-  console.log("✅ Branches seeded: دقن الباشا (رجالي) + حمام الباشا (حريمي)");
+  console.log("✅ Branches seeded: دقن الباشا (01210103025) + حمام الباشا (01556782015)");
 
   // 3. Users
   await prisma.user.upsert({
@@ -104,7 +112,7 @@ async function seed() {
       username: "maestro",
       passwordHash: "password123",
       pin: "157230",
-      phone: "01061301780",
+      phone: "01210103025",
       role: "owner",
       branchId: null,
       isActive: true,
@@ -123,7 +131,7 @@ async function seed() {
       username: "gm-basha",
       passwordHash: "password123",
       pin: "157230",
-      phone: "01061301780",
+      phone: "01210103025",
       role: "general_manager",
       branchId: null,
       isActive: true,
@@ -135,6 +143,7 @@ async function seed() {
     update: {
       passwordHash: "password123",
       pin: "1234",
+      phone: "01210103025",
       branchId: daknBranch.id,
     },
     create: {
@@ -142,7 +151,7 @@ async function seed() {
       username: "cashier-dakn",
       passwordHash: "password123",
       pin: "1234",
-      phone: "01061301780",
+      phone: "01210103025",
       role: "cashier",
       branchId: daknBranch.id,
       isActive: true,
@@ -154,6 +163,7 @@ async function seed() {
     update: {
       passwordHash: "password123",
       pin: "1234",
+      phone: "01556782015",
       branchId: hammamBranch.id,
     },
     create: {
@@ -170,49 +180,48 @@ async function seed() {
   console.log("✅ Users seeded (Owner, GM, 2 Cashiers)");
 
   // 4. Specialists (Men for Dakn El Basha, Women for Hammam El Basha)
-  // Clean existing specialists to avoid duplication
   await prisma.specialist.deleteMany({});
 
   const menSpecialists = [
     {
       name: "كابتن حسام الباشا",
       title: "كبير مصففي دقن الباشا وخبير تدريج الشعر الملكي",
-      phone: "01061301781",
+      phone: "01210103021",
       chairNumber: 1,
       commissionRate: 25,
       branchId: daknBranch.id,
       rating: 4.95,
-      photo: "/Images/سيروم اللحية الفاخر بزيت الأرجان وزبدة الشيا.jpg",
+      photo: "/dakn-hero.jpg",
     },
     {
       name: "كابتن إسلام سيف",
       title: "أخصائي تنظيف البشرة المائي وعلاج الشعر بالبروتين",
-      phone: "01061301782",
+      phone: "01210103022",
       chairNumber: 2,
       commissionRate: 20,
       branchId: daknBranch.id,
       rating: 4.9,
-      photo: "/Images/ماسك الفحم الكوري لتنظيف وتنعيم مسام الوجه.webp",
+      photo: "/services/service-styling.webp",
     },
     {
       name: "كابتن كريم عبد العزيز",
       title: "مصفف وخبير حلاقة ورسم اللحية بالموس الإيطالي",
-      phone: "01061301783",
+      phone: "01210103023",
       chairNumber: 3,
       commissionRate: 20,
       branchId: daknBranch.id,
       rating: 4.88,
-      photo: "/Images/كريم حلاقة وتليين ذقن بالنعناع والمنثول (برطمان 500 مل).jpg",
+      photo: "/dakn-logo.jpg",
     },
     {
       name: "كابتن زياد المغربي",
       title: "أخصائي الحمام المغربي والمساج والجاكوزي الرجالي",
-      phone: "01061301784",
+      phone: "01210103024",
       chairNumber: 4,
       commissionRate: 25,
       branchId: daknBranch.id,
       rating: 4.98,
-      photo: "/Images/شمع شعر عنبر تثبيت 24 ساعة (Strong Wax).webp",
+      photo: "/offers/dakn-white-friday-600.jpg",
     },
   ];
 
@@ -234,6 +243,7 @@ async function seed() {
     });
   }
 
+  // Ladies specialists with real professional female photos
   const womenSpecialists = [
     {
       name: "مدام أمينة المغربية",
@@ -243,7 +253,7 @@ async function seed() {
       commissionRate: 25,
       branchId: hammamBranch.id,
       rating: 4.99,
-      photo: "/Images/مناشف قطنية بيضاء فاخرة مطرزة بشعار صدام VIP.jpg",
+      photo: "/ladies/specialist-amina.jpg",
     },
     {
       name: "أ/ مروة فؤاد",
@@ -253,7 +263,7 @@ async function seed() {
       commissionRate: 20,
       branchId: hammamBranch.id,
       rating: 4.92,
-      photo: "/Images/ماسك الفحم الكوري لتنظيف وتنعيم مسام الوجه.webp",
+      photo: "/ladies/specialist-marwa.jpg",
     },
     {
       name: "أ/ ياسمين الشريف",
@@ -263,7 +273,7 @@ async function seed() {
       commissionRate: 22,
       branchId: hammamBranch.id,
       rating: 4.89,
-      photo: "/Images/صبغة شعر إسبانية لانمي كولاج (أسود ملكي  بني شوكولاتة).jpg",
+      photo: "/ladies/specialist-yasmin.jpg",
     },
     {
       name: "أ/ سارة نور",
@@ -273,7 +283,7 @@ async function seed() {
       commissionRate: 25,
       branchId: hammamBranch.id,
       rating: 4.96,
-      photo: "/Images/سيروم اللحية الفاخر بزيت الأرجان وزبدة الشيا.jpg",
+      photo: "/ladies/specialist-sara.jpg",
     },
   ];
 
@@ -289,12 +299,12 @@ async function seed() {
         rating: s.rating,
         photo: s.photo,
         status: "AVAILABLE",
-        statusReason: "جاهزة ومتاحة لاستقبال العميلات في السبا 🟢",
+        statusReason: "جاهزة ومتاحة لاستقبال العميلات في السبا 🌸",
         isActive: true,
       },
     });
   }
-  console.log("✅ 8 Specialists seeded (4 Men for Dakn El Basha + 4 Women for Hammam El Basha)");
+  console.log("✅ 8 Specialists seeded with separated Men & Women photos!");
 
   // 5. Services (Clean and Seed)
   await prisma.service.deleteMany({});
@@ -305,7 +315,7 @@ async function seed() {
       nameAr: "حلاقة شعر هيبة الباشا الملكية (Classic & Fade Cut)",
       nameEn: "Royal Basha Classic Cut",
       category: "HAIR",
-      price: 160,
+      price: 150,
       durationMinutes: 30,
       description: "قص وتدريج احترافي بأحدث صيحات الموضة العالمية مع غسيل وسيشوار تركي.",
       image: "/services/service-styling.webp",
@@ -315,27 +325,27 @@ async function seed() {
       nameAr: "تحديد وحلاقة ذقن بالبخار والموس الإيطالي",
       nameEn: "Italian Steam Beard Grooming",
       category: "BEARD",
-      price: 110,
+      price: 100,
       durationMinutes: 25,
       description: "رسم وتحديد الذقن بالخيط والموس مع حمام بخار ساخن وترطيب بالزيوت الطبيعية.",
       image: "/services/service-styling.webp",
       sortOrder: 2,
     },
     {
-      nameAr: "باكيدج دقن الباشا الملكي VIP (شعر + دقن + حمام زيت)",
+      nameAr: "باكيدج دقن الباشا الملكي VIP (شعر + دقن + فوطة سخنة)",
       nameEn: "Dakn El Basha VIP Royal Combo",
       category: "VIP_PACKAGES",
-      price: 330,
-      durationMinutes: 60,
-      description: "تجربة ملكية كاملة: قص شعر استثنائي + تحديد دقن بالبخار + حمام زيت ساخن وتدليك فروة الرأس.",
-      image: "/services/service-styling.webp",
+      price: 250,
+      durationMinutes: 45,
+      description: "تجربة ملكية كاملة: قص شعر استثنائي + تحديد دقن بالبخار + فوطة سخنة وساقعة وتدليك فروة الرأس.",
+      image: "/offers/dakn-white-friday-400.jpg",
       sortOrder: 3,
     },
     {
       nameAr: "جلسة تنظيف وبخار وتقشير البشرة (Deep Hydro-Facial)",
       nameEn: "Deep Hydro-Facial Session",
       category: "SKIN_CARE",
-      price: 220,
+      price: 200,
       durationMinutes: 40,
       description: "جلسة هيدروفيشل متكاملة لإزالة الرؤوس السوداء مع ماسك الفحم الكوري وترطيب عميق.",
       image: "/services/service-facial.webp",
@@ -355,27 +365,27 @@ async function seed() {
       nameAr: "صبغة شعر وإخفاء الشيب وتلوين احترافي للرجال",
       nameEn: "Men Hair Color & Gray Blending",
       category: "COLOR_KERATIN",
-      price: 260,
+      price: 250,
       durationMinutes: 45,
       description: "صبغات أوروبية أصلية تدوم طويلاً وتمنحك لوناً طبيعياً متجانساً ومشرقاً.",
       image: "/services/service-color.jpg",
       sortOrder: 6,
     },
     {
-      nameAr: "حمام مغربي رجالي ملكي متكامل + ساونا وجاكوزي",
+      nameAr: "حمام مغربي رجالي متكامل + ساونا وجاكوزي ومغطس",
       nameEn: "Men Royal Moroccan Bath & Sauna",
       category: "VIP_PACKAGES",
-      price: 450,
+      price: 500,
       durationMinutes: 60,
-      description: "جلسة استرخاء رجالية كاملة بالصابون المغربي والليفة الأصلية وغرفة البخار والجاكوزي.",
-      image: "/services/service-pedicure.jpg",
+      description: "جلسة استرخاء رجالية كاملة بمغطس ساخن وساقع وصابون مغربي وطمي وليفة أصلية واستيم وجاكوزي ومخمرية.",
+      image: "/offers/dakn-white-friday-600.jpg",
       sortOrder: 7,
     },
     {
       nameAr: "باديكير رجالي متكامل وعناية باليدين والأظافر",
       nameEn: "Men Royal Spa Pedicure",
       category: "BEARD",
-      price: 220,
+      price: 200,
       durationMinutes: 40,
       description: "إزالة الجلد الميت وتقليم وتنظيف الأظافر مع سكراب استرخائي لليدين والقدمين.",
       image: "/services/service-pedicure.jpg",
@@ -385,7 +395,7 @@ async function seed() {
       nameAr: "حلاقة أطفال مريحة ومرحة (Kids Cut)",
       nameEn: "Kids Cut Experience",
       category: "KIDS",
-      price: 110,
+      price: 100,
       durationMinutes: 20,
       description: "قصات شعر مبهجة للأبطال الصغار مع كرسي خاص بالأطفال وترفيه.",
       image: "/services/service-kids.jpg",
@@ -397,21 +407,31 @@ async function seed() {
       nameAr: "حمام مغربي تركي ملكي متكامل للسيدات",
       nameEn: "Ladies Royal Moroccan Turkish Bath",
       category: "LADIES_SPA",
-      price: 480,
+      price: 350,
       durationMinutes: 60,
-      description: "جلسة دلال ملكية بالصابون البلدي المغربي والليفة الأصلية وإزالة الجلد الميت وتفتيح المسام.",
-      image: "/services/service-pedicure.jpg",
+      description: "جلسة دلال ملكية بالصابون البلدي المغربي والليفة الأصلية وإزالة الجلد الميت وتفتيح المسام في غرفة البخار.",
+      image: "/ladies/ladies-moroccan-bath.jpg",
       sortOrder: 10,
+    },
+    {
+      nameAr: "جلسة سويت كاملة للجسم ونعومة فائقة",
+      nameEn: "Full Body Sweet Wax Session",
+      category: "LADIES_SPA",
+      price: 250,
+      durationMinutes: 45,
+      description: "إزالة كاملة لشعر الجسم بمكونات طبيعية آمنة تمنح بشرتك نعومة حريرية ونضارة تدوم.",
+      image: "/ladies/ladies-sweet.jpg",
+      sortOrder: 11,
     },
     {
       nameAr: "جلسة طمي مغربي أصلي ودلكة سودانية لتفتيح الجسم",
       nameEn: "Original Moroccan Clay & Sudanese Dilka",
       category: "LADIES_SPA",
-      price: 350,
+      price: 300,
       durationMinutes: 45,
-      description: "خلطة تفتيح ونعومة ونضارة فائقة لكامل الجسم بالطمي البركاني المغربي وماء الورد.",
-      image: "/services/service-facial.webp",
-      sortOrder: 11,
+      description: "خلطة تفتيح ونعومة ونضارة فائقة لكامل الجسم بالطمي البركاني المغربي وماء الورد والدلكة العطرية.",
+      image: "/ladies/ladies-moroccan-bath.jpg",
+      sortOrder: 12,
     },
     {
       nameAr: "جلسة جاكوزي دافئ بماء الورد والزيوت العطرية",
@@ -419,29 +439,29 @@ async function seed() {
       category: "LADIES_SPA",
       price: 250,
       durationMinutes: 30,
-      description: "استرخاء عضلي ونفسي كامل في مياه الجاكوزي الدافئة الغنية بخلاصة الورد والزيوت العطرية.",
-      image: "/services/service-pedicure.jpg",
-      sortOrder: 12,
-    },
-    {
-      nameAr: "جلسة ساونا وبخار بالأعشاب الطبيعية واللافندر",
-      nameEn: "Herbal & Lavender Steam Sauna",
-      category: "LADIES_SPA",
-      price: 200,
-      durationMinutes: 30,
-      description: "تنشيط الدورة الدموية وطرد السموم مع استنشاق بخار اللافندر والبابونج المهدئ للأعصاب.",
-      image: "/services/service-facial.webp",
+      description: "استرخاء عضلي ونفسي كامل في مياه الجاكوزي الدافئة الغنية بخلاصة الورد والزيوت العطرية المهدئة.",
+      image: "/ladies/ladies-jacuzzi.jpg",
       sortOrder: 13,
     },
     {
-      nameAr: "مساج استرخائي فرعوني للسيدات بالزيوت العطرية (45 د)",
+      nameAr: "مساج استرخائي فرعوني كامل للجسم بالزيوت العطرية",
       nameEn: "Pharaonic Relaxing Oil Massage (45m)",
       category: "LADIES_SPA",
-      price: 450,
+      price: 400,
       durationMinutes: 45,
       description: "تدليك استرخائي كامل لفك تشنجات الجسم والظهر والرقبة بأيدي خبيرات مساج متمرسات.",
-      image: "/services/service-pedicure.jpg",
+      image: "/ladies/ladies-massage.jpg",
       sortOrder: 14,
+    },
+    {
+      nameAr: "هيد مساج استرخائي ومساج لفروة الرأس",
+      nameEn: "Relaxing Head & Scalp Massage",
+      category: "LADIES_SPA",
+      price: 200,
+      durationMinutes: 25,
+      description: "تدليك مركز لفروة الرأس والصدغين لتخفيف الصداع والإرهاق وتنشيط الدورة الدموية للبصيلات.",
+      image: "/ladies/ladies-massage.jpg",
+      sortOrder: 15,
     },
     {
       nameAr: "تنظيف بشرة مائي هيدروفيشل + ماسك الذهب الكوري 24K",
@@ -450,8 +470,8 @@ async function seed() {
       price: 280,
       durationMinutes: 50,
       description: "تنظيف عميق للمسام وتقشير مائي ماسي مع ترطيب بكولاجين الذهب الكوري لإشراقة ونضارة ملحوظة.",
-      image: "/services/service-facial.webp",
-      sortOrder: 15,
+      image: "/ladies/ladies-facial-gold.jpg",
+      sortOrder: 16,
     },
     {
       nameAr: "باديكير ومانيكير سبا متكامل مع ماسك الشمع والبارافين",
@@ -460,18 +480,18 @@ async function seed() {
       price: 250,
       durationMinutes: 45,
       description: "عناية فائقة بالأظافر واليدين والقدمين مع حمام الشمع والبارافين لتنعيم فائق وتوريد القدمين.",
-      image: "/services/service-pedicure.jpg",
-      sortOrder: 16,
+      image: "/ladies/ladies-pedicure.jpg",
+      sortOrder: 17,
     },
     {
       nameAr: "تصفيف وسيشوار وبيبي ليس ملكي للشعر (Royal Blowout)",
       nameEn: "Royal Ladies Blowout & Styling",
       category: "LADIES_HAIR",
-      price: 150,
+      price: 180,
       durationMinutes: 30,
       description: "غسيل شعر احترافي بحمام كريم وتصفيف ناعم ومموج بأحدث أدوات السيشوار والبيبي ليس.",
-      image: "/services/service-styling.webp",
-      sortOrder: 17,
+      image: "/ladies/ladies-hair-styling.jpg",
+      sortOrder: 18,
     },
     {
       nameAr: "فرد ومعالجة الشعر بالبروتين والنانو ثيرابي البرازيلي",
@@ -480,8 +500,8 @@ async function seed() {
       price: 850,
       durationMinutes: 120,
       description: "علاج مكثف لتقصف وتجعد الشعر يمنحك نعومة حريرية ولمعاناً فائقاً يدوم لشهور.",
-      image: "/services/service-protein.jpg",
-      sortOrder: 18,
+      image: "/ladies/ladies-hair-styling.jpg",
+      sortOrder: 19,
     },
     {
       nameAr: "صبغة شعر حريمي كولاجين إسباني وسحب لون آمن",
@@ -490,72 +510,75 @@ async function seed() {
       price: 450,
       durationMinutes: 60,
       description: "تلوين شعر بأحدث الألوان العصرية (بلوند، تشوكليت، زيتوني) بخامات أصلية مغذية للشعر.",
-      image: "/services/service-color.jpg",
-      sortOrder: 19,
+      image: "/ladies/ladies-hair-color.jpg",
+      sortOrder: 20,
     },
   ];
 
   for (const s of services) {
     await prisma.service.create({ data: s });
   }
-  console.log("✅ 19 Services seeded (Men + Women)");
+  console.log("✅ 20 Services seeded (Men with Barber photos + Women with Spa photos)");
 
-  // 6. Royal Offers (Clean and Seed)
+  // 6. Royal Offers (Clean and Seed matching official flyers)
   await prisma.offer.deleteMany({});
 
   const offers = [
     // --- MEN'S OFFERS (دقن الباشا) ---
     {
-      titleAr: "باقة عريس الباشا الملكي المتكاملة (Groom VIP Experience)",
-      badge: "العرض الأقوى للعرسان 👑",
-      price: 3200,
-      oldPrice: 4200,
-      discountPercent: 24,
-      image: "/offers/offer-groom-vip-3500-full.jpg",
+      titleAr: "عرض وايت فرايداي: باكدج العناية الرجالي المتكامل",
+      badge: "عرض الوايت فرايداي الأقوى 👑",
+      price: 600,
+      oldPrice: 1000,
+      discountPercent: 40,
+      image: "/offers/dakn-white-friday-600.jpg",
       description:
-        "قص وتدريج شعر + تحديد دقن بالبخار + تنظيف بشرة هيدروفيشل 11 مرحلة + وكس للبشرة + صبغة شعر ولحية + حمام مغربي ملكي + ساونا وجاكوزي + مساج + سيشوار وتثبيت اللوك + شاور وتعطير كامل + ضيافة ملكية خاصة.",
+        "قص شعر + تهذيب دقن + حمام مغربي متكامل يشمل: مغطس ساخن، مغطس ساقع، جاكوزي، استيم، صابون مغربي، فرك الجلد الميت من الجسم، ماسك طمي مغربي للجسم، حمام كريم للشعر، ماسك للبشرة، مخمرية في أماكن النبض.",
       features: JSON.stringify([
-        "قص وتدريج شعر ملكي",
-        "تحديد ذقن بالبخار والموس",
-        "تنظيف بشرة هيدروفيشل 11 مرحلة",
-        "حمام مغربي رجالي ملكي",
-        "ساونا وجاكوزي ومساج كامل",
-        "شاور وتعطير الباشا",
+        "قص شعر + تهذيب دقن",
+        "مغطس ساخن + مغطس ساقع + جاكوزي",
+        "استيم + صابون مغربي + فرك الجلد الميت",
+        "ماسك طمي مغربي كامل للجسم",
+        "حمام كريم للشعر + ماسك للبشرة",
+        "مخمرية أصلية في أماكن النبض",
       ]),
       branchId: daknBranch.id,
       sortOrder: 1,
     },
     {
-      titleAr: "عرض العناية الفاخر بالباشا (VIP Care Package)",
-      badge: "الأكثر طلباً للشباب 🌟",
-      price: 1299,
-      oldPrice: 1800,
-      discountPercent: 28,
-      image: "/offers/offer-vip-care-1499.jpg",
+      titleAr: "عرض وايت فرايداي: باكدج الحلاقة وتدليل البشرة الفاخر",
+      badge: "توفير الوايت فرايداي ⚡",
+      price: 400,
+      oldPrice: 700,
+      discountPercent: 43,
+      image: "/offers/dakn-white-friday-400.jpg",
       description:
-        "خدمات متكاملة للعناية بمظهرك: قص شعر + تحديد الذقن بالبخار + سيشوار وتثبيت اللوك + تنظيف بشرة سوفت هيدروفيشل + باديكير يد وقدمين + شاور وتعطير الباشا.",
+        "حلاقة شعر + تهذيب دقن + فوطة سخنة + فوطة ساقعة + حمام كريم + ماسك بشرة + فوطة استخدام مرة واحدة + 3 اسكرابات للبشرة + إبرة دهون + اسكربر + ماسك ترطيب + كبسولة فيتامين.",
       features: JSON.stringify([
-        "قص شعر + دقن بالبخار",
-        "تنظيف بشرة سوفت",
-        "باديكير يد وقدمين",
-        "سيشوار وتثبيت اللوك",
+        "حلاقة شعر احترافية + تهذيب دقن",
+        "فوطة سخنة + فوطة ساقعة",
+        "3 اسكرابات للبشرة + إبرة دهون واسكربر",
+        "ماسك ترطيب + كبسولة فيتامين نضارة",
+        "حمام كريم للشعر + فوطة شخصية لمرة واحدة",
       ]),
       branchId: daknBranch.id,
       sortOrder: 2,
     },
     {
-      titleAr: "كومبو الباشا السريع (شعر + دقن بالبخار + غسيل وسيشوار)",
-      badge: "عرض التوفير الأسبوعي ⚡",
-      price: 299,
-      oldPrice: 390,
-      discountPercent: 23,
-      image: "/offers/offer-combo-299.jpg",
+      titleAr: "باقة عريس الباشا الملكية الكبرى (VIP Groom Experience)",
+      badge: "العرض الملكي للعرسان 🤵",
+      price: 2800,
+      oldPrice: 3800,
+      discountPercent: 26,
+      image: "/offers/offer-groom-vip-3500-full.jpg",
       description:
-        "قص شعر + تحديد دقن بالبخار + غسيل الشعر بحمام كريم + سيشوار وترتيب المظهر في نصف ساعة فقط.",
+        "تجربة العريس الشاملة: قص شعر ملكي + رسم لحية بالموس + حمام مغربي تركي بمغطس ساخن وجاكوزي + مساج كامل + تنظيف بشرة هيدروفيشل 11 مرحلة + وكس وسيشوار وثبات اللوك.",
       features: JSON.stringify([
-        "قص شعر ملكي",
-        "تحديد دقن بالبخار",
-        "غسيل وسيشوار",
+        "قص شعر وتدريج ملكي",
+        "تحديد ورسم اللحية بالبخار",
+        "حمام مغربي وساونا وجاكوزي ومساج",
+        "تنظيف بشرة هيدروفيشل 11 مرحلة",
+        "سيشوار وتثبيت لوك الفرح وتعطير",
       ]),
       branchId: daknBranch.id,
       sortOrder: 3,
@@ -563,56 +586,58 @@ async function seed() {
 
     // --- WOMEN'S OFFERS (حمام الباشا) ---
     {
-      titleAr: "باقة العروسة الملكية الشاملة VIP (Royal Bride Experience)",
-      badge: "أرقى تجهيز عرائس ملكي 👑",
-      price: 3900,
-      oldPrice: 5500,
-      discountPercent: 29,
-      image: "/offers/offer-groom-3500.jpg",
+      titleAr: "عرض وايت فرايداي من حمام الباشا: اختاري أي خدمة بـ 250 ج",
+      badge: "وايت فرايداي حمام الباشا 🌸",
+      price: 250,
+      oldPrice: 450,
+      discountPercent: 44,
+      image: "/offers/hammam-white-friday-250.jpg",
       description:
-        "حمام مغربي تركي ملكي + دلكة سودانية + طمي مغربي أصلي + جاكوزي دافئ بماء الورد + ساونا وبخار أعشاب + مساج استرخائي بالزيوت + هيدروفيشل ماسك الذهب الكوري + باديكير ومانيكير سبا بالبارافين + تصفيف وسيشوار ملكي + غرفة تغيير خاصة وضيافة VIP.",
+        "عرض خاص لفترة محدودة من حمام الباشا! اختاري أي خدمة من الخدمات الملكية التالية: (1. سويت - 2. حمام مغربي - 3. تنظيف بشرة - 4. هيد مساج) — الحجز متاح أونلاين فقط.",
       features: JSON.stringify([
-        "حمام مغربي تركي أصلي",
-        "دلكة سودانية وطمي مغربي",
-        "جاكوزي دافئ بماء الورد",
-        "مساج استرخائي كامل بالزيوت",
-        "هيدروفيشل وماسك الذهب 24K",
-        "باديكير ومانيكير سبا بالبارافين",
+        "1. سويت كامل لنعومة ونضارة الجسم",
+        "2. حمام مغربي بالصابون البلدي والبخار",
+        "3. تنظيف بشرة وتقشير وإشراقة نضارة",
+        "4. هيد مساج استرخائي لفروة الرأس",
+        "الحجز أونلاين فقط عبر الموقع",
       ]),
       branchId: hammamBranch.id,
       sortOrder: 4,
     },
     {
-      titleAr: "بكج الدلال والاسترخاء النسائي (Ladies Relaxation & Spa)",
-      badge: "يوم دلال واستجمام 🌺",
-      price: 1499,
-      oldPrice: 2200,
-      discountPercent: 32,
-      image: "/offers/offer-relaxation-1499.jpg",
+      titleAr: "باقة العروسة الملكية الشاملة VIP (Royal Bride Experience)",
+      badge: "أرقى تجهيز عرائس ملكي 👑",
+      price: 3500,
+      oldPrice: 5000,
+      discountPercent: 30,
+      image: "/ladies/ladies-bridal-spa.jpg",
       description:
-        "حمام مغربي تركي أصلي + غرفة ساونا وبخار + جاكوزي دافئ بالزيوت العطرية + ماسك تفتيح للوجه + باديكير قدمين مع تقشير وسكراب وتوريد كعب القدم.",
+        "حمام مغربي تركي ملكي + دلكة سودانية + طمي مغربي أصلي + جاكوزي دافئ بماء الورد + ساونا وبخار أعشاب + مساج استرخائي بالزيوت + هيدروفيشل ماسك الذهب الكوري 24K + باديكير ومانيكير سبا بالبارافين + تصفيف وسيشوار ملكي.",
       features: JSON.stringify([
-        "حمام مغربي تركي",
-        "جاكوزي دافئ وساونا",
-        "ماسك تفتيح للوجه",
-        "باديكير وتوريد قدمين",
+        "حمام مغربي تركي أصلي بالبخار",
+        "دلكة سودانية وطمي مغربي لتفتيح الجسم",
+        "جاكوزي دافئ بماء الورد واللافندر",
+        "مساج استرخائي كامل بالزيوت العطرية",
+        "هيدروفيشل وماسك الذهب 24K",
+        "باديكير ومانيكير سبا بالبارافين",
       ]),
       branchId: hammamBranch.id,
       sortOrder: 5,
     },
     {
-      titleAr: "عرض السبا السريع (حمام مغربي تركي + ساونا وبخار)",
-      badge: "استرخاء سريع 🧖‍♀️",
-      price: 499,
-      oldPrice: 650,
-      discountPercent: 23,
-      image: "/offers/offer-vip-1000.jpg",
+      titleAr: "بكج الدلال والاسترخاء النسائي (Ladies Relaxation & Spa)",
+      badge: "يوم دلال واستجمام 🌺",
+      price: 1200,
+      oldPrice: 1800,
+      discountPercent: 33,
+      image: "/ladies/ladies-jacuzzi.jpg",
       description:
-        "حمام مغربي بالصابون البلدي والأعشاب والليفة الأصلية + جلسة ساونا وبخار لتفتيح المسام والاسترخاء التام.",
+        "حمام مغربي تركي أصلي + غرفة ساونا وبخار + جاكوزي دافئ بالزيوت العطرية + ماسك تفتيح للوجه + باديكير قدمين مع تقشير وسكراب وتوريد كعب القدم.",
       features: JSON.stringify([
-        "حمام مغربي بالصابون الأصلي",
-        "ليفة كيس وتقشير كامل",
-        "جلسة ساونا وبخار أعشاب",
+        "حمام مغربي تركي بالصابون الأصلي",
+        "جاكوزي دافئ وساونا بخار",
+        "ماسك تفتيح للوجه",
+        "باديكير وتوريد قدمين",
       ]),
       branchId: hammamBranch.id,
       sortOrder: 6,
@@ -622,7 +647,7 @@ async function seed() {
   for (const o of offers) {
     await prisma.offer.create({ data: o });
   }
-  console.log("✅ 6 Royal Offers seeded (Men + Women)");
+  console.log("✅ 6 Royal Offers seeded with real White Friday flyers!");
 
   // 7. Products (Clean and Seed)
   await prisma.product.deleteMany({});
@@ -632,101 +657,75 @@ async function seed() {
     {
       nameAr: "عطر رجالي VIP دقن الباشا أو دي بارفيوم (100 مل)",
       category: "PERFUMES",
-      price: 420,
+      price: 400,
       costPrice: 200,
       stockQty: 30,
       branchId: daknBranch.id,
-      image: "/Images/عطر رجالي صدام VIP أو دي بارفيوم (100 مل).jpg",
+      image: "/dakn-logo.jpg",
     },
     {
       nameAr: "سيروم اللحية الفاخر بزيت الأرجان وزبدة الشيا",
       category: "BEARD_CARE",
-      price: 210,
+      price: 200,
       costPrice: 90,
       stockQty: 35,
       branchId: daknBranch.id,
-      image: "/Images/سيروم اللحية الفاخر بزيت الأرجان وزبدة الشيا.jpg",
+      image: "/services/service-styling.webp",
     },
     {
-      nameAr: "شمع شعر عنبر تثبيت 24 ساعة (Strong Wax)",
+      nameAr: "شمع شعر عنبر تثبيت 24 ساعة (Strong Matte Wax)",
       category: "STYLING",
-      price: 170,
+      price: 150,
       costPrice: 70,
       stockQty: 50,
       branchId: daknBranch.id,
-      image: "/Images/شمع شعر عنبر تثبيت 24 ساعة (Strong Wax).webp",
-    },
-    {
-      nameAr: "ماسك الفحم الكوري لتنظيف وتنعيم مسام الوجه",
-      category: "SKIN_CARE",
-      price: 150,
-      costPrice: 60,
-      stockQty: 40,
-      branchId: daknBranch.id,
-      image: "/Images/ماسك الفحم الكوري لتنظيف وتنعيم مسام الوجه.webp",
+      image: "/services/service-styling.webp",
     },
 
-    // Women's Products (حمام الباشا)
+    // Women's Spa Products (حمام الباشا)
     {
-      nameAr: "صابون مغربي أصلي بزيت الزيتون والأعشاب الطبيعية (300 جم)",
+      nameAr: "صابون مغربي بلدي أصلي بزيت الزيتون والأعشاب",
       category: "SKIN_CARE",
-      price: 160,
-      costPrice: 65,
-      stockQty: 45,
-      branchId: hammamBranch.id,
-      image: "/Images/حبيبات شمع واكس إيطالي لإزالة شعر الوجه والأنف والأذن.jpg",
-    },
-    {
-      nameAr: "ليفة مغربية كيس أصلية عالية الجودة للتقشير",
-      category: "ACCESSORIES",
-      price: 80,
-      costPrice: 30,
-      stockQty: 80,
-      branchId: hammamBranch.id,
-      image: "/Images/مناشف قطنية بيضاء فاخرة مطرزة بشعار صدام VIP.jpg",
-    },
-    {
-      nameAr: "طمي مغربي أصلي معالج بماء الورد واللافندر (500 جم)",
-      category: "SKIN_CARE",
-      price: 140,
-      costPrice: 55,
+      price: 150,
+      costPrice: 70,
       stockQty: 40,
       branchId: hammamBranch.id,
-      image: "/Images/ماسك الفحم الكوري لتنظيف وتنعيم مسام الوجه.webp",
+      image: "/ladies/ladies-moroccan-bath.jpg",
     },
     {
-      nameAr: "سيروم مغذي للشعر بزيت الأرجان والكيراتين (120 مل)",
-      category: "STYLING",
-      price: 240,
-      costPrice: 110,
-      stockQty: 30,
-      branchId: hammamBranch.id,
-      image: "/Images/سيروم اللحية الفاخر بزيت الأرجان وزبدة الشيا.jpg",
-    },
-    {
-      nameAr: "لوشن معطر ومرطب للجسم برائحة الفانيليا والعود الملكي",
-      category: "PERFUMES",
-      price: 190,
-      costPrice: 80,
+      nameAr: "طمي مغربي بركاني أصلي لتفتيح وشد الجسم",
+      category: "SKIN_CARE",
+      price: 180,
+      costPrice: 85,
       stockQty: 35,
       branchId: hammamBranch.id,
-      image: "/Images/عطر رجالي صدام VIP أو دي بارفيوم (100 مل).jpg",
+      image: "/ladies/ladies-moroccan-bath.jpg",
+    },
+    {
+      nameAr: "مخمرية ملكية معطرة للجسم وأماكن النبض (مسك الرمان واللافندر)",
+      category: "PERFUMES",
+      price: 160,
+      costPrice: 75,
+      stockQty: 45,
+      branchId: hammamBranch.id,
+      image: "/ladies/ladies-jacuzzi.jpg",
     },
   ];
 
   for (const p of products) {
     await prisma.product.create({ data: p });
   }
-  console.log("✅ 9 Retail & Spa Products seeded");
+  console.log("✅ 6 Products seeded (Men + Women Spa)");
 
-  console.log("🎉 ALL SEEDING COMPLETED SUCCESSFULLY FOR DAKN EL BASHA & HAMMAM EL BASHA!");
+  console.log("🎉 ALL SEEDING COMPLETED SUCCESSFULLY WITH ZERO GENDER CONFLICTS!");
 }
 
 seed()
   .catch((e) => {
-    console.error("❌ Seed Error:", e);
+    console.error("❌ Seed error:", e);
     process.exit(1);
   })
-  .finally(() => {
-    prisma.$disconnect();
+  .finally(async () => {
+    await prisma.$disconnect();
+    await pool.end();
   });
