@@ -424,17 +424,58 @@ export default function SpecialistChairPage() {
     ticketServices = [];
   }
 
+  // Women Theme Detection for Specialists
+  const isWomenTheme = Boolean(
+    specialist?.branchName?.includes("حمام") ||
+    specialist?.branchName?.includes("حريمي") ||
+    currentUser?.branchName?.includes("حمام") ||
+    currentUser?.username?.includes("hammam") ||
+    currentUser?.username?.includes("amina") ||
+    currentUser?.username?.includes("marwa") ||
+    currentUser?.username?.includes("yasmin") ||
+    currentUser?.username?.includes("sara")
+  );
+
   return (
-    <div className="min-h-screen bg-[#0a0a0e] text-slate-100 flex flex-col font-sans" dir="rtl">
+    <div
+      className={`min-h-screen flex flex-col font-sans transition-colors duration-300 ${
+        isWomenTheme
+          ? "bg-[#0c040a] selection:bg-rose-500 selection:text-white"
+          : "bg-[#0a0a0e] selection:bg-amber-500 selection:text-black"
+      }`}
+      dir="rtl"
+    >
+      {/* Dynamic Ambient Background Glows */}
+      {isWomenTheme ? (
+        <>
+          <div className="absolute w-[500px] h-[500px] bg-rose-600/10 blur-[140px] rounded-full pointer-events-none -top-20 -right-20 animate-pulse" />
+          <div className="absolute w-[400px] h-[400px] bg-pink-500/10 blur-[130px] rounded-full pointer-events-none bottom-20 -left-20" />
+        </>
+      ) : (
+        <>
+          <div className="absolute w-96 h-96 bg-amber-500/10 blur-[130px] rounded-full pointer-events-none -top-10 -right-10" />
+        </>
+      )}
+
       {/* ─────────────────────────────────────────────────────────────
           1. CHAIR TOP HEADER
          ───────────────────────────────────────────────────────────── */}
-      <header className="sticky top-0 z-40 bg-[#0f0f15]/95 backdrop-blur-md border-b border-amber-500/25 px-4 sm:px-8 py-3.5 flex items-center justify-between shadow-lg">
+      <header
+        className={`sticky top-0 z-40 backdrop-blur-md px-4 sm:px-8 py-3.5 flex items-center justify-between shadow-lg transition-colors duration-300 ${
+          isWomenTheme
+            ? "bg-[#150612]/95 border-b border-rose-500/35 shadow-rose-950/20"
+            : "bg-[#0f0f15]/95 border-b border-amber-500/25 shadow-black/40"
+        }`}
+      >
         <div className="flex items-center gap-3">
-          <div className="w-12 h-12 rounded-2xl overflow-hidden border-2 border-amber-400 bg-black shrink-0">
+          <div
+            className={`w-12 h-12 rounded-2xl overflow-hidden border-2 bg-black shrink-0 shadow-md ${
+              isWomenTheme ? "border-rose-400 shadow-rose-500/20" : "border-amber-400 shadow-amber-500/20"
+            }`}
+          >
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
-              src={specialist?.photo || "/dakn-logo.jpg"}
+              src={specialist?.photo || (isWomenTheme ? "/hammam-logo.jpg" : "/dakn-logo.jpg")}
               alt={specialist?.name || "Specialist"}
               className="w-full h-full object-cover"
             />
@@ -442,15 +483,22 @@ export default function SpecialistChairPage() {
 
           <div>
             <div className="flex items-center gap-2">
-              <h2 className="text-base sm:text-lg font-black text-amber-400">
-                {specialist?.name || currentUser?.name || "شاشة المتخصص"}
+              <h2 className={`text-base sm:text-lg font-black ${isWomenTheme ? "text-rose-300" : "text-amber-400"}`}>
+                {specialist?.name || currentUser?.name || (isWomenTheme ? "شاشة خبيرة السبا" : "شاشة المتخصص")}
               </h2>
-              <span className="py-0.5 px-2 rounded-lg bg-amber-500/20 text-amber-300 border border-amber-500/30 text-[10px] font-black">
-                كرسي رقم #{specialist?.chairNumber || 1}
+              <span
+                className={`py-0.5 px-2 rounded-lg text-[10px] font-black border ${
+                  isWomenTheme
+                    ? "bg-rose-500/20 text-rose-300 border-rose-500/40"
+                    : "bg-amber-500/20 text-amber-300 border-amber-500/30"
+                }`}
+              >
+                {isWomenTheme ? "محطة رقم #" : "كرسي رقم #"}
+                {specialist?.chairNumber || 1}
               </span>
             </div>
             <p className="text-xs text-slate-400 font-bold">
-              {specialist?.branchName || currentUser?.branchName || "فرع حدائق القبة"}
+              {specialist?.branchName || currentUser?.branchName || (isWomenTheme ? "فرع حمام الباشا (حريمي وسبا VIP)" : "فرع صالون دقن الباشا (رجالي VIP)")}
             </p>
           </div>
         </div>

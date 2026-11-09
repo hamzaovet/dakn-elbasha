@@ -62,7 +62,18 @@ export default function AdminPage() {
 
   // Auth & Permissions
   const [currentUser, setCurrentUser] = useState<any>(null);
-  const [selectedBranchId, setSelectedBranchId] = useState<string>("ALL");
+  const [selectedBranchId, setSelectedBranchId] = useState<string>(() => {
+    if (typeof window !== "undefined") {
+      try {
+        const saved = localStorage.getItem("basha_staff_user") || localStorage.getItem("saddam_staff_user");
+        if (saved) {
+          const u = JSON.parse(saved);
+          if (u.role === "manager" && u.branchId) return u.branchId;
+        }
+      } catch {}
+    }
+    return "ALL";
+  });
 
   // Active Tab
   const [activeTab, setActiveTab] = useState<
@@ -110,6 +121,46 @@ export default function AdminPage() {
     setSelectedLedgerSpecialistId(id);
     fetchSpecialistStatement(id);
   };
+
+  // User Privileges & Multi-Branch Locking
+  const isOwnerOrGM = currentUser?.role === "owner" || currentUser?.role === "general_manager";
+  const isBranchManager = !isOwnerOrGM; // Any staff role other than Owner or GM is strictly locked
+
+  // Identify Branches
+  const hammamBranch = branches.find(
+    (b) => b.code === "BR-HAMMAM-WOMEN" || b.name?.includes("حمام") || b.name?.includes("حريمي")
+  );
+  const daknBranch = branches.find(
+    (b) => b.code === "BR-DAKN-MEN" || b.name?.includes("دقن") || b.name?.includes("رجالي")
+  );
+
+  // Effective Active Branch ID: If not Owner or GM, strictly locked to their branch
+  const activeBranchId = isOwnerOrGM ? selectedBranchId : (currentUser?.branchId || branches[0]?.id || "ALL");
+
+  // Women's Spa Theme (Hammam El Basha) vs Men's Theme (Dakn El Basha) vs Central (ALL)
+  const isWomenTheme = Boolean(
+    currentUser?.branch?.name?.includes("حمام") ||
+    currentUser?.branch?.name?.includes("حريمي") ||
+    currentUser?.branch?.code === "BR-HAMMAM-WOMEN" ||
+    currentUser?.username?.includes("hammam") ||
+    (hammamBranch && activeBranchId === hammamBranch.id) ||
+    (branches.find((b) => b.id === activeBranchId)?.name?.includes("حمام")) ||
+    (branches.find((b) => b.id === activeBranchId)?.name?.includes("حريمي")) ||
+    (branches.find((b) => b.id === activeBranchId)?.code === "BR-HAMMAM-WOMEN")
+  );
+  const isMenTheme = Boolean(
+    !isWomenTheme && (
+      currentUser?.branch?.name?.includes("دقن") ||
+      currentUser?.branch?.name?.includes("رجالي") ||
+      currentUser?.branch?.code === "BR-DAKN-MEN" ||
+      currentUser?.username?.includes("dakn") ||
+      (daknBranch && activeBranchId === daknBranch.id) ||
+      (branches.find((b) => b.id === activeBranchId)?.name?.includes("دقن")) ||
+      (branches.find((b) => b.id === activeBranchId)?.name?.includes("رجالي")) ||
+      (branches.find((b) => b.id === activeBranchId)?.code === "BR-DAKN-MEN")
+    )
+  );
+  const isAllBranches = activeBranchId === "ALL" && isOwnerOrGM;
 
   // Expense Modal State
   const [showExpenseModal, setShowExpenseModal] = useState<boolean>(false);
@@ -326,6 +377,13 @@ export default function AdminPage() {
     }
   }, [router]);
 
+  // Tab Protection: Branch Managers cannot access global settings or branch architecture
+  useEffect(() => {
+    if (isBranchManager && (activeTab === "branches" || activeTab === "settings")) {
+      setActiveTab("overview");
+    }
+  }, [isBranchManager, activeTab]);
+
   // Audio Alarm Logic (Web Audio API Synthesizer - Royal Chime)
   const startAlarmSound = () => {
     try {
@@ -424,10 +482,10 @@ export default function AdminPage() {
         fetch("/api/customers"),
         fetch("/api/users"),
         fetch("/api/tickets"),
-        fetch(`/api/ledgers?specialistId=${selectedLedgerSpecialistIdRef.current || ""}&branchId=${selectedBranchId}`),
+        fetch(`/api/ledgers?specialistId=${selectedLedgerSpecialistIdRef.current || ""}&branchId=${activeBranchId}`),
         fetch("/api/chat?limit=50"),
-        fetch(`/api/treasury?period=${treasuryPeriod}&branchId=${selectedBranchId}`),
-        fetch(`/api/shifts?branchId=${selectedBranchId}`),
+        fetch(`/api/treasury?period=${treasuryPeriod}&branchId=${activeBranchId}`),
+        fetch(`/api/shifts?branchId=${activeBranchId}`),
       ]);
 
       const [
@@ -508,7 +566,7 @@ export default function AdminPage() {
         const pendingBookings = dataBk.bookings.filter(
           (b: any) =>
             b.status === "PENDING" &&
-            (selectedBranchId === "ALL" || b.branchId === selectedBranchId)
+            (activeBranchId === "ALL" || b.branchId === activeBranchId)
         );
         const newest = pendingBookings[0];
         if (
@@ -541,7 +599,7 @@ export default function AdminPage() {
   const fetchSpecialistStatement = async (specId: string) => {
     if (!specId) return;
     try {
-      const res = await fetch(`/api/ledgers?specialistId=${specId}&branchId=${selectedBranchId}`);
+      const res = await fetch(`/api/ledgers?specialistId=${specId}&branchId=${activeBranchId}`);
       const data = await res.json();
       if (data.success) {
         if (data.statement) setSpecialistStatement(data.statement);
@@ -558,7 +616,7 @@ export default function AdminPage() {
       const interval = setInterval(loadAllData, 4000);
       return () => clearInterval(interval);
     }
-  }, [currentUser, selectedBranchId]);
+  }, [currentUser, selectedBranchId, activeBranchId]);
 
   // Master Kill Switch Toggle
   const handleToggleKillSwitch = async () => {
@@ -1000,7 +1058,7 @@ export default function AdminPage() {
           customerPhone: activeChatCustomer.customerPhone,
           customerId: activeChatCustomer.customerId,
           customerName: activeChatCustomer.customerName,
-          branchId: selectedBranchId !== "ALL" ? selectedBranchId : null,
+          branchId: activeBranchId !== "ALL" ? activeBranchId : null,
         }),
       });
       const data = await res.json();
@@ -1263,7 +1321,7 @@ export default function AdminPage() {
       minStockAlert: 10,
       image: "",
       barcode: "",
-      branchId: selectedBranchId !== "ALL" ? selectedBranchId : "",
+      branchId: activeBranchId !== "ALL" ? activeBranchId : "",
       isActive: true,
     });
     setShowProductModal(true);
@@ -1374,7 +1432,7 @@ export default function AdminPage() {
         body: JSON.stringify({
           ...expenseForm,
           recordedBy: currentUser?.name || "المالك (Maestro)",
-          branchId: expenseForm.branchId || (selectedBranchId !== "ALL" ? selectedBranchId : branches[0]?.id),
+          branchId: expenseForm.branchId || (activeBranchId !== "ALL" ? activeBranchId : branches[0]?.id),
         }),
       });
       const data = await res.json();
@@ -1400,14 +1458,18 @@ export default function AdminPage() {
 
   const handleOpenAdminCloseShift = async () => {
     try {
-      const res = await fetch(`/api/shifts?branchId=${selectedBranchId}`);
+      const res = await fetch(`/api/shifts?branchId=${activeBranchId}`);
       const data = await res.json();
       if (data.success) {
         setAdminShiftStats(data.liveStats);
         setAdminOpenShift(data.openShift);
         setAdminShiftForm({
           actualCash: data.liveStats?.expectedCash || 0,
-          handedTo: "أ/ حمزة عباس (المايسترو - المالك) 👑",
+          handedTo: isWomenTheme
+            ? "أ / ندى المحمدي (مديرة فرع حمام الباشا VIP) 🧖‍♀️"
+            : isMenTheme
+            ? "أ / أحمد عبد الرحيم (مدير فرع صالون دقن الباشا) 💈"
+            : "أ/ حمزة عباس (المايسترو - المالك) 👑",
           notes: "",
         });
         setShowAdminCloseShiftModal(true);
@@ -1493,29 +1555,141 @@ export default function AdminPage() {
     router.push("/login");
   };
 
-  // Filter Bookings by Tab / Status / Branch
+  // Women Services Categorization
+  const womenCategoryIds = ["LADIES_SPA", "LADIES_SKIN", "LADIES_HAIR"];
+  const isServiceForWomen = (srv: any) =>
+    womenCategoryIds.includes(srv.category) ||
+    srv.nameAr?.includes("مغربي") ||
+    srv.nameAr?.includes("سويت") ||
+    srv.nameAr?.includes("هيدروفيشل") ||
+    srv.nameAr?.includes("مساج") ||
+    srv.nameAr?.includes("باديكير") ||
+    srv.nameAr?.includes("عرائس") ||
+    srv.nameAr?.includes("سيدات");
+
+  // 1. Filtered Services by Branch / Gender
+  const filteredServices = isWomenTheme
+    ? services.filter(isServiceForWomen)
+    : isMenTheme
+    ? services.filter((s) => !isServiceForWomen(s))
+    : services;
+
+  // 2. Filtered Specialists by Branch
+  const filteredSpecialists = isWomenTheme
+    ? specialists.filter((s) => s.branchId === activeBranchId || (hammamBranch && s.branchId === hammamBranch.id))
+    : isMenTheme
+    ? specialists.filter((s) => s.branchId === activeBranchId || (daknBranch && s.branchId === daknBranch.id))
+    : specialists;
+
+  // 3. Filtered Products & Supplies by Branch
+  const filteredProducts = isWomenTheme
+    ? products.filter((p) => p.branchId === activeBranchId || (hammamBranch && p.branchId === hammamBranch.id))
+    : isMenTheme
+    ? products.filter((p) => p.branchId === activeBranchId || (daknBranch && p.branchId === daknBranch.id) || !p.branchId)
+    : products;
+
+  // 4. Filtered Bookings by Tab / Status / Branch
   const filteredBookings = bookings.filter((bk) => {
-    const matchBranch = selectedBranchId === "ALL" || bk.branchId === selectedBranchId;
+    const matchBranch = activeBranchId === "ALL" || bk.branchId === activeBranchId;
     const matchStatus =
       bookingFilterStatus === "ALL" || bk.status === bookingFilterStatus;
     return matchBranch && matchStatus;
   });
 
+  // 5. Filtered Offers
+  const filteredOffers = isWomenTheme
+    ? offers.filter((o) => o.branchId === activeBranchId || o.badge?.includes("حمام") || o.titleAr?.includes("حمام") || o.titleAr?.includes("سيدات"))
+    : isMenTheme
+    ? offers.filter((o) => o.branchId === activeBranchId || (!o.badge?.includes("حمام") && !o.titleAr?.includes("حمام") && !o.titleAr?.includes("سيدات")))
+    : offers;
+
+  // 6. Filtered Users (Branch Manager sees only their branch staff)
+  const filteredUsers = isBranchManager
+    ? users.filter((u) => u.branchId === activeBranchId)
+    : users;
+
+  // 7. Filtered Tickets
+  const filteredTickets = tickets.filter(
+    (t) => activeBranchId === "ALL" || t.branchId === activeBranchId
+  );
+
+  // 8. Filtered Chat
+  const filteredChatConversations = chatConversations.filter(
+    (c) => activeBranchId === "ALL" || c.branchId === activeBranchId || !c.branchId
+  );
+
   // Calculate Metrics
-  const totalRevenue = tickets
-    .filter((t) => selectedBranchId === "ALL" || t.branchId === selectedBranchId)
-    .reduce((sum, t) => sum + (t.finalAmount || 0), 0);
+  const totalRevenue = filteredTickets.reduce((sum, t) => sum + (t.finalAmount || 0), 0);
+  const totalClientsServed = filteredTickets.filter((t) => t.status === "COMPLETED").length;
+  const totalRetailSales = filteredTickets.reduce((sum, t) => sum + (t.retailTotal || 0), 0);
 
-  const totalClientsServed = tickets.filter(
-    (t) => selectedBranchId === "ALL" || t.branchId === selectedBranchId
-  ).length;
-
-  const totalRetailSales = tickets
-    .filter((t) => selectedBranchId === "ALL" || t.branchId === selectedBranchId)
-    .reduce((sum, t) => sum + (t.retailTotal || 0), 0);
+  // Visible Navigation Tabs
+  const visibleTabs = [
+    { id: "overview", label: "نظرة عامة 📊", icon: LayoutDashboard },
+    { id: "treasury", label: "الخزنة والحسابات 💰", icon: DollarSign },
+    {
+      id: "bookings",
+      label: `الحجوزات 📅 ${
+        filteredBookings.filter((b) => b.status === "PENDING").length > 0
+          ? `(${filteredBookings.filter((b) => b.status === "PENDING").length})`
+          : ""
+      }`,
+      icon: Calendar,
+    },
+    { id: "offers", label: "العروض الملكية 👑", icon: Sparkles },
+    {
+      id: "chat",
+      label: `شات العملاء 💬 ${unreadChatTotal > 0 ? `(${unreadChatTotal})` : ""}`,
+      icon: MessageSquare,
+    },
+    {
+      id: "specialists",
+      label: isWomenTheme ? "خبيرات السبا والأجور 🧖‍♀️" : "المتخصصين وكشف الأجور ✂️",
+      icon: Scissors,
+    },
+    {
+      id: "services",
+      label: isWomenTheme ? "خدمات السبا والأسعار 🧖‍♀️" : "الخدمات والأسعار 💈",
+      icon: Award,
+    },
+    {
+      id: "inventory",
+      label: isWomenTheme ? "مخزن ومستحضرات السبا 🛍️" : "المخزن والتجميل 🛍️",
+      icon: ShoppingBag,
+    },
+    { id: "customers", label: "قاعدة العملاء 👥", icon: Users },
+    ...(isOwnerOrGM
+      ? [
+          { id: "users", label: "الصلاحيات والمستخدمين 🔒", icon: ShieldCheck },
+          { id: "branches", label: "الفروع 📍", icon: MapPin },
+          { id: "settings", label: "الإعدادات ⚙️", icon: Settings },
+        ]
+      : [{ id: "users", label: "طاقم عمل الفرع 👥", icon: ShieldCheck }]),
+  ];
 
   return (
-    <div className="min-h-screen bg-[#07070b] text-slate-100 flex flex-col font-sans selection:bg-amber-500 selection:text-black" dir="rtl">
+    <div
+      className={`min-h-screen text-slate-100 flex flex-col font-sans transition-colors duration-500 relative overflow-hidden ${
+        isWomenTheme
+          ? "bg-[#0c040a] selection:bg-rose-500 selection:text-white"
+          : "bg-[#07070b] selection:bg-amber-500 selection:text-black"
+      }`}
+      dir="rtl"
+    >
+      {/* Dynamic Ambient Background Glows */}
+      {isWomenTheme ? (
+        <>
+          <div className="absolute w-[500px] h-[500px] bg-rose-600/15 blur-[140px] rounded-full pointer-events-none -top-20 -right-20 animate-pulse" />
+          <div className="absolute w-[500px] h-[500px] bg-pink-500/10 blur-[140px] rounded-full pointer-events-none top-96 -left-20" />
+          <div className="absolute w-[400px] h-[400px] bg-fuchsia-600/10 blur-[130px] rounded-full pointer-events-none bottom-20 right-1/3" />
+        </>
+      ) : (
+        <>
+          <div className="absolute w-96 h-96 bg-amber-500/10 blur-[130px] rounded-full pointer-events-none -top-10 -right-10" />
+          <div className="absolute w-96 h-96 bg-amber-600/5 blur-[120px] rounded-full pointer-events-none top-80 -left-10" />
+        </>
+      )}
+
       {/* ─────────────────────────────────────────────────────────────
           1. AUDIO ALARM BANNER (NEW PENDING BOOKINGS)
          ───────────────────────────────────────────────────────────── */}
@@ -1551,19 +1725,57 @@ export default function AdminPage() {
       {/* ─────────────────────────────────────────────────────────────
           2. TOP HEADER
          ───────────────────────────────────────────────────────────── */}
-      <header className="bg-[#0f0f16] border-b border-amber-500/30 px-4 sm:px-8 py-3.5 flex flex-wrap items-center justify-between gap-3">
+      <header
+        className={`px-4 sm:px-8 py-3.5 flex flex-wrap items-center justify-between gap-3 sticky top-0 z-40 backdrop-blur-md border-b transition-colors duration-300 ${
+          isWomenTheme
+            ? "bg-[#150612]/95 border-rose-500/35 shadow-lg shadow-rose-950/20"
+            : "bg-[#0f0f16]/95 border-amber-500/30 shadow-lg shadow-black/40"
+        }`}
+      >
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-2xl overflow-hidden border border-amber-400 shadow-md bg-black">
+          <div
+            className={`w-11 h-11 rounded-2xl overflow-hidden border-2 shadow-md bg-black shrink-0 transition-transform hover:scale-105 ${
+              isWomenTheme
+                ? "border-rose-400 shadow-rose-500/30 ring-2 ring-pink-500/20"
+                : "border-amber-400 shadow-amber-500/20"
+            }`}
+          >
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src={settingsForm.logoUrl || "/dakn-logo.jpg"} alt="Logo" className="w-full h-full object-cover" />
+            <img
+              src={
+                isWomenTheme
+                  ? "/hammam-logo.jpg"
+                  : isMenTheme
+                  ? "/dakn-logo.jpg"
+                  : (settingsForm.logoUrl || "/dakn-logo.jpg")
+              }
+              alt="Logo"
+              className="w-full h-full object-cover"
+            />
           </div>
           <div>
             <div className="flex items-center gap-2">
-              <h2 className="text-sm sm:text-base font-black text-amber-400">
-                لوحة إدارة مجموعة صالونات وسبا الباشا VIP
+              <h2 className={`text-sm sm:text-base font-black ${isWomenTheme ? "text-rose-300" : "text-amber-400"}`}>
+                {isWomenTheme
+                  ? "لوحة إدارة فرع حمام الباشا VIP (صالون وسبا حريمي) 🧖‍♀️✨"
+                  : isMenTheme
+                  ? "لوحة إدارة فرع صالون دقن الباشا VIP (صالون حلاقة رجالي) 💈👑"
+                  : "لوحة إدارة مجموعة صالونات وسبا الباشا VIP (المركزية) 👑"}
               </h2>
-              <span className="py-0.5 px-2 rounded-full bg-amber-500/20 text-amber-300 text-[10px] font-black border border-amber-500/40">
-                {currentUser?.role === "owner" ? "المالك (Maestro) 👑" : currentUser?.role}
+              <span
+                className={`py-0.5 px-2 rounded-full text-[10px] font-black border ${
+                  isWomenTheme
+                    ? "bg-rose-500/20 text-rose-300 border-rose-500/40"
+                    : "bg-amber-500/20 text-amber-300 border-amber-500/40"
+                }`}
+              >
+                {currentUser?.role === "owner"
+                  ? "المالك (Maestro) 👑"
+                  : currentUser?.role === "general_manager"
+                  ? "المدير العام للمجموعة 🏢"
+                  : isWomenTheme
+                  ? "مديرة الفرع 🧖‍♀️"
+                  : "مدير الفرع 💈"}
               </span>
             </div>
             <p className="text-[11px] text-slate-400 font-bold">
@@ -1572,21 +1784,40 @@ export default function AdminPage() {
           </div>
         </div>
 
-        {/* Top Controls: Branch Switch, Kill Switch, POS link, QR, Logout */}
+        {/* Top Controls: Branch Switch (Owner/GM Only) or Locked Branch Badge (Managers), Kill Switch, POS, QR, Logout */}
         <div className="flex items-center gap-2 sm:gap-3">
-          {/* Branch Filter Switcher */}
-          <select
-            value={selectedBranchId}
-            onChange={(e) => setSelectedBranchId(e.target.value)}
-            className="py-1.5 px-3 rounded-xl bg-[#181822] border border-amber-500/30 text-xs font-bold text-amber-300 focus:outline-none"
-          >
-            <option value="ALL">إجمالي كل الفروع</option>
-            {branches.map((b) => (
-              <option key={b.id} value={b.id}>
-                {b.name}
-              </option>
-            ))}
-          </select>
+          {/* Branch Control */}
+          {isOwnerOrGM ? (
+            <select
+              value={activeBranchId}
+              onChange={(e) => setSelectedBranchId(e.target.value)}
+              className={`py-1.5 px-3 rounded-xl bg-[#181822] border text-xs font-black focus:outline-none transition ${
+                isWomenTheme
+                  ? "border-rose-500/40 text-rose-300 focus:border-rose-400"
+                  : "border-amber-500/40 text-amber-300 focus:border-amber-400"
+              }`}
+            >
+              <option value="ALL">🏢 إجمالي كل الفروع (المركزية)</option>
+              {branches.map((b) => (
+                <option key={b.id} value={b.id}>
+                  {b.name}
+                </option>
+              ))}
+            </select>
+          ) : (
+            <div
+              className={`py-1.5 px-3 rounded-xl border text-xs font-black flex items-center gap-1.5 shadow-md ${
+                isWomenTheme
+                  ? "bg-rose-500/15 border-rose-500/40 text-rose-300 shadow-rose-950/30"
+                  : "bg-amber-500/15 border-amber-500/40 text-amber-300 shadow-amber-950/30"
+              }`}
+              title="فرعك المصرح به حصرياً - غير متاح تبديل الفرع"
+            >
+              <Lock className={`w-3.5 h-3.5 ${isWomenTheme ? "text-rose-400" : "text-amber-400"}`} />
+              <span>{branches.find((b) => b.id === activeBranchId)?.name || currentUser?.branch?.name || "فرعك المعتمد"}</span>
+              <span className="text-[10px] opacity-75">(فرعك المصرح به 🔒)</span>
+            </div>
+          )}
 
           {/* Master Kill Switch Toggle Button (Maestro Power) */}
           {currentUser?.role === "owner" && (
@@ -1616,7 +1847,11 @@ export default function AdminPage() {
           {/* POS Shortcut */}
           <Link
             href="/pos"
-            className="py-1.5 px-3 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-black text-xs transition hidden sm:inline"
+            className={`py-1.5 px-3 rounded-xl font-black text-xs transition hidden sm:inline shadow-md ${
+              isWomenTheme
+                ? "bg-gradient-to-r from-rose-500 to-pink-500 hover:from-rose-400 hover:to-pink-400 text-white shadow-rose-500/20"
+                : "bg-amber-500 hover:bg-amber-400 text-slate-950 shadow-amber-500/20"
+            }`}
           >
             نقطة البيع POS 💰
           </Link>
@@ -1624,7 +1859,11 @@ export default function AdminPage() {
           {/* Card 2 QR */}
           <button
             onClick={() => setShowQrModal(true)}
-            className="p-2 rounded-xl bg-white/5 hover:bg-white/10 text-amber-300 transition"
+            className={`p-2 rounded-xl transition ${
+              isWomenTheme
+                ? "bg-white/5 hover:bg-rose-500/10 text-rose-300"
+                : "bg-white/5 hover:bg-white/10 text-amber-300"
+            }`}
             title="كارت الـ 2 QR"
           >
             <QrCode className="w-4 h-4" />
@@ -1651,22 +1890,15 @@ export default function AdminPage() {
       {/* ─────────────────────────────────────────────────────────────
           3. NAVIGATION TABS (RESPONSIVE & CLEAN MULTI-ROW WRAP)
          ───────────────────────────────────────────────────────────── */}
-      <div className="bg-[#0e0e14] border-b border-amber-500/20 px-3 sm:px-6 py-2.5">
+      <div
+        className={`border-b px-3 sm:px-6 py-2.5 transition-colors duration-300 ${
+          isWomenTheme
+            ? "bg-[#12050f] border-rose-500/25"
+            : "bg-[#0e0e14] border-amber-500/20"
+        }`}
+      >
         <div className="flex flex-wrap items-center gap-1.5 max-w-7xl mx-auto">
-          {[
-            { id: "overview", label: "نظرة عامة 📊", icon: LayoutDashboard },
-            { id: "treasury", label: "الخزنة والحسابات 💰", icon: DollarSign },
-            { id: "bookings", label: `الحجوزات 📅 ${bookings.filter(b => b.status === "PENDING").length > 0 ? `(${bookings.filter(b => b.status === "PENDING").length})` : ""}`, icon: Calendar },
-            { id: "offers", label: "العروض الملكية 👑", icon: Sparkles },
-            { id: "chat", label: `شات العملاء 💬 ${unreadChatTotal > 0 ? `(${unreadChatTotal})` : ""}`, icon: MessageSquare },
-            { id: "specialists", label: "المتخصصين وكشف الأجور ✂️", icon: Scissors },
-            { id: "services", label: "الخدمات والأسعار 💈", icon: Award },
-            { id: "inventory", label: "المخزن والتجميل 🛍️", icon: ShoppingBag },
-            { id: "customers", label: "قاعدة العملاء 👥", icon: Users },
-            { id: "users", label: "الصلاحيات والمستخدمين 🔒", icon: ShieldCheck },
-            { id: "branches", label: "الفروع 📍", icon: MapPin },
-            { id: "settings", label: "الإعدادات ⚙️", icon: Settings },
-          ].map((tab) => {
+          {visibleTabs.map((tab) => {
             const Icon = tab.icon;
             const isCurrent = activeTab === tab.id;
             return (
@@ -1675,7 +1907,11 @@ export default function AdminPage() {
                 onClick={() => setActiveTab(tab.id as any)}
                 className={`py-1.5 px-3 rounded-xl transition flex items-center gap-1.5 text-xs font-bold ${
                   isCurrent
-                    ? "bg-amber-500 text-slate-950 font-black shadow-md shadow-amber-500/25 ring-1 ring-amber-400"
+                    ? isWomenTheme
+                      ? "bg-gradient-to-r from-rose-500 via-pink-500 to-rose-600 text-white font-black shadow-md shadow-rose-500/30 ring-1 ring-pink-300/50 scale-105"
+                      : "bg-amber-500 text-slate-950 font-black shadow-md shadow-amber-500/25 ring-1 ring-amber-400 scale-105"
+                    : isWomenTheme
+                    ? "text-slate-400 hover:text-rose-200 hover:bg-rose-500/10 border border-transparent hover:border-rose-500/25"
                     : "text-slate-400 hover:text-white hover:bg-white/5 border border-transparent hover:border-white/5"
                 }`}
               >
@@ -1697,76 +1933,116 @@ export default function AdminPage() {
         {activeTab === "overview" && (
           <div className="space-y-6 animate-fade-in">
             <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-              <div className="p-4 rounded-3xl bg-[#14141e] border border-amber-500/30 space-y-2">
+              <div className={`p-4 rounded-3xl border space-y-2 transition-colors ${
+                isWomenTheme ? "bg-[#180815] border-rose-500/35 shadow-rose-950/30" : "bg-[#14141e] border-amber-500/30"
+              }`}>
                 <span className="text-xs text-slate-400 font-bold block">إجمالي الإيرادات</span>
-                <p className="text-2xl font-black text-amber-400 font-mono">
+                <p className={`text-2xl font-black font-mono ${isWomenTheme ? "text-rose-300" : "text-amber-400"}`}>
                   {totalRevenue.toLocaleString()} ج.م
                 </p>
                 <span className="text-[10px] text-emerald-400 font-bold">شامل الخدمات والمبيعات</span>
               </div>
 
-              <div className="p-4 rounded-3xl bg-[#14141e] border border-amber-500/30 space-y-2">
-                <span className="text-xs text-slate-400 font-bold block">العملاء المخدومين</span>
+              <div className={`p-4 rounded-3xl border space-y-2 transition-colors ${
+                isWomenTheme ? "bg-[#180815] border-rose-500/35 shadow-rose-950/30" : "bg-[#14141e] border-amber-500/30"
+              }`}>
+                <span className="text-xs text-slate-400 font-bold block">
+                  {isWomenTheme ? "العميلات المخدومات" : "العملاء المخدومين"}
+                </span>
                 <p className="text-2xl font-black text-white font-mono">{totalClientsServed}</p>
-                <span className="text-[10px] text-amber-300 font-bold">تذاكر حلاقة مكتملة</span>
+                <span className={`text-[10px] font-bold ${isWomenTheme ? "text-pink-300" : "text-amber-300"}`}>
+                  {isWomenTheme ? "تذاكر سبا ومغربي مكتملة 🧖‍♀️" : "تذاكر حلاقة مكتملة 💈"}
+                </span>
               </div>
 
-              <div className="p-4 rounded-3xl bg-[#14141e] border border-amber-500/30 space-y-2">
-                <span className="text-xs text-slate-400 font-bold block">مبيعات مستحضرات التجميل</span>
+              <div className={`p-4 rounded-3xl border space-y-2 transition-colors ${
+                isWomenTheme ? "bg-[#180815] border-rose-500/35 shadow-rose-950/30" : "bg-[#14141e] border-amber-500/30"
+              }`}>
+                <span className="text-xs text-slate-400 font-bold block">
+                  {isWomenTheme ? "مبيعات مستحضرات السبا" : "مبيعات مستحضرات التجميل"}
+                </span>
                 <p className="text-2xl font-black text-emerald-400 font-mono">
                   {totalRetailSales.toLocaleString()} ج.م
                 </p>
-                <span className="text-[10px] text-slate-400 font-bold">منتجات العناية بالكرسي والكاشير</span>
+                <span className="text-[10px] text-slate-400 font-bold">
+                  {isWomenTheme ? "زيوت، طمي، وصابون بلدي ومخمرية" : "منتجات العناية بالكرسي والكاشير"}
+                </span>
               </div>
 
-              <div className="p-4 rounded-3xl bg-[#14141e] border border-amber-500/30 space-y-2">
+              <div className={`p-4 rounded-3xl border space-y-2 transition-colors ${
+                isWomenTheme ? "bg-[#180815] border-rose-500/35 shadow-rose-950/30" : "bg-[#14141e] border-amber-500/30"
+              }`}>
                 <span className="text-xs text-slate-400 font-bold block">الحجوزات القادمة</span>
-                <p className="text-2xl font-black text-amber-300 font-mono">{bookings.length}</p>
+                <p className={`text-2xl font-black font-mono ${isWomenTheme ? "text-pink-300" : "text-amber-300"}`}>
+                  {filteredBookings.length}
+                </p>
                 <span className="text-[10px] text-rose-400 font-bold">
-                  {bookings.filter((b) => b.status === "PENDING").length} بانتظار التأكيد
+                  {filteredBookings.filter((b) => b.status === "PENDING").length} بانتظار التأكيد
                 </span>
               </div>
             </div>
 
             {/* Quick Links & Shortcuts */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              <div className="p-5 rounded-3xl bg-[#12121a] border border-white/5 space-y-3">
-                <h4 className="font-black text-sm text-amber-400">📍 فروع مجموعة الباشا المفعّلة:</h4>
+              <div className={`p-5 rounded-3xl border space-y-3 ${
+                isWomenTheme ? "bg-[#180815] border-rose-500/30" : "bg-[#12121a] border-white/5"
+              }`}>
+                <h4 className={`font-black text-sm ${isWomenTheme ? "text-rose-400" : "text-amber-400"}`}>
+                  {activeBranchId !== "ALL"
+                    ? `📍 بيانات الفرع الحالي (${branches.find((b) => b.id === activeBranchId)?.name || "الفرع"}):`
+                    : "📍 فروع مجموعة الباشا المفعّلة:"}
+                </h4>
                 <div className="space-y-2 text-xs">
-                  {branches.map((b) => (
-                    <div key={b.id} className="p-2.5 rounded-xl bg-white/5 border border-white/5 space-y-1">
-                      <strong className="text-white block">{b.name}</strong>
-                      <p className="text-slate-400 text-[11px]">{b.address}</p>
-                      <p className="font-mono text-amber-300 text-[11px]">هاتف: {b.phone}</p>
-                    </div>
-                  ))}
+                  {branches
+                    .filter((b) => activeBranchId === "ALL" || b.id === activeBranchId)
+                    .map((b) => (
+                      <div key={b.id} className="p-2.5 rounded-xl bg-white/5 border border-white/5 space-y-1">
+                        <strong className="text-white block">{b.name}</strong>
+                        <p className="text-slate-400 text-[11px]">{b.address}</p>
+                        <p className={`font-mono text-[11px] ${isWomenTheme ? "text-rose-300" : "text-amber-300"}`}>
+                          هاتف: {b.phone}
+                        </p>
+                      </div>
+                    ))}
                 </div>
               </div>
 
-              <div className="p-5 rounded-3xl bg-[#12121a] border border-white/5 space-y-3">
-                <h4 className="font-black text-sm text-amber-400">👑 العروض الملكية النشطة:</h4>
+              <div className={`p-5 rounded-3xl border space-y-3 ${
+                isWomenTheme ? "bg-[#180815] border-rose-500/30" : "bg-[#12121a] border-white/5"
+              }`}>
+                <h4 className={`font-black text-sm ${isWomenTheme ? "text-rose-400" : "text-amber-400"}`}>
+                  👑 العروض الملكية النشطة:
+                </h4>
                 <p className="text-xs text-slate-300 font-bold">
-                  يوجد حالياً <strong className="text-amber-300 font-mono">{offers.length}</strong> عروض وباكدجات
-                  مفعّلة على صفحة الحجز، بما فيها باكدجات العرسان والاسترخاء بخصومات تصل إلى 46%.
+                  يوجد حالياً <strong className={`font-mono ${isWomenTheme ? "text-rose-300" : "text-amber-300"}`}>{filteredOffers.length}</strong> عروض وباكدجات
+                  مفعّلة على صفحة الحجز، بما فيها باكدجات {isWomenTheme ? "السبا والعرائس والحمام المغربي" : "العرسان والاسترخاء"} بخصومات تصل إلى 46%.
                 </p>
                 <button
                   onClick={() => setActiveTab("offers")}
-                  className="py-2 px-4 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-black text-xs transition"
+                  className={`py-2 px-4 rounded-xl font-black text-xs transition ${
+                    isWomenTheme
+                      ? "bg-gradient-to-r from-rose-500 to-pink-500 hover:from-rose-400 hover:to-pink-400 text-white shadow-rose-500/25"
+                      : "bg-amber-500 hover:bg-amber-400 text-slate-950"
+                  }`}
                 >
                   إدارة العروض والباكدجات 👑
                 </button>
               </div>
 
-              <div className="p-5 rounded-3xl bg-[#12121a] border border-white/5 space-y-3">
-                <h4 className="font-black text-sm text-amber-400">💬 الشات المباشر مع العملاء:</h4>
+              <div className={`p-5 rounded-3xl border space-y-3 ${
+                isWomenTheme ? "bg-[#180815] border-rose-500/30" : "bg-[#12121a] border-white/5"
+              }`}>
+                <h4 className={`font-black text-sm ${isWomenTheme ? "text-rose-400" : "text-amber-400"}`}>
+                  💬 الشات المباشر مع العملاء:
+                </h4>
                 <p className="text-xs text-slate-300">
-                  تواصل فوري ولحظي مع الزبائن للرد على استفسارات المواعيد، عروض العرسان وتعديل الحجوزات.
+                  تواصل فوري ولحظي مع الزبائن للرد على استفسارات المواعيد، عروض {isWomenTheme ? "العرائس والحمام" : "العرسان"} وتعديل الحجوزات.
                 </p>
                 <button
                   onClick={() => setActiveTab("chat")}
                   className="py-2 px-4 rounded-xl bg-white/10 hover:bg-white/15 text-white font-bold text-xs transition flex items-center gap-1.5"
                 >
-                  <MessageSquare className="w-3.5 h-3.5 text-amber-400" />
+                  <MessageSquare className={`w-3.5 h-3.5 ${isWomenTheme ? "text-rose-400" : "text-amber-400"}`} />
                   <span>فتح نافذة المحادثات 💬</span>
                 </button>
               </div>
@@ -1783,13 +2059,23 @@ export default function AdminPage() {
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-white/10 pb-4">
               <div>
                 <h3 className="text-base font-black text-white flex items-center gap-2">
-                  <span>الخزنة والحسابات اليومية وإقفال الورديات 💰</span>
-                  <span className="text-xs px-2.5 py-0.5 rounded-full bg-amber-500/20 text-amber-300 font-mono font-bold border border-amber-500/30">
+                  <span>
+                    {isWomenTheme
+                      ? "خزنة ودرج حمام الباشا وإقفال الوردية 💰"
+                      : isMenTheme
+                      ? "خزنة ودرج صالون دقن الباشا وإقفال الوردية 💰"
+                      : "الخزنة المركزية وحسابات الفروع وإقفال الورديات 💰"}
+                  </span>
+                  <span className={`text-xs px-2.5 py-0.5 rounded-full font-mono font-bold border ${
+                    isWomenTheme ? "bg-rose-500/20 text-rose-300 border-rose-500/30" : "bg-amber-500/20 text-amber-300 border-amber-500/30"
+                  }`}>
                     مباشر لحظي
                   </span>
                 </h3>
                 <p className="text-xs text-slate-400 mt-1">
-                  متابعة شاملة لإيرادات الحلاقة، مبيعات المنتجات، النقدية بالدرج، وسجل تسليم الورديات للمالك 👑
+                  {isWomenTheme
+                    ? "متابعة إيرادات الحمام المغربي والسبا، مبيعات الزيوت والماسكات، نقدية الدرج، وتسليم الوردية 🌸"
+                    : "متابعة شاملة لإيرادات الحلاقة، مبيعات المنتجات، النقدية بالدرج، وسجل تسليم الورديات للمالك 👑"}
                 </p>
               </div>
 
@@ -2315,24 +2601,34 @@ export default function AdminPage() {
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
               <div>
                 <h3 className="text-base font-black text-white">
-                  العروض والباكدجات الملكية الحصرية (VIP Offers)
+                  {isWomenTheme
+                    ? "عروض وباكدجات حمام الباشا والسبا النسائي (White Friday & VIP) 🧖‍♀️✨"
+                    : isMenTheme
+                    ? "عروض وباكدجات صالون دقن الباشا الملكية (White Friday & VIP) 💈👑"
+                    : "العروض والباكدجات الملكية الحصرية (كافة الفروع)"}
                 </h3>
                 <p className="text-xs text-slate-400">
-                  إدارة العروض المعلنة على صفحة الحجز، التحكم في الفروع المتاحة، والخصومات والأسعار 👑
+                  {isWomenTheme
+                    ? "إدارة عروض الحمام المغربي، السويت، الهيدروفيشل، وباقات العرائس المعلنة على صفحة الحجز 🌸"
+                    : "إدارة العروض المعلنة على صفحة الحجز، باكدجات العرسان والعناية، والخصومات والأسعار 👑"}
                 </p>
               </div>
 
               <button
                 onClick={handleOpenCreateOffer}
-                className="py-2.5 px-4 rounded-2xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-black text-xs transition flex items-center gap-1.5 shadow-md shadow-amber-500/20 shrink-0"
+                className={`py-2.5 px-4 rounded-2xl font-black text-xs transition flex items-center gap-1.5 shadow-md shrink-0 ${
+                  isWomenTheme
+                    ? "bg-gradient-to-r from-rose-500 to-pink-500 hover:from-rose-400 hover:to-pink-400 text-white shadow-rose-500/25"
+                    : "bg-amber-500 hover:bg-amber-400 text-slate-950 shadow-amber-500/20"
+                }`}
               >
                 <Plus className="w-4 h-4" />
-                <span>إضافة عرض جديد 👑</span>
+                <span>{isWomenTheme ? "إضافة عرض سبا جديد 🧖‍♀️" : "إضافة عرض جديد 👑"}</span>
               </button>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-              {offers.map((offer) => {
+              {filteredOffers.map((offer) => {
                 let featuresList: string[] = [];
                 try {
                   featuresList = JSON.parse(offer.features || "[]");
@@ -2646,11 +2942,19 @@ export default function AdminPage() {
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-2 border-b border-white/10">
               <div>
                 <h3 className="text-base font-black text-white flex items-center gap-2">
-                  <Scissors className="w-5 h-5 text-amber-400" />
-                  <span>طاقم المتخصصين والحسابات والمستحقات المالية</span>
+                  <Scissors className={`w-5 h-5 ${isWomenTheme ? "text-rose-400" : "text-amber-400"}`} />
+                  <span>
+                    {isWomenTheme
+                      ? "طاقم خبيرات السبا والحمام المغربي والمستحقات المالية 🧖‍♀️"
+                      : isMenTheme
+                      ? "طاقم كباتن وحلاقي صالون دقن الباشا (كراسي الحلاقة) 💈"
+                      : "طاقم المتخصصين والحسابات والمستحقات المالية (كافة الفروع)"}
+                  </span>
                 </h3>
                 <p className="text-xs text-slate-400">
-                  إدارة كراسي العمل، حضور الورديات، كشف الحساب التفصيلي، صرف الأجور، ونسب العمولات والسلف ✂️
+                  {isWomenTheme
+                    ? "إدارة محطات السبا والحمام المغربي، حضور الورديات، كشف الحساب التفصيلي، وصرف العمولات 🌸"
+                    : "إدارة كراسي العمل، حضور الورديات، كشف الحساب التفصيلي، صرف الأجور، ونسب العمولات والسلف ✂️"}
                 </p>
               </div>
 
@@ -2662,24 +2966,28 @@ export default function AdminPage() {
                     onClick={() => setSpecialistSubView("CARDS")}
                     className={`py-1.5 px-3.5 rounded-xl text-xs font-black transition flex items-center gap-1.5 ${
                       specialistSubView === "CARDS"
-                        ? "bg-amber-500 text-slate-950 shadow-md shadow-amber-500/20"
+                        ? isWomenTheme
+                          ? "bg-gradient-to-r from-rose-500 to-pink-500 text-white shadow-md shadow-rose-500/20"
+                          : "bg-amber-500 text-slate-950 shadow-md shadow-amber-500/20"
                         : "text-slate-400 hover:text-white"
                     }`}
                   >
                     <Scissors className="w-3.5 h-3.5" />
-                    <span>بطاقات الحلاقين والورديات ✂️</span>
+                    <span>{isWomenTheme ? "بطاقات الخبيرات 🧖‍♀️" : "بطاقات الحلاقين والورديات ✂️"}</span>
                   </button>
                   <button
                     type="button"
                     onClick={() => {
                       setSpecialistSubView("STATEMENT");
-                      if (!selectedLedgerSpecialistIdRef.current && specialists.length > 0) {
-                        handleSelectLedgerSpecialist(specialists[0].id);
+                      if (!selectedLedgerSpecialistIdRef.current && filteredSpecialists.length > 0) {
+                        handleSelectLedgerSpecialist(filteredSpecialists[0].id);
                       }
                     }}
                     className={`py-1.5 px-3.5 rounded-xl text-xs font-black transition flex items-center gap-1.5 ${
                       specialistSubView === "STATEMENT"
-                        ? "bg-amber-500 text-slate-950 shadow-md shadow-amber-500/20"
+                        ? isWomenTheme
+                          ? "bg-gradient-to-r from-rose-500 to-pink-500 text-white shadow-md shadow-rose-500/20"
+                          : "bg-amber-500 text-slate-950 shadow-md shadow-amber-500/20"
                         : "text-slate-400 hover:text-white"
                     }`}
                   >
@@ -2695,22 +3003,26 @@ export default function AdminPage() {
                       setSpecForm({
                         name: "",
                         phone: "",
-                        title: "خبير حلاقة وتصفيف",
-                        branchId: branches[0]?.id || "",
+                        title: isWomenTheme ? "خبيرة حمام مغربي وسبا" : "خبير حلاقة وتصفيف",
+                        branchId: activeBranchId !== "ALL" ? activeBranchId : branches[0]?.id || "",
                         chairNumber: 1,
                         payType: "SALARY_PLUS_COMMISSION",
                         baseSalary: 6000,
                         commissionRate: 20,
-                        photo: "",
+                        photo: isWomenTheme ? "/ladies/spec-amina.jpg" : "",
                         username: "",
                         password: "",
                       });
                       setShowSpecialistModal(true);
                     }}
-                    className="py-2 px-3.5 rounded-2xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-black text-xs transition flex items-center gap-1.5 shadow-md shadow-amber-500/20 shrink-0"
+                    className={`py-2 px-3.5 rounded-2xl font-black text-xs transition flex items-center gap-1.5 shadow-md shrink-0 ${
+                      isWomenTheme
+                        ? "bg-gradient-to-r from-rose-500 to-pink-500 hover:from-rose-400 hover:to-pink-400 text-white shadow-rose-500/25"
+                        : "bg-amber-500 hover:bg-amber-400 text-slate-950 shadow-amber-500/20"
+                    }`}
                   >
                     <Plus className="w-4 h-4" />
-                    <span>إضافة متخصص جديد ✂️</span>
+                    <span>{isWomenTheme ? "إضافة خبيرة سبا جديدة 🧖‍♀️" : "إضافة متخصص جديد ✂️"}</span>
                   </button>
                 )}
               </div>
@@ -2721,7 +3033,7 @@ export default function AdminPage() {
                ───────────────────────────────────────────────────────────── */}
             {specialistSubView === "CARDS" && (
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                {specialists.map((spec) => {
+                {filteredSpecialists.map((spec) => {
                   const summary = specialistsSummary.find((s) => s.specialist?.id === spec.id);
                   const balanceDue = summary ? summary.balanceDue : 0;
 
@@ -2968,7 +3280,7 @@ export default function AdminPage() {
                         }}
                         className="py-2 px-3 rounded-xl bg-black/60 border border-amber-500/40 text-amber-300 text-xs font-bold focus:outline-none"
                       >
-                        {specialists.map((sp) => (
+                        {filteredSpecialists.map((sp) => (
                           <option key={sp.id} value={sp.id}>
                             {sp.name} • كرسي #{sp.chairNumber} ({sp.branch?.name})
                           </option>
@@ -3444,8 +3756,20 @@ export default function AdminPage() {
           <div className="space-y-6 animate-fade-in">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
               <div>
-                <h3 className="text-base font-black text-white">قائمة الخدمات التجميلية وأسعار الحلاقة (ربط مباشر باللاندينج)</h3>
-                <p className="text-xs text-slate-400">إضافة وتعديل وحذف الخدمات والأسعار وتفعيلها ديناميكياً على الصفحة الرئيسية 💈</p>
+                <h3 className="text-base font-black text-white">
+                  {isWomenTheme
+                    ? "قائمة خدمات حمام الباشا والسبا النسائي (صالون وسبا العرائس 🧖‍♀️)"
+                    : isMenTheme
+                    ? "قائمة خدمات صالون دقن الباشا (حلاقة وأناقة الرجل 💈)"
+                    : "دليل الخدمات التجميلية لكافة الفروع (دقن الباشا & حمام الباشا)"}
+                </h3>
+                <p className="text-xs text-slate-400">
+                  {isWomenTheme
+                    ? "إضافة وتعديل باقات الحمام المغربي، السويت، الهيدروفيشل، المساج، وتصفيف السيدات والعرائس ✨"
+                    : isMenTheme
+                    ? "إضافة وتعديل خدمات قص الشعر، حلاقة الذقن، تنظيف البشرة، وبروتين الرجال 💈"
+                    : "إدارة وتسعير خدمات الصالون الرجالي والسبا النسائي وتفعيلها على اللاندينج"}
+                </p>
               </div>
 
               <button
@@ -3453,40 +3777,55 @@ export default function AdminPage() {
                   setEditingService(null);
                   setServiceForm({
                     nameAr: "",
-                    category: "HAIR",
-                    price: 150,
-                    durationMinutes: 30,
+                    category: isWomenTheme ? "LADIES_SPA" : "HAIR",
+                    price: isWomenTheme ? 250 : 150,
+                    durationMinutes: isWomenTheme ? 45 : 30,
                     description: "",
-                    image: "",
+                    image: isWomenTheme ? "/ladies/ladies-moroccan-bath.jpg" : "",
                     sortOrder: 0,
                     isActive: true,
                   });
                   setShowServiceModal(true);
                 }}
-                className="py-2.5 px-4 rounded-2xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-black text-xs transition flex items-center gap-1.5 shadow-md shadow-amber-500/20 shrink-0"
+                className={`py-2.5 px-4 rounded-2xl font-black text-xs transition flex items-center gap-1.5 shrink-0 ${
+                  isWomenTheme
+                    ? "bg-gradient-to-r from-rose-500 to-pink-500 hover:from-rose-400 hover:to-pink-400 text-white shadow-md shadow-rose-500/30"
+                    : "bg-amber-500 hover:bg-amber-400 text-slate-950 shadow-md shadow-amber-500/20"
+                }`}
               >
                 <Plus className="w-4 h-4" />
-                <span>إضافة خدمة جديدة 💈</span>
+                <span>{isWomenTheme ? "إضافة خدمة سبا جديدة 🧖‍♀️" : "إضافة خدمة حلاقة جديدة 💈"}</span>
               </button>
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-              {services.map((srv) => (
-                <div key={srv.id} className="rounded-3xl bg-[#14141e] border-2 border-amber-500/30 overflow-hidden flex flex-col justify-between shadow-xl hover:border-amber-400 transition group">
+              {filteredServices.map((srv) => (
+                <div
+                  key={srv.id}
+                  className={`rounded-3xl border-2 overflow-hidden flex flex-col justify-between shadow-xl transition group ${
+                    isWomenTheme
+                      ? "bg-[#180815] border-rose-500/35 hover:border-rose-400 shadow-rose-950/40"
+                      : "bg-[#14141e] border-amber-500/30 hover:border-amber-400"
+                  }`}
+                >
                   {/* Service Image Banner Preview */}
                   <div className="relative h-32 w-full bg-black overflow-hidden">
                     {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img
                       src={
                         srv.image ||
-                        "https://images.unsplash.com/photo-1621605815971-fbc98d665033?w=600&auto=format&fit=crop&q=80"
+                        (isWomenTheme
+                          ? "/ladies/ladies-moroccan-bath.jpg"
+                          : "/services/service-fade.webp")
                       }
                       alt={srv.nameAr}
                       className="w-full h-full object-cover group-hover:scale-105 transition duration-500"
                     />
-                    <div className="absolute inset-0 bg-gradient-to-t from-[#14141e] via-black/30 to-transparent" />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent" />
                     
-                    <span className="absolute top-2.5 right-2.5 py-0.5 px-2.5 rounded-xl bg-black/75 backdrop-blur-md text-[10px] font-bold text-amber-300 border border-white/10">
+                    <span className={`absolute top-2.5 right-2.5 py-0.5 px-2.5 rounded-xl bg-black/75 backdrop-blur-md text-[10px] font-bold border border-white/10 ${
+                      isWomenTheme ? "text-rose-300" : "text-amber-300"
+                    }`}>
                       {srv.category}
                     </span>
                     <span className="absolute top-2.5 left-2.5 py-0.5 px-2.5 rounded-xl text-[10px] font-bold bg-black/75 backdrop-blur-md text-slate-300 border border-white/10 font-mono">
@@ -3502,8 +3841,12 @@ export default function AdminPage() {
                   <div className="p-4 space-y-2 flex-1 flex flex-col justify-between">
                     <div>
                       <div className="flex items-center justify-between">
-                        <h4 className="font-black text-sm text-white group-hover:text-amber-300 transition">{srv.nameAr}</h4>
-                        <span className="font-mono text-sm font-black text-amber-400">{srv.price} ج.م</span>
+                        <h4 className={`font-black text-sm text-white transition ${
+                          isWomenTheme ? "group-hover:text-rose-300" : "group-hover:text-amber-300"
+                        }`}>{srv.nameAr}</h4>
+                        <span className={`font-mono text-sm font-black ${
+                          isWomenTheme ? "text-rose-400" : "text-amber-400"
+                        }`}>{srv.price} ج.م</span>
                       </div>
                       {srv.description && (
                         <p className="text-xs text-slate-400 line-clamp-2 mt-1 leading-relaxed">{srv.description}</p>
@@ -3525,7 +3868,11 @@ export default function AdminPage() {
                       <div className="flex items-center gap-1.5">
                         <button
                           onClick={() => handleOpenEditService(srv)}
-                          className="py-1.5 px-3 rounded-xl bg-amber-500/10 hover:bg-amber-500/20 text-amber-300 border border-amber-500/30 text-xs font-bold flex items-center gap-1 transition"
+                          className={`py-1.5 px-3 rounded-xl border text-xs font-bold flex items-center gap-1 transition ${
+                            isWomenTheme
+                              ? "bg-rose-500/10 hover:bg-rose-500/20 text-rose-300 border-rose-500/30"
+                              : "bg-amber-500/10 hover:bg-amber-500/20 text-amber-300 border-amber-500/30"
+                          }`}
                         >
                           <Edit className="w-3.5 h-3.5" />
                           <span>تعديل</span>
@@ -3555,20 +3902,34 @@ export default function AdminPage() {
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-white/10 pb-4">
               <div>
                 <h3 className="text-base font-black text-white flex items-center gap-2">
-                  <span>بضاعة التجميل والمخزن والخامات التشغيلية 🛍️</span>
-                  <span className="text-xs px-2.5 py-0.5 rounded-full bg-amber-500/20 text-amber-300 font-mono font-bold border border-amber-500/30">
-                    {products.length} صنف مسجل
+                  <span>
+                    {isWomenTheme
+                      ? "مخزن مستحضرات وخامات حمام الباشا (السبا والعناية بالسيدات 🛍️)"
+                      : isMenTheme
+                      ? "مخزن بضاعة وخامات صالون دقن الباشا (العناية بالرجل 💈)"
+                      : "بضاعة التجميل والمخزن والخامات التشغيلية (كافة الفروع) 🛍️"}
+                  </span>
+                  <span className={`text-xs px-2.5 py-0.5 rounded-full font-mono font-bold border ${
+                    isWomenTheme ? "bg-rose-500/20 text-rose-300 border-rose-500/30" : "bg-amber-500/20 text-amber-300 border-amber-500/30"
+                  }`}>
+                    {filteredProducts.length} صنف مسجل
                   </span>
                 </h3>
                 <p className="text-xs text-slate-400 mt-1">
-                  إدارة شاملة لمنتجات البيع المباشر للزبائن وخامات ومستلزمات الحلاقة والتشغيل بالصالون 💈
+                  {isWomenTheme
+                    ? "متابعة مخزون الطمي المغربي، الصابون البلدي، المخمرية، الزيوت والماسكات ومستحضرات السبا ✨"
+                    : "إدارة شاملة لمنتجات البيع المباشر للزبائن وخامات ومستلزمات الحلاقة والتشغيل بالصالون 💈"}
                 </p>
               </div>
 
               <button
                 type="button"
                 onClick={handleOpenAddProduct}
-                className="py-2.5 px-4 rounded-2xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-black text-xs transition flex items-center justify-center gap-2 shadow-lg shadow-amber-500/20 shrink-0 cursor-pointer"
+                className={`py-2.5 px-4 rounded-2xl font-black text-xs transition flex items-center justify-center gap-2 shadow-lg shrink-0 cursor-pointer ${
+                  isWomenTheme
+                    ? "bg-gradient-to-r from-rose-500 to-pink-500 hover:from-rose-400 hover:to-pink-400 text-white shadow-rose-500/25"
+                    : "bg-amber-500 hover:bg-amber-400 text-slate-950 shadow-amber-500/20"
+                }`}
               >
                 <Plus className="w-4 h-4" />
                 <span>إضافة منتج أو خامة جديدة ➕</span>
@@ -3584,24 +3945,28 @@ export default function AdminPage() {
                   onClick={() => setProductTypeFilter("ALL")}
                   className={`py-1.5 px-3 rounded-xl text-xs font-bold transition cursor-pointer ${
                     productTypeFilter === "ALL"
-                      ? "bg-amber-500 text-slate-950 font-black shadow-md"
+                      ? isWomenTheme
+                        ? "bg-gradient-to-r from-rose-500 to-pink-500 text-white font-black shadow-md"
+                        : "bg-amber-500 text-slate-950 font-black shadow-md"
                       : "text-slate-400 hover:text-white"
                   }`}
                 >
-                  الكل ({products.length})
+                  الكل ({filteredProducts.length})
                 </button>
                 <button
                   type="button"
                   onClick={() => setProductTypeFilter("RETAIL")}
                   className={`py-1.5 px-3 rounded-xl text-xs font-bold transition flex items-center gap-1 cursor-pointer ${
                     productTypeFilter === "RETAIL"
-                      ? "bg-amber-500 text-slate-950 font-black shadow-md"
+                      ? isWomenTheme
+                        ? "bg-gradient-to-r from-rose-500 to-pink-500 text-white font-black shadow-md"
+                        : "bg-amber-500 text-slate-950 font-black shadow-md"
                       : "text-slate-400 hover:text-white"
                   }`}
                 >
                   <span>🛍️ منتجات بيع للعملاء</span>
                   <span className="font-mono text-[10px]">
-                    ({products.filter((p) => !["SUPPLIES", "COLOR_SUPPLIES", "PROTEIN_SUPPLIES", "ACCESSORIES"].includes(p.category)).length})
+                    ({filteredProducts.filter((p) => !["SUPPLIES", "COLOR_SUPPLIES", "PROTEIN_SUPPLIES", "ACCESSORIES"].includes(p.category)).length})
                   </span>
                 </button>
                 <button
@@ -3609,13 +3974,15 @@ export default function AdminPage() {
                   onClick={() => setProductTypeFilter("SUPPLIES")}
                   className={`py-1.5 px-3 rounded-xl text-xs font-bold transition flex items-center gap-1 cursor-pointer ${
                     productTypeFilter === "SUPPLIES"
-                      ? "bg-amber-500 text-slate-950 font-black shadow-md"
+                      ? isWomenTheme
+                        ? "bg-gradient-to-r from-rose-500 to-pink-500 text-white font-black shadow-md"
+                        : "bg-amber-500 text-slate-950 font-black shadow-md"
                       : "text-slate-400 hover:text-white"
                   }`}
                 >
-                  <span>💈 خامات ومستلزمات تشغيل</span>
+                  <span>{isWomenTheme ? "🧖‍♀️ خامات ومستلزمات السبا" : "💈 خامات ومستلزمات تشغيل"}</span>
                   <span className="font-mono text-[10px]">
-                    ({products.filter((p) => ["SUPPLIES", "COLOR_SUPPLIES", "PROTEIN_SUPPLIES", "ACCESSORIES"].includes(p.category)).length})
+                    ({filteredProducts.filter((p) => ["SUPPLIES", "COLOR_SUPPLIES", "PROTEIN_SUPPLIES", "ACCESSORIES"].includes(p.category)).length})
                   </span>
                 </button>
               </div>
@@ -3628,14 +3995,16 @@ export default function AdminPage() {
                   value={productSearch}
                   onChange={(e) => setProductSearch(e.target.value)}
                   placeholder="بحث باسم المنتج، الباركود، الفئة..."
-                  className="w-full py-2 pr-9 pl-3 rounded-xl bg-black/60 border border-white/10 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-amber-400 font-sans"
+                  className={`w-full py-2 pr-9 pl-3 rounded-xl bg-black/60 border border-white/10 text-xs text-white placeholder-slate-500 focus:outline-none font-sans ${
+                    isWomenTheme ? "focus:border-rose-400" : "focus:border-amber-400"
+                  }`}
                 />
               </div>
             </div>
 
             {/* Products & Supplies Cards Grid */}
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-              {products
+              {filteredProducts
                 .filter((p) => {
                   const isSupply = ["SUPPLIES", "COLOR_SUPPLIES", "PROTEIN_SUPPLIES", "ACCESSORIES"].includes(p.category);
                   if (productTypeFilter === "RETAIL" && isSupply) return false;
@@ -3863,19 +4232,27 @@ export default function AdminPage() {
           <div className="space-y-6 animate-fade-in">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
               <div>
-                <h3 className="text-base font-black text-white">طاقم العمل والمستخدمين والصلاحيات</h3>
+                <h3 className="text-base font-black text-white">
+                  {isBranchManager
+                    ? `طاقم عمل فرعك المعتمد (${branches.find((b) => b.id === activeBranchId)?.name || "فرعك"}) 👥`
+                    : "طاقم العمل والمستخدمين والصلاحيات 🔒"}
+                </h3>
                 <p className="text-xs text-slate-400">
-                  إدارة وتعديل حسابات المديرين، الكاشير، المتخصصين والعمال مع إمكانية التعديل الشامل والتعطيل الفوري 🔒
+                  {isBranchManager
+                    ? "كشف حسابات وأكواد طاقم العمل المصرح لهم بالدخول والعمل في هذا الفرع"
+                    : "إدارة وتعديل حسابات المديرين، الكاشير، المتخصصين والعمال مع إمكانية التعديل الشامل والتعطيل الفوري 🔒"}
                 </p>
               </div>
 
-              <button
-                onClick={handleOpenCreateUser}
-                className="py-2.5 px-4 rounded-2xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-black text-xs transition flex items-center gap-1.5 shadow-md shadow-amber-500/20 shrink-0"
-              >
-                <Plus className="w-4 h-4" />
-                <span>إضافة مستخدم جديد 👤</span>
-              </button>
+              {isOwnerOrGM && (
+                <button
+                  onClick={handleOpenCreateUser}
+                  className="py-2.5 px-4 rounded-2xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-black text-xs transition flex items-center gap-1.5 shadow-md shadow-amber-500/20 shrink-0"
+                >
+                  <Plus className="w-4 h-4" />
+                  <span>إضافة مستخدم جديد 👤</span>
+                </button>
+              )}
             </div>
 
             <div className="overflow-x-auto rounded-3xl border border-white/10 bg-[#14141e]">
@@ -3892,7 +4269,7 @@ export default function AdminPage() {
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-white/5">
-                  {users.map((u) => (
+                  {filteredUsers.map((u) => (
                     <tr key={u.id} className="hover:bg-white/5 transition">
                       <td className="p-3.5 font-black text-white">{u.name}</td>
                       <td className="p-3.5 font-mono text-amber-300 font-bold">{u.username}</td>
@@ -5075,14 +5452,42 @@ export default function AdminPage() {
                   <select
                     value={serviceForm.category}
                     onChange={(e) => setServiceForm({ ...serviceForm, category: e.target.value })}
-                    className="w-full py-2 px-3 rounded-xl bg-black/60 border border-white/10 text-white"
+                    className={`w-full py-2 px-3 rounded-xl bg-black/60 border border-white/10 text-white focus:outline-none ${
+                      isWomenTheme ? "focus:border-rose-400" : "focus:border-amber-400"
+                    }`}
                   >
-                    <option value="HAIR">شعر ✂️</option>
-                    <option value="BEARD">دقن 🧔</option>
-                    <option value="VIP_PACKAGES">بكجات VIP 👑</option>
-                    <option value="SKIN_CARE">عناية بالبشرة 🔥</option>
-                    <option value="COLOR_KERATIN">فرد وصبغة وبروتين 💆</option>
-                    <option value="KIDS">أطفال 👶</option>
+                    {isWomenTheme ? (
+                      <>
+                        <option value="LADIES_SPA">حمام مغربي وسبا ومساج 🧖‍♀️</option>
+                        <option value="LADIES_SKIN">تنظيف بشرة وهيدروفيشل الذهب 24K ✨</option>
+                        <option value="LADIES_HAIR">تصفيف شعر وبروتين وصبغات حريمي 💇‍♀️</option>
+                      </>
+                    ) : isMenTheme ? (
+                      <>
+                        <option value="HAIR">شعر وقص كلاسيك ✂️</option>
+                        <option value="BEARD">دقن وتحديد بالبخار 🧔</option>
+                        <option value="VIP_PACKAGES">باكدجات ملكية وعرسان 👑</option>
+                        <option value="SKIN_CARE">عناية بالبشرة وماسكات 🔥</option>
+                        <option value="COLOR_KERATIN">فرد وصبغة وبروتين رجالي 💆</option>
+                        <option value="KIDS">قصات أطفال وأولاد 👶</option>
+                      </>
+                    ) : (
+                      <>
+                        <optgroup label="🧖‍♀️ خدمات حمام الباشا (حريمي وسبا)">
+                          <option value="LADIES_SPA">حمام مغربي وسبا ومساج 🧖‍♀️</option>
+                          <option value="LADIES_SKIN">تنظيف بشرة وهيدروفيشل الذهب 24K ✨</option>
+                          <option value="LADIES_HAIR">تصفيف شعر وبروتين وصبغات حريمي 💇‍♀️</option>
+                        </optgroup>
+                        <optgroup label="💈 خدمات صالون دقن الباشا (رجالي)">
+                          <option value="HAIR">شعر وقص كلاسيك ✂️</option>
+                          <option value="BEARD">دقن وتحديد بالبخار 🧔</option>
+                          <option value="VIP_PACKAGES">باكدجات ملكية وعرسان 👑</option>
+                          <option value="SKIN_CARE">عناية بالبشرة وماسكات 🔥</option>
+                          <option value="COLOR_KERATIN">فرد وصبغة وبروتين رجالي 💆</option>
+                          <option value="KIDS">قصات أطفال وأولاد 👶</option>
+                        </optgroup>
+                      </>
+                    )}
                   </select>
                 </div>
 
@@ -5296,18 +5701,25 @@ export default function AdminPage() {
               {/* Branch */}
               <div>
                 <label className="text-slate-300 font-bold block mb-1">الفرع المتاح به الصنف:</label>
-                <select
-                  value={productForm.branchId}
-                  onChange={(e) => setProductForm({ ...productForm, branchId: e.target.value })}
-                  className="w-full py-2 px-3 rounded-xl bg-black/60 border border-white/10 text-white"
-                >
-                  <option value="">متاح بجميع الفروع (عام للمنظومة)</option>
-                  {branches.map((b) => (
-                    <option key={b.id} value={b.id}>
-                      {b.name}
-                    </option>
-                  ))}
-                </select>
+                {isOwnerOrGM ? (
+                  <select
+                    value={productForm.branchId}
+                    onChange={(e) => setProductForm({ ...productForm, branchId: e.target.value })}
+                    className="w-full py-2 px-3 rounded-xl bg-black/60 border border-white/10 text-white"
+                  >
+                    <option value="">متاح بجميع الفروع (عام للمنظومة)</option>
+                    {branches.map((b) => (
+                      <option key={b.id} value={b.id}>
+                        {b.name}
+                      </option>
+                    ))}
+                  </select>
+                ) : (
+                  <div className="py-2 px-3 rounded-xl bg-black/60 border border-white/10 text-white font-bold text-xs flex items-center gap-2">
+                    <Lock className={`w-3.5 h-3.5 ${isWomenTheme ? "text-rose-400" : "text-amber-400"}`} />
+                    <span>{branches.find((b) => b.id === activeBranchId)?.name || "فرعك المعتمد"}</span>
+                  </div>
+                )}
               </div>
 
               {/* Price & Cost */}

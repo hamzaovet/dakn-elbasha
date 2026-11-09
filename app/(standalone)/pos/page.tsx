@@ -125,14 +125,53 @@ export default function CashierPosPage() {
     }
   }, [router]);
 
+  // Privileges & Branch Locking
+  const isOwnerOrGM = currentUser?.role === "owner" || currentUser?.role === "general_manager";
+  const isBranchStaff = !isOwnerOrGM;
+
+  // Identify Branches
+  const hammamBranch = branches.find(
+    (b) => b.code === "BR-HAMMAM-WOMEN" || b.name?.includes("حمام") || b.name?.includes("حريمي")
+  );
+  const daknBranch = branches.find(
+    (b) => b.code === "BR-DAKN-MEN" || b.name?.includes("دقن") || b.name?.includes("رجالي")
+  );
+
+  // Effective Active Branch ID: Strictly locked to user branch if staff/manager
+  const activeBranchId = isOwnerOrGM ? selectedBranchId : (currentUser?.branchId || branches[0]?.id || "ALL");
+
+  // Women's Spa Theme (Hammam El Basha) vs Men's Theme (Dakn El Basha)
+  const isWomenTheme = Boolean(
+    currentUser?.branch?.name?.includes("حمام") ||
+    currentUser?.branch?.name?.includes("حريمي") ||
+    currentUser?.branch?.code === "BR-HAMMAM-WOMEN" ||
+    currentUser?.username?.includes("hammam") ||
+    (hammamBranch && activeBranchId === hammamBranch.id) ||
+    (branches.find((b) => b.id === activeBranchId)?.name?.includes("حمام")) ||
+    (branches.find((b) => b.id === activeBranchId)?.name?.includes("حريمي")) ||
+    (branches.find((b) => b.id === activeBranchId)?.code === "BR-HAMMAM-WOMEN")
+  );
+  const isMenTheme = Boolean(
+    !isWomenTheme && (
+      currentUser?.branch?.name?.includes("دقن") ||
+      currentUser?.branch?.name?.includes("رجالي") ||
+      currentUser?.branch?.code === "BR-DAKN-MEN" ||
+      currentUser?.username?.includes("dakn") ||
+      (daknBranch && activeBranchId === daknBranch.id) ||
+      (branches.find((b) => b.id === activeBranchId)?.name?.includes("دقن")) ||
+      (branches.find((b) => b.id === activeBranchId)?.name?.includes("رجالي")) ||
+      (branches.find((b) => b.id === activeBranchId)?.code === "BR-DAKN-MEN")
+    )
+  );
+
   // Load Data
   const fetchPosData = async () => {
     try {
       const [resB, resT, resP, resSpec, resSet] = await Promise.all([
         fetch("/api/branches", { cache: "no-store" }),
-        fetch(`/api/tickets?branchId=${selectedBranchId || "ALL"}&activeOnly=true`, { cache: "no-store" }),
-        fetch(`/api/products?branchId=${selectedBranchId || "ALL"}`, { cache: "no-store" }),
-        fetch(`/api/specialists?branchId=${selectedBranchId || "ALL"}`, { cache: "no-store" }),
+        fetch(`/api/tickets?branchId=${activeBranchId || "ALL"}&activeOnly=true`, { cache: "no-store" }),
+        fetch(`/api/products?branchId=${activeBranchId || "ALL"}`, { cache: "no-store" }),
+        fetch(`/api/specialists?branchId=${activeBranchId || "ALL"}`, { cache: "no-store" }),
         fetch("/api/settings", { cache: "no-store" }),
       ]);
 
@@ -320,14 +359,18 @@ export default function CashierPosPage() {
   // Open Shift Close Modal in POS
   const handleOpenCloseShiftModal = async () => {
     try {
-      const res = await fetch(`/api/shifts?branchId=${selectedBranchId || "ALL"}`);
+      const res = await fetch(`/api/shifts?branchId=${activeBranchId || "ALL"}`);
       const data = await res.json();
       if (data.success) {
         setShiftStats(data.liveStats);
         setOpenShift(data.openShift);
         setShiftForm({
           actualCash: data.liveStats?.expectedCash || 0,
-          handedTo: "أ/ حمزة عباس (المايسترو - المالك) 👑",
+          handedTo: isWomenTheme
+            ? "أ / ندى المحمدي (مديرة فرع حمام الباشا VIP) 🧖‍♀️"
+            : isMenTheme
+            ? "أ / أحمد عبد الرحيم (مدير فرع صالون دقن الباشا) 💈"
+            : "أ/ حمزة عباس (المايسترو - المالك) 👑",
           notes: "",
         });
         setShowCloseShiftModal(true);
@@ -404,7 +447,7 @@ export default function CashierPosPage() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           specialistId: advanceSpecId,
-          branchId: chosen?.branchId || selectedBranchId || branches[0]?.id,
+          branchId: chosen?.branchId || (activeBranchId !== "ALL" ? activeBranchId : branches[0]?.id),
           type: "ADVANCE_WITHDRAWAL",
           amount: Number(advanceAmount),
           notes: advanceNotes,
@@ -430,7 +473,7 @@ export default function CashierPosPage() {
   // Open Treasury / Safe Modal
   const handleOpenTreasuryModal = async () => {
     try {
-      const res = await fetch(`/api/treasury?period=TODAY&branchId=${selectedBranchId || "ALL"}`);
+      const res = await fetch(`/api/treasury?period=TODAY&branchId=${activeBranchId || "ALL"}`);
       const data = await res.json();
       if (data.success && data.summary) {
         setTreasurySummary(data.summary);
@@ -447,7 +490,7 @@ export default function CashierPosPage() {
       const interval = setInterval(fetchPosData, 4000);
       return () => clearInterval(interval);
     }
-  }, [currentUser, selectedBranchId]);
+  }, [currentUser, selectedBranchId, activeBranchId]);
 
   // Select Ticket for Checkout
   const handleSelectTicket = (t: any) => {
@@ -535,7 +578,7 @@ export default function CashierPosPage() {
     parsedServices =
       typeof selectedTicket?.services === "string"
         ? JSON.parse(selectedTicket.services)
-        : selectedTicket?.services || [];
+      : selectedTicket?.services || [];
   } catch {
     parsedServices = [];
   }
@@ -550,27 +593,84 @@ export default function CashierPosPage() {
     parsedRetail = [];
   }
 
+  // Filtered Specialists by Branch / Gender
+  const filteredSpecialists = isWomenTheme
+    ? specialists.filter((s) => s.branchId === activeBranchId || (hammamBranch && s.branchId === hammamBranch.id))
+    : isMenTheme
+    ? specialists.filter((s) => s.branchId === activeBranchId || (daknBranch && s.branchId === daknBranch.id))
+    : specialists;
+
+  // Filtered Products by Branch
+  const filteredProducts = isWomenTheme
+    ? retailProducts.filter((p) => p.branchId === activeBranchId || (hammamBranch && p.branchId === hammamBranch.id))
+    : isMenTheme
+    ? retailProducts.filter((p) => p.branchId === activeBranchId || (daknBranch && p.branchId === daknBranch.id) || !p.branchId)
+    : retailProducts;
+
   // Calculate live checkout total
   const rawTotal = (selectedTicket?.servicesTotal || 0) + (selectedTicket?.retailTotal || 0);
   const calculatedFinal = Math.max(0, rawTotal - Number(discountAmount || 0) + Number(tipAmount || 0));
 
   return (
-    <div className="min-h-screen bg-[#0a0a0e] text-slate-100 flex flex-col font-sans" dir="rtl">
+    <div
+      className={`min-h-screen flex flex-col font-sans transition-colors duration-300 ${
+        isWomenTheme
+          ? "bg-[#0c040a] selection:bg-rose-500 selection:text-white"
+          : "bg-[#0a0a0e] selection:bg-amber-500 selection:text-black"
+      }`}
+      dir="rtl"
+    >
+      {/* Dynamic Ambient Background Glows */}
+      {isWomenTheme ? (
+        <>
+          <div className="absolute w-[500px] h-[500px] bg-rose-600/10 blur-[140px] rounded-full pointer-events-none -top-20 -right-20 animate-pulse" />
+          <div className="absolute w-[400px] h-[400px] bg-pink-500/10 blur-[130px] rounded-full pointer-events-none bottom-20 -left-20" />
+        </>
+      ) : (
+        <>
+          <div className="absolute w-96 h-96 bg-amber-500/10 blur-[130px] rounded-full pointer-events-none -top-10 -right-10" />
+        </>
+      )}
+
       {/* ─────────────────────────────────────────────────────────────
           1. POS HEADER
          ───────────────────────────────────────────────────────────── */}
-      <header className="sticky top-0 z-40 bg-[#0f0f15]/95 backdrop-blur-md border-b border-amber-500/25 px-4 sm:px-8 py-3.5 flex items-center justify-between shadow-lg no-print">
+      <header
+        className={`sticky top-0 z-40 backdrop-blur-md px-4 sm:px-8 py-3.5 flex items-center justify-between shadow-lg no-print transition-colors duration-300 ${
+          isWomenTheme
+            ? "bg-[#150612]/95 border-b border-rose-500/35 shadow-rose-950/20"
+            : "bg-[#0f0f15]/95 border-b border-amber-500/25 shadow-black/40"
+        }`}
+      >
         <div className="flex items-center gap-3">
-          <div className="w-11 h-11 rounded-2xl overflow-hidden border-2 border-amber-400 bg-black shrink-0">
+          <div
+            className={`w-11 h-11 rounded-2xl overflow-hidden border-2 bg-black shrink-0 shadow-md ${
+              isWomenTheme ? "border-rose-400 shadow-rose-500/20" : "border-amber-400 shadow-amber-500/20"
+            }`}
+          >
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="/dakn-logo.jpg" alt="Logo" className="w-full h-full object-cover" />
+            <img
+              src={isWomenTheme ? "/hammam-logo.jpg" : "/dakn-logo.jpg"}
+              alt="Logo"
+              className="w-full h-full object-cover"
+            />
           </div>
           <div>
             <div className="flex items-center gap-2">
-              <h2 className="text-base sm:text-lg font-black text-amber-400">
-                كاشير مجموعة الباشا VIP (نقطة البيع POS)
+              <h2 className={`text-base sm:text-lg font-black ${isWomenTheme ? "text-rose-300" : "text-amber-400"}`}>
+                {isWomenTheme
+                  ? "كاشير حمام الباشا VIP (نقطة البيع والسبا) 🧖‍♀️✨"
+                  : isMenTheme
+                  ? "كاشير صالون دقن الباشا VIP (نقطة البيع POS) 💈👑"
+                  : "كاشير مجموعة الباشا VIP (نقطة البيع POS)"}
               </h2>
-              <span className="py-0.5 px-2 rounded-lg bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 text-[10px] font-black">
+              <span
+                className={`py-0.5 px-2 rounded-lg text-[10px] font-black border ${
+                  isWomenTheme
+                    ? "bg-rose-500/20 text-rose-300 border-rose-500/40"
+                    : "bg-emerald-500/20 text-emerald-300 border-emerald-500/30"
+                }`}
+              >
                 نشط 🟢
               </span>
             </div>
@@ -582,13 +682,17 @@ export default function CashierPosPage() {
 
         {/* Branch Switcher & Actions */}
         <div className="flex items-center gap-2 sm:gap-3">
-          {currentUser?.role === "owner" || currentUser?.role === "general_manager" ? (
+          {isOwnerOrGM ? (
             <select
-              value={selectedBranchId}
+              value={activeBranchId}
               onChange={(e) => setSelectedBranchId(e.target.value)}
-              className="py-1.5 px-3 rounded-xl bg-[#181822] border border-amber-500/30 text-xs font-bold text-amber-300 focus:outline-none"
+              className={`py-1.5 px-3 rounded-xl bg-[#181822] border text-xs font-bold focus:outline-none transition ${
+                isWomenTheme
+                  ? "border-rose-500/40 text-rose-300 focus:border-rose-400"
+                  : "border-amber-500/30 text-amber-300 focus:border-amber-400"
+              }`}
             >
-              <option value="ALL">جميع الفروع</option>
+              <option value="ALL">جميع الفروع (المركزية)</option>
               {branches.map((b) => (
                 <option key={b.id} value={b.id}>
                   {b.name}
@@ -596,22 +700,35 @@ export default function CashierPosPage() {
               ))}
             </select>
           ) : (
-            <span className="text-xs font-bold text-amber-300/80 bg-white/5 py-1 px-3 rounded-xl border border-white/5">
-              {currentUser?.branchName || "الفرع الحالي"}
-            </span>
+            <div
+              className={`py-1.5 px-3 rounded-xl border text-xs font-black flex items-center gap-1.5 shadow-md ${
+                isWomenTheme
+                  ? "bg-rose-500/15 border-rose-500/40 text-rose-300 shadow-rose-950/30"
+                  : "bg-amber-500/15 border-amber-500/40 text-amber-300 shadow-amber-950/30"
+              }`}
+              title="فرعك المصرح به حصرياً - غير متاح تبديل الفرع"
+            >
+              <Lock className={`w-3.5 h-3.5 ${isWomenTheme ? "text-rose-400" : "text-amber-400"}`} />
+              <span>{branches.find((b) => b.id === activeBranchId)?.name || currentUser?.branch?.name || "فرعك المعتمد"}</span>
+              <span className="text-[10px] opacity-75">(فرعك المصرح به 🔒)</span>
+            </div>
           )}
 
           <button
             onClick={() => {
               setAdmitCustomerName("");
               setAdmitCustomerPhone("");
-              setAdmitSpecialistId(specialists[0]?.id || "");
+              setAdmitSpecialistId(filteredSpecialists[0]?.id || "");
               setShowAdmitModal(true);
             }}
-            className="py-1.5 px-3 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 text-xs font-black transition flex items-center gap-1.5 shadow-md shadow-amber-500/20 shrink-0 cursor-pointer"
+            className={`py-1.5 px-3 rounded-xl text-xs font-black transition flex items-center gap-1.5 shadow-md shrink-0 cursor-pointer ${
+              isWomenTheme
+                ? "bg-gradient-to-r from-rose-500 to-pink-500 hover:from-rose-400 hover:to-pink-400 text-white shadow-rose-500/20"
+                : "bg-amber-500 hover:bg-amber-400 text-slate-950 shadow-amber-500/20"
+            }`}
           >
             <Plus className="w-3.5 h-3.5" />
-            <span>إجلاس زبون 💺</span>
+            <span>{isWomenTheme ? "إجلاس عميلة 🧖‍♀️" : "إجلاس زبون 💺"}</span>
           </button>
 
           <button
@@ -918,7 +1035,7 @@ export default function CashierPosPage() {
             </h3>
 
             <div className="grid grid-cols-2 sm:grid-cols-3 gap-2.5">
-              {retailProducts.map((prod) => (
+              {filteredProducts.map((prod) => (
                 <button
                   key={prod.id}
                   onClick={() => handleAddRetailProduct(prod)}
@@ -1104,7 +1221,7 @@ export default function CashierPosPage() {
             </div>
 
             <div className="space-y-3 max-h-[65vh] overflow-y-auto pr-1">
-              {specialists.map((spec) => (
+              {filteredSpecialists.map((spec) => (
                 <div key={spec.id} className="p-4 rounded-2xl bg-[#181824] border border-white/10 flex flex-col sm:flex-row sm:items-center justify-between gap-3 hover:border-amber-500/40 transition">
                   <div className="flex items-center gap-3">
                     <div className="w-12 h-12 rounded-xl overflow-hidden border border-amber-400 bg-black shrink-0">
@@ -1265,8 +1382,10 @@ export default function CashierPosPage() {
                   }}
                   className="w-full py-2.5 px-3 rounded-xl bg-black/60 border border-white/10 text-white font-bold"
                 >
-                  <option value="FIRST_AVAILABLE">⏳ في انتظار أول كابتن يفضى (بدون تفضيل شخصي)</option>
-                  {specialists.map((spec) => (
+                  <option value="FIRST_AVAILABLE">
+                    {isWomenTheme ? "⏳ في انتظار أول خبيرة سبا تفضى (بدون تفضيل)" : "⏳ في انتظار أول كابتن يفضى (بدون تفضيل)"}
+                  </option>
+                  {filteredSpecialists.map((spec) => (
                     <option key={spec.id} value={spec.id}>
                       {spec.name} • كرسي #{spec.chairNumber} ({spec.status === "AVAILABLE" ? "متاح فوراً 🟢" : "مشغول على الكرسي 🔴"})
                     </option>
@@ -1383,8 +1502,10 @@ export default function CashierPosPage() {
             </div>
 
             <div className="overflow-y-auto pr-1 space-y-2 flex-1">
-              <span className="text-xs text-slate-300 font-bold block mb-1">الكباتن المتاحين في الصالون الآن:</span>
-              {specialists.map((sp) => {
+              <span className="text-xs text-slate-300 font-bold block mb-1">
+                {isWomenTheme ? "خبيرات السبا المتاحات الآن:" : "الكباتن المتاحين في الصالون الآن:"}
+              </span>
+              {filteredSpecialists.map((sp) => {
                 const isAvailable = sp.status === "AVAILABLE";
                 return (
                   <button
@@ -1422,8 +1543,16 @@ export default function CashierPosPage() {
       {lastPrintedTicket && (
         <div id="thermal-receipt" className="hidden print:block text-black font-sans" dir="rtl">
           <div className="text-center space-y-1 border-b-2 border-black pb-2 mb-2">
-            <h2 className="text-lg font-black tracking-wider">مجموعة صالونات وسبا الباشا VIP</h2>
-            <p className="text-[11px] font-mono font-bold">DAKN EL BASHA & HAMMAM EL BASHA</p>
+            <h2 className="text-lg font-black tracking-wider">
+              {lastPrintedTicket.branch?.name?.includes("حمام") || isWomenTheme
+                ? "حمام الباشا VIP (صالون وسبا حريمي)"
+                : "صالون دقن الباشا VIP (رجالي)"}
+            </h2>
+            <p className="text-[11px] font-mono font-bold">
+              {lastPrintedTicket.branch?.name?.includes("حمام") || isWomenTheme
+                ? "HAMMAM EL BASHA - LUXURY WOMEN SPA"
+                : "DAKN EL BASHA - VIP MEN SALON"}
+            </p>
             <p className="text-[10px]">
               {lastPrintedTicket.branch?.name || "فرع حدائق القبة"}
             </p>
@@ -1740,8 +1869,8 @@ export default function CashierPosPage() {
                   onChange={(e) => setAdvanceSpecId(e.target.value)}
                   className="w-full py-2 px-3 rounded-xl bg-black/60 border border-white/10 text-white font-bold"
                 >
-                  <option value="">-- اختر المتخصص --</option>
-                  {specialists.map((sp) => (
+                  <option value="">{isWomenTheme ? "-- اختاري خبيرة السبا --" : "-- اختر المتخصص --"}</option>
+                  {filteredSpecialists.map((sp) => (
                     <option key={sp.id} value={sp.id}>
                       {sp.name} • كرسي #{sp.chairNumber} ({sp.branch?.name})
                     </option>
