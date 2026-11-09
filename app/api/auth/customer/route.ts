@@ -8,8 +8,8 @@ function generateOtp(): string {
 
 async function sendOtpEmail(toEmail: string, code: string, customerName: string) {
   try {
-    const user = process.env.EMAIL_USER || process.env.SMTP_USER || "hamzaovet@gmail.com";
-    const pass = process.env.EMAIL_PASS || process.env.SMTP_PASS || "goyl rmse icox vrdh";
+    const user = process.env.EMAIL_USER || process.env.GMAIL_USER || process.env.SMTP_USER || "hamzaovet@gmail.com";
+    const pass = process.env.EMAIL_PASS || process.env.GMAIL_PASS || process.env.SMTP_PASS || "goyl rmse icox vrdh";
 
     const transporter = nodemailer.createTransport({
       service: "gmail",
@@ -17,20 +17,20 @@ async function sendOtpEmail(toEmail: string, code: string, customerName: string)
     });
 
     await transporter.sendMail({
-      from: `"صالون حلاقة صدام VIP 👑" <${user}>`,
+      from: `"مجموعة صالونات وسبا الباشا VIP 👑" <${user}>`,
       to: toEmail,
-      subject: `كود تفعيل حسابك في صالون صدام الملكي: ${code}`,
+      subject: `كود تفعيل حسابك في مجموعة الباشا VIP: ${code}`,
       html: `
         <div dir="rtl" style="font-family: Arial, sans-serif; background-color: #0a0a0e; color: #f4f4f5; padding: 35px 20px; border-radius: 20px; border: 2px solid #d4af37; max-width: 520px; margin: 0 auto; text-align: center;">
           <div style="background: #14141c; padding: 15px; border-radius: 16px; display: inline-block; border: 1px solid rgba(212, 175, 55, 0.3); margin-bottom: 15px;">
-            <h1 style="color: #d4af37; margin: 0; font-size: 22px; font-weight: 900; letter-spacing: 1px;">👑 صالون حلاقة صدام VIP 👑</h1>
-            <p style="color: #a1a1aa; font-size: 11px; margin: 4px 0 0 0; text-transform: uppercase; font-family: monospace;">SADDAM BARBER SHOP • ROYAL EXPERIENCE</p>
+            <h1 style="color: #d4af37; margin: 0; font-size: 20px; font-weight: 900; letter-spacing: 1px;">👑 مجموعة صالونات وسبا الباشا VIP 👑</h1>
+            <p style="color: #a1a1aa; font-size: 11px; margin: 4px 0 0 0; text-transform: uppercase; font-family: monospace;">DAKN EL BASHA & HAMMAM EL BASHA</p>
           </div>
           
           <div style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 16px; padding: 25px; margin-top: 15px; text-align: right;">
             <p style="font-size: 15px; color: #ffffff; margin-top: 0;">أهلاً بك يا <strong>${customerName}</strong>،</p>
             <p style="font-size: 13px; color: #d4d4d8; line-height: 1.8;">
-              يسعدنا اختيارك لصالون حلاقة صدام. لتأكيد حسابك وتأكيد حجز موعدك في الفرع، استخدم رمز التفعيل السري التالي:
+              يسعدنا تشريفك لمجموعة الباشا VIP. لتأكيد حسابك وتأكيد حجز موعدك الملكي في الفرع، استخدم رمز التفعيل السري التالي:
             </p>
             
             <div style="background: #000000; padding: 20px; border-radius: 14px; text-align: center; font-size: 32px; font-weight: 900; letter-spacing: 8px; color: #d4af37; border: 2px dashed #d4af37; margin: 25px 0;">
@@ -42,9 +42,9 @@ async function sendOtpEmail(toEmail: string, code: string, customerName: string)
             </p>
           </div>
 
-          <div style="margin-top: 25px; font-size: 11px; color: #a1a1aa; border-top: 1px solid rgba(212, 175, 55, 0.2); pt: 15px;">
-            <p style="margin: 5px 0;">📍 فرع حدائق القبة: 17 ش مصر والسودان • 📍 فرع مدينة نصر: مكرم عبيد</p>
-            <p style="margin: 5px 0; color: #d4af37;">الخط الساخن: 19888 • واتساب: 01018671000</p>
+          <div style="margin-top: 25px; font-size: 11px; color: #a1a1aa; border-top: 1px solid rgba(212, 175, 55, 0.2); padding-top: 15px;">
+            <p style="margin: 5px 0;">🎩 فرع صالون دقن الباشا (رجالي): 73 ترعة الجبل، أمام مستشفى سان بول • 01061301780</p>
+            <p style="margin: 5px 0;">👑 فرع حمام الباشا (حريمي وسبا): 84 ترعة الجبل، كينج بارك مول • 01556782015</p>
           </div>
         </div>
       `,
