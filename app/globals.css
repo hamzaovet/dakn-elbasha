@@ -1,0 +1,64 @@
+@import "tailwindcss";
+
+:root {
+  --background: #0a0a0e;
+  --foreground: #f4f4f6;
+  --gold-primary: #d4af37;
+  --gold-secondary: #f3e5ab;
+  --gold-hover: #c59b27;
+}
+
+body {
+  background-color: var(--background);
+  color: var(--foreground);
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Cairo", sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Custom Gold Gradients & Luxury Accents */
+.gold-gradient-text {
+  background: linear-gradient(135deg, #fff2b2 0%, #d4af37 50%, #aa771c 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.gold-gradient-bg {
+  background: linear-gradient(135deg, #d4af37 0%, #aa771c 100%);
+}
+
+.gold-border {
+  border-color: rgba(212, 175, 55, 0.3);
+}
+
+.gold-glow {
+  box-shadow: 0 0 25px rgba(212, 175, 55, 0.15);
+}
+
+.gold-card {
+  background: linear-gradient(180deg, rgba(24, 24, 30, 0.95) 0%, rgba(14, 14, 18, 0.98) 100%);
+  border: 1px solid rgba(212, 175, 55, 0.2);
+}
+
+/* Thermal Receipt Print Styles */
+@media print {
+  body * {
+    visibility: hidden;
+  }
+  #thermal-receipt,
+  #thermal-receipt * {
+    visibility: visible;
+  }
+  #thermal-receipt {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 80mm !important;
+    margin: 0 !important;
+    padding: 10px !important;
+    color: #000 !important;
+    background: #fff !important;
+  }
+  .no-print {
+    display: none !important;
+  }
+}

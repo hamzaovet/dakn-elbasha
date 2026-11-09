@@ -1,0 +1,342 @@
+datasource db {
+  provider = "postgresql"
+}
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../lib/generated/client"
+}
+
+// ----------------------------------------------------
+// 1. MULTI-BRANCH SYSTEM (منظومة الفروع المتعددة)
+// ----------------------------------------------------
+model Branch {
+  id              String             @id @default(cuid())
+  name            String             // e.g. "فرع حدائق القبة", "فرع مدينة نصر"
+  code            String             @unique // "BR-KOBBA", "BR-NASR-CITY"
+  address         String
+  phone           String
+  whatsapp        String?
+  googleMapsUrl   String?
+  isActive        Boolean            @default(true)
+  createdAt       DateTime           @default(now())
+  users           User[]
+  specialists     Specialist[]
+  bookings        Booking[]
+  tickets         Ticket[]
+  products        Product[]
+  ledgers         SpecialistLedger[]
+  offers          Offer[]
+  chatMessages    ChatMessage[]
+  shifts          CashShift[]
+  expenses        TreasuryExpense[]
+}
+
+// ----------------------------------------------------
+// 2. STAFF & USERS RBAC (المستخدمين والصلاحيات)
+// ----------------------------------------------------
+model User {
+  id              String             @id @default(cuid())
+  name            String
+  username        String             @unique // maestro, hadayek-mgr, nasr-mgr, cashier1, etc.
+  passwordHash    String             // 123456789
+  pin             String             @default("157230") // PIN Code
+  phone           String?
+  role            String             @default("owner") // owner, general_manager, manager, cashier, specialist, worker
+  branchId        String?
+  branch          Branch?            @relation(fields: [branchId], references: [id], onDelete: SetNull)
+  permissions     String?            // JSON array
+  isActive        Boolean            @default(true)
+  createdAt       DateTime           @default(now())
+  specialistProfile Specialist?
+}
+
+// ----------------------------------------------------
+// 3. SPECIALISTS / BARBERS (المتخصصين وكراسي الحلاقة)
+// ----------------------------------------------------
+model Specialist {
+  id              String             @id @default(cuid())
+  userId          String?            @unique
+  user            User?              @relation(fields: [userId], references: [id], onDelete: SetNull)
+  branchId        String
+  branch          Branch             @relation(fields: [branchId], references: [id], onDelete: Cascade)
+  name            String
+  phone           String?
+  photo           String?            // ImgBB URL
+  title           String             @default("خبير حلاقة وتصفيف")
+  chairNumber     Int                @default(1)
+  status          String             @default("AVAILABLE") // AVAILABLE, WITH_CLIENT, BREAK, OFF_DUTY, DAY_OFF, ABSENT
+  statusReason    String?            // سبب التعطيل أو الملاحظة (مثلاً: إجازة أسبوعية، استراحة غداء، انتهى اليوم ومشي)
+  rating          Float              @default(4.9)
+  
+  // Compensation & Payroll scheme
+  payType         String             @default("SALARY_PLUS_COMMISSION") // DAILY, WEEKLY, MONTHLY, COMMISSION_ONLY, SALARY_PLUS_COMMISSION
+  baseSalary      Float              @default(0)
+  commissionRate  Float              @default(20) // %
+  
+  isActive        Boolean            @default(true)
+  createdAt       DateTime           @default(now())
+
+  bookings        Booking[]
+  tickets         Ticket[]
+  ledgers         SpecialistLedger[]
+}
+
+// ----------------------------------------------------
+// 4. DYNAMIC SERVICES CATALOG (الخدمات التجميلية والحلاقة)
+// ----------------------------------------------------
+model Service {
+  id              String             @id @default(cuid())
+  nameAr          String
+  nameEn          String?
+  category        String             @default("HAIR") // HAIR, BEARD, SKIN_CARE, VIP_PACKAGES, KIDS, COLOR_KERATIN
+  price           Float
+  durationMinutes Int                @default(30)
+  description     String?
+  image           String?            // ImgBB URL
+  sortOrder       Int                @default(0)
+  isActive        Boolean            @default(true)
+  createdAt       DateTime           @default(now())
+}
+
+// ----------------------------------------------------
+// 5. CUSTOMER DATABASE & CRM (قاعدة بيانات العملاء والتسويق)
+// ----------------------------------------------------
+model Customer {
+  id                String           @id @default(cuid())
+  name              String
+  phone             String           @unique
+  email             String?
+  passwordHash      String?
+  isVerified        Boolean          @default(false)
+  verificationCode  String?
+  avatar            String?
+  notes             String?
+  vipLevel          String           @default("REGULAR") // REGULAR, VIP, GOLD_MEMBER
+  totalVisits       Int              @default(0)
+  totalSpent        Float            @default(0)
+  createdAt         DateTime         @default(now())
+  lastVisitAt       DateTime?
+
+  bookings          Booking[]
+  tickets           Ticket[]
+}
+
+// ----------------------------------------------------
+// 6. APPOINTMENTS & BOOKINGS (الحجوزات المسبقة)
+// ----------------------------------------------------
+model Booking {
+  id              String             @id @default(cuid())
+  bookingNumber   String             @unique // SAD-XXXX
+  customerId      String
+  customer        Customer           @relation(fields: [customerId], references: [id], onDelete: Cascade)
+  branchId        String
+  branch          Branch             @relation(fields: [branchId], references: [id], onDelete: Cascade)
+  specialistId    String?
+  specialist      Specialist?        @relation(fields: [specialistId], references: [id], onDelete: SetNull)
+  serviceIds      String             // JSON array: [{ id, nameAr, price, durationMinutes }]
+  bookingDate     String             // YYYY-MM-DD
+  timeSlot        String             // e.g. "05:00 PM"
+  status          String             @default("CONFIRMED") // PENDING, CONFIRMED, IN_CHAIR, COMPLETED, CANCELLED, NO_SHOW
+  notes           String?
+  totalAmount     Float              @default(0)
+  createdAt       DateTime           @default(now())
+  updatedAt       DateTime           @updatedAt
+}
+
+// ----------------------------------------------------
+// 7. IN-CHAIR LIVE TICKETS (شاشة المتخصص والكرسي اللحظية)
+// ----------------------------------------------------
+model Ticket {
+  id              String             @id @default(cuid())
+  ticketNumber    String             @unique // CHAIR-XXXX
+  branchId        String
+  branch          Branch             @relation(fields: [branchId], references: [id], onDelete: Cascade)
+  specialistId    String
+  specialist      Specialist         @relation(fields: [specialistId], references: [id], onDelete: Cascade)
+  customerId      String?
+  customer        Customer?          @relation(fields: [customerId], references: [id], onDelete: SetNull)
+  customerName    String
+  customerPhone   String?
+  chairNumber     Int                @default(1)
+  status          String             @default("IN_CHAIR") // IN_CHAIR, READY_FOR_CASHIER, COMPLETED, CANCELLED
+  
+  services        String             @default("[]") // JSON: [{ id, nameAr, price, addedAt }]
+  retailItems     String             @default("[]") // JSON: [{ id, nameAr, price, qty, total }]
+  
+  servicesTotal   Float              @default(0)
+  retailTotal     Float              @default(0)
+  discount        Float              @default(0)
+  tipAmount       Float              @default(0)
+  finalAmount     Float              @default(0)
+  paymentMethod   String             @default("CASH") // CASH, CARD, INSTAPAY, VODAFONE_CASH
+  
+  startTime       DateTime           @default(now())
+  endTime         DateTime?
+  durationMinutes Int?
+  
+  cashierName     String?
+  notes           String?
+  createdAt       DateTime           @default(now())
+  updatedAt       DateTime           @updatedAt
+}
+
+// ----------------------------------------------------
+// 8. RETAIL BEAUTY PRODUCTS (بضاعة التجميل ومستحضرات العناية)
+// ----------------------------------------------------
+model Product {
+  id              String             @id @default(cuid())
+  branchId        String?
+  branch          Branch?            @relation(fields: [branchId], references: [id], onDelete: SetNull)
+  nameAr          String
+  category        String             @default("STYLING") // STYLING, BEARD_CARE, SKIN_CARE, PERFUMES, ACCESSORIES
+  price           Float
+  costPrice       Float              @default(0)
+  stockQty        Int                @default(50)
+  minStockAlert   Int                @default(10)
+  image           String?            // ImgBB URL
+  barcode         String?
+  isActive        Boolean            @default(true)
+  createdAt       DateTime           @default(now())
+}
+
+// ----------------------------------------------------
+// 9. SPECIALIST LEDGER & PAYROLL (سجل حسابات وسلف وأجور المتخصصين)
+// ----------------------------------------------------
+model SpecialistLedger {
+  id              String             @id @default(cuid())
+  specialistId    String
+  specialist      Specialist         @relation(fields: [specialistId], references: [id], onDelete: Cascade)
+  branchId        String
+  branch          Branch             @relation(fields: [branchId], references: [id], onDelete: Cascade)
+  type            String             // SALARY_PAYOUT, COMMISSION_EARNED, ADVANCE_WITHDRAWAL, BONUS, DEDUCTION
+  amount          Float
+  notes           String?
+  date            DateTime           @default(now())
+  recordedBy      String             @default("المالك (Maestro)")
+  createdAt       DateTime           @default(now())
+}
+
+// ----------------------------------------------------
+// 10. SYSTEM GLOBAL SETTINGS & KILL SWITCH (إعدادات النظام والتحكم)
+// ----------------------------------------------------
+model SystemSettings {
+  id              String             @id @default("default-settings")
+  salonNameAr     String             @default("صالون حلاقة صدام")
+  salonNameEn     String             @default("SADDAM BARBER SHOP")
+  logoUrl         String             @default("/logo.jpg")
+  systemLocked    Boolean            @default(false)
+  lockMessage     String             @default("النظام مغلق مؤقتاً لأعمال الصيانة والتحديث.")
+  hadayekPhone    String             @default("01121537537")
+  nasrCityPhone   String             @default("01121537537")
+  hotline         String             @default("01121537537")
+  whatsappNumber  String             @default("01121537537")
+  facebookUrl     String             @default("https://www.facebook.com/SaddamSalon/")
+  instagramUrl    String?
+  defaultOpenHour String             @default("12:00 PM")
+  defaultCloseHour String            @default("02:00 AM")
+  
+  // Weekly Day Off & Booking Policies
+  weeklyDayOff    String             @default("MONDAY") // MONDAY, TUESDAY, WEDNESDAY, THURSDAY, FRIDAY, SATURDAY, SUNDAY, NONE
+  isDayOffEnabled Boolean            @default(true)
+  dayOffMessage   String             @default("عفواً، صالون صدام في عطلة أسبوعية يوم الإثنين - نتشرف بحجز موعدكم طوال باقي أيام الأسبوع ✂️")
+  bookingSlotInterval Int            @default(30) // in minutes
+  reminderMinutesBefore Int          @default(15) // reminder 15 min before
+  receiptFooterNotes String          @default("شكراً لزيارتكم صالون صدام الملكي 👑 تجربة استثنائية لأناقة الرجل")
+  
+  updatedAt       DateTime           @updatedAt
+}
+
+// ----------------------------------------------------
+// 11. DYNAMIC ROYAL OFFERS & PACKAGES (العروض الملكية والباكدجات)
+// ----------------------------------------------------
+model Offer {
+  id              String             @id @default(cuid())
+  titleAr         String             // e.g. "عرض العريس الملكي"
+  badge           String?            // "خصم 46%", "VIP", "لفترة محدودة"
+  price           Float              // 3500
+  oldPrice        Float?             // 4000
+  discountPercent Int?               // 15
+  image           String             // "/offers/offer-groom-3500.jpg"
+  description     String?
+  features        String             @default("[]") // JSON array of bullet points
+  branchId        String?            // null = متاح في كل الفروع
+  branch          Branch?            @relation(fields: [branchId], references: [id], onDelete: SetNull)
+  isActive        Boolean            @default(true)
+  sortOrder       Int                @default(0)
+  createdAt       DateTime           @default(now())
+  updatedAt       DateTime           @updatedAt
+}
+
+// ----------------------------------------------------
+// 12. IN-APP LIVE CHAT (شات مباشر وتواصل فوري بين الصالون والعملاء)
+// ----------------------------------------------------
+model ChatMessage {
+  id              String             @id @default(cuid())
+  branchId        String?
+  branch          Branch?            @relation(fields: [branchId], references: [id], onDelete: SetNull)
+  customerId      String?
+  customerName    String             @default("عميل VIP")
+  customerPhone   String?
+  bookingId       String?
+  sender          String             // "CUSTOMER" or "SALON"
+  senderName      String             @default("خدمة عملاء صدام")
+  message         String
+  isRead          Boolean            @default(false)
+  createdAt       DateTime           @default(now())
+}
+
+// ----------------------------------------------------
+// 13. CASH SHIFTS & DRAWER CLOSING (إقفال الورديات وتسليم النقدية)
+// ----------------------------------------------------
+model CashShift {
+  id                String             @id @default(cuid())
+  shiftNumber       String             @unique // SHIFT-XXXX
+  branchId          String
+  branch            Branch             @relation(fields: [branchId], references: [id], onDelete: Cascade)
+  cashierName       String
+  openedAt          DateTime           @default(now())
+  closedAt          DateTime?
+  status            String             @default("OPEN") // OPEN, CLOSED
+  
+  // Financial breakdown
+  ticketsCount      Int                @default(0)
+  servicesTotal     Float              @default(0) // إجمالي الحلاقة
+  retailTotal       Float              @default(0) // إجمالي مبيعات المنتجات
+  cashCollected     Float              @default(0) // نقدية كاش مقبوضة
+  visaCollected     Float              @default(0) // فيزا وماستر
+  instapayCollected Float              @default(0) // انستاباي
+  vodafoneCollected Float              @default(0) // فودافون كاش
+  
+  advancesPayouts   Float              @default(0) // سلف ومستحقات خرجت نقداً
+  expensesTotal     Float              @default(0) // مصروفات ونثريات خرجت نقداً
+  
+  expectedCash      Float              @default(0) // النقدية الصافية المطلوبة بالدرج
+  actualCash        Float              @default(0) // النقدية الفعلية المسلمة
+  difference        Float              @default(0) // عجز أو زيادة (+/-)
+  
+  handedTo          String             @default("المالك (Maestro)") // تم تسليم الفلوس لمين
+  notes             String?
+  
+  createdAt         DateTime           @default(now())
+  updatedAt         DateTime           @updatedAt
+}
+
+// ----------------------------------------------------
+// 14. GENERAL TREASURY EXPENSES (مصروفات ونثريات الخزينة)
+// ----------------------------------------------------
+model TreasuryExpense {
+  id              String             @id @default(cuid())
+  branchId        String?
+  branch          Branch?            @relation(fields: [branchId], references: [id], onDelete: SetNull)
+  category        String             // SUPPLIES, UTILITIES, RENT, REFRESHMENTS, MAINTENANCE, OTHER
+  amount          Float
+  paymentMethod   String             @default("CASH") // CASH, CARD, INSTAPAY, VODAFONE_CASH
+  description     String
+  recipientName   String?            // اسم المستلم / المورد
+  recordedBy      String             @default("الكاشير")
+  date            DateTime           @default(now())
+  createdAt       DateTime           @default(now())
+}
+
+
