@@ -9,89 +9,99 @@ export async function GET(req: NextRequest) {
     "dakn-elbasha.vercel.app";
   const proto = req.headers.get("x-forwarded-proto") || "https";
   const cleanOrigin = `${proto}://${host}`.replace(/\/+$/, "");
-  const target = req.nextUrl.searchParams.get("target") || "app";
 
-  const isCoordinator = target === "coordinator";
-  const isAdmin = target === "admin";
-  const urlPath = isCoordinator ? "/coordinator" : isAdmin ? "/login" : "/";
-  const title = isCoordinator
-    ? "منسق صالة الباشا VIP"
-    : isAdmin
-    ? "لوحة إدارة صالونات الباشا"
-    : "صالونات وسبا الباشا VIP";
+  const psScript = `
+$ErrorActionPreference = 'SilentlyContinue'
+$ProgressPreference = 'SilentlyContinue'
+[Console]::OutputEncoding = [System.Text.Encoding]::UTF8
 
-  const targetUrl = `${cleanOrigin}${urlPath}`;
+$ws = New-Object -ComObject WScript.Shell
+$desktop = [Environment]::GetFolderPath('Desktop')
+$programs = [Environment]::GetFolderPath('Programs')
+
+# Find Browser (Chrome or Edge)
+$browser = ''
+$chrome64 = "$env:ProgramFiles\\Google\\Chrome\\Application\\chrome.exe"
+$chrome32 = "\${env:ProgramFiles(x86)}\\Google\\Chrome\\Application\\chrome.exe"
+$edge32 = "\${env:ProgramFiles(x86)}\\Microsoft\\Edge\\Application\\msedge.exe"
+$edge64 = "$env:ProgramFiles\\Microsoft\\Edge\\Application\\msedge.exe"
+
+if (Test-Path $chrome64) { $browser = $chrome64 }
+elseif (Test-Path $chrome32) { $browser = $chrome32 }
+elseif (Test-Path $edge32) { $browser = $edge32 }
+elseif (Test-Path $edge64) { $browser = $edge64 }
+
+$dirApp = Join-Path $env:LOCALAPPDATA "DaknElBashaStandalone"
+if (-not (Test-Path $dirApp)) { New-Item -ItemType Directory -Force -Path $dirApp | Out-Null }
+$icoApp = Join-Path $dirApp "basha.ico"
+try {
+  Invoke-WebRequest -Uri "${cleanOrigin}/favicon.ico" -OutFile $icoApp -UseBasicParsing -TimeoutSec 5
+} catch {}
+
+$apps = @(
+  @{ id = "portal"; title = "صالونات وسبا الباشا VIP"; url = "${cleanOrigin}/"; desc = "مجموعة صالونات وسبا الباشا VIP - دقن الباشا وحمام الباشا" },
+  @{ id = "admin"; title = "لوحة إدارة صالونات الباشا"; url = "${cleanOrigin}/login"; desc = "لوحة إدارة صالونات وطاقم الباشا" },
+  @{ id = "coord"; title = "منسق صالة الباشا VIP"; url = "${cleanOrigin}/coordinator"; desc = "شاشة منسق صالة وحجوزات الباشا" }
+)
+
+foreach ($app in $apps) {
+  foreach ($folder in @($desktop, $programs)) {
+    $tempPath = Join-Path $folder ("temp_" + $app.id + ".lnk")
+    $finalPath = Join-Path $folder ($app.title + ".lnk")
+    if (Test-Path $tempPath) { Remove-Item -Path $tempPath -Force -ErrorAction SilentlyContinue }
+    $lnk = $ws.CreateShortcut($tempPath)
+    if ($browser) {
+      $lnk.TargetPath = $browser
+      $lnk.Arguments = "--app=" + $app.url + " --start-maximized"
+    } else {
+      $lnk.TargetPath = $app.url
+    }
+    if (Test-Path $icoApp) { $lnk.IconLocation = "$icoApp,0" }
+    $lnk.Description = $app.desc
+    $lnk.Save()
+    Move-Item -Path $tempPath -Destination $finalPath -Force
+  }
+}
+
+Write-Host ""
+Write-Host "=====================================================" -ForegroundColor Yellow
+Write-Host "  [OK] تم بنجاح تثبيت تطبيق صالونات وسبا الباشا VIP على سطح المكتب وقائمة Start!" -ForegroundColor Green
+Write-Host "=====================================================" -ForegroundColor Yellow
+Write-Host ""
+
+if ($browser) {
+  Start-Process $browser -ArgumentList ("--app=${cleanOrigin}/ --start-maximized")
+}
+`;
+
+  const encoded = Buffer.from(psScript, "utf16le").toString("base64");
 
   const batContent = [
     "@echo off",
     "chcp 65001 >nul",
-    `title تثبيت ${title} على سطح المكتب`,
+    "title صالونات وسبا الباشا VIP",
     "color 0E",
     "cls",
     "echo ==============================================================================",
-    `echo          مجموعة صالونات وسبا الباشا VIP - ${title}`,
-    "echo             تثبيت تطبيق سطح المكتب المستقل (Windows Standalone App)",
+    "echo             صالونات وسبا الباشا VIP",
+    "echo       تثبيت تطبيق سطح المكتب المستقل (Windows Standalone App)",
     "echo ==============================================================================",
     "echo.",
-    "echo  [1/2] جاري تجهيز الأيقونة الرسمية وتحميلها محلياً...",
-    "",
-    `set "TARGET_URL=${targetUrl}"`,
-    `set "DATA_DIR=%LOCALAPPDATA%\\DaknElBashaData"`,
-    `set "ICO=%DATA_DIR%\\basha.ico"`,
-    "",
-    'if not exist "%DATA_DIR%" mkdir "%DATA_DIR%" 2>nul',
-    `curl -s -L -o "%ICO%" "${cleanOrigin}/favicon.ico"`,
-    "",
-    'set "BROWSER="',
-    'if exist "C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe" (',
-    '    set "BROWSER=C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe"',
-    ') else if exist "C:\\Program Files (x86)\\Google\\Chrome\\Application\\chrome.exe" (',
-    '    set "BROWSER=C:\\Program Files (x86)\\Google\\Chrome\\Application\\chrome.exe"',
-    ') else if exist "C:\\Program Files (x86)\\Microsoft\\Edge\\Application\\msedge.exe" (',
-    '    set "BROWSER=C:\\Program Files (x86)\\Microsoft\\Edge\\Application\\msedge.exe"',
-    ') else if exist "C:\\Program Files\\Microsoft\\Edge\\Application\\msedge.exe" (',
-    '    set "BROWSER=C:\\Program Files\\Microsoft\\Edge\\Application\\msedge.exe"',
-    ")",
-    "",
+    "echo  جاري إعداد وتحميل الأيقونة وإنشاء الاختصارات على سطح المكتب وقائمة Start...",
     "echo.",
-    `echo  [2/2] جاري إنشاء أيقونة ${title} على سطح المكتب وقائمة البرامج...`,
-    "",
-    "powershell -NoProfile -ExecutionPolicy Bypass -Command ^",
-    '  "$ws = New-Object -ComObject WScript.Shell; ^',
-    "   $d = [Environment]::GetFolderPath('Desktop'); ^",
-    "   $p = [Environment]::GetFolderPath('Programs'); ^",
-    "   $ico = '%ICO%'; ^",
-    "   $browser = '%BROWSER%'; ^",
-    "   $url = '%TARGET_URL%'; ^",
-    `   $lnk1 = $ws.CreateShortcut((Join-Path $d '${title}.lnk')); ^`,
-    "   if ($browser -and (Test-Path $browser)) { $lnk1.TargetPath = $browser; $lnk1.Arguments = '--app=' + $url + ' --window-size=1400,900' } else { $lnk1.TargetPath = $url }; ^",
-    "   if (Test-Path $ico) { $lnk1.IconLocation = $ico + ',0' }; ^",
-    `   $lnk1.Description = '${title}'; ^`,
-    "   $lnk1.Save(); ^",
-    `   $lnk2 = $ws.CreateShortcut((Join-Path $p '${title}.lnk')); ^`,
-    "   if ($browser -and (Test-Path $browser)) { $lnk2.TargetPath = $browser; $lnk2.Arguments = '--app=' + $url + ' --window-size=1400,900' } else { $lnk2.TargetPath = $url }; ^",
-    "   if (Test-Path $ico) { $lnk2.IconLocation = $ico + ',0' }; ^",
-    "   $lnk2.Save(); ^",
-    `   Write-Host '  [OK] تم بنجاح إنشاء أيقونة ${title} على سطح المكتب!' -ForegroundColor Green"`,
-    "",
+    `powershell.exe -NoProfile -ExecutionPolicy Bypass -EncodedCommand ${encoded}`,
     "echo.",
     "echo ==============================================================================",
-    `echo    🎉 مبروك! تم تثبيت ${title} بنجاح تام على الكمبيوتر.`,
+    "echo        مبروك! تم تثبيت التطبيق المستقل بنجاح على سطح المكتب.",
     "echo ==============================================================================",
     "echo.",
-    "if defined BROWSER (",
-    '    start "" "%BROWSER%" --app="%TARGET_URL%"',
-    ") else (",
-    '    start "" "%TARGET_URL%"',
-    ")",
     "pause",
-    "exit /b 0",
   ].join("\r\n");
 
   return new NextResponse(batContent, {
     headers: {
       "Content-Type": "application/octet-stream; charset=utf-8",
-      "Content-Disposition": `attachment; filename="Install-${title}.bat"`,
+      "Content-Disposition": 'attachment; filename="Install-DaknElBasha.bat"',
       "Cache-Control": "no-store, must-revalidate",
     },
   });

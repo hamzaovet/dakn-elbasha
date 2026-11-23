@@ -819,7 +819,7 @@ export default function HomePage() {
 
             <div className="flex items-center gap-2">
               <a
-                href="/Install-DaknElBasha.bat"
+                href="/api/desktop-installer"
                 download="Install-DaknElBasha.bat"
                 className="py-1.5 px-3 rounded-xl bg-white/10 hover:bg-white/15 border border-white/20 text-white text-xs font-black transition flex items-center gap-1.5"
               >
@@ -1020,7 +1020,7 @@ export default function HomePage() {
         <div className="hidden md:flex items-center gap-2 shrink-0">
           {/* Desktop Installer Button */}
           <a
-            href="/Install-DaknElBasha.bat"
+            href="/api/desktop-installer"
             download="Install-DaknElBasha.bat"
             className="py-1.5 px-3 rounded-xl bg-white/5 hover:bg-white/10 border border-white/15 text-slate-200 text-xs font-bold transition flex items-center gap-1.5 shrink-0"
             title="تثبيت اختصار سطح المكتب للكمبيوتر"
@@ -1221,7 +1221,7 @@ export default function HomePage() {
             </button>
 
             <a
-              href="/Install-DaknElBasha.bat"
+              href="/api/desktop-installer"
               download="Install-DaknElBasha.bat"
               onClick={() => setMobileMenuOpen(false)}
               className="w-full flex items-center justify-between p-2.5 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-white text-xs font-bold"
