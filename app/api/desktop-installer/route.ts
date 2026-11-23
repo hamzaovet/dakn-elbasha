@@ -13,64 +13,62 @@ export async function GET(req: NextRequest) {
   const psScript = `
 $ErrorActionPreference = 'SilentlyContinue'
 $ProgressPreference = 'SilentlyContinue'
-[Console]::OutputEncoding = [System.Text.Encoding]::UTF8
 
 $ws = New-Object -ComObject WScript.Shell
 $desktop = [Environment]::GetFolderPath('Desktop')
 $programs = [Environment]::GetFolderPath('Programs')
 
-# Find Browser (Chrome or Edge)
+# Find Browser
 $browser = ''
-$chrome64 = "$env:ProgramFiles\\Google\\Chrome\\Application\\chrome.exe"
-$chrome32 = "\${env:ProgramFiles(x86)}\\Google\\Chrome\\Application\\chrome.exe"
-$edge32 = "\${env:ProgramFiles(x86)}\\Microsoft\\Edge\\Application\\msedge.exe"
-$edge64 = "$env:ProgramFiles\\Microsoft\\Edge\\Application\\msedge.exe"
-
-if (Test-Path $chrome64) { $browser = $chrome64 }
-elseif (Test-Path $chrome32) { $browser = $chrome32 }
-elseif (Test-Path $edge32) { $browser = $edge32 }
-elseif (Test-Path $edge64) { $browser = $edge64 }
+$paths = @(
+    "$env:ProgramFiles\\Google\\Chrome\\Application\\chrome.exe",
+    "\${env:ProgramFiles(x86)}\\Google\\Chrome\\Application\\chrome.exe",
+    "\${env:ProgramFiles(x86)}\\Microsoft\\Edge\\Application\\msedge.exe",
+    "$env:ProgramFiles\\Microsoft\\Edge\\Application\\msedge.exe"
+)
+foreach ($pth in $paths) {
+    if (Test-Path $pth) { $browser = $pth; break }
+}
 
 $dirApp = Join-Path $env:LOCALAPPDATA "DaknElBashaStandalone"
 if (-not (Test-Path $dirApp)) { New-Item -ItemType Directory -Force -Path $dirApp | Out-Null }
 $icoApp = Join-Path $dirApp "basha.ico"
 try {
-  Invoke-WebRequest -Uri "${cleanOrigin}/favicon.ico" -OutFile $icoApp -UseBasicParsing -TimeoutSec 5
-} catch {}
+    Invoke-WebRequest -Uri "${cleanOrigin}/basha.ico" -OutFile $icoApp -UseBasicParsing -TimeoutSec 5
+} catch {
+    try { Invoke-WebRequest -Uri "${cleanOrigin}/favicon.ico" -OutFile $icoApp -UseBasicParsing -TimeoutSec 5 } catch {}
+}
 
 $apps = @(
-  @{ id = "portal"; title = "صالونات وسبا الباشا VIP"; url = "${cleanOrigin}/"; desc = "مجموعة صالونات وسبا الباشا VIP - دقن الباشا وحمام الباشا" },
-  @{ id = "admin"; title = "لوحة إدارة صالونات الباشا"; url = "${cleanOrigin}/login"; desc = "لوحة إدارة صالونات وطاقم الباشا" },
-  @{ id = "coord"; title = "منسق صالة الباشا VIP"; url = "${cleanOrigin}/coordinator"; desc = "شاشة منسق صالة وحجوزات الباشا" }
+    @{ name = "Dakn El Basha VIP.lnk"; url = "${cleanOrigin}/"; desc = "Dakn El Basha VIP Salon & Spa" },
+    @{ name = "Dakn El Basha Admin.lnk"; url = "${cleanOrigin}/login"; desc = "Dakn El Basha Admin" },
+    @{ name = "Dakn El Basha Coordinator.lnk"; url = "${cleanOrigin}/coordinator"; desc = "Dakn El Basha Coordinator" }
 )
 
 foreach ($app in $apps) {
-  foreach ($folder in @($desktop, $programs)) {
-    $tempPath = Join-Path $folder ("temp_" + $app.id + ".lnk")
-    $finalPath = Join-Path $folder ($app.title + ".lnk")
-    if (Test-Path $tempPath) { Remove-Item -Path $tempPath -Force -ErrorAction SilentlyContinue }
-    $lnk = $ws.CreateShortcut($tempPath)
-    if ($browser) {
-      $lnk.TargetPath = $browser
-      $lnk.Arguments = "--app=" + $app.url + " --start-maximized"
-    } else {
-      $lnk.TargetPath = $app.url
+    foreach ($folder in @($desktop, $programs)) {
+        $p = Join-Path $folder $app.name
+        $sc = $ws.CreateShortcut($p)
+        if ($browser) {
+            $sc.TargetPath = $browser
+            $sc.Arguments = "--app=" + $app.url + " --start-maximized"
+        } else {
+            $sc.TargetPath = $app.url
+        }
+        if (Test-Path $icoApp) { $sc.IconLocation = "$icoApp,0" }
+        $sc.Description = $app.desc
+        $sc.Save()
     }
-    if (Test-Path $icoApp) { $lnk.IconLocation = "$icoApp,0" }
-    $lnk.Description = $app.desc
-    $lnk.Save()
-    Move-Item -Path $tempPath -Destination $finalPath -Force
-  }
 }
 
 Write-Host ""
-Write-Host "=====================================================" -ForegroundColor Yellow
-Write-Host "  [OK] تم بنجاح تثبيت تطبيق صالونات وسبا الباشا VIP على سطح المكتب وقائمة Start!" -ForegroundColor Green
-Write-Host "=====================================================" -ForegroundColor Yellow
+Write-Host "==========================================================" -ForegroundColor Yellow
+Write-Host "  [OK] تم بنجاح تثبيت صالونات وسبا الباشا VIP على الكمبيوتر!" -ForegroundColor Green
+Write-Host "==========================================================" -ForegroundColor Yellow
 Write-Host ""
 
 if ($browser) {
-  Start-Process $browser -ArgumentList ("--app=${cleanOrigin}/ --start-maximized")
+    Start-Process $browser -ArgumentList ("--app=${cleanOrigin}/ --start-maximized")
 }
 `;
 
@@ -79,23 +77,24 @@ if ($browser) {
   const batContent = [
     "@echo off",
     "chcp 65001 >nul",
-    "title صالونات وسبا الباشا VIP",
+    "title Dakn El Basha VIP - Desktop Installer",
     "color 0E",
     "cls",
     "echo ==============================================================================",
-    "echo             صالونات وسبا الباشا VIP",
-    "echo       تثبيت تطبيق سطح المكتب المستقل (Windows Standalone App)",
+    "echo           مجموعة صالونات وسبا الباشا VIP (دقن الباشا ^& حمام الباشا)",
+    "echo             تثبيت تطبيق سطح المكتب المستقل (Windows Standalone App)",
     "echo ==============================================================================",
     "echo.",
-    "echo  جاري إعداد وتحميل الأيقونة وإنشاء الاختصارات على سطح المكتب وقائمة Start...",
+    "echo  جاري تجهيز الأيقونة عالية الدقة وتثبيت التطبيق على سطح المكتب...",
     "echo.",
     `powershell.exe -NoProfile -ExecutionPolicy Bypass -EncodedCommand ${encoded}`,
     "echo.",
     "echo ==============================================================================",
-    "echo        مبروك! تم تثبيت التطبيق المستقل بنجاح على سطح المكتب.",
+    "echo        مبروك! تم تثبيت تطبيق الباشا المستقل بنجاح على سطح المكتب.",
     "echo ==============================================================================",
     "echo.",
-    "pause",
+    "timeout /t 3 >nul",
+    "exit /b 0",
   ].join("\r\n");
 
   return new NextResponse(batContent, {
