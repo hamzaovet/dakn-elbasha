@@ -13,6 +13,7 @@ import {
   AlertCircle,
   Scissors,
   CheckCircle2,
+  Users,
 } from "lucide-react";
 
 export default function StaffLoginPage() {
@@ -59,6 +60,11 @@ export default function StaffLoginPage() {
           router.push("/admin");
         } else if (data.user.role === "cashier") {
           router.push("/pos");
+        } else if (
+          data.user.role === "coordinator" ||
+          data.user.role === "receptionist"
+        ) {
+          router.push("/coordinator");
         } else if (data.user.role === "specialist") {
           router.push("/chair");
         } else {
@@ -76,7 +82,7 @@ export default function StaffLoginPage() {
 
   return (
     <div
-      className="min-h-screen bg-[#07070b] text-slate-100 flex flex-col items-center justify-center p-4 font-sans selection:bg-amber-500 selection:text-black"
+      className="min-h-screen bg-[#07070b] text-slate-100 flex flex-col items-center justify-center p-4 font-sans selection:bg-amber-500 selection:text-black relative"
       dir="rtl"
     >
       {/* Background Ambient Glows */}
@@ -118,19 +124,23 @@ export default function StaffLoginPage() {
           </div>
         )}
 
-        {/* Login Form */}
-        <form onSubmit={handleLogin} className="space-y-4">
+        {/* Login Form with Anti-Autofill */}
+        <form onSubmit={handleLogin} className="space-y-4" autoComplete="off">
           <div className="space-y-1">
             <label className="text-xs font-bold text-slate-300 flex items-center gap-1.5">
               <User className="w-3.5 h-3.5 text-amber-400" />
-              <span>اسم المستخدم:</span>
+              <span>اسم المستخدم (كلمة واحدة):</span>
             </label>
             <input
               type="text"
+              name="fake_user_field"
+              autoComplete="new-password"
+              readOnly
+              onFocus={(e) => e.target.removeAttribute("readonly")}
               required
               value={username}
               onChange={(e) => setUsername(e.target.value)}
-              placeholder="مثال: maestro أو gm-basha أو cashier-dakn"
+              placeholder="مثال: maestro أو basha أو coordinator"
               className="w-full py-2.5 px-3.5 rounded-xl bg-black/60 border border-amber-500/30 text-xs text-white font-mono font-bold focus:outline-none focus:border-amber-400"
             />
           </div>
@@ -142,6 +152,10 @@ export default function StaffLoginPage() {
             </label>
             <input
               type="password"
+              name="fake_pass_field"
+              autoComplete="new-password"
+              readOnly
+              onFocus={(e) => e.target.removeAttribute("readonly")}
               required
               value={password}
               onChange={(e) => setPassword(e.target.value)}
@@ -157,6 +171,10 @@ export default function StaffLoginPage() {
             </label>
             <input
               type="password"
+              name="fake_pin_field"
+              autoComplete="new-password"
+              readOnly
+              onFocus={(e) => e.target.removeAttribute("readonly")}
               maxLength={6}
               value={pin}
               onChange={(e) => setPin(e.target.value)}
@@ -175,8 +193,24 @@ export default function StaffLoginPage() {
           </button>
         </form>
 
+        {/* Staff Quick Guide (Single-Word Users) */}
+        <div className="bg-white/5 border border-white/10 rounded-2xl p-3 text-[11px] text-slate-400 space-y-1">
+          <div className="flex items-center gap-1.5 text-amber-300 font-bold">
+            <Users className="w-3.5 h-3.5" />
+            <span>حسابات الطاقم المعتمدة (قابلة للتعديل من الإعدادات):</span>
+          </div>
+          <div className="grid grid-cols-2 gap-1 text-[10px] text-slate-300 font-mono pt-1">
+            <div>👑 <strong className="text-amber-400">maestro</strong>: المالك</div>
+            <div>👔 <strong className="text-amber-400">basha</strong>: مدير عام</div>
+            <div>💅 <strong className="text-rose-400">hammam</strong>: مديرة السبا</div>
+            <div>✂️ <strong className="text-teal-400">coordinator</strong>: منسق الصالة</div>
+            <div>🌸 <strong className="text-rose-400">reception</strong>: استقبال حريمي</div>
+            <div>💵 <strong className="text-emerald-400">cashier</strong>: الكاشير</div>
+          </div>
+        </div>
+
         {/* Back to Homepage */}
-        <div className="text-center pt-2">
+        <div className="text-center pt-1">
           <Link
             href="/"
             className="text-xs text-slate-400 hover:text-amber-400 transition inline-flex items-center gap-1 font-bold"
@@ -184,6 +218,11 @@ export default function StaffLoginPage() {
             <span>العودة لصفحة الحجز الرئيسية</span>
             <ArrowRight className="w-3.5 h-3.5 rotate-180" />
           </Link>
+        </div>
+
+        {/* Footer Orca Tech Signature */}
+        <div className="pt-3 border-t border-white/10 text-center text-[10px] text-amber-400/80 font-bold">
+          تطوير شركة أوركا للحلول البرمجية (Orca Tech) 🐬 • 01018671000
         </div>
       </div>
     </div>

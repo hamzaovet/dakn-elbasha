@@ -8614,6 +8614,8 @@ export namespace Prisma {
     status: string | null
     notes: string | null
     totalAmount: number | null
+    reminderSentAt: Date | null
+    overdueAlertSentAt: Date | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -8630,6 +8632,8 @@ export namespace Prisma {
     status: string | null
     notes: string | null
     totalAmount: number | null
+    reminderSentAt: Date | null
+    overdueAlertSentAt: Date | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -8646,6 +8650,8 @@ export namespace Prisma {
     status: number
     notes: number
     totalAmount: number
+    reminderSentAt: number
+    overdueAlertSentAt: number
     createdAt: number
     updatedAt: number
     _all: number
@@ -8672,6 +8678,8 @@ export namespace Prisma {
     status?: true
     notes?: true
     totalAmount?: true
+    reminderSentAt?: true
+    overdueAlertSentAt?: true
     createdAt?: true
     updatedAt?: true
   }
@@ -8688,6 +8696,8 @@ export namespace Prisma {
     status?: true
     notes?: true
     totalAmount?: true
+    reminderSentAt?: true
+    overdueAlertSentAt?: true
     createdAt?: true
     updatedAt?: true
   }
@@ -8704,6 +8714,8 @@ export namespace Prisma {
     status?: true
     notes?: true
     totalAmount?: true
+    reminderSentAt?: true
+    overdueAlertSentAt?: true
     createdAt?: true
     updatedAt?: true
     _all?: true
@@ -8807,6 +8819,8 @@ export namespace Prisma {
     status: string
     notes: string | null
     totalAmount: number
+    reminderSentAt: Date | null
+    overdueAlertSentAt: Date | null
     createdAt: Date
     updatedAt: Date
     _count: BookingCountAggregateOutputType | null
@@ -8842,6 +8856,8 @@ export namespace Prisma {
     status?: boolean
     notes?: boolean
     totalAmount?: boolean
+    reminderSentAt?: boolean
+    overdueAlertSentAt?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     customer?: boolean | CustomerDefaultArgs<ExtArgs>
@@ -8861,6 +8877,8 @@ export namespace Prisma {
     status?: boolean
     notes?: boolean
     totalAmount?: boolean
+    reminderSentAt?: boolean
+    overdueAlertSentAt?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     customer?: boolean | CustomerDefaultArgs<ExtArgs>
@@ -8880,6 +8898,8 @@ export namespace Prisma {
     status?: boolean
     notes?: boolean
     totalAmount?: boolean
+    reminderSentAt?: boolean
+    overdueAlertSentAt?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     customer?: boolean | CustomerDefaultArgs<ExtArgs>
@@ -8899,11 +8919,13 @@ export namespace Prisma {
     status?: boolean
     notes?: boolean
     totalAmount?: boolean
+    reminderSentAt?: boolean
+    overdueAlertSentAt?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }
 
-  export type BookingOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "bookingNumber" | "customerId" | "branchId" | "specialistId" | "serviceIds" | "bookingDate" | "timeSlot" | "status" | "notes" | "totalAmount" | "createdAt" | "updatedAt", ExtArgs["result"]["booking"]>
+  export type BookingOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "bookingNumber" | "customerId" | "branchId" | "specialistId" | "serviceIds" | "bookingDate" | "timeSlot" | "status" | "notes" | "totalAmount" | "reminderSentAt" | "overdueAlertSentAt" | "createdAt" | "updatedAt", ExtArgs["result"]["booking"]>
   export type BookingInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     customer?: boolean | CustomerDefaultArgs<ExtArgs>
     branch?: boolean | BranchDefaultArgs<ExtArgs>
@@ -8939,6 +8961,8 @@ export namespace Prisma {
       status: string
       notes: string | null
       totalAmount: number
+      reminderSentAt: Date | null
+      overdueAlertSentAt: Date | null
       createdAt: Date
       updatedAt: Date
     }, ExtArgs["result"]["booking"]>
@@ -9378,6 +9402,8 @@ export namespace Prisma {
     readonly status: FieldRef<"Booking", 'String'>
     readonly notes: FieldRef<"Booking", 'String'>
     readonly totalAmount: FieldRef<"Booking", 'Float'>
+    readonly reminderSentAt: FieldRef<"Booking", 'DateTime'>
+    readonly overdueAlertSentAt: FieldRef<"Booking", 'DateTime'>
     readonly createdAt: FieldRef<"Booking", 'DateTime'>
     readonly updatedAt: FieldRef<"Booking", 'DateTime'>
   }
@@ -19921,6 +19947,8 @@ export namespace Prisma {
     status: 'status',
     notes: 'notes',
     totalAmount: 'totalAmount',
+    reminderSentAt: 'reminderSentAt',
+    overdueAlertSentAt: 'overdueAlertSentAt',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt'
   };
@@ -20713,6 +20741,8 @@ export namespace Prisma {
     status?: StringFilter<"Booking"> | string
     notes?: StringNullableFilter<"Booking"> | string | null
     totalAmount?: FloatFilter<"Booking"> | number
+    reminderSentAt?: DateTimeNullableFilter<"Booking"> | Date | string | null
+    overdueAlertSentAt?: DateTimeNullableFilter<"Booking"> | Date | string | null
     createdAt?: DateTimeFilter<"Booking"> | Date | string
     updatedAt?: DateTimeFilter<"Booking"> | Date | string
     customer?: XOR<CustomerScalarRelationFilter, CustomerWhereInput>
@@ -20732,6 +20762,8 @@ export namespace Prisma {
     status?: SortOrder
     notes?: SortOrderInput | SortOrder
     totalAmount?: SortOrder
+    reminderSentAt?: SortOrderInput | SortOrder
+    overdueAlertSentAt?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     customer?: CustomerOrderByWithRelationInput
@@ -20754,6 +20786,8 @@ export namespace Prisma {
     status?: StringFilter<"Booking"> | string
     notes?: StringNullableFilter<"Booking"> | string | null
     totalAmount?: FloatFilter<"Booking"> | number
+    reminderSentAt?: DateTimeNullableFilter<"Booking"> | Date | string | null
+    overdueAlertSentAt?: DateTimeNullableFilter<"Booking"> | Date | string | null
     createdAt?: DateTimeFilter<"Booking"> | Date | string
     updatedAt?: DateTimeFilter<"Booking"> | Date | string
     customer?: XOR<CustomerScalarRelationFilter, CustomerWhereInput>
@@ -20773,6 +20807,8 @@ export namespace Prisma {
     status?: SortOrder
     notes?: SortOrderInput | SortOrder
     totalAmount?: SortOrder
+    reminderSentAt?: SortOrderInput | SortOrder
+    overdueAlertSentAt?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     _count?: BookingCountOrderByAggregateInput
@@ -20797,6 +20833,8 @@ export namespace Prisma {
     status?: StringWithAggregatesFilter<"Booking"> | string
     notes?: StringNullableWithAggregatesFilter<"Booking"> | string | null
     totalAmount?: FloatWithAggregatesFilter<"Booking"> | number
+    reminderSentAt?: DateTimeNullableWithAggregatesFilter<"Booking"> | Date | string | null
+    overdueAlertSentAt?: DateTimeNullableWithAggregatesFilter<"Booking"> | Date | string | null
     createdAt?: DateTimeWithAggregatesFilter<"Booking"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"Booking"> | Date | string
   }
@@ -22283,6 +22321,8 @@ export namespace Prisma {
     status?: string
     notes?: string | null
     totalAmount?: number
+    reminderSentAt?: Date | string | null
+    overdueAlertSentAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     customer: CustomerCreateNestedOneWithoutBookingsInput
@@ -22302,6 +22342,8 @@ export namespace Prisma {
     status?: string
     notes?: string | null
     totalAmount?: number
+    reminderSentAt?: Date | string | null
+    overdueAlertSentAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -22315,6 +22357,8 @@ export namespace Prisma {
     status?: StringFieldUpdateOperationsInput | string
     notes?: NullableStringFieldUpdateOperationsInput | string | null
     totalAmount?: FloatFieldUpdateOperationsInput | number
+    reminderSentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    overdueAlertSentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     customer?: CustomerUpdateOneRequiredWithoutBookingsNestedInput
@@ -22334,6 +22378,8 @@ export namespace Prisma {
     status?: StringFieldUpdateOperationsInput | string
     notes?: NullableStringFieldUpdateOperationsInput | string | null
     totalAmount?: FloatFieldUpdateOperationsInput | number
+    reminderSentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    overdueAlertSentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -22350,6 +22396,8 @@ export namespace Prisma {
     status?: string
     notes?: string | null
     totalAmount?: number
+    reminderSentAt?: Date | string | null
+    overdueAlertSentAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -22363,6 +22411,8 @@ export namespace Prisma {
     status?: StringFieldUpdateOperationsInput | string
     notes?: NullableStringFieldUpdateOperationsInput | string | null
     totalAmount?: FloatFieldUpdateOperationsInput | number
+    reminderSentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    overdueAlertSentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -22379,6 +22429,8 @@ export namespace Prisma {
     status?: StringFieldUpdateOperationsInput | string
     notes?: NullableStringFieldUpdateOperationsInput | string | null
     totalAmount?: FloatFieldUpdateOperationsInput | number
+    reminderSentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    overdueAlertSentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -23998,6 +24050,8 @@ export namespace Prisma {
     status?: SortOrder
     notes?: SortOrder
     totalAmount?: SortOrder
+    reminderSentAt?: SortOrder
+    overdueAlertSentAt?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -24018,6 +24072,8 @@ export namespace Prisma {
     status?: SortOrder
     notes?: SortOrder
     totalAmount?: SortOrder
+    reminderSentAt?: SortOrder
+    overdueAlertSentAt?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -24034,6 +24090,8 @@ export namespace Prisma {
     status?: SortOrder
     notes?: SortOrder
     totalAmount?: SortOrder
+    reminderSentAt?: SortOrder
+    overdueAlertSentAt?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -25940,6 +25998,8 @@ export namespace Prisma {
     status?: string
     notes?: string | null
     totalAmount?: number
+    reminderSentAt?: Date | string | null
+    overdueAlertSentAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     customer: CustomerCreateNestedOneWithoutBookingsInput
@@ -25957,6 +26017,8 @@ export namespace Prisma {
     status?: string
     notes?: string | null
     totalAmount?: number
+    reminderSentAt?: Date | string | null
+    overdueAlertSentAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -26377,6 +26439,8 @@ export namespace Prisma {
     status?: StringFilter<"Booking"> | string
     notes?: StringNullableFilter<"Booking"> | string | null
     totalAmount?: FloatFilter<"Booking"> | number
+    reminderSentAt?: DateTimeNullableFilter<"Booking"> | Date | string | null
+    overdueAlertSentAt?: DateTimeNullableFilter<"Booking"> | Date | string | null
     createdAt?: DateTimeFilter<"Booking"> | Date | string
     updatedAt?: DateTimeFilter<"Booking"> | Date | string
   }
@@ -26927,6 +26991,8 @@ export namespace Prisma {
     status?: string
     notes?: string | null
     totalAmount?: number
+    reminderSentAt?: Date | string | null
+    overdueAlertSentAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     customer: CustomerCreateNestedOneWithoutBookingsInput
@@ -26944,6 +27010,8 @@ export namespace Prisma {
     status?: string
     notes?: string | null
     totalAmount?: number
+    reminderSentAt?: Date | string | null
+    overdueAlertSentAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -27201,6 +27269,8 @@ export namespace Prisma {
     status?: string
     notes?: string | null
     totalAmount?: number
+    reminderSentAt?: Date | string | null
+    overdueAlertSentAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     branch: BranchCreateNestedOneWithoutBookingsInput
@@ -27218,6 +27288,8 @@ export namespace Prisma {
     status?: string
     notes?: string | null
     totalAmount?: number
+    reminderSentAt?: Date | string | null
+    overdueAlertSentAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -28644,6 +28716,8 @@ export namespace Prisma {
     status?: string
     notes?: string | null
     totalAmount?: number
+    reminderSentAt?: Date | string | null
+    overdueAlertSentAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -28875,6 +28949,8 @@ export namespace Prisma {
     status?: StringFieldUpdateOperationsInput | string
     notes?: NullableStringFieldUpdateOperationsInput | string | null
     totalAmount?: FloatFieldUpdateOperationsInput | number
+    reminderSentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    overdueAlertSentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     customer?: CustomerUpdateOneRequiredWithoutBookingsNestedInput
@@ -28892,6 +28968,8 @@ export namespace Prisma {
     status?: StringFieldUpdateOperationsInput | string
     notes?: NullableStringFieldUpdateOperationsInput | string | null
     totalAmount?: FloatFieldUpdateOperationsInput | number
+    reminderSentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    overdueAlertSentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -28907,6 +28985,8 @@ export namespace Prisma {
     status?: StringFieldUpdateOperationsInput | string
     notes?: NullableStringFieldUpdateOperationsInput | string | null
     totalAmount?: FloatFieldUpdateOperationsInput | number
+    reminderSentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    overdueAlertSentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -29273,6 +29353,8 @@ export namespace Prisma {
     status?: string
     notes?: string | null
     totalAmount?: number
+    reminderSentAt?: Date | string | null
+    overdueAlertSentAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -29323,6 +29405,8 @@ export namespace Prisma {
     status?: StringFieldUpdateOperationsInput | string
     notes?: NullableStringFieldUpdateOperationsInput | string | null
     totalAmount?: FloatFieldUpdateOperationsInput | number
+    reminderSentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    overdueAlertSentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     customer?: CustomerUpdateOneRequiredWithoutBookingsNestedInput
@@ -29340,6 +29424,8 @@ export namespace Prisma {
     status?: StringFieldUpdateOperationsInput | string
     notes?: NullableStringFieldUpdateOperationsInput | string | null
     totalAmount?: FloatFieldUpdateOperationsInput | number
+    reminderSentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    overdueAlertSentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -29355,6 +29441,8 @@ export namespace Prisma {
     status?: StringFieldUpdateOperationsInput | string
     notes?: NullableStringFieldUpdateOperationsInput | string | null
     totalAmount?: FloatFieldUpdateOperationsInput | number
+    reminderSentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    overdueAlertSentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -29481,6 +29569,8 @@ export namespace Prisma {
     status?: string
     notes?: string | null
     totalAmount?: number
+    reminderSentAt?: Date | string | null
+    overdueAlertSentAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -29520,6 +29610,8 @@ export namespace Prisma {
     status?: StringFieldUpdateOperationsInput | string
     notes?: NullableStringFieldUpdateOperationsInput | string | null
     totalAmount?: FloatFieldUpdateOperationsInput | number
+    reminderSentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    overdueAlertSentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     branch?: BranchUpdateOneRequiredWithoutBookingsNestedInput
@@ -29537,6 +29629,8 @@ export namespace Prisma {
     status?: StringFieldUpdateOperationsInput | string
     notes?: NullableStringFieldUpdateOperationsInput | string | null
     totalAmount?: FloatFieldUpdateOperationsInput | number
+    reminderSentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    overdueAlertSentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -29552,6 +29646,8 @@ export namespace Prisma {
     status?: StringFieldUpdateOperationsInput | string
     notes?: NullableStringFieldUpdateOperationsInput | string | null
     totalAmount?: FloatFieldUpdateOperationsInput | number
+    reminderSentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    overdueAlertSentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }

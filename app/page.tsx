@@ -36,6 +36,10 @@ import {
   LogOut,
   Flower2,
   Crown,
+  Menu,
+  Monitor,
+  Download,
+  RefreshCw,
 } from "lucide-react";
 
 export default function HomePage() {
@@ -49,6 +53,8 @@ export default function HomePage() {
 
   // 👑 DUAL MODE STATE: "MEN" (دقن الباشا) | "WOMEN" (حمام الباشا)
   const [activeMode, setActiveMode] = useState<"MEN" | "WOMEN">("MEN");
+  const [showBranchGateway, setShowBranchGateway] = useState<boolean>(true);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState<boolean>(false);
 
   // Selected Booking Details
   const [selectedBranchId, setSelectedBranchId] = useState<string>("");
@@ -121,6 +127,12 @@ export default function HomePage() {
     setActiveCategory("ALL");
     setSelectedSpecialistId("");
     setSelectedServices([]);
+
+    if (typeof window !== "undefined") {
+      try {
+        localStorage.setItem("basha_chosen_branch", mode);
+      } catch {}
+    }
 
     if (mode === "MEN" && daknBranch) {
       setSelectedBranchId(daknBranch.id);
@@ -377,14 +389,38 @@ export default function HomePage() {
         if (dataSet.success && dataSet.settings) setSettings(dataSet.settings);
         if (dataB.success && dataB.branches) {
           setBranches(dataB.branches);
-          // Set initial branch to Men branch
-          const mB = dataB.branches.find(
-            (b: any) => b.code === "BR-DAKN-MEN" || b.name?.includes("دقن")
-          );
-          if (mB) {
-            setSelectedBranchId(mB.id);
-          } else if (dataB.branches.length > 0) {
-            setSelectedBranchId(dataB.branches[0].id);
+
+          let forceGateway = false;
+          if (typeof window !== "undefined") {
+            const urlParams = new URLSearchParams(window.location.search);
+            if (urlParams.get("gateway") === "1" || urlParams.get("selectBranch") === "1") {
+              forceGateway = true;
+            }
+          }
+
+          const savedBranchMode = typeof window !== "undefined" ? localStorage.getItem("basha_chosen_branch") : null;
+
+          if (!forceGateway && savedBranchMode === "WOMEN") {
+            setActiveMode("WOMEN");
+            const wB = dataB.branches.find(
+              (b: any) => b.code === "BR-HAMMAM-WOMEN" || b.name?.includes("حمام") || b.name?.includes("حريمي")
+            );
+            if (wB) setSelectedBranchId(wB.id);
+            setShowBranchGateway(false);
+          } else if (!forceGateway && savedBranchMode === "MEN") {
+            setActiveMode("MEN");
+            const mB = dataB.branches.find(
+              (b: any) => b.code === "BR-DAKN-MEN" || b.name?.includes("دقن") || b.name?.includes("رجالي")
+            );
+            if (mB) setSelectedBranchId(mB.id);
+            setShowBranchGateway(false);
+          } else {
+            // First time or forced gateway
+            setShowBranchGateway(true);
+            const mB = dataB.branches.find(
+              (b: any) => b.code === "BR-DAKN-MEN" || b.name?.includes("دقن") || b.name?.includes("رجالي")
+            );
+            if (mB) setSelectedBranchId(mB.id);
           }
         }
         if (dataS.success && dataS.services) setServices(dataS.services);
@@ -756,7 +792,173 @@ export default function HomePage() {
       <audio id="bashaReminderAudio" src="/notification.wav" preload="auto" className="hidden" />
 
       {/* ─────────────────────────────────────────────────────────────
-          1. LUXURY TOP NAVIGATION BAR
+          0. GRAND ENTRANCE GATEWAY (ROYAL SELECTION BEFORE BROWSING)
+         ───────────────────────────────────────────────────────────── */}
+      {showBranchGateway && (
+        <div
+          className="fixed inset-0 z-[120] overflow-y-auto bg-[#07070a] text-slate-100 flex flex-col font-sans animate-fade-in"
+          dir="rtl"
+        >
+          {/* Ambient Cinema Backdrop */}
+          <div
+            className="fixed inset-0 bg-cover bg-center opacity-15 scale-105 pointer-events-none filter blur-[3px]"
+            style={{
+              backgroundImage: "url('/dakn-hero.jpg')",
+            }}
+          />
+          <div className="fixed -top-32 right-1/4 w-[520px] h-[520px] rounded-full bg-amber-500/15 blur-[140px] pointer-events-none" />
+          <div className="fixed -bottom-32 left-1/4 w-[460px] h-[460px] rounded-full bg-rose-500/15 blur-[140px] pointer-events-none" />
+          <div className="fixed inset-0 bg-gradient-to-b from-[#07070a]/95 via-[#0a0a10]/90 to-[#07070a]/98 pointer-events-none" />
+
+          {/* Gateway Top Bar */}
+          <div className="relative z-10 max-w-6xl w-full mx-auto px-4 sm:px-8 pt-4 sm:pt-6 flex items-center justify-between gap-3">
+            <div className="inline-flex items-center gap-2 py-1.5 px-3.5 rounded-full bg-amber-500/10 border border-amber-400/35 text-amber-300 text-xs font-black">
+              <Crown className="w-4 h-4 text-amber-400 animate-pulse" />
+              <span>منظومة الباشا الملكية VIP • اختر القسم للدخول</span>
+            </div>
+
+            <div className="flex items-center gap-2">
+              <a
+                href="/Install-DaknElBasha.bat"
+                download="Install-DaknElBasha.bat"
+                className="py-1.5 px-3 rounded-xl bg-white/10 hover:bg-white/15 border border-white/20 text-white text-xs font-black transition flex items-center gap-1.5"
+              >
+                <Monitor className="w-3.5 h-3.5" />
+                <span className="hidden sm:inline">نسخة الكمبيوتر</span>
+              </a>
+              <Link
+                href="/login"
+                className="py-1.5 px-3 rounded-xl bg-amber-500/10 hover:bg-amber-500/20 border border-amber-500/30 text-amber-300 text-xs font-black transition flex items-center gap-1"
+              >
+                <LogIn className="w-3.5 h-3.5" />
+                <span>الطاقم 🔒</span>
+              </Link>
+            </div>
+          </div>
+
+          {/* Center Gateway Content */}
+          <div className="relative z-10 flex-1 max-w-5xl w-full mx-auto px-4 sm:px-8 py-8 sm:py-12 flex flex-col items-center justify-center space-y-8">
+            {/* Headlines */}
+            <div className="text-center space-y-3 max-w-2xl">
+              <span className="inline-block text-xs font-black tracking-widest uppercase text-amber-400 bg-amber-500/10 border border-amber-500/20 px-3.5 py-1 rounded-full">
+                👑 أهلاً بكم في صرح الباشا VIP
+              </span>
+              <h2 className="text-2xl sm:text-4xl lg:text-5xl font-black text-white leading-tight">
+                اختر وجهتك لبدء <span className="bg-clip-text text-transparent bg-gradient-to-r from-amber-300 via-amber-400 to-amber-200">التجربة الملكية</span>
+              </h2>
+              <p className="text-xs sm:text-sm text-slate-300 leading-relaxed max-w-xl mx-auto">
+                يرجى اختيار القسم لعرض الخدمات المخصصة، العروض الحصرية، والحجز الفوري مع نخبة المتخصصين
+              </p>
+            </div>
+
+            {/* Two Majestic Portals */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full max-w-4xl">
+              {/* Card 1: صالون دقن الباشا (رجالي VIP) */}
+              <div
+                onClick={() => {
+                  handleSwitchMode("MEN");
+                  setShowBranchGateway(false);
+                  showToast("success", "أهلاً بك في صالون دقن الباشا (رجالي VIP) 🎩✨");
+                }}
+                className="group relative rounded-3xl overflow-hidden border-2 border-amber-500/30 hover:border-amber-400 bg-gradient-to-b from-slate-900/90 to-black p-6 sm:p-8 cursor-pointer transition-all duration-300 hover:scale-[1.02] hover:shadow-2xl hover:shadow-amber-500/20 flex flex-col justify-between"
+              >
+                {/* Card Image Cover */}
+                <div className="h-44 sm:h-52 w-full rounded-2xl overflow-hidden relative mb-5">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src="/dakn-hero.jpg"
+                    alt="دقن الباشا"
+                    className="w-full h-full object-cover group-hover:scale-105 transition duration-500"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black via-black/30 to-transparent" />
+                  <div className="absolute top-3 right-3 flex items-center gap-1.5 bg-black/80 backdrop-blur-md px-3 py-1 rounded-full border border-amber-500/40 text-[11px] font-black text-amber-300">
+                    <Scissors className="w-3.5 h-3.5" />
+                    <span>رجالي VIP</span>
+                  </div>
+                  <div className="absolute bottom-3 right-3 left-3 flex items-center gap-3">
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img
+                      src="/dakn-logo.jpg"
+                      alt="شعار دقن الباشا"
+                      className="w-12 h-12 rounded-xl object-cover border-2 border-amber-400 bg-black shrink-0 shadow-lg"
+                    />
+                    <div className="text-white">
+                      <h3 className="font-black text-lg text-amber-300 leading-tight">صالون دقن الباشا</h3>
+                      <p className="text-[11px] text-slate-300">73 شارع ترعة الجبل، حدائق القبة</p>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="space-y-4">
+                  <p className="text-xs text-slate-300 leading-relaxed">
+                    خدمات الحلاقة الملكية، العناية بالبشرة، الاستشوار، وعلاجات الشعر بأعلى درجات الرفاهية والخصوصية.
+                  </p>
+                  <button
+                    type="button"
+                    className="w-full py-3 px-4 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 text-slate-950 font-black text-sm shadow-lg shadow-amber-500/20 group-hover:shadow-amber-500/40 transition flex items-center justify-center gap-2 cursor-pointer"
+                  >
+                    <span>دخول صالون دقن الباشا (رجالي)</span>
+                    <ChevronLeft className="w-4 h-4 rtl:rotate-0 ltr:rotate-180" />
+                  </button>
+                </div>
+              </div>
+
+              {/* Card 2: حمام الباشا (حريمي وسبا VIP) */}
+              <div
+                onClick={() => {
+                  handleSwitchMode("WOMEN");
+                  setShowBranchGateway(false);
+                  showToast("success", "أهلاً بكِ في حمام الباشا (حريمي وسبا VIP) 👑🌸");
+                }}
+                className="group relative rounded-3xl overflow-hidden border-2 border-rose-500/30 hover:border-rose-400 bg-gradient-to-b from-slate-900/90 to-black p-6 sm:p-8 cursor-pointer transition-all duration-300 hover:scale-[1.02] hover:shadow-2xl hover:shadow-rose-500/20 flex flex-col justify-between"
+              >
+                {/* Card Image Cover */}
+                <div className="h-44 sm:h-52 w-full rounded-2xl overflow-hidden relative mb-5">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src="/hammam-hero.jpg"
+                    alt="حمام الباشا"
+                    className="w-full h-full object-cover group-hover:scale-105 transition duration-500"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black via-black/30 to-transparent" />
+                  <div className="absolute top-3 right-3 flex items-center gap-1.5 bg-black/80 backdrop-blur-md px-3 py-1 rounded-full border border-rose-500/40 text-[11px] font-black text-rose-300">
+                    <Sparkles className="w-3.5 h-3.5" />
+                    <span>حريمي وسبا VIP</span>
+                  </div>
+                  <div className="absolute bottom-3 right-3 left-3 flex items-center gap-3">
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img
+                      src="/hammam-logo.jpg"
+                      alt="شعار حمام الباشا"
+                      className="w-12 h-12 rounded-xl object-cover border-2 border-rose-400 bg-black shrink-0 shadow-lg"
+                    />
+                    <div className="text-white">
+                      <h3 className="font-black text-lg text-rose-300 leading-tight">حمام الباشا الملكي</h3>
+                      <p className="text-[11px] text-slate-300">84 ترعة الجبل، كينج بارك مول</p>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="space-y-4">
+                  <p className="text-xs text-slate-300 leading-relaxed">
+                    الحمام المغربي الملكي، السبا، تجهيز العرائس، العناية بالبشرة والمساج مع طاقم نسائي متخصص بالكامل.
+                  </p>
+                  <button
+                    type="button"
+                    className="w-full py-3 px-4 rounded-xl bg-gradient-to-r from-rose-500 to-pink-600 text-white font-black text-sm shadow-lg shadow-rose-500/20 group-hover:shadow-rose-500/40 transition flex items-center justify-center gap-2 cursor-pointer"
+                  >
+                    <span>دخول حمام الباشا (حريمي وسبا)</span>
+                    <ChevronLeft className="w-4 h-4 rtl:rotate-0 ltr:rotate-180" />
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ─────────────────────────────────────────────────────────────
+          1. LUXURY TOP NAVIGATION BAR (RESPONSIVE & OVERLAP-PROOF)
          ───────────────────────────────────────────────────────────── */}
       <header className={`sticky top-0 z-40 ${themeHeaderBg} backdrop-blur-md border-b px-3 sm:px-8 py-2.5 sm:py-3.5 flex items-center justify-between shadow-2xl transition-colors duration-500`}>
         {/* Brand Logo & Name */}
@@ -803,34 +1005,54 @@ export default function HomePage() {
           >
             <span>👑 حمام الباشا (حريمي)</span>
           </button>
+          <button
+            type="button"
+            onClick={() => setShowBranchGateway(true)}
+            className="py-1.5 px-2.5 rounded-xl text-xs font-bold text-slate-300 hover:text-white hover:bg-white/10 transition flex items-center gap-1 cursor-pointer"
+            title="تغيير القسم / فتح البوابة الملكية"
+          >
+            <RefreshCw className="w-3.5 h-3.5 text-amber-400" />
+            <span>تغيير 🔄</span>
+          </button>
         </div>
 
-        {/* Action Buttons: Staff Login + Card QR + Customer */}
-        <div className="flex items-center gap-1.5 sm:gap-2.5 shrink-0">
-          {/* STAFF LOGIN BUTTON */}
-          <Link
-            href="/login"
-            className={`py-1.5 px-2.5 sm:py-2 sm:px-3.5 rounded-xl ${isWomen ? "bg-rose-500/10 hover:bg-rose-500/20 border-rose-400/50 text-rose-300" : "bg-amber-500/10 hover:bg-amber-500/20 border-amber-400/50 text-amber-300"} border text-xs font-black transition flex items-center gap-1.5 shadow-sm whitespace-nowrap shrink-0`}
-            title="دخول طاقم العمل والإدارة"
+        {/* Desktop Action Buttons */}
+        <div className="hidden md:flex items-center gap-2 shrink-0">
+          {/* Desktop Installer Button */}
+          <a
+            href="/Install-DaknElBasha.bat"
+            download="Install-DaknElBasha.bat"
+            className="py-1.5 px-3 rounded-xl bg-white/5 hover:bg-white/10 border border-white/15 text-slate-200 text-xs font-bold transition flex items-center gap-1.5 shrink-0"
+            title="تثبيت اختصار سطح المكتب للكمبيوتر"
           >
-            <LogIn className={`w-4 h-4 ${themeAccentText} shrink-0`} />
-            <span className="hidden sm:inline">دخول الطاقم والإدارة 🔒</span>
-          </Link>
+            <Monitor className="w-4 h-4 text-amber-400 shrink-0" />
+            <span className="hidden lg:inline">تثبيت للكمبيوتر 💻</span>
+          </a>
 
           {/* Card 2 QR Button */}
           <button
             onClick={() => setShowQrModal(true)}
-            className="p-2 sm:py-2 sm:px-3 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-slate-300 text-xs font-bold transition flex items-center gap-1.5 shrink-0 cursor-pointer"
+            className="py-1.5 px-3 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-slate-300 text-xs font-bold transition flex items-center gap-1.5 shrink-0 cursor-pointer"
             title="كارت الـ 2 كيو آر كود"
           >
             <QrCode className={`w-4 h-4 ${themeAccentText} shrink-0`} />
             <span className="hidden lg:inline">كارت الـ 2 QR 🪪</span>
           </button>
 
+          {/* STAFF LOGIN BUTTON */}
+          <Link
+            href="/login"
+            className={`py-1.5 px-3 rounded-xl ${isWomen ? "bg-rose-500/10 hover:bg-rose-500/20 border-rose-400/50 text-rose-300" : "bg-amber-500/10 hover:bg-amber-500/20 border-amber-400/50 text-amber-300"} border text-xs font-black transition flex items-center gap-1.5 shadow-sm whitespace-nowrap shrink-0`}
+            title="دخول طاقم العمل والإدارة"
+          >
+            <LogIn className={`w-4 h-4 ${themeAccentText} shrink-0`} />
+            <span>دخول الطاقم 🔒</span>
+          </Link>
+
           {/* Customer Profile / Login */}
           {customer ? (
             <div className="relative shrink-0">
-              <div className={`flex items-center gap-1 sm:gap-1.5 py-1 px-2 sm:px-2.5 rounded-xl bg-black/70 border ${themeBorder} text-xs shadow-md`}>
+              <div className={`flex items-center gap-1.5 py-1 px-2.5 rounded-xl bg-black/70 border ${themeBorder} text-xs shadow-md`}>
                 <button
                   type="button"
                   onClick={() => setShowCustomerMenu(!showCustomerMenu)}
@@ -838,7 +1060,7 @@ export default function HomePage() {
                   title="عرض تفاصيل الحساب"
                 >
                   <User className={`w-3.5 h-3.5 ${themeAccentText} shrink-0`} />
-                  <span className="font-bold text-white max-w-[65px] sm:max-w-[100px] truncate">{customer.name}</span>
+                  <span className="font-bold text-white max-w-[90px] truncate">{customer.name}</span>
                   <span className={`text-[9px] px-1.5 py-0.5 rounded-full ${isWomen ? "bg-rose-500/20 text-rose-300 border-rose-500/30" : "bg-amber-500/20 text-amber-300 border-amber-500/30"} font-mono font-black border`}>
                     VIP
                   </span>
@@ -898,14 +1120,199 @@ export default function HomePage() {
                 setAuthStep("INPUT");
                 setShowAuthModal(true);
               }}
-              className={`py-1.5 px-3 sm:py-2 sm:px-4 rounded-xl ${themeGradientBtn} font-black text-xs transition flex items-center gap-1.5 shadow-md active:scale-95 whitespace-nowrap shrink-0 cursor-pointer`}
+              className={`py-1.5 px-3.5 rounded-xl ${themeGradientBtn} font-black text-xs transition flex items-center gap-1.5 shadow-md active:scale-95 whitespace-nowrap shrink-0 cursor-pointer`}
             >
               <User className="w-3.5 h-3.5 shrink-0" />
               <span>تسجيل / حسابي</span>
             </button>
           )}
         </div>
+
+        {/* 📱 Mobile Actions Bar (Completely Overlap-Proof!) */}
+        <div className="flex md:hidden items-center gap-2 shrink-0">
+          {/* Quick Branch Badge / Switcher */}
+          <button
+            type="button"
+            onClick={() => setShowBranchGateway(true)}
+            className={`py-1 px-2.5 rounded-xl border text-[11px] font-black flex items-center gap-1 transition ${
+              isWomen
+                ? "bg-rose-500/20 border-rose-400/50 text-rose-300"
+                : "bg-amber-500/20 border-amber-400/50 text-amber-300"
+            }`}
+            title="تبديل القسم أو فتح البوابة"
+          >
+            <span>{isWomen ? "👑 حريمي" : "🎩 رجالي"}</span>
+            <RefreshCw className="w-3 h-3 text-amber-400" />
+          </button>
+
+          {/* Quick Staff Login */}
+          <Link
+            href="/login"
+            className="p-2 rounded-xl bg-white/5 border border-white/10 text-slate-300 hover:text-white transition"
+            title="دخول الطاقم 🔒"
+          >
+            <LogIn className="w-4 h-4 text-amber-400" />
+          </Link>
+
+          {/* Hamburger Menu Toggle */}
+          <button
+            type="button"
+            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            className="w-9 h-9 rounded-xl bg-white/10 hover:bg-white/15 border border-white/15 text-white flex items-center justify-center transition cursor-pointer"
+            aria-label="القائمة"
+          >
+            {mobileMenuOpen ? <X className="w-4 h-4" /> : <Menu className="w-4 h-4" />}
+          </button>
+        </div>
       </header>
+
+      {/* 📱 Mobile Drawer Menu (Never Crowded, Never Colliding!) */}
+      {mobileMenuOpen && (
+        <div className={`md:hidden ${themeCardBg} border-b ${themeBorder} px-4 py-4 space-y-3 shadow-2xl animate-fade-in relative z-30`}>
+          {/* Fast Mode Switch in Drawer */}
+          <div className="grid grid-cols-2 gap-2 pb-2 border-b border-white/10">
+            <button
+              type="button"
+              onClick={() => {
+                handleSwitchMode("MEN");
+                setMobileMenuOpen(false);
+              }}
+              className={`flex items-center justify-center gap-1.5 p-2.5 rounded-xl text-xs font-black border transition ${
+                !isWomen
+                  ? "bg-amber-500 text-slate-950 border-amber-400 shadow-md"
+                  : "bg-white/5 text-slate-300 border-white/10"
+              }`}
+            >
+              <Scissors className="w-3.5 h-3.5" />
+              <span>دقن الباشا (رجالي)</span>
+            </button>
+
+            <button
+              type="button"
+              onClick={() => {
+                handleSwitchMode("WOMEN");
+                setMobileMenuOpen(false);
+              }}
+              className={`flex items-center justify-center gap-1.5 p-2.5 rounded-xl text-xs font-black border transition ${
+                isWomen
+                  ? "bg-rose-500 text-white border-rose-400 shadow-md"
+                  : "bg-white/5 text-slate-300 border-white/10"
+              }`}
+            >
+              <Sparkles className="w-3.5 h-3.5" />
+              <span>حمام الباشا (حريمي)</span>
+            </button>
+          </div>
+
+          <div className="space-y-2">
+            <button
+              type="button"
+              onClick={() => {
+                setMobileMenuOpen(false);
+                setShowBranchGateway(true);
+              }}
+              className="w-full flex items-center justify-between p-2.5 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-white text-xs font-bold"
+            >
+              <div className="flex items-center gap-2">
+                <Crown className="w-4 h-4 text-amber-400" />
+                <span>بوابة الاختيار الملكية (التقسيم قبل الدخول)</span>
+              </div>
+              <ChevronLeft className="w-4 h-4 text-slate-400 rtl:rotate-0 ltr:rotate-180" />
+            </button>
+
+            <a
+              href="/Install-DaknElBasha.bat"
+              download="Install-DaknElBasha.bat"
+              onClick={() => setMobileMenuOpen(false)}
+              className="w-full flex items-center justify-between p-2.5 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-white text-xs font-bold"
+            >
+              <div className="flex items-center gap-2">
+                <Monitor className="w-4 h-4 text-amber-400" />
+                <span>تثبيت نسخة الكمبيوتر (.bat) 💻</span>
+              </div>
+              <Download className="w-4 h-4 text-amber-400" />
+            </a>
+
+            <button
+              type="button"
+              onClick={() => {
+                setMobileMenuOpen(false);
+                setShowQrModal(true);
+              }}
+              className="w-full flex items-center justify-between p-2.5 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-white text-xs font-bold"
+            >
+              <div className="flex items-center gap-2">
+                <QrCode className="w-4 h-4 text-amber-400" />
+                <span>كارت المنظومة الملكي (2-QR) 🪪</span>
+              </div>
+              <ChevronLeft className="w-4 h-4 text-slate-400 rtl:rotate-0 ltr:rotate-180" />
+            </button>
+
+            <Link
+              href="/coordinator"
+              onClick={() => setMobileMenuOpen(false)}
+              className="w-full flex items-center justify-between p-2.5 rounded-xl bg-amber-500/10 hover:bg-amber-500/20 border border-amber-500/30 text-amber-300 text-xs font-black"
+            >
+              <div className="flex items-center gap-2">
+                <Clock className="w-4 h-4" />
+                <span>شاشة منسق الصالة والأدوار (Live Floor) ⏱️</span>
+              </div>
+              <ChevronLeft className="w-4 h-4 rtl:rotate-0 ltr:rotate-180" />
+            </Link>
+
+            <Link
+              href="/login"
+              onClick={() => setMobileMenuOpen(false)}
+              className="w-full flex items-center justify-between p-2.5 rounded-xl bg-white/10 hover:bg-white/15 border border-white/20 text-white text-xs font-black"
+            >
+              <div className="flex items-center gap-2">
+                <LogIn className="w-4 h-4 text-amber-400" />
+                <span>دخول طاقم العمل والإدارة 🔒</span>
+              </div>
+              <ChevronLeft className="w-4 h-4 rtl:rotate-0 ltr:rotate-180" />
+            </Link>
+
+            {/* Mobile Customer Login / Profile */}
+            {customer ? (
+              <div className="p-3 rounded-xl bg-black/60 border border-white/10 space-y-2">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <User className="w-4 h-4 text-amber-400" />
+                    <span className="text-white font-bold text-xs">{customer.name}</span>
+                  </div>
+                  <span className="text-[10px] px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-300 font-black">
+                    VIP
+                  </span>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setMobileMenuOpen(false);
+                    handleCustomerLogout();
+                  }}
+                  className="w-full py-1.5 px-3 rounded-lg bg-rose-500/15 text-rose-300 text-xs font-bold transition flex items-center justify-center gap-1.5"
+                >
+                  <LogOut className="w-3.5 h-3.5" />
+                  <span>تسجيل خروج 🚪</span>
+                </button>
+              </div>
+            ) : (
+              <button
+                type="button"
+                onClick={() => {
+                  setMobileMenuOpen(false);
+                  setAuthStep("INPUT");
+                  setShowAuthModal(true);
+                }}
+                className={`w-full py-2.5 px-4 rounded-xl ${themeGradientBtn} font-black text-xs transition flex items-center justify-center gap-1.5 shadow-md`}
+              >
+                <User className="w-3.5 h-3.5" />
+                <span>تسجيل حساب العميل / متابعة الحجوزات 👤</span>
+              </button>
+            )}
+          </div>
+        </div>
+      )}
 
       {/* ─────────────────────────────────────────────────────────────
           2. GRAND DUAL-MODE VISUAL HERO SECTION

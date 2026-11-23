@@ -126,22 +126,24 @@ model Customer {
 // 6. APPOINTMENTS & BOOKINGS (الحجوزات المسبقة)
 // ----------------------------------------------------
 model Booking {
-  id            String      @id @default(cuid())
-  bookingNumber String      @unique // SAD-XXXX
-  customerId    String
-  customer      Customer    @relation(fields: [customerId], references: [id], onDelete: Cascade)
-  branchId      String
-  branch        Branch      @relation(fields: [branchId], references: [id], onDelete: Cascade)
-  specialistId  String?
-  specialist    Specialist? @relation(fields: [specialistId], references: [id], onDelete: SetNull)
-  serviceIds    String // JSON array: [{ id, nameAr, price, durationMinutes }]
-  bookingDate   String // YYYY-MM-DD
-  timeSlot      String // e.g. "05:00 PM"
-  status        String      @default("CONFIRMED") // PENDING, CONFIRMED, IN_CHAIR, COMPLETED, CANCELLED, NO_SHOW
-  notes         String?
-  totalAmount   Float       @default(0)
-  createdAt     DateTime    @default(now())
-  updatedAt     DateTime    @updatedAt
+  id                 String      @id @default(cuid())
+  bookingNumber      String      @unique // SAD-XXXX
+  customerId         String
+  customer           Customer    @relation(fields: [customerId], references: [id], onDelete: Cascade)
+  branchId           String
+  branch             Branch      @relation(fields: [branchId], references: [id], onDelete: Cascade)
+  specialistId       String?
+  specialist         Specialist? @relation(fields: [specialistId], references: [id], onDelete: SetNull)
+  serviceIds         String // JSON array: [{ id, nameAr, price, durationMinutes }]
+  bookingDate        String // YYYY-MM-DD
+  timeSlot           String // e.g. "05:00 PM"
+  status             String      @default("CONFIRMED") // PENDING, CONFIRMED, IN_CHAIR, COMPLETED, CANCELLED, NO_SHOW
+  notes              String?
+  totalAmount        Float       @default(0)
+  reminderSentAt     DateTime?
+  overdueAlertSentAt DateTime?
+  createdAt          DateTime    @default(now())
+  updatedAt          DateTime    @updatedAt
 }
 
 // ----------------------------------------------------

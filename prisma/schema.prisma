@@ -140,6 +140,8 @@ model Booking {
   status          String             @default("CONFIRMED") // PENDING, CONFIRMED, IN_CHAIR, COMPLETED, CANCELLED, NO_SHOW
   notes           String?
   totalAmount     Float              @default(0)
+  reminderSentAt  DateTime?
+  overdueAlertSentAt DateTime?
   createdAt       DateTime           @default(now())
   updatedAt       DateTime           @updatedAt
 }
