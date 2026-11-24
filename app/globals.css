@@ -39,26 +39,93 @@ body {
   border: 1px solid rgba(212, 175, 55, 0.2);
 }
 
-/* Thermal Receipt Print Styles */
+/* Professional Print Styles (Thermal 80mm & A4 Invoices) */
+@page {
+  size: auto;
+  margin: 0;
+}
+
 @media print {
+  /* Reset margins and backgrounds for clean high-contrast printing */
+  html, body {
+    margin: 0 !important;
+    padding: 0 !important;
+    background: #fff !important;
+    color: #000 !important;
+    width: 100% !important;
+    height: auto !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  /* Hide screen-only elements */
+  .no-print,
+  nav,
+  header,
+  footer,
+  aside,
+  button,
+  .no-print-area {
+    display: none !important;
+  }
+
+  /* Make print containers visible and reset body visibility */
   body * {
     visibility: hidden;
   }
+
   #thermal-receipt,
-  #thermal-receipt * {
-    visibility: visible;
+  #thermal-receipt *,
+  #a4-royal-invoice,
+  #a4-royal-invoice *,
+  #shift-handover-receipt,
+  #shift-handover-receipt *,
+  #careers-qr-poster,
+  #careers-qr-poster *,
+  .printable-area,
+  .printable-area * {
+    visibility: visible !important;
   }
+
+  /* 80mm Thermal Receipt Container: Centered on A4, full-width on thermal roll */
   #thermal-receipt {
-    position: absolute;
-    left: 0;
-    top: 0;
-    width: 80mm !important;
-    margin: 0 !important;
-    padding: 10px !important;
+    position: relative !important;
+    display: block !important;
+    width: 78mm !important;
+    max-width: 100% !important;
+    margin: 0 auto !important;
+    padding: 3mm 2mm !important;
     color: #000 !important;
     background: #fff !important;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Tahoma, Arial, sans-serif !important;
+    box-sizing: border-box !important;
   }
-  .no-print {
-    display: none !important;
+
+  /* A4 Royal Invoice Container */
+  #a4-royal-invoice {
+    position: relative !important;
+    display: block !important;
+    width: 100% !important;
+    max-width: 210mm !important;
+    margin: 0 auto !important;
+    padding: 8mm 12mm !important;
+    color: #000 !important;
+    background: #fff !important;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Tahoma, Arial, sans-serif !important;
+    box-sizing: border-box !important;
+  }
+
+  /* Shift Z-Report */
+  #shift-handover-receipt {
+    position: relative !important;
+    display: block !important;
+    width: 78mm !important;
+    max-width: 100% !important;
+    margin: 0 auto !important;
+    padding: 3mm 2mm !important;
+    color: #000 !important;
+    background: #fff !important;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Tahoma, Arial, sans-serif !important;
+    box-sizing: border-box !important;
   }
 }

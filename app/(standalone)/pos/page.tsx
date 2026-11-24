@@ -29,7 +29,14 @@ import {
   Wallet,
   FileText,
   Barcode,
+  Share2,
+  ExternalLink,
+  QrCode,
+  Eye,
+  Check,
 } from "lucide-react";
+import QRCode from "qrcode";
+import { generateCode128Svg } from "@/lib/barcode-svg";
 import { playAttendanceChime } from "@/lib/attendance-sound";
 
 export default function CashierPosPage() {
@@ -66,6 +73,23 @@ export default function CashierPosPage() {
 
   // Completed / Printed Receipt Order
   const [lastPrintedTicket, setLastPrintedTicket] = useState<any>(null);
+  const [showReceiptModal, setShowReceiptModal] = useState<boolean>(false);
+  const [receiptPrintMode, setReceiptPrintMode] = useState<"THERMAL_80MM" | "A4_INVOICE">("THERMAL_80MM");
+  const [receiptQrDataUrl, setReceiptQrDataUrl] = useState<string>("");
+
+  // Generate Crisp QR Code for the receipt
+  useEffect(() => {
+    if (lastPrintedTicket) {
+      const qrData = `https://daknelbasha.com/receipt?ticket=${lastPrintedTicket.ticketNumber || lastPrintedTicket.id}&amount=${lastPrintedTicket.finalAmount}`;
+      QRCode.toDataURL(qrData, {
+        width: 180,
+        margin: 1,
+        color: { dark: "#000000", light: "#ffffff" },
+      })
+        .then(setReceiptQrDataUrl)
+        .catch(console.error);
+    }
+  }, [lastPrintedTicket]);
 
   // Sound ref for new ticket alert
   const audioCtxRef = useRef<AudioContext | null>(null);
@@ -690,11 +714,12 @@ export default function CashierPosPage() {
       if (data.success && data.ticket) {
         setLastPrintedTicket(data.ticket);
         setSelectedTicket(null);
+        setShowReceiptModal(true);
         fetchPosData();
 
-        // Trigger thermal print
+        // Trigger direct thermal print with high-precision 80mm window
         setTimeout(() => {
-          window.print();
+          executePrintThermal(data.ticket);
         }, 300);
       } else {
         showToast("error", data.error || "فشل تحصيل التذكرة");
@@ -704,6 +729,653 @@ export default function CashierPosPage() {
     } finally {
       setSettlingTicket(false);
     }
+  };
+
+  // 1. Direct Thermal Print (80mm / 76mm printable roll for Xprinter & POS)
+  const executePrintThermal = (ticket: any) => {
+    if (!ticket) return;
+
+    let services: any[] = [];
+    try {
+      services = typeof ticket.services === "string" ? JSON.parse(ticket.services) : ticket.services || [];
+    } catch {}
+
+    let retailItems: any[] = [];
+    try {
+      retailItems = typeof ticket.retailItems === "string" ? JSON.parse(ticket.retailItems) : ticket.retailItems || [];
+    } catch {}
+
+    const barcodeSvg = generateCode128Svg(ticket.ticketNumber || "CHK-IN-0000", {
+      height: 38,
+      moduleWidth: 1.6,
+      includeText: true,
+      fontSize: 10,
+    });
+
+    const isHammam = ticket.branch?.name?.includes("حمام") || isWomenTheme;
+    const isNewSkin =
+      ticket.branch?.name?.includes("Skin") ||
+      ticket.services?.includes("ليزر") ||
+      ticket.services?.includes("بشرة") ||
+      isNewSkinTheme;
+
+    const brandName = isNewSkin
+      ? "عيادة نيو سكين VIP (جلدية وليزر)"
+      : isHammam
+      ? "حمام وسبا الباشا VIP (حريمي)"
+      : "صالون دقن الباشا VIP (رجالي)";
+
+    const brandSub = isNewSkin
+      ? "NEW SKIN CLINIC & LASER VIP"
+      : isHammam
+      ? "HAMMAM EL BASHA - LUXURY WOMEN SPA"
+      : "DAKN EL BASHA - VIP MEN SALON";
+
+    const printWin = window.open("", "_blank", "width=420,height=620");
+    if (!printWin) {
+      window.print();
+      return;
+    }
+
+    const itemsRows = [
+      ...services.map((it: any) => `
+        <tr>
+          <td style="padding: 4px 2px; text-align: right; font-weight: bold;">${it.nameAr}</td>
+          <td style="padding: 4px 2px; text-align: center;">1</td>
+          <td style="padding: 4px 2px; text-align: center; font-family: monospace;">${it.price}</td>
+          <td style="padding: 4px 2px; text-align: left; font-weight: bold; font-family: monospace;">${it.price} ج</td>
+        </tr>
+      `),
+      ...retailItems.map((it: any) => `
+        <tr>
+          <td style="padding: 4px 2px; text-align: right; font-weight: bold;">${it.nameAr}</td>
+          <td style="padding: 4px 2px; text-align: center; font-family: monospace;">${it.qty}</td>
+          <td style="padding: 4px 2px; text-align: center; font-family: monospace;">${it.price}</td>
+          <td style="padding: 4px 2px; text-align: left; font-weight: bold; font-family: monospace;">${it.total} ج</td>
+        </tr>
+      `),
+    ].join("");
+
+    const payMethodName =
+      ticket.paymentMethod === "CASH"
+        ? "نقداً (كاش) 💵"
+        : ticket.paymentMethod === "CARD"
+        ? "بطاقة بنكية (فيزا) 💳"
+        : ticket.paymentMethod === "INSTAPAY"
+        ? "انستاباي InstaPay ⚡"
+        : "فودافون كاش 📱";
+
+    const rawTotal = (ticket.servicesTotal || 0) + (ticket.retailTotal || 0);
+
+    printWin.document.write(`
+      <!DOCTYPE html>
+      <html dir="rtl" lang="ar">
+      <head>
+        <meta charset="utf-8" />
+        <title>إيصال #${ticket.ticketNumber}</title>
+        <style>
+          @page {
+            size: 80mm auto;
+            margin: 0;
+          }
+          * { box-sizing: border-box; margin: 0; padding: 0; }
+          body {
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Tahoma, Arial, sans-serif;
+            width: 76mm;
+            margin: 0 auto;
+            padding: 3mm 2mm;
+            color: #000;
+            background: #fff;
+            font-size: 11px;
+            line-height: 1.35;
+          }
+          .text-center { text-align: center; }
+          .text-right { text-align: right; }
+          .text-left { text-align: left; }
+          .bold { font-weight: bold; }
+          .black { font-weight: 900; }
+          .dashed-line {
+            border-bottom: 1.5px dashed #000;
+            margin: 6px 0;
+          }
+          .double-line {
+            border-bottom: 2.5px double #000;
+            margin: 6px 0;
+          }
+          table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 10.5px;
+          }
+          th {
+            border-bottom: 1.5px solid #000;
+            padding: 4px 2px;
+            font-size: 10px;
+          }
+          .total-box {
+            border: 2px solid #000;
+            padding: 6px 8px;
+            margin: 6px 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 13px;
+            font-weight: 900;
+            background: #fbfbfb;
+          }
+          .barcode-wrap {
+            margin: 6px 0 2px;
+            display: flex;
+            justify-content: center;
+          }
+          .barcode-wrap svg {
+            max-width: 100%;
+            height: auto;
+          }
+          .qr-wrap {
+            display: flex;
+            justify-content: center;
+            margin: 6px 0 2px;
+          }
+          .qr-wrap img {
+            width: 85px;
+            height: 85px;
+          }
+          .cut-line {
+            text-align: center;
+            font-size: 8.5px;
+            letter-spacing: 2px;
+            margin-top: 8px;
+            color: #444;
+          }
+        </style>
+      </head>
+      <body>
+        <div class="text-center">
+          <div style="font-size: 22px; line-height: 1;">👑</div>
+          <div class="black" style="font-size: 14px; margin-top: 2px;">مجموعة صالونات وسبا الباشا VIP</div>
+          <div class="bold" style="font-size: 12px; margin-top: 1px;">${brandName}</div>
+          <div style="font-size: 9px; font-weight: 700; letter-spacing: 0.5px; margin-top: 1px;">${brandSub}</div>
+          <div style="font-size: 9.5px; margin-top: 2px;">${ticket.branch?.name || "فرع حدائق القبة الملكي"}</div>
+          <div style="font-size: 9px; color: #333;">73 ترعة الجبل، أمام مستشفى سان بول</div>
+          <div style="font-size: 9.5px; font-weight: bold; margin-top: 1px;">الخط الساخن: 01210103025 - 01556782015</div>
+        </div>
+
+        <div class="dashed-line"></div>
+
+        <div style="font-size: 10.5px;">
+          <div style="display: flex; justify-content: space-between;">
+            <span class="bold">إيصال رقم:</span>
+            <span class="black" style="font-family: monospace; font-size: 12px;">#${ticket.ticketNumber}</span>
+          </div>
+          <div style="display: flex; justify-content: space-between; margin-top: 2px;">
+            <span>التاريخ:</span>
+            <span style="font-family: monospace;">${new Date().toLocaleDateString("ar-EG")} • ${new Date().toLocaleTimeString("ar-EG", { hour: "2-digit", minute: "2-digit" })}</span>
+          </div>
+          <div style="display: flex; justify-content: space-between; margin-top: 2px;">
+            <span>العميل:</span>
+            <span class="black">${ticket.customerName || "عميل الصالون VIP"}</span>
+          </div>
+          ${ticket.customerPhone ? `
+          <div style="display: flex; justify-content: space-between; margin-top: 2px;">
+            <span>الهاتف:</span>
+            <span style="font-family: monospace;">${ticket.customerPhone}</span>
+          </div>
+          ` : ""}
+          <div style="display: flex; justify-content: space-between; margin-top: 2px;">
+            <span>المتخصص والكرسي:</span>
+            <span class="bold">${ticket.specialist?.name || "كابتن الباشا"} (كرسي #${ticket.chairNumber || 1})</span>
+          </div>
+          <div style="display: flex; justify-content: space-between; margin-top: 2px;">
+            <span>الكاشير:</span>
+            <span>${ticket.cashierName || currentUser?.name || "كاشير الباشا"}</span>
+          </div>
+          <div style="display: flex; justify-content: space-between; margin-top: 2px;">
+            <span>طريقة الدفع:</span>
+            <span class="bold">${payMethodName}</span>
+          </div>
+        </div>
+
+        <div class="dashed-line"></div>
+
+        <table>
+          <thead>
+            <tr>
+              <th style="text-align: right; width: 48%;">الخدمة / الصنف</th>
+              <th style="text-align: center; width: 14%;">الكمية</th>
+              <th style="text-align: center; width: 18%;">السعر</th>
+              <th style="text-align: left; width: 20%;">الإجمالي</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${itemsRows || '<tr><td colspan="4" style="text-align: center; padding: 6px;">لا توجد عناصر</td></tr>'}
+          </tbody>
+        </table>
+
+        <div class="dashed-line"></div>
+
+        <div style="font-size: 10.5px;">
+          ${ticket.servicesTotal > 0 && ticket.retailTotal > 0 ? `
+            <div style="display: flex; justify-content: space-between;">
+              <span>إجمالي الخدمات:</span>
+              <span class="bold" style="font-family: monospace;">${ticket.servicesTotal} ج</span>
+            </div>
+            <div style="display: flex; justify-content: space-between; margin-top: 2px;">
+              <span>إجمالي المنتجات:</span>
+              <span class="bold" style="font-family: monospace;">${ticket.retailTotal} ج</span>
+            </div>
+          ` : rawTotal !== ticket.finalAmount && rawTotal > 0 ? `
+            <div style="display: flex; justify-content: space-between;">
+              <span>إجمالي الحساب:</span>
+              <span class="bold" style="font-family: monospace;">${rawTotal} ج</span>
+            </div>
+          ` : ""}
+          ${ticket.discount > 0 ? `
+            <div style="display: flex; justify-content: space-between; color: #b00; margin-top: 2px;">
+              <span>الخصم الممنوح:</span>
+              <span class="bold" style="font-family: monospace;">-${ticket.discount} ج</span>
+            </div>
+          ` : ""}
+          ${ticket.tipAmount > 0 ? `
+            <div style="display: flex; justify-content: space-between; margin-top: 2px;">
+              <span>الإكرامية / الخدمة:</span>
+              <span class="bold" style="font-family: monospace;">+${ticket.tipAmount} ج</span>
+            </div>
+          ` : ""}
+        </div>
+
+        <div class="total-box">
+          <span>المبلغ الإجمالي المدفوع:</span>
+          <span style="font-family: monospace; font-size: 15px;">${ticket.finalAmount} ج.م</span>
+        </div>
+
+        <div class="barcode-wrap">
+          ${barcodeSvg}
+        </div>
+
+        ${receiptQrDataUrl ? `
+        <div class="qr-wrap">
+          <img src="${receiptQrDataUrl}" alt="QR" />
+        </div>
+        <div class="text-center" style="font-size: 8.5px; color: #444; margin-bottom: 4px;">
+          امسح الكود لمعاينة الفاتورة وحجز موعدك القادم أونلاين 📱
+        </div>
+        ` : ""}
+
+        <div class="dashed-line"></div>
+
+        <div class="text-center" style="font-size: 9.5px; color: #222;">
+          <div class="bold">سعدنا بخدمتكم • دي هيبة الباشا تليق بكم 👑</div>
+          <div style="font-size: 8.5px; color: #555; margin-top: 2px;">الأسعار شاملة ضريبة القيمة المضافة • يُرجى الاحتفاظ بالإيصال</div>
+          <div style="font-size: 8px; color: #777; margin-top: 2px;">تطوير شركة أوركا للحلول البرمجية (Orca Tech) 🐬</div>
+        </div>
+
+        <div class="cut-line">- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -</div>
+
+        <script>
+          window.onload = function() {
+            window.focus();
+            window.print();
+            setTimeout(function() { window.close(); }, 1200);
+          };
+        </script>
+      </body>
+      </html>
+    `);
+    printWin.document.close();
+  };
+
+  // 2. Direct A4 Royal Invoice Print (Full-Page Corporate Tax Invoice)
+  const executePrintA4Invoice = (ticket: any) => {
+    if (!ticket) return;
+
+    let services: any[] = [];
+    try {
+      services = typeof ticket.services === "string" ? JSON.parse(ticket.services) : ticket.services || [];
+    } catch {}
+
+    let retailItems: any[] = [];
+    try {
+      retailItems = typeof ticket.retailItems === "string" ? JSON.parse(ticket.retailItems) : ticket.retailItems || [];
+    } catch {}
+
+    const isHammam = ticket.branch?.name?.includes("حمام") || isWomenTheme;
+    const isNewSkin =
+      ticket.branch?.name?.includes("Skin") ||
+      ticket.services?.includes("ليزر") ||
+      ticket.services?.includes("بشرة") ||
+      isNewSkinTheme;
+
+    const brandName = isNewSkin
+      ? "عيادة نيو سكين VIP (جلدية وليزر)"
+      : isHammam
+      ? "حمام وسبا الباشا VIP (حريمي)"
+      : "صالون دقن الباشا VIP (رجالي)";
+
+    const barcodeSvg = generateCode128Svg(ticket.ticketNumber || "CHK-IN-0000", {
+      height: 44,
+      moduleWidth: 2,
+      includeText: true,
+      fontSize: 12,
+    });
+
+    const printWin = window.open("", "_blank", "width=850,height=950");
+    if (!printWin) {
+      window.print();
+      return;
+    }
+
+    const allItems = [
+      ...services.map((it: any, i: number) => ({
+        index: i + 1,
+        name: it.nameAr,
+        type: "خدمة صالون / سبا",
+        qty: 1,
+        price: it.price,
+        total: it.price,
+      })),
+      ...retailItems.map((it: any, i: number) => ({
+        index: services.length + i + 1,
+        name: it.nameAr,
+        type: "منتج عناية وتجميل",
+        qty: it.qty,
+        price: it.price,
+        total: it.total,
+      })),
+    ];
+
+    printWin.document.write(`
+      <!DOCTYPE html>
+      <html dir="rtl" lang="ar">
+      <head>
+        <meta charset="utf-8" />
+        <title>فاتورة ضريبية رسمية #${ticket.ticketNumber}</title>
+        <style>
+          @page {
+            size: A4 portrait;
+            margin: 12mm 15mm;
+          }
+          * { box-sizing: border-box; margin: 0; padding: 0; }
+          body {
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Tahoma, Arial, sans-serif;
+            color: #111;
+            background: #fff;
+            padding: 10px;
+            font-size: 13px;
+            line-height: 1.4;
+          }
+          .header-box {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 3px double #d4af37;
+            padding-bottom: 15px;
+            margin-bottom: 15px;
+          }
+          .brand-title {
+            font-size: 22px;
+            font-weight: 900;
+            color: #0a0a0e;
+          }
+          .brand-sub {
+            font-size: 15px;
+            font-weight: bold;
+            color: #aa771c;
+          }
+          .invoice-badge {
+            background: #0a0a0e;
+            color: #d4af37;
+            padding: 8px 18px;
+            border-radius: 12px;
+            text-align: center;
+          }
+          .details-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 20px;
+          }
+          .info-card {
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            padding: 12px;
+            background: #fafafa;
+          }
+          .info-card h4 {
+            font-size: 13px;
+            font-weight: bold;
+            color: #333;
+            border-bottom: 1px solid #e0e0e0;
+            padding-bottom: 5px;
+            margin-bottom: 8px;
+          }
+          table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+          }
+          th {
+            background: #12121a;
+            color: #fff;
+            padding: 10px 8px;
+            font-size: 12px;
+            text-align: right;
+          }
+          td {
+            padding: 9px 8px;
+            border-bottom: 1px solid #eee;
+            font-size: 12.5px;
+          }
+          tr:nth-child(even) { background: #fbfbfb; }
+          .totals-wrap {
+            display: flex;
+            justify-content: flex-end;
+            margin-bottom: 25px;
+          }
+          .totals-table {
+            width: 320px;
+            border: 1.5px solid #000;
+            border-collapse: collapse;
+          }
+          .totals-table td {
+            padding: 8px 12px;
+            border-bottom: 1px solid #ddd;
+          }
+          .final-row {
+            background: #12121a !important;
+            color: #fff !important;
+            font-weight: 900;
+            font-size: 15px;
+          }
+          .stamps-row {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 30px;
+            padding-top: 15px;
+            border-top: 1px dashed #ccc;
+          }
+          .stamp-box {
+            text-align: center;
+            width: 200px;
+          }
+          .stamp-placeholder {
+            height: 70px;
+            border: 1px dashed #999;
+            border-radius: 8px;
+            margin-top: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 11px;
+            color: #888;
+          }
+        </style>
+      </head>
+      <body>
+        <div class="header-box">
+          <div>
+            <div style="font-size: 26px; line-height: 1;">👑</div>
+            <h1 class="brand-title">مجموعة صالونات وسبا الباشا VIP</h1>
+            <h2 class="brand-sub">${brandName}</h2>
+            <p style="font-size: 11px; color: #555; margin-top: 3px;">
+              فرع: ${ticket.branch?.name || "حدائق القبة"} • الخط الساخن: 01210103025 - 01556782015
+            </p>
+          </div>
+          <div class="invoice-badge">
+            <div style="font-size: 11px; font-weight: bold;">فاتورة مبيعات وخدمات رسمية</div>
+            <div style="font-size: 18px; font-family: monospace; font-weight: 900; margin-top: 3px;">#${ticket.ticketNumber}</div>
+            <div style="font-size: 10px; margin-top: 2px;">تاريخ: ${new Date().toLocaleDateString("ar-EG")}</div>
+          </div>
+        </div>
+
+        <div class="details-grid">
+          <div class="info-card">
+            <h4>بيانات العميل والفاتورة:</h4>
+            <div><strong>اسم العميل:</strong> ${ticket.customerName || "عميل الصالون VIP"}</div>
+            ${ticket.customerPhone ? `<div><strong>رقم الهاتف:</strong> <span style="font-family: monospace;">${ticket.customerPhone}</span></div>` : ""}
+            <div><strong>الكاشير المسئول:</strong> ${ticket.cashierName || currentUser?.name || "كاشير الباشا"}</div>
+            <div><strong>طريقة الدفع:</strong> ${ticket.paymentMethod === "CASH" ? "نقداً (كاش) 💵" : ticket.paymentMethod === "CARD" ? "بطاقة بنكية (فيزا) 💳" : ticket.paymentMethod === "INSTAPAY" ? "انستاباي InstaPay ⚡" : "فودافون كاش 📱"}</div>
+          </div>
+
+          <div class="info-card">
+            <h4>بيانات مقدم الخدمة والفرع:</h4>
+            <div><strong>المتخصص المسئول:</strong> ${ticket.specialist?.name || "كابتن الباشا"}</div>
+            <div><strong>رقم الكرسي / الجناح:</strong> كرسي #${ticket.chairNumber || 1}</div>
+            <div><strong>الفرع:</strong> ${ticket.branch?.name || "فرع حدائق القبة"} (73 شارع ترعة الجبل)</div>
+            <div><strong>التوقيت:</strong> ${new Date().toLocaleTimeString("ar-EG", { hour: "2-digit", minute: "2-digit" })}</div>
+          </div>
+        </div>
+
+        <table>
+          <thead>
+            <tr>
+              <th style="width: 5%; text-align: center;">#</th>
+              <th style="width: 45%;">الخدمة أو المنتج</th>
+              <th style="width: 20%;">النوع / التصنيف</th>
+              <th style="width: 10%; text-align: center;">الكمية</th>
+              <th style="width: 10%; text-align: center;">سعر الوحدة</th>
+              <th style="width: 10%; text-align: left;">الإجمالي</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${allItems.map((it) => `
+              <tr>
+                <td style="text-align: center; font-weight: bold;">${it.index}</td>
+                <td style="font-weight: bold;">${it.name}</td>
+                <td style="color: #555;">${it.type}</td>
+                <td style="text-align: center; font-family: monospace;">${it.qty}</td>
+                <td style="text-align: center; font-family: monospace;">${it.price} ج</td>
+                <td style="text-align: left; font-weight: bold; font-family: monospace;">${it.total} ج</td>
+              </tr>
+            `).join("")}
+          </tbody>
+        </table>
+
+        <div class="totals-wrap">
+          <table class="totals-table">
+            <tr>
+              <td>إجمالي الحساب:</td>
+              <td style="text-align: left; font-weight: bold; font-family: monospace;">${(ticket.servicesTotal || 0) + (ticket.retailTotal || 0)} ج.م</td>
+            </tr>
+            ${ticket.discount > 0 ? `
+            <tr style="color: #b00;">
+              <td>الخصم الممنوح:</td>
+              <td style="text-align: left; font-weight: bold; font-family: monospace;">-${ticket.discount} ج.م</td>
+            </tr>
+            ` : ""}
+            ${ticket.tipAmount > 0 ? `
+            <tr>
+              <td>الإكرامية / الخدمة:</td>
+              <td style="text-align: left; font-weight: bold; font-family: monospace;">+${ticket.tipAmount} ج.م</td>
+            </tr>
+            ` : ""}
+            <tr class="final-row">
+              <td>المبلغ الإجمالي المدفوع:</td>
+              <td style="text-align: left; font-family: monospace; font-size: 16px;">${ticket.finalAmount} ج.م</td>
+            </tr>
+          </table>
+        </div>
+
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+          <div style="text-align: center;">
+            ${barcodeSvg}
+          </div>
+          ${receiptQrDataUrl ? `
+          <div style="text-align: center; display: flex; align-items: center; gap: 10px;">
+            <img src="${receiptQrDataUrl}" style="width: 80px; height: 80px;" alt="QR" />
+            <div style="font-size: 10px; color: #555; text-align: right;">
+              كود التحقق والحجز الذكي<br/>
+              امسح للتحقق من صحة الفاتورة
+            </div>
+          </div>
+          ` : ""}
+        </div>
+
+        <div class="stamps-row">
+          <div class="stamp-box">
+            <div>توقيع الكاشير المسئول</div>
+            <div class="stamp-placeholder">${ticket.cashierName || currentUser?.name || "كاشير الباشا"}</div>
+          </div>
+          <div class="stamp-box">
+            <div>توقيع المستلم / العميل</div>
+            <div class="stamp-placeholder">${ticket.customerName || "توقيع العميل"}</div>
+          </div>
+          <div class="stamp-box">
+            <div>خاتم الإدارة والاعتماد</div>
+            <div class="stamp-placeholder">خاتم مجموعة الباشا VIP 👑</div>
+          </div>
+        </div>
+
+        <script>
+          window.onload = function() {
+            window.focus();
+            window.print();
+            setTimeout(function() { window.close(); }, 1500);
+          };
+        </script>
+      </body>
+      </html>
+    `);
+    printWin.document.close();
+  };
+
+  // 3. Send Electronic Receipt via WhatsApp
+  const handleSendReceiptWhatsApp = (ticket: any) => {
+    if (!ticket) return;
+    const phone = ticket.customerPhone || "";
+    const cleanPhone = phone.replace(/^0/, "20");
+
+    let services: any[] = [];
+    try {
+      services = typeof ticket.services === "string" ? JSON.parse(ticket.services) : ticket.services || [];
+    } catch {}
+
+    let retailItems: any[] = [];
+    try {
+      retailItems = typeof ticket.retailItems === "string" ? JSON.parse(ticket.retailItems) : ticket.retailItems || [];
+    } catch {}
+
+    const servicesText = services.map((s: any) => `• ${s.nameAr}: ${s.price} ج.م`).join("\n");
+    const productsText = retailItems.map((r: any) => `• ${r.nameAr} (×${r.qty}): ${r.total} ج.م`).join("\n");
+
+    const message = `👑 *مجموعة صالونات وسبا الباشا VIP* 👑
+--------------------------------
+🧾 *إيصال دفع إلكتروني رسمي*
+*رقم الإيصال:* #${ticket.ticketNumber}
+*اسم العميل:* ${ticket.customerName || "عميلنا المميز"}
+*التاريخ:* ${new Date().toLocaleDateString("ar-EG")} - ${new Date().toLocaleTimeString("ar-EG", { hour: "2-digit", minute: "2-digit" })}
+*المتخصص:* ${ticket.specialist?.name || "كابتن الباشا"} (كرسي #${ticket.chairNumber || 1})
+*الفرع:* ${ticket.branch?.name || "فرع حدائق القبة"}
+--------------------------------
+*تفاصيل الحساب:*
+${servicesText ? `*الخدمات:* \n${servicesText}\n` : ""}${productsText ? `*المنتجات:* \n${productsText}\n` : ""}
+💰 *المبلغ الإجمالي المدفوع:* ${ticket.finalAmount} ج.م
+💳 *طريقة الدفع:* ${ticket.paymentMethod === "CASH" ? "نقداً (كاش)" : ticket.paymentMethod === "CARD" ? "بطاقة بنكية (فيزا)" : ticket.paymentMethod === "INSTAPAY" ? "انستاباي" : "محفظة إلكترونية"}
+--------------------------------
+سعدنا جداً بخدمتكم في صالون وسبا الباشا الملكي، دي هيبة الباشا تليق بكم! ✨
+📞 خدمة العملاء والحجز: 01210103025 - 01556782015`;
+
+    window.open(`https://wa.me/${cleanPhone}?text=${encodeURIComponent(message)}`, "_blank");
   };
 
   const handleLogout = () => {
@@ -852,6 +1524,17 @@ export default function CashierPosPage() {
               <span>{branches.find((b) => b.id === activeBranchId)?.name || currentUser?.branch?.name || "فرعك المعتمد"}</span>
               <span className="text-[10px] opacity-75">(فرعك المصرح به 🔒)</span>
             </div>
+          )}
+
+          {lastPrintedTicket && (
+            <button
+              onClick={() => setShowReceiptModal(true)}
+              className="py-1.5 px-3 rounded-xl bg-purple-500/20 hover:bg-purple-500/30 border border-purple-500/40 text-purple-300 text-xs font-black transition flex items-center gap-1.5 shadow-sm cursor-pointer"
+              title="معاينة وطباعة آخر إيصال أو إرساله واتساب"
+            >
+              <Printer className="w-3.5 h-3.5" />
+              <span>آخر إيصال #{lastPrintedTicket.ticketNumber} 🧾</span>
+            </button>
           )}
 
           <button
@@ -1783,108 +2466,490 @@ export default function CashierPosPage() {
       )}
 
       {/* ─────────────────────────────────────────────────────────────
-          3. THERMAL RECEIPT PRINT TEMPLATE (80MM)
+          3. PROFESSIONAL RECEIPT PRINT TEMPLATES & PREVIEW MODAL
          ───────────────────────────────────────────────────────────── */}
       {lastPrintedTicket && (
-        <div id="thermal-receipt" className="hidden print:block text-black font-sans" dir="rtl">
-          <div className="text-center space-y-1 border-b-2 border-black pb-2 mb-2">
-            <h2 className="text-lg font-black tracking-wider">
-              {lastPrintedTicket.branch?.name?.includes("حمام") || isWomenTheme
-                ? "حمام الباشا VIP (صالون وسبا حريمي)"
-                : "صالون دقن الباشا VIP (رجالي)"}
-            </h2>
-            <p className="text-[11px] font-mono font-bold">
-              {lastPrintedTicket.branch?.name?.includes("حمام") || isWomenTheme
-                ? "HAMMAM EL BASHA - LUXURY WOMEN SPA"
-                : "DAKN EL BASHA - VIP MEN SALON"}
-            </p>
-            <p className="text-[10px]">
-              {lastPrintedTicket.branch?.name || "فرع حدائق القبة"}
-            </p>
-            <p className="text-[10px] font-mono">
-              تاريخ: {new Date().toLocaleDateString("ar-EG")} • {new Date().toLocaleTimeString("ar-EG")}
-            </p>
-            <p className="text-[11px] font-black font-mono">
-              إيصال رقم: #{lastPrintedTicket.ticketNumber}
-            </p>
-          </div>
+        <>
+          {/* Printable Thermal 80mm element (Used if native window.print() is invoked) */}
+          <div id="thermal-receipt" className="hidden print:block text-black font-sans" dir="rtl">
+            <div className="text-center space-y-1 border-b-2 border-black pb-2 mb-2">
+              <div className="text-2xl leading-none">👑</div>
+              <h2 className="text-base font-black tracking-wider">
+                مجموعة صالونات وسبا الباشا VIP
+              </h2>
+              <p className="text-xs font-black">
+                {lastPrintedTicket.branch?.name?.includes("Skin") || lastPrintedTicket.services?.includes("ليزر")
+                  ? "عيادة نيو سكين VIP (جلدية وليزر)"
+                  : lastPrintedTicket.branch?.name?.includes("حمام") || isWomenTheme
+                  ? "حمام وسبا الباشا VIP (حريمي)"
+                  : "صالون دقن الباشا VIP (رجالي)"}
+              </p>
+              <p className="text-[10px] font-mono font-bold tracking-tight text-gray-700">
+                {lastPrintedTicket.branch?.name?.includes("Skin") || lastPrintedTicket.services?.includes("ليزر")
+                  ? "NEW SKIN CLINIC & LASER VIP"
+                  : lastPrintedTicket.branch?.name?.includes("حمام") || isWomenTheme
+                  ? "HAMMAM EL BASHA - LUXURY WOMEN SPA"
+                  : "DAKN EL BASHA - VIP MEN SALON"}
+              </p>
+              <p className="text-[10px] font-bold">
+                {lastPrintedTicket.branch?.name || "فرع حدائق القبة الملكي"}
+              </p>
+              <p className="text-[9px] text-gray-600">
+                73 ترعة الجبل، أمام مستشفى سان بول • ت: 01210103025
+              </p>
+            </div>
 
-          <div className="text-[11px] space-y-1.5 border-b border-black pb-2 mb-2">
-            <div className="flex justify-between">
-              <span>العميل:</span>
-              <strong>{lastPrintedTicket.customerName}</strong>
-            </div>
-            <div className="flex justify-between">
-              <span>المتخصص والكرسي:</span>
-              <strong className="text-right">
-                {lastPrintedTicket.specialist?.name || "كابتن الباشا"} • كرسي #{lastPrintedTicket.chairNumber || 1}
-              </strong>
-            </div>
-            <div className="flex justify-between">
-              <span>الكاشير:</span>
-              <strong>{lastPrintedTicket.cashierName || currentUser?.name || "المايسترو"}</strong>
-            </div>
-            <div className="flex justify-between">
-              <span>طريقة الدفع:</span>
-              <strong>
-                {lastPrintedTicket.paymentMethod === "CASH"
-                  ? "نقداً (كاش) 💵"
-                  : lastPrintedTicket.paymentMethod === "CARD"
-                  ? "بطاقة بنكية (فيزا) 💳"
-                  : lastPrintedTicket.paymentMethod === "INSTAPAY"
-                  ? "انستاباي InstaPay ⚡"
-                  : "فودافون كاش 📱"}
-              </strong>
-            </div>
-          </div>
-
-          {/* Items */}
-          <div className="text-[11px] space-y-1 border-b border-black pb-2 mb-2">
-            <p className="font-black">تفاصيل الحساب:</p>
-            {(() => {
-              let s: any[] = [];
-              try {
-                s = typeof lastPrintedTicket.services === "string" ? JSON.parse(lastPrintedTicket.services) : lastPrintedTicket.services || [];
-              } catch {}
-              return s.map((it: any, idx: number) => (
-                <div key={idx} className="flex justify-between">
-                  <span>{it.nameAr}</span>
-                  <span className="font-mono font-bold">{it.price} ج</span>
+            <div className="text-[11px] space-y-1.5 border-b border-black pb-2 mb-2 font-medium">
+              <div className="flex justify-between items-center font-bold">
+                <span>إيصال رقم:</span>
+                <span className="font-mono text-sm tracking-wide">#{lastPrintedTicket.ticketNumber}</span>
+              </div>
+              <div className="flex justify-between items-center text-[10px]">
+                <span>التاريخ والوقت:</span>
+                <span className="font-mono font-bold">
+                  {new Date().toLocaleDateString("ar-EG")} • {new Date().toLocaleTimeString("ar-EG", { hour: "2-digit", minute: "2-digit" })}
+                </span>
+              </div>
+              <div className="flex justify-between items-center">
+                <span>العميل:</span>
+                <strong className="text-xs">{lastPrintedTicket.customerName || "عميل الباشا VIP"}</strong>
+              </div>
+              {lastPrintedTicket.customerPhone && (
+                <div className="flex justify-between items-center text-[10px]">
+                  <span>رقم الهاتف:</span>
+                  <span className="font-mono">{lastPrintedTicket.customerPhone}</span>
                 </div>
-              ));
-            })()}
+              )}
+              <div className="flex justify-between items-center">
+                <span>المتخصص والكرسي:</span>
+                <strong>
+                  {lastPrintedTicket.specialist?.name || "كابتن الباشا"} (كرسي #{lastPrintedTicket.chairNumber || 1})
+                </strong>
+              </div>
+              <div className="flex justify-between items-center text-[10px]">
+                <span>الكاشير المسؤول:</span>
+                <span>{lastPrintedTicket.cashierName || currentUser?.name || "كاشير الباشا"}</span>
+              </div>
+              <div className="flex justify-between items-center font-bold">
+                <span>طريقة الدفع:</span>
+                <span>
+                  {lastPrintedTicket.paymentMethod === "CASH"
+                    ? "نقداً (كاش) 💵"
+                    : lastPrintedTicket.paymentMethod === "CARD"
+                    ? "بطاقة بنكية (فيزا) 💳"
+                    : lastPrintedTicket.paymentMethod === "INSTAPAY"
+                    ? "انستاباي InstaPay ⚡"
+                    : "محفظة إلكترونية 📱"}
+                </span>
+              </div>
+            </div>
 
-            {(() => {
-              let r: any[] = [];
-              try {
-                r = typeof lastPrintedTicket.retailItems === "string" ? JSON.parse(lastPrintedTicket.retailItems) : lastPrintedTicket.retailItems || [];
-              } catch {}
-              return r.map((it: any, idx: number) => (
-                <div key={`pr-${idx}`} className="flex justify-between">
-                  <span>{it.nameAr} (×{it.qty})</span>
-                  <span className="font-mono font-bold">{it.total} ج</span>
+            {/* Table of Services & Retail */}
+            <div className="text-[11px] space-y-1 border-b border-black pb-2 mb-2">
+              <table className="w-full text-right border-collapse text-[10.5px]">
+                <thead>
+                  <tr className="border-b border-black text-[10px]">
+                    <th className="py-1 text-right">الخدمة / الصنف</th>
+                    <th className="py-1 text-center">الكمية</th>
+                    <th className="py-1 text-center">السعر</th>
+                    <th className="py-1 text-left">الإجمالي</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-gray-200">
+                  {(() => {
+                    let s: any[] = [];
+                    try {
+                      s = typeof lastPrintedTicket.services === "string" ? JSON.parse(lastPrintedTicket.services) : lastPrintedTicket.services || [];
+                    } catch {}
+                    return s.map((it: any, idx: number) => (
+                      <tr key={`svc-${idx}`}>
+                        <td className="py-1 text-right font-bold">{it.nameAr}</td>
+                        <td className="py-1 text-center">1</td>
+                        <td className="py-1 text-center font-mono">{it.price}</td>
+                        <td className="py-1 text-left font-mono font-bold">{it.price} ج</td>
+                      </tr>
+                    ));
+                  })()}
+
+                  {(() => {
+                    let r: any[] = [];
+                    try {
+                      r = typeof lastPrintedTicket.retailItems === "string" ? JSON.parse(lastPrintedTicket.retailItems) : lastPrintedTicket.retailItems || [];
+                    } catch {}
+                    return r.map((it: any, idx: number) => (
+                      <tr key={`ret-${idx}`}>
+                        <td className="py-1 text-right font-bold">{it.nameAr}</td>
+                        <td className="py-1 text-center font-mono">{it.qty}</td>
+                        <td className="py-1 text-center font-mono">{it.price}</td>
+                        <td className="py-1 text-left font-mono font-bold">{it.total} ج</td>
+                      </tr>
+                    ));
+                  })()}
+                </tbody>
+              </table>
+            </div>
+
+            {/* Calculations Breakdown */}
+            <div className="text-[11px] space-y-1 border-b border-black pb-2 mb-2 font-medium">
+              {lastPrintedTicket.servicesTotal > 0 && lastPrintedTicket.retailTotal > 0 && (
+                <>
+                  <div className="flex justify-between">
+                    <span>إجمالي الخدمات:</span>
+                    <span className="font-mono font-bold">{lastPrintedTicket.servicesTotal} ج</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span>إجمالي المنتجات:</span>
+                    <span className="font-mono font-bold">{lastPrintedTicket.retailTotal} ج</span>
+                  </div>
+                </>
+              )}
+              {lastPrintedTicket.discount > 0 && (
+                <div className="flex justify-between text-red-700 font-bold">
+                  <span>الخصم الممنوح:</span>
+                  <span className="font-mono">-{lastPrintedTicket.discount} ج</span>
                 </div>
-              ));
-            })()}
-          </div>
+              )}
+              {lastPrintedTicket.tipAmount > 0 && (
+                <div className="flex justify-between">
+                  <span>الإكرامية / الخدمة:</span>
+                  <span className="font-mono font-bold">+{lastPrintedTicket.tipAmount} ج</span>
+                </div>
+              )}
+            </div>
 
-          <div className="text-[12px] space-y-1 font-black border-b-2 border-black pb-2 mb-2">
-            <div className="flex justify-between text-sm">
+            {/* Final Total Box */}
+            <div className="border-2 border-black p-2 my-2 flex justify-between items-center text-sm font-black bg-gray-50">
               <span>المبلغ الإجمالي المدفوع:</span>
               <span className="font-mono text-base">{lastPrintedTicket.finalAmount} ج.م</span>
             </div>
+
+            {/* Barcode & QR Code */}
+            <div className="my-2 text-center space-y-1">
+              <div
+                className="flex justify-center"
+                dangerouslySetInnerHTML={{
+                  __html: generateCode128Svg(lastPrintedTicket.ticketNumber || "CHK-IN-0000", {
+                    height: 36,
+                    moduleWidth: 1.5,
+                    includeText: true,
+                    fontSize: 10,
+                  }),
+                }}
+              />
+              {receiptQrDataUrl && (
+                <div className="flex flex-col items-center justify-center pt-1">
+                  <img src={receiptQrDataUrl} alt="QR Code" className="w-20 h-20" />
+                  <span className="text-[8px] text-gray-500">امسح الكود للتحقق الذكي وحجز موعدك أونلاين</span>
+                </div>
+              )}
+            </div>
+
+            {/* Royal Footer */}
+            <div className="text-center text-[10px] space-y-1 pt-1.5 border-t border-black">
+              <p className="font-bold">{settings?.receiptFooterNotes || "شكراً لزيارتكم مجموعة صالونات وسبا الباشا VIP 👑"}</p>
+              <p className="font-mono font-black text-[10px]">
+                خدمة العملاء والحجز: 01210103025 - 01556782015
+              </p>
+              <p className="text-[8.5px] text-gray-700">
+                📍 دقن الباشا: 73 ترعة الجبل • 📍 حمام الباشا: 84 ترعة الجبل كينج بارك مول
+              </p>
+              <p className="text-[7.5px] text-gray-500 pt-0.5">
+                تطوير شركة أوركا للحلول البرمجية (Orca Tech) 🐬
+              </p>
+            </div>
           </div>
 
-          <div className="text-center text-[10px] space-y-1 pt-1.5 border-t border-black">
-            <p className="font-bold">{settings?.receiptFooterNotes || "شكراً لزيارتكم مجموعة صالونات وسبا الباشا VIP 👑"}</p>
-            <p className="font-mono font-black text-[11px]">
-              خدمة العملاء والحجز: 01210103025 - 01556782015
-            </p>
-            <p className="text-[9px] text-gray-700">
-              📍 دقن الباشا (رجالي): 73 ترعة الجبل • 📍 حمام الباشا (حريمي): 84 ترعة الجبل كينج بارك مول
-            </p>
-          </div>
-        </div>
+          {/* ─────────────────────────────────────────────────────────
+              RECEIPT MODAL (Live Interactive Preview & Print Dispatcher)
+             ───────────────────────────────────────────────────────── */}
+          {showReceiptModal && (
+            <div
+              className="fixed inset-0 z-50 overflow-y-auto bg-black/85 backdrop-blur-md flex justify-center items-start sm:items-center py-6 sm:py-10 px-3 font-sans no-print"
+              dir="rtl"
+            >
+              <div className="relative w-full max-w-xl my-auto bg-[#12121a] border border-amber-500/40 rounded-3xl p-5 sm:p-6 shadow-2xl space-y-4 max-h-[92vh] flex flex-col">
+                {/* Modal Header */}
+                <div className="flex items-center justify-between border-b border-white/10 pb-3 shrink-0">
+                  <div className="flex items-center gap-2">
+                    <div className="p-2 rounded-2xl bg-amber-500/20 text-amber-400">
+                      <Printer className="w-5 h-5" />
+                    </div>
+                    <div>
+                      <h3 className="text-sm font-black text-white flex items-center gap-2">
+                        معاينة وطباعة الفاتورة الملكية
+                        <span className="text-xs font-mono px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/30">
+                          #{lastPrintedTicket.ticketNumber}
+                        </span>
+                      </h3>
+                      <p className="text-[11px] text-slate-400">
+                        العميل: <strong className="text-white">{lastPrintedTicket.customerName}</strong> • المبلغ:{" "}
+                        <strong className="text-amber-400 font-mono">{lastPrintedTicket.finalAmount} ج.م</strong>
+                      </p>
+                    </div>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => setShowReceiptModal(false)}
+                    className="w-8 h-8 rounded-full bg-white/5 hover:bg-white/10 text-slate-400 hover:text-white flex items-center justify-center text-sm cursor-pointer"
+                  >
+                    ✕
+                  </button>
+                </div>
+
+                {/* View Mode Switcher Tabs */}
+                <div className="flex items-center gap-2 bg-black/40 p-1.5 rounded-2xl border border-white/5 shrink-0">
+                  <button
+                    type="button"
+                    onClick={() => setReceiptPrintMode("THERMAL_80MM")}
+                    className={`flex-1 py-2 px-3 rounded-xl text-xs font-black transition flex items-center justify-center gap-2 cursor-pointer ${
+                      receiptPrintMode === "THERMAL_80MM"
+                        ? "bg-amber-500 text-slate-950 shadow-md"
+                        : "text-slate-400 hover:text-white hover:bg-white/5"
+                    }`}
+                  >
+                    <Receipt className="w-4 h-4" />
+                    <span>إيصال كاشير حراري (80mm Xprinter)</span>
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setReceiptPrintMode("A4_INVOICE")}
+                    className={`flex-1 py-2 px-3 rounded-xl text-xs font-black transition flex items-center justify-center gap-2 cursor-pointer ${
+                      receiptPrintMode === "A4_INVOICE"
+                        ? "bg-amber-500 text-slate-950 shadow-md"
+                        : "text-slate-400 hover:text-white hover:bg-white/5"
+                    }`}
+                  >
+                    <FileText className="w-4 h-4" />
+                    <span>فاتورة ضريبية رسمية (A4)</span>
+                  </button>
+                </div>
+
+                {/* Interactive Real Paper Preview Window */}
+                <div className="overflow-y-auto pr-1 flex-1 max-h-[50vh] rounded-2xl bg-slate-900/80 p-3 border border-white/10 flex justify-center">
+                  {receiptPrintMode === "THERMAL_80MM" ? (
+                    /* Thermal 80mm Preview Card */
+                    <div className="w-[300px] bg-white text-black p-4 rounded-xl shadow-2xl font-sans text-xs space-y-2 border border-slate-300">
+                      <div className="text-center space-y-1 border-b border-black pb-2">
+                        <div className="text-xl">👑</div>
+                        <h4 className="font-black text-sm">مجموعة صالونات وسبا الباشا VIP</h4>
+                        <p className="text-[10px] font-bold text-gray-700">
+                          {lastPrintedTicket.branch?.name?.includes("Skin") || lastPrintedTicket.services?.includes("ليزر")
+                            ? "عيادة نيو سكين VIP (جلدية وليزر)"
+                            : lastPrintedTicket.branch?.name?.includes("حمام") || isWomenTheme
+                            ? "حمام وسبا الباشا VIP (حريمي)"
+                            : "صالون دقن الباشا VIP (رجالي)"}
+                        </p>
+                        <p className="text-[9px] font-mono text-gray-500 font-semibold">
+                          {lastPrintedTicket.branch?.name || "فرع حدائق القبة الملكي"}
+                        </p>
+                      </div>
+
+                      <div className="text-[10px] space-y-1 border-b border-dashed border-gray-400 pb-2">
+                        <div className="flex justify-between font-bold">
+                          <span>إيصال رقم:</span>
+                          <span className="font-mono">#{lastPrintedTicket.ticketNumber}</span>
+                        </div>
+                        <div className="flex justify-between">
+                          <span>العميل:</span>
+                          <strong>{lastPrintedTicket.customerName}</strong>
+                        </div>
+                        <div className="flex justify-between">
+                          <span>المتخصص:</span>
+                          <span>{lastPrintedTicket.specialist?.name || "كابتن الباشا"} (كرسي #{lastPrintedTicket.chairNumber || 1})</span>
+                        </div>
+                        <div className="flex justify-between">
+                          <span>طريقة الدفع:</span>
+                          <span className="font-bold">
+                            {lastPrintedTicket.paymentMethod === "CASH"
+                              ? "نقداً (كاش)"
+                              : lastPrintedTicket.paymentMethod === "CARD"
+                              ? "فيزا (بطاقة بنكية)"
+                              : "انستاباي / محفظة"}
+                          </span>
+                        </div>
+                      </div>
+
+                      {/* Items */}
+                      <div className="text-[10px] space-y-1 border-b border-dashed border-gray-400 pb-2">
+                        {(() => {
+                          let s: any[] = [];
+                          try {
+                            s = typeof lastPrintedTicket.services === "string" ? JSON.parse(lastPrintedTicket.services) : lastPrintedTicket.services || [];
+                          } catch {}
+                          return s.map((it: any, i: number) => (
+                            <div key={`prev-svc-${i}`} className="flex justify-between">
+                              <span className="font-semibold">{it.nameAr}</span>
+                              <span className="font-mono font-bold">{it.price} ج</span>
+                            </div>
+                          ));
+                        })()}
+                        {(() => {
+                          let r: any[] = [];
+                          try {
+                            r = typeof lastPrintedTicket.retailItems === "string" ? JSON.parse(lastPrintedTicket.retailItems) : lastPrintedTicket.retailItems || [];
+                          } catch {}
+                          return r.map((it: any, i: number) => (
+                            <div key={`prev-ret-${i}`} className="flex justify-between">
+                              <span className="font-semibold">{it.nameAr} (×{it.qty})</span>
+                              <span className="font-mono font-bold">{it.total} ج</span>
+                            </div>
+                          ));
+                        })()}
+                      </div>
+
+                      {/* Final Total */}
+                      <div className="bg-gray-100 p-2 rounded border border-gray-300 flex justify-between items-center font-black text-xs">
+                        <span>المبلغ المدفوع:</span>
+                        <span className="font-mono text-sm text-emerald-800">{lastPrintedTicket.finalAmount} ج.م</span>
+                      </div>
+
+                      {/* Barcode & QR code preview */}
+                      <div className="text-center pt-1">
+                        <div
+                          className="flex justify-center"
+                          dangerouslySetInnerHTML={{
+                            __html: generateCode128Svg(lastPrintedTicket.ticketNumber || "CHK-IN-0000", {
+                              height: 32,
+                              moduleWidth: 1.3,
+                              includeText: true,
+                              fontSize: 9,
+                            }),
+                          }}
+                        />
+                        {receiptQrDataUrl && (
+                          <div className="flex justify-center pt-2">
+                            <img src={receiptQrDataUrl} alt="QR" className="w-16 h-16" />
+                          </div>
+                        )}
+                      </div>
+
+                      <div className="text-center text-[8.5px] text-gray-500 pt-1 border-t border-gray-200">
+                        شكراً لزيارتكم • دي هيبة الباشا تليق بكم 👑
+                      </div>
+                    </div>
+                  ) : (
+                    /* A4 Invoice Preview Card */
+                    <div className="w-full max-w-[420px] bg-white text-black p-5 rounded-xl shadow-2xl font-sans text-[11px] space-y-3 border-2 border-amber-600/30">
+                      <div className="flex justify-between items-center border-b-2 border-amber-600/40 pb-3">
+                        <div>
+                          <h4 className="font-black text-sm text-slate-900">مجموعة صالونات وسبا الباشا VIP</h4>
+                          <p className="text-[10px] text-amber-700 font-bold">فاتورة ضريبية رسمية (TAX INVOICE)</p>
+                          <p className="text-[9px] text-gray-500">{lastPrintedTicket.branch?.name || "فرع حدائق القبة"}</p>
+                        </div>
+                        <div className="text-2xl">👑</div>
+                      </div>
+
+                      <div className="grid grid-cols-2 gap-2 p-2 bg-gray-50 rounded border border-gray-200 text-[10px]">
+                        <div>
+                          <span className="text-gray-500 block">رقم الفاتورة:</span>
+                          <span className="font-mono font-bold">#{lastPrintedTicket.ticketNumber}</span>
+                        </div>
+                        <div>
+                          <span className="text-gray-500 block">التاريخ:</span>
+                          <span className="font-mono font-bold">{new Date().toLocaleDateString("ar-EG")}</span>
+                        </div>
+                        <div>
+                          <span className="text-gray-500 block">اسم العميل:</span>
+                          <span className="font-bold">{lastPrintedTicket.customerName}</span>
+                        </div>
+                        <div>
+                          <span className="text-gray-500 block">الكاشير:</span>
+                          <span>{lastPrintedTicket.cashierName || currentUser?.name || "المايسترو"}</span>
+                        </div>
+                      </div>
+
+                      {/* Items table */}
+                      <table className="w-full text-right border-collapse text-[10px]">
+                        <thead>
+                          <tr className="bg-slate-900 text-white">
+                            <th className="p-1.5 text-right">البيان</th>
+                            <th className="p-1.5 text-center">الكمية</th>
+                            <th className="p-1.5 text-center">السعر</th>
+                            <th className="p-1.5 text-left">الإجمالي</th>
+                          </tr>
+                        </thead>
+                        <tbody className="divide-y divide-gray-200">
+                          {(() => {
+                            let s: any[] = [];
+                            try {
+                              s = typeof lastPrintedTicket.services === "string" ? JSON.parse(lastPrintedTicket.services) : lastPrintedTicket.services || [];
+                            } catch {}
+                            return s.map((it: any, i: number) => (
+                              <tr key={`a4-svc-${i}`}>
+                                <td className="p-1.5 font-bold">{it.nameAr}</td>
+                                <td className="p-1.5 text-center">1</td>
+                                <td className="p-1.5 text-center font-mono">{it.price}</td>
+                                <td className="p-1.5 text-left font-mono font-bold">{it.price} ج</td>
+                              </tr>
+                            ));
+                          })()}
+                        </tbody>
+                      </table>
+
+                      {/* Total */}
+                      <div className="border-t-2 border-black pt-2 flex justify-between items-center font-black">
+                        <span>إجمالي الفاتورة المدفوع:</span>
+                        <span className="text-sm font-mono text-emerald-800">{lastPrintedTicket.finalAmount} ج.م</span>
+                      </div>
+
+                      {/* QR and Stamps */}
+                      <div className="flex justify-between items-center pt-2 border-t border-gray-200 text-[9px] text-gray-500">
+                        {receiptQrDataUrl && <img src={receiptQrDataUrl} alt="QR" className="w-14 h-14" />}
+                        <div className="text-center border border-dashed border-gray-400 p-2 rounded">
+                          <div>ختم الإدارة والاعتماد</div>
+                          <div className="font-bold text-amber-800 pt-0.5">مجموعة الباشا VIP 👑</div>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+                </div>
+
+                {/* Dispatch & Print Buttons */}
+                <div className="pt-2 border-t border-white/10 flex flex-wrap items-center justify-between gap-2 shrink-0">
+                  <div className="flex items-center gap-2">
+                    <button
+                      type="button"
+                      onClick={() => executePrintThermal(lastPrintedTicket)}
+                      className="py-2.5 px-4 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-black text-xs transition flex items-center gap-2 shadow-lg shadow-amber-500/20 cursor-pointer"
+                    >
+                      <Printer className="w-4 h-4" />
+                      <span>طباعة إيصال كاشير (80mm Xprinter)</span>
+                    </button>
+
+                    <button
+                      type="button"
+                      onClick={() => executePrintA4Invoice(lastPrintedTicket)}
+                      className="py-2.5 px-3.5 rounded-xl bg-white/10 hover:bg-white/20 text-white font-bold text-xs transition flex items-center gap-2 border border-white/10 cursor-pointer"
+                    >
+                      <FileText className="w-4 h-4 text-amber-400" />
+                      <span>طباعة فاتورة A4 رسمية</span>
+                    </button>
+
+                    {lastPrintedTicket.customerPhone && (
+                      <button
+                        type="button"
+                        onClick={() => handleSendReceiptWhatsApp(lastPrintedTicket)}
+                        className="py-2.5 px-3.5 rounded-xl bg-emerald-600/20 hover:bg-emerald-600/30 text-emerald-300 font-bold text-xs transition flex items-center gap-1.5 border border-emerald-500/30 cursor-pointer"
+                        title="إرسال إيصال الدفع عبر واتساب للعميل"
+                      >
+                        <Share2 className="w-4 h-4" />
+                        <span>إرسال واتساب</span>
+                      </button>
+                    )}
+                  </div>
+
+                  <button
+                    type="button"
+                    onClick={() => setShowReceiptModal(false)}
+                    className="py-2.5 px-4 rounded-xl bg-white/5 hover:bg-white/10 text-slate-300 text-xs font-bold transition cursor-pointer"
+                  >
+                    إغلاق
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
+        </>
       )}
       {/* ─────────────────────────────────────────────────────────────
           4. POS CLOSE SHIFT MODAL (إقفال وتسليم الوردية)
