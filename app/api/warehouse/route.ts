@@ -53,6 +53,38 @@ export async function GET(req: Request) {
       return NextResponse.json({ success: true, barcode });
     }
 
+    // 2.1 GENERATE BARCODES FOR ALL PRODUCTS WITHOUT BARCODE
+    if (action === "generate_missing_barcodes") {
+      const missing = await prisma.product.findMany({
+        where: {
+          OR: [{ barcode: null }, { barcode: "" }],
+        },
+      });
+
+      let updatedCount = 0;
+      for (const p of missing) {
+        const barcode = await generateUniqueBarcode();
+        await prisma.product.update({
+          where: { id: p.id },
+          data: { barcode, barcodeType: "AUTO" },
+        });
+        updatedCount++;
+      }
+
+      const allProducts = await prisma.product.findMany({
+        where: { isActive: true },
+        include: { branch: true },
+        orderBy: { createdAt: "desc" },
+      });
+
+      return NextResponse.json({
+        success: true,
+        updatedCount,
+        message: `تم توليد باركود تلقائي فريد لـ (${updatedCount}) صنف بنجاح!`,
+        products: allProducts,
+      });
+    }
+
     // 3. GET PURCHASES & OPENING INVENTORIES
     if (action === "get_purchases") {
       const purchases = await prisma.stockPurchase.findMany({
@@ -167,6 +199,21 @@ export async function POST(req: Request) {
   try {
     const body = await req.json();
     const { action } = body;
+
+    // 0. ASSIGN SINGLE BARCODE TO PRODUCT
+    if (action === "assign_single_barcode") {
+      const { productId } = body;
+      if (!productId) {
+        return NextResponse.json({ success: false, error: "معرف الصنف مطلوب" }, { status: 400 });
+      }
+      const barcode = await generateUniqueBarcode();
+      const updated = await prisma.product.update({
+        where: { id: productId },
+        data: { barcode, barcodeType: "AUTO" },
+        include: { branch: true },
+      });
+      return NextResponse.json({ success: true, product: updated, barcode });
+    }
 
     // 1. CREATE OR UPDATE PRODUCT WITH AUTO/EXISTING BARCODE
     if (action === "save_product") {

@@ -77,6 +77,7 @@ export default function CentralWarehouseTab({
 
   // State
   const [products, setProducts] = useState<Product[]>([]);
+  const [allProducts, setAllProducts] = useState<Product[]>([]); // Unfiltered products for modals & scanning
   const [purchases, setPurchases] = useState<any[]>([]);
   const [transfers, setTransfers] = useState<any[]>([]);
   const [consumptionLogs, setConsumptionLogs] = useState<any[]>([]);
@@ -87,6 +88,16 @@ export default function CentralWarehouseTab({
   const [searchQuery, setSearchQuery] = useState("");
   const [usageFilter, setUsageFilter] = useState<"ALL" | "RETAIL" | "CONSUMABLE">("ALL");
   const [branchFilter, setBranchFilter] = useState<string>("ALL");
+
+  // Barcode Scanners State
+  const [globalBarcodeInput, setGlobalBarcodeInput] = useState("");
+  const [stockInBarcodeInput, setStockInBarcodeInput] = useState("");
+  const [stockInMatchedProduct, setStockInMatchedProduct] = useState<Product | null>(null);
+  const stockInQtyRef = useRef<HTMLInputElement>(null);
+
+  const [transferBarcodeInput, setTransferBarcodeInput] = useState("");
+  const [transferMatchedProduct, setTransferMatchedProduct] = useState<Product | null>(null);
+  const transferQtyRef = useRef<HTMLInputElement>(null);
 
   // Modals
   const [showProductModal, setShowProductModal] = useState(false);
@@ -168,9 +179,15 @@ export default function CentralWarehouseTab({
       const resP = await fetch("/api/warehouse?action=get_stock&usageType=ALL&branchId=ALL");
       const dataP = await resP.json();
       if (dataP.success) {
-        setProducts(dataP.products || []);
-        if (dataP.products.length > 0 && !selectedProductForLabel) {
-          setSelectedProductForLabel(dataP.products[0]);
+        const loaded = dataP.products || [];
+        setProducts(loaded);
+        setAllProducts(loaded);
+        if (loaded.length > 0) {
+          setSelectedProductForLabel((prev) => {
+            if (!prev) return loaded[0];
+            const updated = loaded.find((item: any) => item.id === prev.id);
+            return updated || loaded[0];
+          });
         }
       }
 
@@ -197,6 +214,119 @@ export default function CentralWarehouseTab({
       showToast("error", "تعذر تحميل بيانات المخزن العام");
     } finally {
       setLoading(false);
+    }
+  };
+
+  // Global Barcode Scan (from main scanner bar)
+  const handleGlobalBarcodeScan = (code: string) => {
+    const clean = code.trim();
+    if (!clean) return;
+    const match = allProducts.find(
+      (p) => p.barcode && p.barcode.trim().toLowerCase() === clean.toLowerCase()
+    );
+    if (match) {
+      setSelectedProductForLabel(match);
+      setSubTab("labels");
+      showToast("success", `🎯 تم العثور على (${match.nameAr}) ومطابقة الباركود! جاهز للطباعة 🖨️`);
+      setGlobalBarcodeInput("");
+    } else {
+      showToast("error", `⚠️ لم يتم العثور على أي صنف بالباركود [${clean}]!`);
+    }
+  };
+
+  // Stock-In Barcode Scan
+  const handleStockInBarcodeScan = (code: string, isSubmit = false) => {
+    const clean = code.trim();
+    if (!clean) {
+      setStockInMatchedProduct(null);
+      return;
+    }
+    const match = allProducts.find(
+      (p) => p.barcode && p.barcode.trim().toLowerCase() === clean.toLowerCase()
+    );
+    if (match) {
+      setStockInMatchedProduct(match);
+      setStockInForm((prev) => ({
+        ...prev,
+        productId: match.id,
+        costPrice: match.costPrice || 0,
+      }));
+      showToast("success", `✅ تم التعرف على الصنف: ${match.nameAr}`);
+      if (isSubmit) {
+        stockInQtyRef.current?.focus();
+        stockInQtyRef.current?.select();
+      }
+    } else if (isSubmit) {
+      showToast("info", `الباركود [${clean}] غير مسجل كصنف سابق. يمكنك تكويده بالأسفل!`);
+    }
+  };
+
+  // Transfer Barcode Scan
+  const handleTransferBarcodeScan = (code: string, isSubmit = false) => {
+    const clean = code.trim();
+    if (!clean) {
+      setTransferMatchedProduct(null);
+      return;
+    }
+    const match = allProducts.find(
+      (p) => p.barcode && p.barcode.trim().toLowerCase() === clean.toLowerCase()
+    );
+    if (match) {
+      setTransferMatchedProduct(match);
+      setTransferForm((prev) => ({
+        ...prev,
+        productId: match.id,
+      }));
+      showToast("success", `✅ تم التعرف على الصنف: ${match.nameAr} | المتاح بالمخزن العام: ${match.centralStockQty}`);
+      if (isSubmit) {
+        transferQtyRef.current?.focus();
+        transferQtyRef.current?.select();
+      }
+    } else if (isSubmit) {
+      showToast("error", `⚠️ هذا الباركود [${clean}] غير موجود بالمخزن!`);
+    }
+  };
+
+  // Assign Barcode to Currently Selected Product
+  const handleAssignBarcodeToSelectedProduct = async () => {
+    if (!selectedProductForLabel) return;
+    try {
+      const res = await fetch("/api/warehouse", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          action: "assign_single_barcode",
+          productId: selectedProductForLabel.id,
+        }),
+      });
+      const data = await res.json();
+      if (data.success && data.product) {
+        setSelectedProductForLabel(data.product);
+        showToast("success", `🎉 تم توليد وتثبيت الباركود [${data.barcode}] للصنف بنجاح!`);
+        await loadWarehouseData();
+        if (onRefreshData) await onRefreshData();
+      } else {
+        showToast("error", data.error || "فشل توليد الباركود");
+      }
+    } catch {
+      showToast("error", "تعذر الاتصال بالخادم");
+    }
+  };
+
+  // Generate All Missing Barcodes
+  const handleGenerateAllMissingBarcodes = async () => {
+    try {
+      const res = await fetch("/api/warehouse?action=generate_missing_barcodes");
+      const data = await res.json();
+      if (data.success) {
+        showToast("success", data.message || "تم تحديث الباركود لجميع الأصناف بنجاح!");
+        await loadWarehouseData();
+        if (onRefreshData) await onRefreshData();
+      } else {
+        showToast("error", data.error || "فشل التحديث");
+      }
+    } catch {
+      showToast("error", "خطأ في الاتصال");
     }
   };
 
@@ -645,6 +775,50 @@ export default function CentralWarehouseTab({
         </div>
       </div>
 
+      {/* GLOBAL INSTANT BARCODE GUN SCANNER (ماسح الباركود السريع المباشر) */}
+      <div className="p-4 rounded-3xl bg-gradient-to-r from-amber-500/20 via-black/80 to-slate-900 border-2 border-amber-500/50 shadow-xl flex flex-col md:flex-row items-center justify-between gap-4">
+        <div className="flex items-center gap-3 w-full md:w-auto">
+          <div className="w-11 h-11 rounded-2xl bg-amber-500/20 border border-amber-400/50 flex items-center justify-center text-amber-400 shrink-0 shadow-inner">
+            <Barcode className="w-6 h-6 animate-pulse" />
+          </div>
+          <div>
+            <h4 className="text-xs font-black text-white flex items-center gap-2">
+              <span>ماسح الباركود المركزي الشامل (Laser Barcode Scanner 🔫)</span>
+              <span className="text-[10px] px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 font-bold border border-emerald-500/30">
+                جاهز للمسح المباشر
+              </span>
+            </h4>
+            <p className="text-[11px] text-slate-400 mt-0.5">
+              وجه مسدس الباركود على أي منتج أو استيكر مطبوع للتعرف عليه فوراً والتحويل لطباعته أو صرفه
+            </p>
+          </div>
+        </div>
+
+        <div className="relative w-full md:w-96">
+          <input
+            type="text"
+            value={globalBarcodeInput}
+            onChange={(e) => setGlobalBarcodeInput(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") {
+                e.preventDefault();
+                handleGlobalBarcodeScan(globalBarcodeInput);
+              }
+            }}
+            placeholder="امسح الباركود بالمسدس هنا أو اكتب الكود..."
+            className="w-full py-2.5 pr-10 pl-20 rounded-2xl bg-black/90 border border-amber-500/60 text-amber-300 font-mono font-bold text-xs focus:outline-none focus:border-amber-400 focus:ring-2 focus:ring-amber-500/30 placeholder-slate-500"
+          />
+          <Barcode className="w-4 h-4 text-amber-400 absolute right-3 top-1/2 -translate-y-1/2" />
+          <button
+            type="button"
+            onClick={() => handleGlobalBarcodeScan(globalBarcodeInput)}
+            className="absolute left-1.5 top-1/2 -translate-y-1/2 py-1 px-3 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-black text-[11px] transition cursor-pointer"
+          >
+            مسح 🔍
+          </button>
+        </div>
+      </div>
+
       {/* Navigation Sub-Tabs */}
       <div className="flex items-center gap-2 p-1.5 bg-black/50 rounded-2xl border border-white/10 overflow-x-auto">
         <button
@@ -952,22 +1126,31 @@ export default function CentralWarehouseTab({
             </h3>
 
             {/* Select Product */}
-            <div>
-              <label className="text-xs text-slate-300 font-bold block mb-1">اختر الصنف المراد طباعة باركوده:</label>
+            <div className="space-y-2">
+              <label className="text-xs text-slate-300 font-bold block">اختر الصنف المراد طباعة باركوده:</label>
               <select
                 value={selectedProductForLabel?.id || ""}
                 onChange={(e) => {
-                  const sel = products.find((p) => p.id === e.target.value);
+                  const sel = allProducts.find((p) => p.id === e.target.value);
                   if (sel) setSelectedProductForLabel(sel);
                 }}
-                className="w-full py-2 px-3 rounded-xl bg-black/60 border border-white/10 text-white text-xs font-bold"
+                className="w-full py-2.5 px-3 rounded-xl bg-black/60 border border-white/10 text-white text-xs font-bold focus:border-amber-400"
               >
-                {products.map((p) => (
+                {allProducts.map((p) => (
                   <option key={p.id} value={p.id}>
                     {p.nameAr} [{p.barcode || "بدون باركود"}]
                   </option>
                 ))}
               </select>
+
+              <button
+                type="button"
+                onClick={handleGenerateAllMissingBarcodes}
+                className="w-full py-2 px-3 rounded-xl bg-amber-500/10 hover:bg-amber-500/20 text-amber-300 border border-amber-500/30 text-[11px] font-bold transition flex items-center justify-center gap-1.5 cursor-pointer"
+              >
+                <RefreshCw className="w-3.5 h-3.5" />
+                <span>توليد باركود تلقائي لجميع الأصناف التي بدون باركود 🔄</span>
+              </button>
             </div>
 
             {/* Print Quantity */}
@@ -1038,7 +1221,17 @@ export default function CentralWarehouseTab({
                       className="w-full flex justify-center"
                     />
                   ) : (
-                    <span className="text-xs text-rose-600 font-bold">لا يوجد باركود مسجل لهذا الصنف</span>
+                    <div className="py-2 px-3 rounded-xl bg-amber-50 border border-amber-300 space-y-1.5 w-full">
+                      <span className="text-[11px] text-rose-600 font-black block">لا يوجد باركود مسجل لهذا الصنف!</span>
+                      <button
+                        type="button"
+                        onClick={handleAssignBarcodeToSelectedProduct}
+                        className="py-1 px-3 rounded-lg bg-amber-500 hover:bg-amber-400 text-slate-950 font-black text-[10px] transition shadow flex items-center justify-center gap-1 mx-auto cursor-pointer"
+                      >
+                        <Sparkles className="w-3 h-3" />
+                        <span>توليد وتثبيت باركود فريد الآن (DKN-XXXXXX) ⚡</span>
+                      </button>
+                    </div>
                   )}
                 </div>
 
@@ -1490,25 +1683,69 @@ export default function CentralWarehouseTab({
                 </div>
               </div>
 
+              {/* Barcode Gun Laser Scanner */}
+              <div className="p-3.5 rounded-2xl bg-gradient-to-r from-emerald-500/20 via-black/80 to-slate-900 border-2 border-emerald-500/50 space-y-2 shadow-lg">
+                <div className="flex items-center justify-between">
+                  <label className="text-xs font-black text-emerald-300 flex items-center gap-1.5">
+                    <Barcode className="w-4 h-4 text-emerald-400" />
+                    <span>مسح الباركود بالمسدس (Laser Scanner 🔫):</span>
+                  </label>
+                  <span className="text-[10px] text-slate-400 font-mono">اضغط Enter للاختيار</span>
+                </div>
+                <div className="relative">
+                  <input
+                    type="text"
+                    value={stockInBarcodeInput}
+                    onChange={(e) => {
+                      setStockInBarcodeInput(e.target.value);
+                      handleStockInBarcodeScan(e.target.value);
+                    }}
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter") {
+                        e.preventDefault();
+                        handleStockInBarcodeScan(stockInBarcodeInput, true);
+                      }
+                    }}
+                    placeholder="امسح الباركود بالمسدس هنا أو اكتب الكود..."
+                    className="w-full py-2.5 pr-9 pl-16 rounded-xl bg-black/90 border border-emerald-500/60 text-emerald-300 font-mono font-bold text-xs focus:outline-none focus:border-emerald-400 focus:ring-2 focus:ring-emerald-500/30 placeholder-slate-500"
+                  />
+                  <Barcode className="w-4 h-4 text-emerald-400 absolute right-2.5 top-1/2 -translate-y-1/2" />
+                  <button
+                    type="button"
+                    onClick={() => handleStockInBarcodeScan(stockInBarcodeInput, true)}
+                    className="absolute left-1.5 top-1/2 -translate-y-1/2 py-1 px-2.5 rounded-lg bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-black text-[10px] transition cursor-pointer"
+                  >
+                    مسح 📷
+                  </button>
+                </div>
+                {stockInMatchedProduct && (
+                  <div className="p-2 rounded-xl bg-emerald-950/80 border border-emerald-500/40 text-[11px] text-emerald-200 flex items-center justify-between font-bold">
+                    <span>✅ تم التعرف: {stockInMatchedProduct.nameAr}</span>
+                    <span className="font-mono text-amber-300">مخزن: {stockInMatchedProduct.centralStockQty} {stockInMatchedProduct.unit}</span>
+                  </div>
+                )}
+              </div>
+
               <div>
-                <label className="text-slate-300 font-bold block mb-1">الصنف المضاف:</label>
+                <label className="text-slate-300 font-bold block mb-1">أو اختر الصنف يدوياً من كافة المنتجات:</label>
                 <select
                   required
                   value={stockInForm.productId}
                   onChange={(e) => {
-                    const prod = products.find((p) => p.id === e.target.value);
+                    const prod = allProducts.find((p) => p.id === e.target.value);
                     setStockInForm({
                       ...stockInForm,
                       productId: e.target.value,
                       costPrice: prod?.costPrice || 0,
                     });
+                    if (prod) setStockInMatchedProduct(prod);
                   }}
-                  className="w-full py-2 px-3 rounded-xl bg-black/60 border border-white/10 text-white font-bold"
+                  className="w-full py-2.5 px-3 rounded-xl bg-black/60 border border-white/10 text-white font-bold text-xs focus:border-emerald-400"
                 >
-                  <option value="">اختر الصنف...</option>
-                  {products.map((p) => (
+                  <option value="">اختر الصنف من القائمة...</option>
+                  {allProducts.map((p) => (
                     <option key={p.id} value={p.id}>
-                      {p.nameAr} ({p.unit})
+                      {p.nameAr} [{p.barcode || "بدون باركود"}] — رصيد المخزن: {p.centralStockQty} {p.unit}
                     </option>
                   ))}
                 </select>
@@ -1518,6 +1755,7 @@ export default function CentralWarehouseTab({
                 <div>
                   <label className="text-slate-300 font-bold block mb-1">الكمية المضافة:</label>
                   <input
+                    ref={stockInQtyRef}
                     type="number"
                     min="1"
                     required
@@ -1582,18 +1820,65 @@ export default function CentralWarehouseTab({
             </div>
 
             <form onSubmit={handleSaveTransfer} className="space-y-3.5 text-xs">
+              {/* Barcode Gun Laser Scanner for Transfer */}
+              <div className="p-3.5 rounded-2xl bg-gradient-to-r from-amber-500/20 via-black/80 to-slate-900 border-2 border-amber-500/50 space-y-2 shadow-lg">
+                <div className="flex items-center justify-between">
+                  <label className="text-xs font-black text-amber-300 flex items-center gap-1.5">
+                    <Barcode className="w-4 h-4 text-amber-400" />
+                    <span>مسح باركود الصنف بالمسدس للصرف السريع 🔫:</span>
+                  </label>
+                  <span className="text-[10px] text-slate-400 font-mono">اضغط Enter للاختيار</span>
+                </div>
+                <div className="relative">
+                  <input
+                    type="text"
+                    value={transferBarcodeInput}
+                    onChange={(e) => {
+                      setTransferBarcodeInput(e.target.value);
+                      handleTransferBarcodeScan(e.target.value);
+                    }}
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter") {
+                        e.preventDefault();
+                        handleTransferBarcodeScan(transferBarcodeInput, true);
+                      }
+                    }}
+                    placeholder="امسح باركود الصنف بالمسدس هنا..."
+                    className="w-full py-2.5 pr-9 pl-16 rounded-xl bg-black/90 border border-amber-500/60 text-amber-300 font-mono font-bold text-xs focus:outline-none focus:border-amber-400 focus:ring-2 focus:ring-amber-500/30 placeholder-slate-500"
+                  />
+                  <Barcode className="w-4 h-4 text-amber-400 absolute right-2.5 top-1/2 -translate-y-1/2" />
+                  <button
+                    type="button"
+                    onClick={() => handleTransferBarcodeScan(transferBarcodeInput, true)}
+                    className="absolute left-1.5 top-1/2 -translate-y-1/2 py-1 px-2.5 rounded-lg bg-amber-500 hover:bg-amber-400 text-slate-950 font-black text-[10px] transition cursor-pointer"
+                  >
+                    مسح 📷
+                  </button>
+                </div>
+                {transferMatchedProduct && (
+                  <div className="p-2 rounded-xl bg-amber-950/80 border border-amber-500/40 text-[11px] text-amber-200 flex items-center justify-between font-bold">
+                    <span>✅ تم التعرف: {transferMatchedProduct.nameAr}</span>
+                    <span className="font-mono text-emerald-300">متاح بالمخزن: {transferMatchedProduct.centralStockQty} {transferMatchedProduct.unit}</span>
+                  </div>
+                )}
+              </div>
+
               <div>
-                <label className="text-slate-300 font-bold block mb-1">الصنف المراد تحويله:</label>
+                <label className="text-slate-300 font-bold block mb-1">أو اختر الصنف يدوياً من كافة المنتجات:</label>
                 <select
                   required
                   value={transferForm.productId}
-                  onChange={(e) => setTransferForm({ ...transferForm, productId: e.target.value })}
-                  className="w-full py-2 px-3 rounded-xl bg-black/60 border border-white/10 text-white font-bold"
+                  onChange={(e) => {
+                    const prod = allProducts.find((p) => p.id === e.target.value);
+                    setTransferForm({ ...transferForm, productId: e.target.value });
+                    if (prod) setTransferMatchedProduct(prod);
+                  }}
+                  className="w-full py-2.5 px-3 rounded-xl bg-black/60 border border-white/10 text-white font-bold text-xs focus:border-amber-400"
                 >
-                  <option value="">اختر الصنف...</option>
-                  {products.map((p) => (
+                  <option value="">اختر الصنف من القائمة...</option>
+                  {allProducts.map((p) => (
                     <option key={p.id} value={p.id}>
-                      {p.nameAr} [رصيد المخزن العام: {p.centralStockQty} {p.unit}]
+                      {p.nameAr} [{p.barcode || "بدون باركود"}] — متاح بالمخزن: {p.centralStockQty} {p.unit}
                     </option>
                   ))}
                 </select>
@@ -1619,6 +1904,7 @@ export default function CentralWarehouseTab({
               <div>
                 <label className="text-slate-300 font-bold block mb-1">الكمية المراد صرفها:</label>
                 <input
+                  ref={transferQtyRef}
                   type="number"
                   min="1"
                   required

@@ -28,6 +28,7 @@ import {
   Receipt,
   Wallet,
   FileText,
+  Barcode,
 } from "lucide-react";
 import { playAttendanceChime } from "@/lib/attendance-sound";
 
@@ -104,6 +105,10 @@ export default function CashierPosPage() {
   // Customer Edit State for Checkout
   const [checkoutCustomerName, setCheckoutCustomerName] = useState<string>("");
   const [checkoutCustomerPhone, setCheckoutCustomerPhone] = useState<string>("");
+
+  // Barcode Gun Scanner State for Cashier POS
+  const [posBarcodeInput, setPosBarcodeInput] = useState<string>("");
+  const posBarcodeInputRef = useRef<HTMLInputElement>(null);
 
   // Attendance Punch State
   const [isCheckedIn, setIsCheckedIn] = useState<boolean>(false);
@@ -587,6 +592,73 @@ export default function CashierPosPage() {
       if (data.success && data.ticket) {
         setSelectedTicket(data.ticket);
         fetchPosData();
+      }
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
+  // Scan Barcode with Laser Gun and Add Product to Ticket
+  const handleScanBarcodeInPos = async (code: string) => {
+    const cleanCode = code.trim();
+    if (!cleanCode) return;
+
+    // Search in retailProducts by barcode
+    const foundProduct = retailProducts.find(
+      (p) => p.barcode && p.barcode.trim().toLowerCase() === cleanCode.toLowerCase()
+    );
+
+    if (!foundProduct) {
+      showToast("error", `⚠️ هذا الباركود [${cleanCode}] غير مسجل بأي منتج في المنظومة!`);
+      setPosBarcodeInput("");
+      return;
+    }
+
+    if (!selectedTicket) {
+      showToast("error", `يرجى اختيار تذكرة عميل أولاً، أو فتح فاتورة بيع مباشر سريع لإضافة (${foundProduct.nameAr}) 🛒`);
+      setPosBarcodeInput("");
+      return;
+    }
+
+    if (foundProduct.stockQty <= 0) {
+      showToast("error", `عفواً، رصيد المنتج (${foundProduct.nameAr}) نفذ بالكامل من المخزن (0)!`);
+      setPosBarcodeInput("");
+      return;
+    }
+
+    await handleAddRetailProduct(foundProduct);
+    showToast("success", `✅ تم مسح وإضافة (${foundProduct.nameAr}) لسلة العميل بنجاح! 🛒`);
+    setPosBarcodeInput("");
+    setTimeout(() => {
+      posBarcodeInputRef.current?.focus();
+    }, 100);
+  };
+
+  // Open Quick Direct Retail Ticket (Walk-in Customer Buying Retail)
+  const handleCreateQuickRetailTicket = async () => {
+    if (!activeBranchId) return;
+    try {
+      const spec = specialists[0];
+      const res = await fetch("/api/tickets", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          specialistId: spec?.id || "spec-retail",
+          branchId: activeBranchId,
+          customerName: "عميل شراء مباشر 🛍️",
+          status: "READY_FOR_CASHIER",
+          initialServices: [],
+          notes: "فاتورة بيع منتجات ومستحضرات تجميل مباشرة",
+        }),
+      });
+      const data = await res.json();
+      if (data.success && data.ticket) {
+        setSelectedTicket(data.ticket);
+        await fetchPosData();
+        showToast("success", "تم فتح فاتورة بيع مباشر جديدة! جاهز لمسح الباركود 🔫");
+        setTimeout(() => {
+          posBarcodeInputRef.current?.focus();
+        }, 150);
       }
     } catch (e) {
       console.error(e);
@@ -1115,6 +1187,56 @@ export default function CashierPosPage() {
               </>
             );
           })()}
+
+          {/* Barcode Gun Laser Scanner for Cashier POS */}
+          <div className="p-4 rounded-3xl bg-gradient-to-r from-amber-500/20 via-black/80 to-slate-900 border-2 border-amber-500/50 shadow-xl space-y-2">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <Barcode className="w-5 h-5 text-amber-400 animate-pulse" />
+                <h4 className="text-xs font-black text-amber-300">
+                  مسح باركود المنتجات (مسدس الباركود 🔫):
+                </h4>
+              </div>
+              <button
+                type="button"
+                onClick={handleCreateQuickRetailTicket}
+                className="py-1 px-3 rounded-xl bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 border border-amber-500/40 text-[11px] font-bold transition flex items-center gap-1.5 cursor-pointer shadow-sm"
+                title="فتح فاتورة بيع جديدة للعميل فوراً بدون حلاقة"
+              >
+                <Plus className="w-3.5 h-3.5" />
+                <span>فاتورة بيع مباشر سريع 🛍️</span>
+              </button>
+            </div>
+
+            <div className="relative">
+              <input
+                ref={posBarcodeInputRef}
+                type="text"
+                value={posBarcodeInput}
+                onChange={(e) => setPosBarcodeInput(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") {
+                    e.preventDefault();
+                    handleScanBarcodeInPos(posBarcodeInput);
+                  }
+                }}
+                placeholder={
+                  selectedTicket
+                    ? `امسح الباركود لإضافته فوراً لتذكرة (${selectedTicket.customerName})...`
+                    : "اختر تذكرة عميل أولاً، أو اضغط على فاتورة بيع مباشر سريع..."
+                }
+                className="w-full py-2.5 pr-10 pl-24 rounded-2xl bg-black/90 border border-amber-500/60 text-amber-300 font-mono font-bold text-xs focus:outline-none focus:border-amber-400 focus:ring-2 focus:ring-amber-500/30 placeholder-slate-500"
+              />
+              <Barcode className="w-4 h-4 text-amber-400 absolute right-3 top-1/2 -translate-y-1/2" />
+              <button
+                type="button"
+                onClick={() => handleScanBarcodeInPos(posBarcodeInput)}
+                className="absolute left-1.5 top-1/2 -translate-y-1/2 py-1 px-3 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-black text-[11px] transition cursor-pointer"
+              >
+                إضافة 🛒
+              </button>
+            </div>
+          </div>
 
           {/* Retail Beauty Products Catalog (Add to Cart) */}
           <div className="space-y-3">
