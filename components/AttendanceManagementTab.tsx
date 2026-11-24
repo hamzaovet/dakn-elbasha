@@ -1,6 +1,7 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
+import { playAttendanceChime, sendDesktopNotification } from "@/lib/attendance-sound";
 import {
   Clock,
   CheckCircle2,
@@ -16,6 +17,8 @@ import {
   LogOut,
   MapPin,
   Sparkles,
+  Bell,
+  Volume2,
 } from "lucide-react";
 
 interface AttendanceTabProps {
@@ -57,6 +60,7 @@ export default function AttendanceManagementTab({
     notes: "",
   });
   const [submittingManual, setSubmittingManual] = useState<boolean>(false);
+  const prevCountRef = useRef<number | null>(null);
 
   // Fetch Attendance Records
   const fetchAttendance = async () => {
@@ -69,8 +73,21 @@ export default function AttendanceManagementTab({
       );
       const data = await res.json();
       if (data.success) {
-        setRecords(data.records || []);
+        const fetchedRecords = data.records || [];
+        setRecords(fetchedRecords);
         setSummary(data.summary || null);
+
+        // Audible Ding-Dong Alarm & Desktop Push if a new attendance punch occurred
+        if (prevCountRef.current !== null && fetchedRecords.length > prevCountRef.current) {
+          const newest = fetchedRecords[0];
+          playAttendanceChime(newest.checkOutTime ? "CHECK_OUT" : "CHECK_IN");
+          const msg = `سجل [ ${newest.user?.name} ] ${
+            newest.checkOutTime ? "انصراف" : "حضور"
+          } بفرع (${newest.branch?.name})`;
+          sendDesktopNotification("بصمة حضور مجموعة الباشا VIP ⏰", msg);
+          showToast("info", `🔔 تنبيه فوري: ${msg}`);
+        }
+        prevCountRef.current = fetchedRecords.length;
       } else {
         showToast("error", data.error || "فشل جلب بيانات الحضور");
       }
@@ -98,6 +115,7 @@ export default function AttendanceManagementTab({
       });
       const data = await res.json();
       if (data.success) {
+        playAttendanceChime("CHECK_OUT");
         showToast("success", data.message);
         fetchAttendance();
       } else {
@@ -129,6 +147,7 @@ export default function AttendanceManagementTab({
       });
       const data = await res.json();
       if (data.success) {
+        playAttendanceChime(manualForm.action as any);
         showToast("success", data.message);
         setShowManualModal(false);
         setManualForm({ userId: "", action: "CHECK_IN", branchId: "", notes: "" });
@@ -285,6 +304,20 @@ export default function AttendanceManagementTab({
 
         {/* Action Buttons */}
         <div className="flex items-center gap-2">
+          <button
+            type="button"
+            onClick={() => {
+              playAttendanceChime("CHECK_IN");
+              sendDesktopNotification("مجموعة الباشا VIP ⏰", "تم اختبار صوت جرس الحضور والانصراف بنجاح 🔔");
+              showToast("success", "🔔 تم تجربة صوت جرس البصمة وتأكيد تفعيل الصوت!");
+            }}
+            className="py-2 px-3 rounded-2xl bg-amber-500/15 hover:bg-amber-500/25 border border-amber-500/35 text-amber-300 font-bold text-xs transition flex items-center gap-1.5 shadow-sm active:scale-95 cursor-pointer"
+            title="انقر لتشغيل جرس التنبيه وتأكيد تفعيل الصوت"
+          >
+            <Volume2 className="w-3.5 h-3.5" />
+            <span>تجربة صوت الجرس 🔔</span>
+          </button>
+
           <button
             onClick={() => setShowManualModal(true)}
             className="py-2 px-4 rounded-2xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-black font-black text-xs transition flex items-center gap-1.5 shadow-md active:scale-95 cursor-pointer"

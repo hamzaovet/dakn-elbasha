@@ -88,6 +88,21 @@ export type TreasuryExpense = $Result.DefaultSelection<Prisma.$TreasuryExpensePa
  * 
  */
 export type AttendanceRecord = $Result.DefaultSelection<Prisma.$AttendanceRecordPayload>
+/**
+ * Model StockPurchase
+ * 
+ */
+export type StockPurchase = $Result.DefaultSelection<Prisma.$StockPurchasePayload>
+/**
+ * Model StockTransfer
+ * 
+ */
+export type StockTransfer = $Result.DefaultSelection<Prisma.$StockTransferPayload>
+/**
+ * Model MaterialConsumptionLog
+ * 
+ */
+export type MaterialConsumptionLog = $Result.DefaultSelection<Prisma.$MaterialConsumptionLogPayload>
 
 /**
  * ##  Prisma Client ʲˢ
@@ -359,6 +374,36 @@ export class PrismaClient<
     * ```
     */
   get attendanceRecord(): Prisma.AttendanceRecordDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.stockPurchase`: Exposes CRUD operations for the **StockPurchase** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more StockPurchases
+    * const stockPurchases = await prisma.stockPurchase.findMany()
+    * ```
+    */
+  get stockPurchase(): Prisma.StockPurchaseDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.stockTransfer`: Exposes CRUD operations for the **StockTransfer** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more StockTransfers
+    * const stockTransfers = await prisma.stockTransfer.findMany()
+    * ```
+    */
+  get stockTransfer(): Prisma.StockTransferDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.materialConsumptionLog`: Exposes CRUD operations for the **MaterialConsumptionLog** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more MaterialConsumptionLogs
+    * const materialConsumptionLogs = await prisma.materialConsumptionLog.findMany()
+    * ```
+    */
+  get materialConsumptionLog(): Prisma.MaterialConsumptionLogDelegate<ExtArgs, ClientOptions>;
 }
 
 export namespace Prisma {
@@ -820,7 +865,10 @@ export namespace Prisma {
     ChatMessage: 'ChatMessage',
     CashShift: 'CashShift',
     TreasuryExpense: 'TreasuryExpense',
-    AttendanceRecord: 'AttendanceRecord'
+    AttendanceRecord: 'AttendanceRecord',
+    StockPurchase: 'StockPurchase',
+    StockTransfer: 'StockTransfer',
+    MaterialConsumptionLog: 'MaterialConsumptionLog'
   };
 
   export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -836,7 +884,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "branch" | "user" | "specialist" | "service" | "customer" | "booking" | "ticket" | "product" | "specialistLedger" | "systemSettings" | "offer" | "chatMessage" | "cashShift" | "treasuryExpense" | "attendanceRecord"
+      modelProps: "branch" | "user" | "specialist" | "service" | "customer" | "booking" | "ticket" | "product" | "specialistLedger" | "systemSettings" | "offer" | "chatMessage" | "cashShift" | "treasuryExpense" | "attendanceRecord" | "stockPurchase" | "stockTransfer" | "materialConsumptionLog"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -1950,6 +1998,228 @@ export namespace Prisma {
           }
         }
       }
+      StockPurchase: {
+        payload: Prisma.$StockPurchasePayload<ExtArgs>
+        fields: Prisma.StockPurchaseFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.StockPurchaseFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$StockPurchasePayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.StockPurchaseFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$StockPurchasePayload>
+          }
+          findFirst: {
+            args: Prisma.StockPurchaseFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$StockPurchasePayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.StockPurchaseFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$StockPurchasePayload>
+          }
+          findMany: {
+            args: Prisma.StockPurchaseFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$StockPurchasePayload>[]
+          }
+          create: {
+            args: Prisma.StockPurchaseCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$StockPurchasePayload>
+          }
+          createMany: {
+            args: Prisma.StockPurchaseCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.StockPurchaseCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$StockPurchasePayload>[]
+          }
+          delete: {
+            args: Prisma.StockPurchaseDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$StockPurchasePayload>
+          }
+          update: {
+            args: Prisma.StockPurchaseUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$StockPurchasePayload>
+          }
+          deleteMany: {
+            args: Prisma.StockPurchaseDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.StockPurchaseUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.StockPurchaseUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$StockPurchasePayload>[]
+          }
+          upsert: {
+            args: Prisma.StockPurchaseUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$StockPurchasePayload>
+          }
+          aggregate: {
+            args: Prisma.StockPurchaseAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateStockPurchase>
+          }
+          groupBy: {
+            args: Prisma.StockPurchaseGroupByArgs<ExtArgs>
+            result: $Utils.Optional<StockPurchaseGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.StockPurchaseCountArgs<ExtArgs>
+            result: $Utils.Optional<StockPurchaseCountAggregateOutputType> | number
+          }
+        }
+      }
+      StockTransfer: {
+        payload: Prisma.$StockTransferPayload<ExtArgs>
+        fields: Prisma.StockTransferFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.StockTransferFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$StockTransferPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.StockTransferFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$StockTransferPayload>
+          }
+          findFirst: {
+            args: Prisma.StockTransferFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$StockTransferPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.StockTransferFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$StockTransferPayload>
+          }
+          findMany: {
+            args: Prisma.StockTransferFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$StockTransferPayload>[]
+          }
+          create: {
+            args: Prisma.StockTransferCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$StockTransferPayload>
+          }
+          createMany: {
+            args: Prisma.StockTransferCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.StockTransferCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$StockTransferPayload>[]
+          }
+          delete: {
+            args: Prisma.StockTransferDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$StockTransferPayload>
+          }
+          update: {
+            args: Prisma.StockTransferUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$StockTransferPayload>
+          }
+          deleteMany: {
+            args: Prisma.StockTransferDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.StockTransferUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.StockTransferUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$StockTransferPayload>[]
+          }
+          upsert: {
+            args: Prisma.StockTransferUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$StockTransferPayload>
+          }
+          aggregate: {
+            args: Prisma.StockTransferAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateStockTransfer>
+          }
+          groupBy: {
+            args: Prisma.StockTransferGroupByArgs<ExtArgs>
+            result: $Utils.Optional<StockTransferGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.StockTransferCountArgs<ExtArgs>
+            result: $Utils.Optional<StockTransferCountAggregateOutputType> | number
+          }
+        }
+      }
+      MaterialConsumptionLog: {
+        payload: Prisma.$MaterialConsumptionLogPayload<ExtArgs>
+        fields: Prisma.MaterialConsumptionLogFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.MaterialConsumptionLogFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MaterialConsumptionLogPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.MaterialConsumptionLogFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MaterialConsumptionLogPayload>
+          }
+          findFirst: {
+            args: Prisma.MaterialConsumptionLogFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MaterialConsumptionLogPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.MaterialConsumptionLogFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MaterialConsumptionLogPayload>
+          }
+          findMany: {
+            args: Prisma.MaterialConsumptionLogFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MaterialConsumptionLogPayload>[]
+          }
+          create: {
+            args: Prisma.MaterialConsumptionLogCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MaterialConsumptionLogPayload>
+          }
+          createMany: {
+            args: Prisma.MaterialConsumptionLogCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.MaterialConsumptionLogCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MaterialConsumptionLogPayload>[]
+          }
+          delete: {
+            args: Prisma.MaterialConsumptionLogDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MaterialConsumptionLogPayload>
+          }
+          update: {
+            args: Prisma.MaterialConsumptionLogUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MaterialConsumptionLogPayload>
+          }
+          deleteMany: {
+            args: Prisma.MaterialConsumptionLogDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.MaterialConsumptionLogUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.MaterialConsumptionLogUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MaterialConsumptionLogPayload>[]
+          }
+          upsert: {
+            args: Prisma.MaterialConsumptionLogUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MaterialConsumptionLogPayload>
+          }
+          aggregate: {
+            args: Prisma.MaterialConsumptionLogAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateMaterialConsumptionLog>
+          }
+          groupBy: {
+            args: Prisma.MaterialConsumptionLogGroupByArgs<ExtArgs>
+            result: $Utils.Optional<MaterialConsumptionLogGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.MaterialConsumptionLogCountArgs<ExtArgs>
+            result: $Utils.Optional<MaterialConsumptionLogCountAggregateOutputType> | number
+          }
+        }
+      }
     }
   } & {
     other: {
@@ -2088,6 +2358,9 @@ export namespace Prisma {
     cashShift?: CashShiftOmit
     treasuryExpense?: TreasuryExpenseOmit
     attendanceRecord?: AttendanceRecordOmit
+    stockPurchase?: StockPurchaseOmit
+    stockTransfer?: StockTransferOmit
+    materialConsumptionLog?: MaterialConsumptionLogOmit
   }
 
   /* Types for Logging */
@@ -2179,6 +2452,8 @@ export namespace Prisma {
     shifts: number
     expenses: number
     attendances: number
+    transfers: number
+    consumptionLogs: number
   }
 
   export type BranchCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -2193,6 +2468,8 @@ export namespace Prisma {
     shifts?: boolean | BranchCountOutputTypeCountShiftsArgs
     expenses?: boolean | BranchCountOutputTypeCountExpensesArgs
     attendances?: boolean | BranchCountOutputTypeCountAttendancesArgs
+    transfers?: boolean | BranchCountOutputTypeCountTransfersArgs
+    consumptionLogs?: boolean | BranchCountOutputTypeCountConsumptionLogsArgs
   }
 
   // Custom InputTypes
@@ -2281,6 +2558,20 @@ export namespace Prisma {
    */
   export type BranchCountOutputTypeCountAttendancesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: AttendanceRecordWhereInput
+  }
+
+  /**
+   * BranchCountOutputType without action
+   */
+  export type BranchCountOutputTypeCountTransfersArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: StockTransferWhereInput
+  }
+
+  /**
+   * BranchCountOutputType without action
+   */
+  export type BranchCountOutputTypeCountConsumptionLogsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: MaterialConsumptionLogWhereInput
   }
 
 
@@ -2401,6 +2692,55 @@ export namespace Prisma {
    */
   export type CustomerCountOutputTypeCountTicketsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: TicketWhereInput
+  }
+
+
+  /**
+   * Count Type ProductCountOutputType
+   */
+
+  export type ProductCountOutputType = {
+    purchases: number
+    transfers: number
+    consumptionLogs: number
+  }
+
+  export type ProductCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    purchases?: boolean | ProductCountOutputTypeCountPurchasesArgs
+    transfers?: boolean | ProductCountOutputTypeCountTransfersArgs
+    consumptionLogs?: boolean | ProductCountOutputTypeCountConsumptionLogsArgs
+  }
+
+  // Custom InputTypes
+  /**
+   * ProductCountOutputType without action
+   */
+  export type ProductCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ProductCountOutputType
+     */
+    select?: ProductCountOutputTypeSelect<ExtArgs> | null
+  }
+
+  /**
+   * ProductCountOutputType without action
+   */
+  export type ProductCountOutputTypeCountPurchasesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: StockPurchaseWhereInput
+  }
+
+  /**
+   * ProductCountOutputType without action
+   */
+  export type ProductCountOutputTypeCountTransfersArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: StockTransferWhereInput
+  }
+
+  /**
+   * ProductCountOutputType without action
+   */
+  export type ProductCountOutputTypeCountConsumptionLogsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: MaterialConsumptionLogWhereInput
   }
 
 
@@ -2615,6 +2955,8 @@ export namespace Prisma {
     shifts?: boolean | Branch$shiftsArgs<ExtArgs>
     expenses?: boolean | Branch$expensesArgs<ExtArgs>
     attendances?: boolean | Branch$attendancesArgs<ExtArgs>
+    transfers?: boolean | Branch$transfersArgs<ExtArgs>
+    consumptionLogs?: boolean | Branch$consumptionLogsArgs<ExtArgs>
     _count?: boolean | BranchCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["branch"]>
 
@@ -2667,6 +3009,8 @@ export namespace Prisma {
     shifts?: boolean | Branch$shiftsArgs<ExtArgs>
     expenses?: boolean | Branch$expensesArgs<ExtArgs>
     attendances?: boolean | Branch$attendancesArgs<ExtArgs>
+    transfers?: boolean | Branch$transfersArgs<ExtArgs>
+    consumptionLogs?: boolean | Branch$consumptionLogsArgs<ExtArgs>
     _count?: boolean | BranchCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type BranchIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
@@ -2686,6 +3030,8 @@ export namespace Prisma {
       shifts: Prisma.$CashShiftPayload<ExtArgs>[]
       expenses: Prisma.$TreasuryExpensePayload<ExtArgs>[]
       attendances: Prisma.$AttendanceRecordPayload<ExtArgs>[]
+      transfers: Prisma.$StockTransferPayload<ExtArgs>[]
+      consumptionLogs: Prisma.$MaterialConsumptionLogPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -3102,6 +3448,8 @@ export namespace Prisma {
     shifts<T extends Branch$shiftsArgs<ExtArgs> = {}>(args?: Subset<T, Branch$shiftsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CashShiftPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     expenses<T extends Branch$expensesArgs<ExtArgs> = {}>(args?: Subset<T, Branch$expensesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TreasuryExpensePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     attendances<T extends Branch$attendancesArgs<ExtArgs> = {}>(args?: Subset<T, Branch$attendancesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$AttendanceRecordPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    transfers<T extends Branch$transfersArgs<ExtArgs> = {}>(args?: Subset<T, Branch$transfersArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$StockTransferPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    consumptionLogs<T extends Branch$consumptionLogsArgs<ExtArgs> = {}>(args?: Subset<T, Branch$consumptionLogsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$MaterialConsumptionLogPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -3794,6 +4142,54 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: AttendanceRecordScalarFieldEnum | AttendanceRecordScalarFieldEnum[]
+  }
+
+  /**
+   * Branch.transfers
+   */
+  export type Branch$transfersArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the StockTransfer
+     */
+    select?: StockTransferSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the StockTransfer
+     */
+    omit?: StockTransferOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: StockTransferInclude<ExtArgs> | null
+    where?: StockTransferWhereInput
+    orderBy?: StockTransferOrderByWithRelationInput | StockTransferOrderByWithRelationInput[]
+    cursor?: StockTransferWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: StockTransferScalarFieldEnum | StockTransferScalarFieldEnum[]
+  }
+
+  /**
+   * Branch.consumptionLogs
+   */
+  export type Branch$consumptionLogsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the MaterialConsumptionLog
+     */
+    select?: MaterialConsumptionLogSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the MaterialConsumptionLog
+     */
+    omit?: MaterialConsumptionLogOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MaterialConsumptionLogInclude<ExtArgs> | null
+    where?: MaterialConsumptionLogWhereInput
+    orderBy?: MaterialConsumptionLogOrderByWithRelationInput | MaterialConsumptionLogOrderByWithRelationInput[]
+    cursor?: MaterialConsumptionLogWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: MaterialConsumptionLogScalarFieldEnum | MaterialConsumptionLogScalarFieldEnum[]
   }
 
   /**
@@ -11453,6 +11849,9 @@ export namespace Prisma {
     costPrice: number | null
     stockQty: number | null
     minStockAlert: number | null
+    centralStockQty: number | null
+    estimatedUsesPerUnit: number | null
+    currentOpenedUnits: number | null
   }
 
   export type ProductSumAggregateOutputType = {
@@ -11460,6 +11859,9 @@ export namespace Prisma {
     costPrice: number | null
     stockQty: number | null
     minStockAlert: number | null
+    centralStockQty: number | null
+    estimatedUsesPerUnit: number | null
+    currentOpenedUnits: number | null
   }
 
   export type ProductMinAggregateOutputType = {
@@ -11473,8 +11875,16 @@ export namespace Prisma {
     minStockAlert: number | null
     image: string | null
     barcode: string | null
+    barcodeType: string | null
+    usageType: string | null
+    unit: string | null
+    centralStockQty: number | null
+    consumptionRule: string | null
+    estimatedUsesPerUnit: number | null
+    currentOpenedUnits: number | null
     isActive: boolean | null
     createdAt: Date | null
+    updatedAt: Date | null
   }
 
   export type ProductMaxAggregateOutputType = {
@@ -11488,8 +11898,16 @@ export namespace Prisma {
     minStockAlert: number | null
     image: string | null
     barcode: string | null
+    barcodeType: string | null
+    usageType: string | null
+    unit: string | null
+    centralStockQty: number | null
+    consumptionRule: string | null
+    estimatedUsesPerUnit: number | null
+    currentOpenedUnits: number | null
     isActive: boolean | null
     createdAt: Date | null
+    updatedAt: Date | null
   }
 
   export type ProductCountAggregateOutputType = {
@@ -11503,8 +11921,16 @@ export namespace Prisma {
     minStockAlert: number
     image: number
     barcode: number
+    barcodeType: number
+    usageType: number
+    unit: number
+    centralStockQty: number
+    consumptionRule: number
+    estimatedUsesPerUnit: number
+    currentOpenedUnits: number
     isActive: number
     createdAt: number
+    updatedAt: number
     _all: number
   }
 
@@ -11514,6 +11940,9 @@ export namespace Prisma {
     costPrice?: true
     stockQty?: true
     minStockAlert?: true
+    centralStockQty?: true
+    estimatedUsesPerUnit?: true
+    currentOpenedUnits?: true
   }
 
   export type ProductSumAggregateInputType = {
@@ -11521,6 +11950,9 @@ export namespace Prisma {
     costPrice?: true
     stockQty?: true
     minStockAlert?: true
+    centralStockQty?: true
+    estimatedUsesPerUnit?: true
+    currentOpenedUnits?: true
   }
 
   export type ProductMinAggregateInputType = {
@@ -11534,8 +11966,16 @@ export namespace Prisma {
     minStockAlert?: true
     image?: true
     barcode?: true
+    barcodeType?: true
+    usageType?: true
+    unit?: true
+    centralStockQty?: true
+    consumptionRule?: true
+    estimatedUsesPerUnit?: true
+    currentOpenedUnits?: true
     isActive?: true
     createdAt?: true
+    updatedAt?: true
   }
 
   export type ProductMaxAggregateInputType = {
@@ -11549,8 +11989,16 @@ export namespace Prisma {
     minStockAlert?: true
     image?: true
     barcode?: true
+    barcodeType?: true
+    usageType?: true
+    unit?: true
+    centralStockQty?: true
+    consumptionRule?: true
+    estimatedUsesPerUnit?: true
+    currentOpenedUnits?: true
     isActive?: true
     createdAt?: true
+    updatedAt?: true
   }
 
   export type ProductCountAggregateInputType = {
@@ -11564,8 +12012,16 @@ export namespace Prisma {
     minStockAlert?: true
     image?: true
     barcode?: true
+    barcodeType?: true
+    usageType?: true
+    unit?: true
+    centralStockQty?: true
+    consumptionRule?: true
+    estimatedUsesPerUnit?: true
+    currentOpenedUnits?: true
     isActive?: true
     createdAt?: true
+    updatedAt?: true
     _all?: true
   }
 
@@ -11666,8 +12122,16 @@ export namespace Prisma {
     minStockAlert: number
     image: string | null
     barcode: string | null
+    barcodeType: string
+    usageType: string
+    unit: string
+    centralStockQty: number
+    consumptionRule: string | null
+    estimatedUsesPerUnit: number
+    currentOpenedUnits: number
     isActive: boolean
     createdAt: Date
+    updatedAt: Date
     _count: ProductCountAggregateOutputType | null
     _avg: ProductAvgAggregateOutputType | null
     _sum: ProductSumAggregateOutputType | null
@@ -11700,9 +12164,21 @@ export namespace Prisma {
     minStockAlert?: boolean
     image?: boolean
     barcode?: boolean
+    barcodeType?: boolean
+    usageType?: boolean
+    unit?: boolean
+    centralStockQty?: boolean
+    consumptionRule?: boolean
+    estimatedUsesPerUnit?: boolean
+    currentOpenedUnits?: boolean
     isActive?: boolean
     createdAt?: boolean
+    updatedAt?: boolean
     branch?: boolean | Product$branchArgs<ExtArgs>
+    purchases?: boolean | Product$purchasesArgs<ExtArgs>
+    transfers?: boolean | Product$transfersArgs<ExtArgs>
+    consumptionLogs?: boolean | Product$consumptionLogsArgs<ExtArgs>
+    _count?: boolean | ProductCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["product"]>
 
   export type ProductSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -11716,8 +12192,16 @@ export namespace Prisma {
     minStockAlert?: boolean
     image?: boolean
     barcode?: boolean
+    barcodeType?: boolean
+    usageType?: boolean
+    unit?: boolean
+    centralStockQty?: boolean
+    consumptionRule?: boolean
+    estimatedUsesPerUnit?: boolean
+    currentOpenedUnits?: boolean
     isActive?: boolean
     createdAt?: boolean
+    updatedAt?: boolean
     branch?: boolean | Product$branchArgs<ExtArgs>
   }, ExtArgs["result"]["product"]>
 
@@ -11732,8 +12216,16 @@ export namespace Prisma {
     minStockAlert?: boolean
     image?: boolean
     barcode?: boolean
+    barcodeType?: boolean
+    usageType?: boolean
+    unit?: boolean
+    centralStockQty?: boolean
+    consumptionRule?: boolean
+    estimatedUsesPerUnit?: boolean
+    currentOpenedUnits?: boolean
     isActive?: boolean
     createdAt?: boolean
+    updatedAt?: boolean
     branch?: boolean | Product$branchArgs<ExtArgs>
   }, ExtArgs["result"]["product"]>
 
@@ -11748,13 +12240,25 @@ export namespace Prisma {
     minStockAlert?: boolean
     image?: boolean
     barcode?: boolean
+    barcodeType?: boolean
+    usageType?: boolean
+    unit?: boolean
+    centralStockQty?: boolean
+    consumptionRule?: boolean
+    estimatedUsesPerUnit?: boolean
+    currentOpenedUnits?: boolean
     isActive?: boolean
     createdAt?: boolean
+    updatedAt?: boolean
   }
 
-  export type ProductOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "branchId" | "nameAr" | "category" | "price" | "costPrice" | "stockQty" | "minStockAlert" | "image" | "barcode" | "isActive" | "createdAt", ExtArgs["result"]["product"]>
+  export type ProductOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "branchId" | "nameAr" | "category" | "price" | "costPrice" | "stockQty" | "minStockAlert" | "image" | "barcode" | "barcodeType" | "usageType" | "unit" | "centralStockQty" | "consumptionRule" | "estimatedUsesPerUnit" | "currentOpenedUnits" | "isActive" | "createdAt" | "updatedAt", ExtArgs["result"]["product"]>
   export type ProductInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     branch?: boolean | Product$branchArgs<ExtArgs>
+    purchases?: boolean | Product$purchasesArgs<ExtArgs>
+    transfers?: boolean | Product$transfersArgs<ExtArgs>
+    consumptionLogs?: boolean | Product$consumptionLogsArgs<ExtArgs>
+    _count?: boolean | ProductCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type ProductIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     branch?: boolean | Product$branchArgs<ExtArgs>
@@ -11767,6 +12271,9 @@ export namespace Prisma {
     name: "Product"
     objects: {
       branch: Prisma.$BranchPayload<ExtArgs> | null
+      purchases: Prisma.$StockPurchasePayload<ExtArgs>[]
+      transfers: Prisma.$StockTransferPayload<ExtArgs>[]
+      consumptionLogs: Prisma.$MaterialConsumptionLogPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -11779,8 +12286,16 @@ export namespace Prisma {
       minStockAlert: number
       image: string | null
       barcode: string | null
+      barcodeType: string
+      usageType: string
+      unit: string
+      centralStockQty: number
+      consumptionRule: string | null
+      estimatedUsesPerUnit: number
+      currentOpenedUnits: number
       isActive: boolean
       createdAt: Date
+      updatedAt: Date
     }, ExtArgs["result"]["product"]>
     composites: {}
   }
@@ -12176,6 +12691,9 @@ export namespace Prisma {
   export interface Prisma__ProductClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     branch<T extends Product$branchArgs<ExtArgs> = {}>(args?: Subset<T, Product$branchArgs<ExtArgs>>): Prisma__BranchClient<$Result.GetResult<Prisma.$BranchPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    purchases<T extends Product$purchasesArgs<ExtArgs> = {}>(args?: Subset<T, Product$purchasesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$StockPurchasePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    transfers<T extends Product$transfersArgs<ExtArgs> = {}>(args?: Subset<T, Product$transfersArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$StockTransferPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    consumptionLogs<T extends Product$consumptionLogsArgs<ExtArgs> = {}>(args?: Subset<T, Product$consumptionLogsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$MaterialConsumptionLogPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -12215,8 +12733,16 @@ export namespace Prisma {
     readonly minStockAlert: FieldRef<"Product", 'Int'>
     readonly image: FieldRef<"Product", 'String'>
     readonly barcode: FieldRef<"Product", 'String'>
+    readonly barcodeType: FieldRef<"Product", 'String'>
+    readonly usageType: FieldRef<"Product", 'String'>
+    readonly unit: FieldRef<"Product", 'String'>
+    readonly centralStockQty: FieldRef<"Product", 'Int'>
+    readonly consumptionRule: FieldRef<"Product", 'String'>
+    readonly estimatedUsesPerUnit: FieldRef<"Product", 'Int'>
+    readonly currentOpenedUnits: FieldRef<"Product", 'Int'>
     readonly isActive: FieldRef<"Product", 'Boolean'>
     readonly createdAt: FieldRef<"Product", 'DateTime'>
+    readonly updatedAt: FieldRef<"Product", 'DateTime'>
   }
     
 
@@ -12634,6 +13160,78 @@ export namespace Prisma {
      */
     include?: BranchInclude<ExtArgs> | null
     where?: BranchWhereInput
+  }
+
+  /**
+   * Product.purchases
+   */
+  export type Product$purchasesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the StockPurchase
+     */
+    select?: StockPurchaseSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the StockPurchase
+     */
+    omit?: StockPurchaseOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: StockPurchaseInclude<ExtArgs> | null
+    where?: StockPurchaseWhereInput
+    orderBy?: StockPurchaseOrderByWithRelationInput | StockPurchaseOrderByWithRelationInput[]
+    cursor?: StockPurchaseWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: StockPurchaseScalarFieldEnum | StockPurchaseScalarFieldEnum[]
+  }
+
+  /**
+   * Product.transfers
+   */
+  export type Product$transfersArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the StockTransfer
+     */
+    select?: StockTransferSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the StockTransfer
+     */
+    omit?: StockTransferOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: StockTransferInclude<ExtArgs> | null
+    where?: StockTransferWhereInput
+    orderBy?: StockTransferOrderByWithRelationInput | StockTransferOrderByWithRelationInput[]
+    cursor?: StockTransferWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: StockTransferScalarFieldEnum | StockTransferScalarFieldEnum[]
+  }
+
+  /**
+   * Product.consumptionLogs
+   */
+  export type Product$consumptionLogsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the MaterialConsumptionLog
+     */
+    select?: MaterialConsumptionLogSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the MaterialConsumptionLog
+     */
+    omit?: MaterialConsumptionLogOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MaterialConsumptionLogInclude<ExtArgs> | null
+    where?: MaterialConsumptionLogWhereInput
+    orderBy?: MaterialConsumptionLogOrderByWithRelationInput | MaterialConsumptionLogOrderByWithRelationInput[]
+    cursor?: MaterialConsumptionLogWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: MaterialConsumptionLogScalarFieldEnum | MaterialConsumptionLogScalarFieldEnum[]
   }
 
   /**
@@ -21169,6 +21767,3581 @@ export namespace Prisma {
 
 
   /**
+   * Model StockPurchase
+   */
+
+  export type AggregateStockPurchase = {
+    _count: StockPurchaseCountAggregateOutputType | null
+    _avg: StockPurchaseAvgAggregateOutputType | null
+    _sum: StockPurchaseSumAggregateOutputType | null
+    _min: StockPurchaseMinAggregateOutputType | null
+    _max: StockPurchaseMaxAggregateOutputType | null
+  }
+
+  export type StockPurchaseAvgAggregateOutputType = {
+    quantity: number | null
+    costPrice: number | null
+    totalCost: number | null
+  }
+
+  export type StockPurchaseSumAggregateOutputType = {
+    quantity: number | null
+    costPrice: number | null
+    totalCost: number | null
+  }
+
+  export type StockPurchaseMinAggregateOutputType = {
+    id: string | null
+    invoiceNumber: string | null
+    type: string | null
+    supplierName: string | null
+    productId: string | null
+    quantity: number | null
+    costPrice: number | null
+    totalCost: number | null
+    destination: string | null
+    notes: string | null
+    recordedBy: string | null
+    createdAt: Date | null
+  }
+
+  export type StockPurchaseMaxAggregateOutputType = {
+    id: string | null
+    invoiceNumber: string | null
+    type: string | null
+    supplierName: string | null
+    productId: string | null
+    quantity: number | null
+    costPrice: number | null
+    totalCost: number | null
+    destination: string | null
+    notes: string | null
+    recordedBy: string | null
+    createdAt: Date | null
+  }
+
+  export type StockPurchaseCountAggregateOutputType = {
+    id: number
+    invoiceNumber: number
+    type: number
+    supplierName: number
+    productId: number
+    quantity: number
+    costPrice: number
+    totalCost: number
+    destination: number
+    notes: number
+    recordedBy: number
+    createdAt: number
+    _all: number
+  }
+
+
+  export type StockPurchaseAvgAggregateInputType = {
+    quantity?: true
+    costPrice?: true
+    totalCost?: true
+  }
+
+  export type StockPurchaseSumAggregateInputType = {
+    quantity?: true
+    costPrice?: true
+    totalCost?: true
+  }
+
+  export type StockPurchaseMinAggregateInputType = {
+    id?: true
+    invoiceNumber?: true
+    type?: true
+    supplierName?: true
+    productId?: true
+    quantity?: true
+    costPrice?: true
+    totalCost?: true
+    destination?: true
+    notes?: true
+    recordedBy?: true
+    createdAt?: true
+  }
+
+  export type StockPurchaseMaxAggregateInputType = {
+    id?: true
+    invoiceNumber?: true
+    type?: true
+    supplierName?: true
+    productId?: true
+    quantity?: true
+    costPrice?: true
+    totalCost?: true
+    destination?: true
+    notes?: true
+    recordedBy?: true
+    createdAt?: true
+  }
+
+  export type StockPurchaseCountAggregateInputType = {
+    id?: true
+    invoiceNumber?: true
+    type?: true
+    supplierName?: true
+    productId?: true
+    quantity?: true
+    costPrice?: true
+    totalCost?: true
+    destination?: true
+    notes?: true
+    recordedBy?: true
+    createdAt?: true
+    _all?: true
+  }
+
+  export type StockPurchaseAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which StockPurchase to aggregate.
+     */
+    where?: StockPurchaseWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of StockPurchases to fetch.
+     */
+    orderBy?: StockPurchaseOrderByWithRelationInput | StockPurchaseOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: StockPurchaseWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` StockPurchases from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` StockPurchases.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned StockPurchases
+    **/
+    _count?: true | StockPurchaseCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: StockPurchaseAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: StockPurchaseSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: StockPurchaseMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: StockPurchaseMaxAggregateInputType
+  }
+
+  export type GetStockPurchaseAggregateType<T extends StockPurchaseAggregateArgs> = {
+        [P in keyof T & keyof AggregateStockPurchase]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateStockPurchase[P]>
+      : GetScalarType<T[P], AggregateStockPurchase[P]>
+  }
+
+
+
+
+  export type StockPurchaseGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: StockPurchaseWhereInput
+    orderBy?: StockPurchaseOrderByWithAggregationInput | StockPurchaseOrderByWithAggregationInput[]
+    by: StockPurchaseScalarFieldEnum[] | StockPurchaseScalarFieldEnum
+    having?: StockPurchaseScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: StockPurchaseCountAggregateInputType | true
+    _avg?: StockPurchaseAvgAggregateInputType
+    _sum?: StockPurchaseSumAggregateInputType
+    _min?: StockPurchaseMinAggregateInputType
+    _max?: StockPurchaseMaxAggregateInputType
+  }
+
+  export type StockPurchaseGroupByOutputType = {
+    id: string
+    invoiceNumber: string
+    type: string
+    supplierName: string | null
+    productId: string
+    quantity: number
+    costPrice: number
+    totalCost: number
+    destination: string
+    notes: string | null
+    recordedBy: string
+    createdAt: Date
+    _count: StockPurchaseCountAggregateOutputType | null
+    _avg: StockPurchaseAvgAggregateOutputType | null
+    _sum: StockPurchaseSumAggregateOutputType | null
+    _min: StockPurchaseMinAggregateOutputType | null
+    _max: StockPurchaseMaxAggregateOutputType | null
+  }
+
+  type GetStockPurchaseGroupByPayload<T extends StockPurchaseGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<StockPurchaseGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof StockPurchaseGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], StockPurchaseGroupByOutputType[P]>
+            : GetScalarType<T[P], StockPurchaseGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type StockPurchaseSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    invoiceNumber?: boolean
+    type?: boolean
+    supplierName?: boolean
+    productId?: boolean
+    quantity?: boolean
+    costPrice?: boolean
+    totalCost?: boolean
+    destination?: boolean
+    notes?: boolean
+    recordedBy?: boolean
+    createdAt?: boolean
+    product?: boolean | ProductDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["stockPurchase"]>
+
+  export type StockPurchaseSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    invoiceNumber?: boolean
+    type?: boolean
+    supplierName?: boolean
+    productId?: boolean
+    quantity?: boolean
+    costPrice?: boolean
+    totalCost?: boolean
+    destination?: boolean
+    notes?: boolean
+    recordedBy?: boolean
+    createdAt?: boolean
+    product?: boolean | ProductDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["stockPurchase"]>
+
+  export type StockPurchaseSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    invoiceNumber?: boolean
+    type?: boolean
+    supplierName?: boolean
+    productId?: boolean
+    quantity?: boolean
+    costPrice?: boolean
+    totalCost?: boolean
+    destination?: boolean
+    notes?: boolean
+    recordedBy?: boolean
+    createdAt?: boolean
+    product?: boolean | ProductDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["stockPurchase"]>
+
+  export type StockPurchaseSelectScalar = {
+    id?: boolean
+    invoiceNumber?: boolean
+    type?: boolean
+    supplierName?: boolean
+    productId?: boolean
+    quantity?: boolean
+    costPrice?: boolean
+    totalCost?: boolean
+    destination?: boolean
+    notes?: boolean
+    recordedBy?: boolean
+    createdAt?: boolean
+  }
+
+  export type StockPurchaseOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "invoiceNumber" | "type" | "supplierName" | "productId" | "quantity" | "costPrice" | "totalCost" | "destination" | "notes" | "recordedBy" | "createdAt", ExtArgs["result"]["stockPurchase"]>
+  export type StockPurchaseInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    product?: boolean | ProductDefaultArgs<ExtArgs>
+  }
+  export type StockPurchaseIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    product?: boolean | ProductDefaultArgs<ExtArgs>
+  }
+  export type StockPurchaseIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    product?: boolean | ProductDefaultArgs<ExtArgs>
+  }
+
+  export type $StockPurchasePayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "StockPurchase"
+    objects: {
+      product: Prisma.$ProductPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      invoiceNumber: string
+      type: string
+      supplierName: string | null
+      productId: string
+      quantity: number
+      costPrice: number
+      totalCost: number
+      destination: string
+      notes: string | null
+      recordedBy: string
+      createdAt: Date
+    }, ExtArgs["result"]["stockPurchase"]>
+    composites: {}
+  }
+
+  type StockPurchaseGetPayload<S extends boolean | null | undefined | StockPurchaseDefaultArgs> = $Result.GetResult<Prisma.$StockPurchasePayload, S>
+
+  type StockPurchaseCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<StockPurchaseFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: StockPurchaseCountAggregateInputType | true
+    }
+
+  export interface StockPurchaseDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['StockPurchase'], meta: { name: 'StockPurchase' } }
+    /**
+     * Find zero or one StockPurchase that matches the filter.
+     * @param {StockPurchaseFindUniqueArgs} args - Arguments to find a StockPurchase
+     * @example
+     * // Get one StockPurchase
+     * const stockPurchase = await prisma.stockPurchase.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends StockPurchaseFindUniqueArgs>(args: SelectSubset<T, StockPurchaseFindUniqueArgs<ExtArgs>>): Prisma__StockPurchaseClient<$Result.GetResult<Prisma.$StockPurchasePayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one StockPurchase that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {StockPurchaseFindUniqueOrThrowArgs} args - Arguments to find a StockPurchase
+     * @example
+     * // Get one StockPurchase
+     * const stockPurchase = await prisma.stockPurchase.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends StockPurchaseFindUniqueOrThrowArgs>(args: SelectSubset<T, StockPurchaseFindUniqueOrThrowArgs<ExtArgs>>): Prisma__StockPurchaseClient<$Result.GetResult<Prisma.$StockPurchasePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first StockPurchase that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {StockPurchaseFindFirstArgs} args - Arguments to find a StockPurchase
+     * @example
+     * // Get one StockPurchase
+     * const stockPurchase = await prisma.stockPurchase.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends StockPurchaseFindFirstArgs>(args?: SelectSubset<T, StockPurchaseFindFirstArgs<ExtArgs>>): Prisma__StockPurchaseClient<$Result.GetResult<Prisma.$StockPurchasePayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first StockPurchase that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {StockPurchaseFindFirstOrThrowArgs} args - Arguments to find a StockPurchase
+     * @example
+     * // Get one StockPurchase
+     * const stockPurchase = await prisma.stockPurchase.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends StockPurchaseFindFirstOrThrowArgs>(args?: SelectSubset<T, StockPurchaseFindFirstOrThrowArgs<ExtArgs>>): Prisma__StockPurchaseClient<$Result.GetResult<Prisma.$StockPurchasePayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more StockPurchases that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {StockPurchaseFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all StockPurchases
+     * const stockPurchases = await prisma.stockPurchase.findMany()
+     * 
+     * // Get first 10 StockPurchases
+     * const stockPurchases = await prisma.stockPurchase.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const stockPurchaseWithIdOnly = await prisma.stockPurchase.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends StockPurchaseFindManyArgs>(args?: SelectSubset<T, StockPurchaseFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$StockPurchasePayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a StockPurchase.
+     * @param {StockPurchaseCreateArgs} args - Arguments to create a StockPurchase.
+     * @example
+     * // Create one StockPurchase
+     * const StockPurchase = await prisma.stockPurchase.create({
+     *   data: {
+     *     // ... data to create a StockPurchase
+     *   }
+     * })
+     * 
+     */
+    create<T extends StockPurchaseCreateArgs>(args: SelectSubset<T, StockPurchaseCreateArgs<ExtArgs>>): Prisma__StockPurchaseClient<$Result.GetResult<Prisma.$StockPurchasePayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many StockPurchases.
+     * @param {StockPurchaseCreateManyArgs} args - Arguments to create many StockPurchases.
+     * @example
+     * // Create many StockPurchases
+     * const stockPurchase = await prisma.stockPurchase.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends StockPurchaseCreateManyArgs>(args?: SelectSubset<T, StockPurchaseCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many StockPurchases and returns the data saved in the database.
+     * @param {StockPurchaseCreateManyAndReturnArgs} args - Arguments to create many StockPurchases.
+     * @example
+     * // Create many StockPurchases
+     * const stockPurchase = await prisma.stockPurchase.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many StockPurchases and only return the `id`
+     * const stockPurchaseWithIdOnly = await prisma.stockPurchase.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends StockPurchaseCreateManyAndReturnArgs>(args?: SelectSubset<T, StockPurchaseCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$StockPurchasePayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a StockPurchase.
+     * @param {StockPurchaseDeleteArgs} args - Arguments to delete one StockPurchase.
+     * @example
+     * // Delete one StockPurchase
+     * const StockPurchase = await prisma.stockPurchase.delete({
+     *   where: {
+     *     // ... filter to delete one StockPurchase
+     *   }
+     * })
+     * 
+     */
+    delete<T extends StockPurchaseDeleteArgs>(args: SelectSubset<T, StockPurchaseDeleteArgs<ExtArgs>>): Prisma__StockPurchaseClient<$Result.GetResult<Prisma.$StockPurchasePayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one StockPurchase.
+     * @param {StockPurchaseUpdateArgs} args - Arguments to update one StockPurchase.
+     * @example
+     * // Update one StockPurchase
+     * const stockPurchase = await prisma.stockPurchase.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends StockPurchaseUpdateArgs>(args: SelectSubset<T, StockPurchaseUpdateArgs<ExtArgs>>): Prisma__StockPurchaseClient<$Result.GetResult<Prisma.$StockPurchasePayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more StockPurchases.
+     * @param {StockPurchaseDeleteManyArgs} args - Arguments to filter StockPurchases to delete.
+     * @example
+     * // Delete a few StockPurchases
+     * const { count } = await prisma.stockPurchase.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends StockPurchaseDeleteManyArgs>(args?: SelectSubset<T, StockPurchaseDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more StockPurchases.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {StockPurchaseUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many StockPurchases
+     * const stockPurchase = await prisma.stockPurchase.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends StockPurchaseUpdateManyArgs>(args: SelectSubset<T, StockPurchaseUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more StockPurchases and returns the data updated in the database.
+     * @param {StockPurchaseUpdateManyAndReturnArgs} args - Arguments to update many StockPurchases.
+     * @example
+     * // Update many StockPurchases
+     * const stockPurchase = await prisma.stockPurchase.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more StockPurchases and only return the `id`
+     * const stockPurchaseWithIdOnly = await prisma.stockPurchase.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends StockPurchaseUpdateManyAndReturnArgs>(args: SelectSubset<T, StockPurchaseUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$StockPurchasePayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one StockPurchase.
+     * @param {StockPurchaseUpsertArgs} args - Arguments to update or create a StockPurchase.
+     * @example
+     * // Update or create a StockPurchase
+     * const stockPurchase = await prisma.stockPurchase.upsert({
+     *   create: {
+     *     // ... data to create a StockPurchase
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the StockPurchase we want to update
+     *   }
+     * })
+     */
+    upsert<T extends StockPurchaseUpsertArgs>(args: SelectSubset<T, StockPurchaseUpsertArgs<ExtArgs>>): Prisma__StockPurchaseClient<$Result.GetResult<Prisma.$StockPurchasePayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of StockPurchases.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {StockPurchaseCountArgs} args - Arguments to filter StockPurchases to count.
+     * @example
+     * // Count the number of StockPurchases
+     * const count = await prisma.stockPurchase.count({
+     *   where: {
+     *     // ... the filter for the StockPurchases we want to count
+     *   }
+     * })
+    **/
+    count<T extends StockPurchaseCountArgs>(
+      args?: Subset<T, StockPurchaseCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], StockPurchaseCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a StockPurchase.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {StockPurchaseAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends StockPurchaseAggregateArgs>(args: Subset<T, StockPurchaseAggregateArgs>): Prisma.PrismaPromise<GetStockPurchaseAggregateType<T>>
+
+    /**
+     * Group by StockPurchase.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {StockPurchaseGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends StockPurchaseGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: StockPurchaseGroupByArgs['orderBy'] }
+        : { orderBy?: StockPurchaseGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, StockPurchaseGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetStockPurchaseGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the StockPurchase model
+   */
+  readonly fields: StockPurchaseFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for StockPurchase.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__StockPurchaseClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    product<T extends ProductDefaultArgs<ExtArgs> = {}>(args?: Subset<T, ProductDefaultArgs<ExtArgs>>): Prisma__ProductClient<$Result.GetResult<Prisma.$ProductPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the StockPurchase model
+   */
+  interface StockPurchaseFieldRefs {
+    readonly id: FieldRef<"StockPurchase", 'String'>
+    readonly invoiceNumber: FieldRef<"StockPurchase", 'String'>
+    readonly type: FieldRef<"StockPurchase", 'String'>
+    readonly supplierName: FieldRef<"StockPurchase", 'String'>
+    readonly productId: FieldRef<"StockPurchase", 'String'>
+    readonly quantity: FieldRef<"StockPurchase", 'Int'>
+    readonly costPrice: FieldRef<"StockPurchase", 'Float'>
+    readonly totalCost: FieldRef<"StockPurchase", 'Float'>
+    readonly destination: FieldRef<"StockPurchase", 'String'>
+    readonly notes: FieldRef<"StockPurchase", 'String'>
+    readonly recordedBy: FieldRef<"StockPurchase", 'String'>
+    readonly createdAt: FieldRef<"StockPurchase", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * StockPurchase findUnique
+   */
+  export type StockPurchaseFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the StockPurchase
+     */
+    select?: StockPurchaseSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the StockPurchase
+     */
+    omit?: StockPurchaseOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: StockPurchaseInclude<ExtArgs> | null
+    /**
+     * Filter, which StockPurchase to fetch.
+     */
+    where: StockPurchaseWhereUniqueInput
+  }
+
+  /**
+   * StockPurchase findUniqueOrThrow
+   */
+  export type StockPurchaseFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the StockPurchase
+     */
+    select?: StockPurchaseSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the StockPurchase
+     */
+    omit?: StockPurchaseOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: StockPurchaseInclude<ExtArgs> | null
+    /**
+     * Filter, which StockPurchase to fetch.
+     */
+    where: StockPurchaseWhereUniqueInput
+  }
+
+  /**
+   * StockPurchase findFirst
+   */
+  export type StockPurchaseFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the StockPurchase
+     */
+    select?: StockPurchaseSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the StockPurchase
+     */
+    omit?: StockPurchaseOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: StockPurchaseInclude<ExtArgs> | null
+    /**
+     * Filter, which StockPurchase to fetch.
+     */
+    where?: StockPurchaseWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of StockPurchases to fetch.
+     */
+    orderBy?: StockPurchaseOrderByWithRelationInput | StockPurchaseOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for StockPurchases.
+     */
+    cursor?: StockPurchaseWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` StockPurchases from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` StockPurchases.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of StockPurchases.
+     */
+    distinct?: StockPurchaseScalarFieldEnum | StockPurchaseScalarFieldEnum[]
+  }
+
+  /**
+   * StockPurchase findFirstOrThrow
+   */
+  export type StockPurchaseFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the StockPurchase
+     */
+    select?: StockPurchaseSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the StockPurchase
+     */
+    omit?: StockPurchaseOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: StockPurchaseInclude<ExtArgs> | null
+    /**
+     * Filter, which StockPurchase to fetch.
+     */
+    where?: StockPurchaseWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of StockPurchases to fetch.
+     */
+    orderBy?: StockPurchaseOrderByWithRelationInput | StockPurchaseOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for StockPurchases.
+     */
+    cursor?: StockPurchaseWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` StockPurchases from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` StockPurchases.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of StockPurchases.
+     */
+    distinct?: StockPurchaseScalarFieldEnum | StockPurchaseScalarFieldEnum[]
+  }
+
+  /**
+   * StockPurchase findMany
+   */
+  export type StockPurchaseFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the StockPurchase
+     */
+    select?: StockPurchaseSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the StockPurchase
+     */
+    omit?: StockPurchaseOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: StockPurchaseInclude<ExtArgs> | null
+    /**
+     * Filter, which StockPurchases to fetch.
+     */
+    where?: StockPurchaseWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of StockPurchases to fetch.
+     */
+    orderBy?: StockPurchaseOrderByWithRelationInput | StockPurchaseOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing StockPurchases.
+     */
+    cursor?: StockPurchaseWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` StockPurchases from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` StockPurchases.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of StockPurchases.
+     */
+    distinct?: StockPurchaseScalarFieldEnum | StockPurchaseScalarFieldEnum[]
+  }
+
+  /**
+   * StockPurchase create
+   */
+  export type StockPurchaseCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the StockPurchase
+     */
+    select?: StockPurchaseSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the StockPurchase
+     */
+    omit?: StockPurchaseOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: StockPurchaseInclude<ExtArgs> | null
+    /**
+     * The data needed to create a StockPurchase.
+     */
+    data: XOR<StockPurchaseCreateInput, StockPurchaseUncheckedCreateInput>
+  }
+
+  /**
+   * StockPurchase createMany
+   */
+  export type StockPurchaseCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many StockPurchases.
+     */
+    data: StockPurchaseCreateManyInput | StockPurchaseCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * StockPurchase createManyAndReturn
+   */
+  export type StockPurchaseCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the StockPurchase
+     */
+    select?: StockPurchaseSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the StockPurchase
+     */
+    omit?: StockPurchaseOmit<ExtArgs> | null
+    /**
+     * The data used to create many StockPurchases.
+     */
+    data: StockPurchaseCreateManyInput | StockPurchaseCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: StockPurchaseIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * StockPurchase update
+   */
+  export type StockPurchaseUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the StockPurchase
+     */
+    select?: StockPurchaseSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the StockPurchase
+     */
+    omit?: StockPurchaseOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: StockPurchaseInclude<ExtArgs> | null
+    /**
+     * The data needed to update a StockPurchase.
+     */
+    data: XOR<StockPurchaseUpdateInput, StockPurchaseUncheckedUpdateInput>
+    /**
+     * Choose, which StockPurchase to update.
+     */
+    where: StockPurchaseWhereUniqueInput
+  }
+
+  /**
+   * StockPurchase updateMany
+   */
+  export type StockPurchaseUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update StockPurchases.
+     */
+    data: XOR<StockPurchaseUpdateManyMutationInput, StockPurchaseUncheckedUpdateManyInput>
+    /**
+     * Filter which StockPurchases to update
+     */
+    where?: StockPurchaseWhereInput
+    /**
+     * Limit how many StockPurchases to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * StockPurchase updateManyAndReturn
+   */
+  export type StockPurchaseUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the StockPurchase
+     */
+    select?: StockPurchaseSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the StockPurchase
+     */
+    omit?: StockPurchaseOmit<ExtArgs> | null
+    /**
+     * The data used to update StockPurchases.
+     */
+    data: XOR<StockPurchaseUpdateManyMutationInput, StockPurchaseUncheckedUpdateManyInput>
+    /**
+     * Filter which StockPurchases to update
+     */
+    where?: StockPurchaseWhereInput
+    /**
+     * Limit how many StockPurchases to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: StockPurchaseIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * StockPurchase upsert
+   */
+  export type StockPurchaseUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the StockPurchase
+     */
+    select?: StockPurchaseSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the StockPurchase
+     */
+    omit?: StockPurchaseOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: StockPurchaseInclude<ExtArgs> | null
+    /**
+     * The filter to search for the StockPurchase to update in case it exists.
+     */
+    where: StockPurchaseWhereUniqueInput
+    /**
+     * In case the StockPurchase found by the `where` argument doesn't exist, create a new StockPurchase with this data.
+     */
+    create: XOR<StockPurchaseCreateInput, StockPurchaseUncheckedCreateInput>
+    /**
+     * In case the StockPurchase was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<StockPurchaseUpdateInput, StockPurchaseUncheckedUpdateInput>
+  }
+
+  /**
+   * StockPurchase delete
+   */
+  export type StockPurchaseDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the StockPurchase
+     */
+    select?: StockPurchaseSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the StockPurchase
+     */
+    omit?: StockPurchaseOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: StockPurchaseInclude<ExtArgs> | null
+    /**
+     * Filter which StockPurchase to delete.
+     */
+    where: StockPurchaseWhereUniqueInput
+  }
+
+  /**
+   * StockPurchase deleteMany
+   */
+  export type StockPurchaseDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which StockPurchases to delete
+     */
+    where?: StockPurchaseWhereInput
+    /**
+     * Limit how many StockPurchases to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * StockPurchase without action
+   */
+  export type StockPurchaseDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the StockPurchase
+     */
+    select?: StockPurchaseSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the StockPurchase
+     */
+    omit?: StockPurchaseOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: StockPurchaseInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model StockTransfer
+   */
+
+  export type AggregateStockTransfer = {
+    _count: StockTransferCountAggregateOutputType | null
+    _avg: StockTransferAvgAggregateOutputType | null
+    _sum: StockTransferSumAggregateOutputType | null
+    _min: StockTransferMinAggregateOutputType | null
+    _max: StockTransferMaxAggregateOutputType | null
+  }
+
+  export type StockTransferAvgAggregateOutputType = {
+    quantity: number | null
+  }
+
+  export type StockTransferSumAggregateOutputType = {
+    quantity: number | null
+  }
+
+  export type StockTransferMinAggregateOutputType = {
+    id: string | null
+    transferNumber: string | null
+    productId: string | null
+    fromLocation: string | null
+    toBranchId: string | null
+    quantity: number | null
+    status: string | null
+    receivedBy: string | null
+    dispatchedBy: string | null
+    notes: string | null
+    createdAt: Date | null
+  }
+
+  export type StockTransferMaxAggregateOutputType = {
+    id: string | null
+    transferNumber: string | null
+    productId: string | null
+    fromLocation: string | null
+    toBranchId: string | null
+    quantity: number | null
+    status: string | null
+    receivedBy: string | null
+    dispatchedBy: string | null
+    notes: string | null
+    createdAt: Date | null
+  }
+
+  export type StockTransferCountAggregateOutputType = {
+    id: number
+    transferNumber: number
+    productId: number
+    fromLocation: number
+    toBranchId: number
+    quantity: number
+    status: number
+    receivedBy: number
+    dispatchedBy: number
+    notes: number
+    createdAt: number
+    _all: number
+  }
+
+
+  export type StockTransferAvgAggregateInputType = {
+    quantity?: true
+  }
+
+  export type StockTransferSumAggregateInputType = {
+    quantity?: true
+  }
+
+  export type StockTransferMinAggregateInputType = {
+    id?: true
+    transferNumber?: true
+    productId?: true
+    fromLocation?: true
+    toBranchId?: true
+    quantity?: true
+    status?: true
+    receivedBy?: true
+    dispatchedBy?: true
+    notes?: true
+    createdAt?: true
+  }
+
+  export type StockTransferMaxAggregateInputType = {
+    id?: true
+    transferNumber?: true
+    productId?: true
+    fromLocation?: true
+    toBranchId?: true
+    quantity?: true
+    status?: true
+    receivedBy?: true
+    dispatchedBy?: true
+    notes?: true
+    createdAt?: true
+  }
+
+  export type StockTransferCountAggregateInputType = {
+    id?: true
+    transferNumber?: true
+    productId?: true
+    fromLocation?: true
+    toBranchId?: true
+    quantity?: true
+    status?: true
+    receivedBy?: true
+    dispatchedBy?: true
+    notes?: true
+    createdAt?: true
+    _all?: true
+  }
+
+  export type StockTransferAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which StockTransfer to aggregate.
+     */
+    where?: StockTransferWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of StockTransfers to fetch.
+     */
+    orderBy?: StockTransferOrderByWithRelationInput | StockTransferOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: StockTransferWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` StockTransfers from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` StockTransfers.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned StockTransfers
+    **/
+    _count?: true | StockTransferCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: StockTransferAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: StockTransferSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: StockTransferMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: StockTransferMaxAggregateInputType
+  }
+
+  export type GetStockTransferAggregateType<T extends StockTransferAggregateArgs> = {
+        [P in keyof T & keyof AggregateStockTransfer]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateStockTransfer[P]>
+      : GetScalarType<T[P], AggregateStockTransfer[P]>
+  }
+
+
+
+
+  export type StockTransferGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: StockTransferWhereInput
+    orderBy?: StockTransferOrderByWithAggregationInput | StockTransferOrderByWithAggregationInput[]
+    by: StockTransferScalarFieldEnum[] | StockTransferScalarFieldEnum
+    having?: StockTransferScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: StockTransferCountAggregateInputType | true
+    _avg?: StockTransferAvgAggregateInputType
+    _sum?: StockTransferSumAggregateInputType
+    _min?: StockTransferMinAggregateInputType
+    _max?: StockTransferMaxAggregateInputType
+  }
+
+  export type StockTransferGroupByOutputType = {
+    id: string
+    transferNumber: string
+    productId: string
+    fromLocation: string
+    toBranchId: string
+    quantity: number
+    status: string
+    receivedBy: string | null
+    dispatchedBy: string
+    notes: string | null
+    createdAt: Date
+    _count: StockTransferCountAggregateOutputType | null
+    _avg: StockTransferAvgAggregateOutputType | null
+    _sum: StockTransferSumAggregateOutputType | null
+    _min: StockTransferMinAggregateOutputType | null
+    _max: StockTransferMaxAggregateOutputType | null
+  }
+
+  type GetStockTransferGroupByPayload<T extends StockTransferGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<StockTransferGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof StockTransferGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], StockTransferGroupByOutputType[P]>
+            : GetScalarType<T[P], StockTransferGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type StockTransferSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    transferNumber?: boolean
+    productId?: boolean
+    fromLocation?: boolean
+    toBranchId?: boolean
+    quantity?: boolean
+    status?: boolean
+    receivedBy?: boolean
+    dispatchedBy?: boolean
+    notes?: boolean
+    createdAt?: boolean
+    product?: boolean | ProductDefaultArgs<ExtArgs>
+    toBranch?: boolean | BranchDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["stockTransfer"]>
+
+  export type StockTransferSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    transferNumber?: boolean
+    productId?: boolean
+    fromLocation?: boolean
+    toBranchId?: boolean
+    quantity?: boolean
+    status?: boolean
+    receivedBy?: boolean
+    dispatchedBy?: boolean
+    notes?: boolean
+    createdAt?: boolean
+    product?: boolean | ProductDefaultArgs<ExtArgs>
+    toBranch?: boolean | BranchDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["stockTransfer"]>
+
+  export type StockTransferSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    transferNumber?: boolean
+    productId?: boolean
+    fromLocation?: boolean
+    toBranchId?: boolean
+    quantity?: boolean
+    status?: boolean
+    receivedBy?: boolean
+    dispatchedBy?: boolean
+    notes?: boolean
+    createdAt?: boolean
+    product?: boolean | ProductDefaultArgs<ExtArgs>
+    toBranch?: boolean | BranchDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["stockTransfer"]>
+
+  export type StockTransferSelectScalar = {
+    id?: boolean
+    transferNumber?: boolean
+    productId?: boolean
+    fromLocation?: boolean
+    toBranchId?: boolean
+    quantity?: boolean
+    status?: boolean
+    receivedBy?: boolean
+    dispatchedBy?: boolean
+    notes?: boolean
+    createdAt?: boolean
+  }
+
+  export type StockTransferOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "transferNumber" | "productId" | "fromLocation" | "toBranchId" | "quantity" | "status" | "receivedBy" | "dispatchedBy" | "notes" | "createdAt", ExtArgs["result"]["stockTransfer"]>
+  export type StockTransferInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    product?: boolean | ProductDefaultArgs<ExtArgs>
+    toBranch?: boolean | BranchDefaultArgs<ExtArgs>
+  }
+  export type StockTransferIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    product?: boolean | ProductDefaultArgs<ExtArgs>
+    toBranch?: boolean | BranchDefaultArgs<ExtArgs>
+  }
+  export type StockTransferIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    product?: boolean | ProductDefaultArgs<ExtArgs>
+    toBranch?: boolean | BranchDefaultArgs<ExtArgs>
+  }
+
+  export type $StockTransferPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "StockTransfer"
+    objects: {
+      product: Prisma.$ProductPayload<ExtArgs>
+      toBranch: Prisma.$BranchPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      transferNumber: string
+      productId: string
+      fromLocation: string
+      toBranchId: string
+      quantity: number
+      status: string
+      receivedBy: string | null
+      dispatchedBy: string
+      notes: string | null
+      createdAt: Date
+    }, ExtArgs["result"]["stockTransfer"]>
+    composites: {}
+  }
+
+  type StockTransferGetPayload<S extends boolean | null | undefined | StockTransferDefaultArgs> = $Result.GetResult<Prisma.$StockTransferPayload, S>
+
+  type StockTransferCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<StockTransferFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: StockTransferCountAggregateInputType | true
+    }
+
+  export interface StockTransferDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['StockTransfer'], meta: { name: 'StockTransfer' } }
+    /**
+     * Find zero or one StockTransfer that matches the filter.
+     * @param {StockTransferFindUniqueArgs} args - Arguments to find a StockTransfer
+     * @example
+     * // Get one StockTransfer
+     * const stockTransfer = await prisma.stockTransfer.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends StockTransferFindUniqueArgs>(args: SelectSubset<T, StockTransferFindUniqueArgs<ExtArgs>>): Prisma__StockTransferClient<$Result.GetResult<Prisma.$StockTransferPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one StockTransfer that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {StockTransferFindUniqueOrThrowArgs} args - Arguments to find a StockTransfer
+     * @example
+     * // Get one StockTransfer
+     * const stockTransfer = await prisma.stockTransfer.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends StockTransferFindUniqueOrThrowArgs>(args: SelectSubset<T, StockTransferFindUniqueOrThrowArgs<ExtArgs>>): Prisma__StockTransferClient<$Result.GetResult<Prisma.$StockTransferPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first StockTransfer that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {StockTransferFindFirstArgs} args - Arguments to find a StockTransfer
+     * @example
+     * // Get one StockTransfer
+     * const stockTransfer = await prisma.stockTransfer.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends StockTransferFindFirstArgs>(args?: SelectSubset<T, StockTransferFindFirstArgs<ExtArgs>>): Prisma__StockTransferClient<$Result.GetResult<Prisma.$StockTransferPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first StockTransfer that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {StockTransferFindFirstOrThrowArgs} args - Arguments to find a StockTransfer
+     * @example
+     * // Get one StockTransfer
+     * const stockTransfer = await prisma.stockTransfer.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends StockTransferFindFirstOrThrowArgs>(args?: SelectSubset<T, StockTransferFindFirstOrThrowArgs<ExtArgs>>): Prisma__StockTransferClient<$Result.GetResult<Prisma.$StockTransferPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more StockTransfers that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {StockTransferFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all StockTransfers
+     * const stockTransfers = await prisma.stockTransfer.findMany()
+     * 
+     * // Get first 10 StockTransfers
+     * const stockTransfers = await prisma.stockTransfer.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const stockTransferWithIdOnly = await prisma.stockTransfer.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends StockTransferFindManyArgs>(args?: SelectSubset<T, StockTransferFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$StockTransferPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a StockTransfer.
+     * @param {StockTransferCreateArgs} args - Arguments to create a StockTransfer.
+     * @example
+     * // Create one StockTransfer
+     * const StockTransfer = await prisma.stockTransfer.create({
+     *   data: {
+     *     // ... data to create a StockTransfer
+     *   }
+     * })
+     * 
+     */
+    create<T extends StockTransferCreateArgs>(args: SelectSubset<T, StockTransferCreateArgs<ExtArgs>>): Prisma__StockTransferClient<$Result.GetResult<Prisma.$StockTransferPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many StockTransfers.
+     * @param {StockTransferCreateManyArgs} args - Arguments to create many StockTransfers.
+     * @example
+     * // Create many StockTransfers
+     * const stockTransfer = await prisma.stockTransfer.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends StockTransferCreateManyArgs>(args?: SelectSubset<T, StockTransferCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many StockTransfers and returns the data saved in the database.
+     * @param {StockTransferCreateManyAndReturnArgs} args - Arguments to create many StockTransfers.
+     * @example
+     * // Create many StockTransfers
+     * const stockTransfer = await prisma.stockTransfer.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many StockTransfers and only return the `id`
+     * const stockTransferWithIdOnly = await prisma.stockTransfer.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends StockTransferCreateManyAndReturnArgs>(args?: SelectSubset<T, StockTransferCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$StockTransferPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a StockTransfer.
+     * @param {StockTransferDeleteArgs} args - Arguments to delete one StockTransfer.
+     * @example
+     * // Delete one StockTransfer
+     * const StockTransfer = await prisma.stockTransfer.delete({
+     *   where: {
+     *     // ... filter to delete one StockTransfer
+     *   }
+     * })
+     * 
+     */
+    delete<T extends StockTransferDeleteArgs>(args: SelectSubset<T, StockTransferDeleteArgs<ExtArgs>>): Prisma__StockTransferClient<$Result.GetResult<Prisma.$StockTransferPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one StockTransfer.
+     * @param {StockTransferUpdateArgs} args - Arguments to update one StockTransfer.
+     * @example
+     * // Update one StockTransfer
+     * const stockTransfer = await prisma.stockTransfer.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends StockTransferUpdateArgs>(args: SelectSubset<T, StockTransferUpdateArgs<ExtArgs>>): Prisma__StockTransferClient<$Result.GetResult<Prisma.$StockTransferPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more StockTransfers.
+     * @param {StockTransferDeleteManyArgs} args - Arguments to filter StockTransfers to delete.
+     * @example
+     * // Delete a few StockTransfers
+     * const { count } = await prisma.stockTransfer.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends StockTransferDeleteManyArgs>(args?: SelectSubset<T, StockTransferDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more StockTransfers.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {StockTransferUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many StockTransfers
+     * const stockTransfer = await prisma.stockTransfer.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends StockTransferUpdateManyArgs>(args: SelectSubset<T, StockTransferUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more StockTransfers and returns the data updated in the database.
+     * @param {StockTransferUpdateManyAndReturnArgs} args - Arguments to update many StockTransfers.
+     * @example
+     * // Update many StockTransfers
+     * const stockTransfer = await prisma.stockTransfer.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more StockTransfers and only return the `id`
+     * const stockTransferWithIdOnly = await prisma.stockTransfer.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends StockTransferUpdateManyAndReturnArgs>(args: SelectSubset<T, StockTransferUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$StockTransferPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one StockTransfer.
+     * @param {StockTransferUpsertArgs} args - Arguments to update or create a StockTransfer.
+     * @example
+     * // Update or create a StockTransfer
+     * const stockTransfer = await prisma.stockTransfer.upsert({
+     *   create: {
+     *     // ... data to create a StockTransfer
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the StockTransfer we want to update
+     *   }
+     * })
+     */
+    upsert<T extends StockTransferUpsertArgs>(args: SelectSubset<T, StockTransferUpsertArgs<ExtArgs>>): Prisma__StockTransferClient<$Result.GetResult<Prisma.$StockTransferPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of StockTransfers.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {StockTransferCountArgs} args - Arguments to filter StockTransfers to count.
+     * @example
+     * // Count the number of StockTransfers
+     * const count = await prisma.stockTransfer.count({
+     *   where: {
+     *     // ... the filter for the StockTransfers we want to count
+     *   }
+     * })
+    **/
+    count<T extends StockTransferCountArgs>(
+      args?: Subset<T, StockTransferCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], StockTransferCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a StockTransfer.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {StockTransferAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends StockTransferAggregateArgs>(args: Subset<T, StockTransferAggregateArgs>): Prisma.PrismaPromise<GetStockTransferAggregateType<T>>
+
+    /**
+     * Group by StockTransfer.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {StockTransferGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends StockTransferGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: StockTransferGroupByArgs['orderBy'] }
+        : { orderBy?: StockTransferGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, StockTransferGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetStockTransferGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the StockTransfer model
+   */
+  readonly fields: StockTransferFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for StockTransfer.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__StockTransferClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    product<T extends ProductDefaultArgs<ExtArgs> = {}>(args?: Subset<T, ProductDefaultArgs<ExtArgs>>): Prisma__ProductClient<$Result.GetResult<Prisma.$ProductPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    toBranch<T extends BranchDefaultArgs<ExtArgs> = {}>(args?: Subset<T, BranchDefaultArgs<ExtArgs>>): Prisma__BranchClient<$Result.GetResult<Prisma.$BranchPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the StockTransfer model
+   */
+  interface StockTransferFieldRefs {
+    readonly id: FieldRef<"StockTransfer", 'String'>
+    readonly transferNumber: FieldRef<"StockTransfer", 'String'>
+    readonly productId: FieldRef<"StockTransfer", 'String'>
+    readonly fromLocation: FieldRef<"StockTransfer", 'String'>
+    readonly toBranchId: FieldRef<"StockTransfer", 'String'>
+    readonly quantity: FieldRef<"StockTransfer", 'Int'>
+    readonly status: FieldRef<"StockTransfer", 'String'>
+    readonly receivedBy: FieldRef<"StockTransfer", 'String'>
+    readonly dispatchedBy: FieldRef<"StockTransfer", 'String'>
+    readonly notes: FieldRef<"StockTransfer", 'String'>
+    readonly createdAt: FieldRef<"StockTransfer", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * StockTransfer findUnique
+   */
+  export type StockTransferFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the StockTransfer
+     */
+    select?: StockTransferSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the StockTransfer
+     */
+    omit?: StockTransferOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: StockTransferInclude<ExtArgs> | null
+    /**
+     * Filter, which StockTransfer to fetch.
+     */
+    where: StockTransferWhereUniqueInput
+  }
+
+  /**
+   * StockTransfer findUniqueOrThrow
+   */
+  export type StockTransferFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the StockTransfer
+     */
+    select?: StockTransferSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the StockTransfer
+     */
+    omit?: StockTransferOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: StockTransferInclude<ExtArgs> | null
+    /**
+     * Filter, which StockTransfer to fetch.
+     */
+    where: StockTransferWhereUniqueInput
+  }
+
+  /**
+   * StockTransfer findFirst
+   */
+  export type StockTransferFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the StockTransfer
+     */
+    select?: StockTransferSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the StockTransfer
+     */
+    omit?: StockTransferOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: StockTransferInclude<ExtArgs> | null
+    /**
+     * Filter, which StockTransfer to fetch.
+     */
+    where?: StockTransferWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of StockTransfers to fetch.
+     */
+    orderBy?: StockTransferOrderByWithRelationInput | StockTransferOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for StockTransfers.
+     */
+    cursor?: StockTransferWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` StockTransfers from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` StockTransfers.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of StockTransfers.
+     */
+    distinct?: StockTransferScalarFieldEnum | StockTransferScalarFieldEnum[]
+  }
+
+  /**
+   * StockTransfer findFirstOrThrow
+   */
+  export type StockTransferFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the StockTransfer
+     */
+    select?: StockTransferSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the StockTransfer
+     */
+    omit?: StockTransferOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: StockTransferInclude<ExtArgs> | null
+    /**
+     * Filter, which StockTransfer to fetch.
+     */
+    where?: StockTransferWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of StockTransfers to fetch.
+     */
+    orderBy?: StockTransferOrderByWithRelationInput | StockTransferOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for StockTransfers.
+     */
+    cursor?: StockTransferWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` StockTransfers from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` StockTransfers.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of StockTransfers.
+     */
+    distinct?: StockTransferScalarFieldEnum | StockTransferScalarFieldEnum[]
+  }
+
+  /**
+   * StockTransfer findMany
+   */
+  export type StockTransferFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the StockTransfer
+     */
+    select?: StockTransferSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the StockTransfer
+     */
+    omit?: StockTransferOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: StockTransferInclude<ExtArgs> | null
+    /**
+     * Filter, which StockTransfers to fetch.
+     */
+    where?: StockTransferWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of StockTransfers to fetch.
+     */
+    orderBy?: StockTransferOrderByWithRelationInput | StockTransferOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing StockTransfers.
+     */
+    cursor?: StockTransferWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` StockTransfers from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` StockTransfers.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of StockTransfers.
+     */
+    distinct?: StockTransferScalarFieldEnum | StockTransferScalarFieldEnum[]
+  }
+
+  /**
+   * StockTransfer create
+   */
+  export type StockTransferCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the StockTransfer
+     */
+    select?: StockTransferSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the StockTransfer
+     */
+    omit?: StockTransferOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: StockTransferInclude<ExtArgs> | null
+    /**
+     * The data needed to create a StockTransfer.
+     */
+    data: XOR<StockTransferCreateInput, StockTransferUncheckedCreateInput>
+  }
+
+  /**
+   * StockTransfer createMany
+   */
+  export type StockTransferCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many StockTransfers.
+     */
+    data: StockTransferCreateManyInput | StockTransferCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * StockTransfer createManyAndReturn
+   */
+  export type StockTransferCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the StockTransfer
+     */
+    select?: StockTransferSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the StockTransfer
+     */
+    omit?: StockTransferOmit<ExtArgs> | null
+    /**
+     * The data used to create many StockTransfers.
+     */
+    data: StockTransferCreateManyInput | StockTransferCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: StockTransferIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * StockTransfer update
+   */
+  export type StockTransferUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the StockTransfer
+     */
+    select?: StockTransferSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the StockTransfer
+     */
+    omit?: StockTransferOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: StockTransferInclude<ExtArgs> | null
+    /**
+     * The data needed to update a StockTransfer.
+     */
+    data: XOR<StockTransferUpdateInput, StockTransferUncheckedUpdateInput>
+    /**
+     * Choose, which StockTransfer to update.
+     */
+    where: StockTransferWhereUniqueInput
+  }
+
+  /**
+   * StockTransfer updateMany
+   */
+  export type StockTransferUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update StockTransfers.
+     */
+    data: XOR<StockTransferUpdateManyMutationInput, StockTransferUncheckedUpdateManyInput>
+    /**
+     * Filter which StockTransfers to update
+     */
+    where?: StockTransferWhereInput
+    /**
+     * Limit how many StockTransfers to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * StockTransfer updateManyAndReturn
+   */
+  export type StockTransferUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the StockTransfer
+     */
+    select?: StockTransferSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the StockTransfer
+     */
+    omit?: StockTransferOmit<ExtArgs> | null
+    /**
+     * The data used to update StockTransfers.
+     */
+    data: XOR<StockTransferUpdateManyMutationInput, StockTransferUncheckedUpdateManyInput>
+    /**
+     * Filter which StockTransfers to update
+     */
+    where?: StockTransferWhereInput
+    /**
+     * Limit how many StockTransfers to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: StockTransferIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * StockTransfer upsert
+   */
+  export type StockTransferUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the StockTransfer
+     */
+    select?: StockTransferSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the StockTransfer
+     */
+    omit?: StockTransferOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: StockTransferInclude<ExtArgs> | null
+    /**
+     * The filter to search for the StockTransfer to update in case it exists.
+     */
+    where: StockTransferWhereUniqueInput
+    /**
+     * In case the StockTransfer found by the `where` argument doesn't exist, create a new StockTransfer with this data.
+     */
+    create: XOR<StockTransferCreateInput, StockTransferUncheckedCreateInput>
+    /**
+     * In case the StockTransfer was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<StockTransferUpdateInput, StockTransferUncheckedUpdateInput>
+  }
+
+  /**
+   * StockTransfer delete
+   */
+  export type StockTransferDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the StockTransfer
+     */
+    select?: StockTransferSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the StockTransfer
+     */
+    omit?: StockTransferOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: StockTransferInclude<ExtArgs> | null
+    /**
+     * Filter which StockTransfer to delete.
+     */
+    where: StockTransferWhereUniqueInput
+  }
+
+  /**
+   * StockTransfer deleteMany
+   */
+  export type StockTransferDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which StockTransfers to delete
+     */
+    where?: StockTransferWhereInput
+    /**
+     * Limit how many StockTransfers to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * StockTransfer without action
+   */
+  export type StockTransferDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the StockTransfer
+     */
+    select?: StockTransferSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the StockTransfer
+     */
+    omit?: StockTransferOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: StockTransferInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model MaterialConsumptionLog
+   */
+
+  export type AggregateMaterialConsumptionLog = {
+    _count: MaterialConsumptionLogCountAggregateOutputType | null
+    _avg: MaterialConsumptionLogAvgAggregateOutputType | null
+    _sum: MaterialConsumptionLogSumAggregateOutputType | null
+    _min: MaterialConsumptionLogMinAggregateOutputType | null
+    _max: MaterialConsumptionLogMaxAggregateOutputType | null
+  }
+
+  export type MaterialConsumptionLogAvgAggregateOutputType = {
+    quantityConsumed: number | null
+  }
+
+  export type MaterialConsumptionLogSumAggregateOutputType = {
+    quantityConsumed: number | null
+  }
+
+  export type MaterialConsumptionLogMinAggregateOutputType = {
+    id: string | null
+    productId: string | null
+    branchId: string | null
+    ticketId: string | null
+    specialistId: string | null
+    serviceName: string | null
+    quantityConsumed: number | null
+    unit: string | null
+    reason: string | null
+    date: string | null
+    notes: string | null
+    createdAt: Date | null
+  }
+
+  export type MaterialConsumptionLogMaxAggregateOutputType = {
+    id: string | null
+    productId: string | null
+    branchId: string | null
+    ticketId: string | null
+    specialistId: string | null
+    serviceName: string | null
+    quantityConsumed: number | null
+    unit: string | null
+    reason: string | null
+    date: string | null
+    notes: string | null
+    createdAt: Date | null
+  }
+
+  export type MaterialConsumptionLogCountAggregateOutputType = {
+    id: number
+    productId: number
+    branchId: number
+    ticketId: number
+    specialistId: number
+    serviceName: number
+    quantityConsumed: number
+    unit: number
+    reason: number
+    date: number
+    notes: number
+    createdAt: number
+    _all: number
+  }
+
+
+  export type MaterialConsumptionLogAvgAggregateInputType = {
+    quantityConsumed?: true
+  }
+
+  export type MaterialConsumptionLogSumAggregateInputType = {
+    quantityConsumed?: true
+  }
+
+  export type MaterialConsumptionLogMinAggregateInputType = {
+    id?: true
+    productId?: true
+    branchId?: true
+    ticketId?: true
+    specialistId?: true
+    serviceName?: true
+    quantityConsumed?: true
+    unit?: true
+    reason?: true
+    date?: true
+    notes?: true
+    createdAt?: true
+  }
+
+  export type MaterialConsumptionLogMaxAggregateInputType = {
+    id?: true
+    productId?: true
+    branchId?: true
+    ticketId?: true
+    specialistId?: true
+    serviceName?: true
+    quantityConsumed?: true
+    unit?: true
+    reason?: true
+    date?: true
+    notes?: true
+    createdAt?: true
+  }
+
+  export type MaterialConsumptionLogCountAggregateInputType = {
+    id?: true
+    productId?: true
+    branchId?: true
+    ticketId?: true
+    specialistId?: true
+    serviceName?: true
+    quantityConsumed?: true
+    unit?: true
+    reason?: true
+    date?: true
+    notes?: true
+    createdAt?: true
+    _all?: true
+  }
+
+  export type MaterialConsumptionLogAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which MaterialConsumptionLog to aggregate.
+     */
+    where?: MaterialConsumptionLogWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of MaterialConsumptionLogs to fetch.
+     */
+    orderBy?: MaterialConsumptionLogOrderByWithRelationInput | MaterialConsumptionLogOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: MaterialConsumptionLogWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` MaterialConsumptionLogs from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` MaterialConsumptionLogs.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned MaterialConsumptionLogs
+    **/
+    _count?: true | MaterialConsumptionLogCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: MaterialConsumptionLogAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: MaterialConsumptionLogSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: MaterialConsumptionLogMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: MaterialConsumptionLogMaxAggregateInputType
+  }
+
+  export type GetMaterialConsumptionLogAggregateType<T extends MaterialConsumptionLogAggregateArgs> = {
+        [P in keyof T & keyof AggregateMaterialConsumptionLog]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateMaterialConsumptionLog[P]>
+      : GetScalarType<T[P], AggregateMaterialConsumptionLog[P]>
+  }
+
+
+
+
+  export type MaterialConsumptionLogGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: MaterialConsumptionLogWhereInput
+    orderBy?: MaterialConsumptionLogOrderByWithAggregationInput | MaterialConsumptionLogOrderByWithAggregationInput[]
+    by: MaterialConsumptionLogScalarFieldEnum[] | MaterialConsumptionLogScalarFieldEnum
+    having?: MaterialConsumptionLogScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: MaterialConsumptionLogCountAggregateInputType | true
+    _avg?: MaterialConsumptionLogAvgAggregateInputType
+    _sum?: MaterialConsumptionLogSumAggregateInputType
+    _min?: MaterialConsumptionLogMinAggregateInputType
+    _max?: MaterialConsumptionLogMaxAggregateInputType
+  }
+
+  export type MaterialConsumptionLogGroupByOutputType = {
+    id: string
+    productId: string
+    branchId: string
+    ticketId: string | null
+    specialistId: string | null
+    serviceName: string | null
+    quantityConsumed: number
+    unit: string
+    reason: string
+    date: string
+    notes: string | null
+    createdAt: Date
+    _count: MaterialConsumptionLogCountAggregateOutputType | null
+    _avg: MaterialConsumptionLogAvgAggregateOutputType | null
+    _sum: MaterialConsumptionLogSumAggregateOutputType | null
+    _min: MaterialConsumptionLogMinAggregateOutputType | null
+    _max: MaterialConsumptionLogMaxAggregateOutputType | null
+  }
+
+  type GetMaterialConsumptionLogGroupByPayload<T extends MaterialConsumptionLogGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<MaterialConsumptionLogGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof MaterialConsumptionLogGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], MaterialConsumptionLogGroupByOutputType[P]>
+            : GetScalarType<T[P], MaterialConsumptionLogGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type MaterialConsumptionLogSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    productId?: boolean
+    branchId?: boolean
+    ticketId?: boolean
+    specialistId?: boolean
+    serviceName?: boolean
+    quantityConsumed?: boolean
+    unit?: boolean
+    reason?: boolean
+    date?: boolean
+    notes?: boolean
+    createdAt?: boolean
+    product?: boolean | ProductDefaultArgs<ExtArgs>
+    branch?: boolean | BranchDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["materialConsumptionLog"]>
+
+  export type MaterialConsumptionLogSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    productId?: boolean
+    branchId?: boolean
+    ticketId?: boolean
+    specialistId?: boolean
+    serviceName?: boolean
+    quantityConsumed?: boolean
+    unit?: boolean
+    reason?: boolean
+    date?: boolean
+    notes?: boolean
+    createdAt?: boolean
+    product?: boolean | ProductDefaultArgs<ExtArgs>
+    branch?: boolean | BranchDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["materialConsumptionLog"]>
+
+  export type MaterialConsumptionLogSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    productId?: boolean
+    branchId?: boolean
+    ticketId?: boolean
+    specialistId?: boolean
+    serviceName?: boolean
+    quantityConsumed?: boolean
+    unit?: boolean
+    reason?: boolean
+    date?: boolean
+    notes?: boolean
+    createdAt?: boolean
+    product?: boolean | ProductDefaultArgs<ExtArgs>
+    branch?: boolean | BranchDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["materialConsumptionLog"]>
+
+  export type MaterialConsumptionLogSelectScalar = {
+    id?: boolean
+    productId?: boolean
+    branchId?: boolean
+    ticketId?: boolean
+    specialistId?: boolean
+    serviceName?: boolean
+    quantityConsumed?: boolean
+    unit?: boolean
+    reason?: boolean
+    date?: boolean
+    notes?: boolean
+    createdAt?: boolean
+  }
+
+  export type MaterialConsumptionLogOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "productId" | "branchId" | "ticketId" | "specialistId" | "serviceName" | "quantityConsumed" | "unit" | "reason" | "date" | "notes" | "createdAt", ExtArgs["result"]["materialConsumptionLog"]>
+  export type MaterialConsumptionLogInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    product?: boolean | ProductDefaultArgs<ExtArgs>
+    branch?: boolean | BranchDefaultArgs<ExtArgs>
+  }
+  export type MaterialConsumptionLogIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    product?: boolean | ProductDefaultArgs<ExtArgs>
+    branch?: boolean | BranchDefaultArgs<ExtArgs>
+  }
+  export type MaterialConsumptionLogIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    product?: boolean | ProductDefaultArgs<ExtArgs>
+    branch?: boolean | BranchDefaultArgs<ExtArgs>
+  }
+
+  export type $MaterialConsumptionLogPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "MaterialConsumptionLog"
+    objects: {
+      product: Prisma.$ProductPayload<ExtArgs>
+      branch: Prisma.$BranchPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      productId: string
+      branchId: string
+      ticketId: string | null
+      specialistId: string | null
+      serviceName: string | null
+      quantityConsumed: number
+      unit: string
+      reason: string
+      date: string
+      notes: string | null
+      createdAt: Date
+    }, ExtArgs["result"]["materialConsumptionLog"]>
+    composites: {}
+  }
+
+  type MaterialConsumptionLogGetPayload<S extends boolean | null | undefined | MaterialConsumptionLogDefaultArgs> = $Result.GetResult<Prisma.$MaterialConsumptionLogPayload, S>
+
+  type MaterialConsumptionLogCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<MaterialConsumptionLogFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: MaterialConsumptionLogCountAggregateInputType | true
+    }
+
+  export interface MaterialConsumptionLogDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['MaterialConsumptionLog'], meta: { name: 'MaterialConsumptionLog' } }
+    /**
+     * Find zero or one MaterialConsumptionLog that matches the filter.
+     * @param {MaterialConsumptionLogFindUniqueArgs} args - Arguments to find a MaterialConsumptionLog
+     * @example
+     * // Get one MaterialConsumptionLog
+     * const materialConsumptionLog = await prisma.materialConsumptionLog.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends MaterialConsumptionLogFindUniqueArgs>(args: SelectSubset<T, MaterialConsumptionLogFindUniqueArgs<ExtArgs>>): Prisma__MaterialConsumptionLogClient<$Result.GetResult<Prisma.$MaterialConsumptionLogPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one MaterialConsumptionLog that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {MaterialConsumptionLogFindUniqueOrThrowArgs} args - Arguments to find a MaterialConsumptionLog
+     * @example
+     * // Get one MaterialConsumptionLog
+     * const materialConsumptionLog = await prisma.materialConsumptionLog.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends MaterialConsumptionLogFindUniqueOrThrowArgs>(args: SelectSubset<T, MaterialConsumptionLogFindUniqueOrThrowArgs<ExtArgs>>): Prisma__MaterialConsumptionLogClient<$Result.GetResult<Prisma.$MaterialConsumptionLogPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first MaterialConsumptionLog that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {MaterialConsumptionLogFindFirstArgs} args - Arguments to find a MaterialConsumptionLog
+     * @example
+     * // Get one MaterialConsumptionLog
+     * const materialConsumptionLog = await prisma.materialConsumptionLog.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends MaterialConsumptionLogFindFirstArgs>(args?: SelectSubset<T, MaterialConsumptionLogFindFirstArgs<ExtArgs>>): Prisma__MaterialConsumptionLogClient<$Result.GetResult<Prisma.$MaterialConsumptionLogPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first MaterialConsumptionLog that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {MaterialConsumptionLogFindFirstOrThrowArgs} args - Arguments to find a MaterialConsumptionLog
+     * @example
+     * // Get one MaterialConsumptionLog
+     * const materialConsumptionLog = await prisma.materialConsumptionLog.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends MaterialConsumptionLogFindFirstOrThrowArgs>(args?: SelectSubset<T, MaterialConsumptionLogFindFirstOrThrowArgs<ExtArgs>>): Prisma__MaterialConsumptionLogClient<$Result.GetResult<Prisma.$MaterialConsumptionLogPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more MaterialConsumptionLogs that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {MaterialConsumptionLogFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all MaterialConsumptionLogs
+     * const materialConsumptionLogs = await prisma.materialConsumptionLog.findMany()
+     * 
+     * // Get first 10 MaterialConsumptionLogs
+     * const materialConsumptionLogs = await prisma.materialConsumptionLog.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const materialConsumptionLogWithIdOnly = await prisma.materialConsumptionLog.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends MaterialConsumptionLogFindManyArgs>(args?: SelectSubset<T, MaterialConsumptionLogFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$MaterialConsumptionLogPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a MaterialConsumptionLog.
+     * @param {MaterialConsumptionLogCreateArgs} args - Arguments to create a MaterialConsumptionLog.
+     * @example
+     * // Create one MaterialConsumptionLog
+     * const MaterialConsumptionLog = await prisma.materialConsumptionLog.create({
+     *   data: {
+     *     // ... data to create a MaterialConsumptionLog
+     *   }
+     * })
+     * 
+     */
+    create<T extends MaterialConsumptionLogCreateArgs>(args: SelectSubset<T, MaterialConsumptionLogCreateArgs<ExtArgs>>): Prisma__MaterialConsumptionLogClient<$Result.GetResult<Prisma.$MaterialConsumptionLogPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many MaterialConsumptionLogs.
+     * @param {MaterialConsumptionLogCreateManyArgs} args - Arguments to create many MaterialConsumptionLogs.
+     * @example
+     * // Create many MaterialConsumptionLogs
+     * const materialConsumptionLog = await prisma.materialConsumptionLog.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends MaterialConsumptionLogCreateManyArgs>(args?: SelectSubset<T, MaterialConsumptionLogCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many MaterialConsumptionLogs and returns the data saved in the database.
+     * @param {MaterialConsumptionLogCreateManyAndReturnArgs} args - Arguments to create many MaterialConsumptionLogs.
+     * @example
+     * // Create many MaterialConsumptionLogs
+     * const materialConsumptionLog = await prisma.materialConsumptionLog.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many MaterialConsumptionLogs and only return the `id`
+     * const materialConsumptionLogWithIdOnly = await prisma.materialConsumptionLog.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends MaterialConsumptionLogCreateManyAndReturnArgs>(args?: SelectSubset<T, MaterialConsumptionLogCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$MaterialConsumptionLogPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a MaterialConsumptionLog.
+     * @param {MaterialConsumptionLogDeleteArgs} args - Arguments to delete one MaterialConsumptionLog.
+     * @example
+     * // Delete one MaterialConsumptionLog
+     * const MaterialConsumptionLog = await prisma.materialConsumptionLog.delete({
+     *   where: {
+     *     // ... filter to delete one MaterialConsumptionLog
+     *   }
+     * })
+     * 
+     */
+    delete<T extends MaterialConsumptionLogDeleteArgs>(args: SelectSubset<T, MaterialConsumptionLogDeleteArgs<ExtArgs>>): Prisma__MaterialConsumptionLogClient<$Result.GetResult<Prisma.$MaterialConsumptionLogPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one MaterialConsumptionLog.
+     * @param {MaterialConsumptionLogUpdateArgs} args - Arguments to update one MaterialConsumptionLog.
+     * @example
+     * // Update one MaterialConsumptionLog
+     * const materialConsumptionLog = await prisma.materialConsumptionLog.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends MaterialConsumptionLogUpdateArgs>(args: SelectSubset<T, MaterialConsumptionLogUpdateArgs<ExtArgs>>): Prisma__MaterialConsumptionLogClient<$Result.GetResult<Prisma.$MaterialConsumptionLogPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more MaterialConsumptionLogs.
+     * @param {MaterialConsumptionLogDeleteManyArgs} args - Arguments to filter MaterialConsumptionLogs to delete.
+     * @example
+     * // Delete a few MaterialConsumptionLogs
+     * const { count } = await prisma.materialConsumptionLog.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends MaterialConsumptionLogDeleteManyArgs>(args?: SelectSubset<T, MaterialConsumptionLogDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more MaterialConsumptionLogs.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {MaterialConsumptionLogUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many MaterialConsumptionLogs
+     * const materialConsumptionLog = await prisma.materialConsumptionLog.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends MaterialConsumptionLogUpdateManyArgs>(args: SelectSubset<T, MaterialConsumptionLogUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more MaterialConsumptionLogs and returns the data updated in the database.
+     * @param {MaterialConsumptionLogUpdateManyAndReturnArgs} args - Arguments to update many MaterialConsumptionLogs.
+     * @example
+     * // Update many MaterialConsumptionLogs
+     * const materialConsumptionLog = await prisma.materialConsumptionLog.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more MaterialConsumptionLogs and only return the `id`
+     * const materialConsumptionLogWithIdOnly = await prisma.materialConsumptionLog.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends MaterialConsumptionLogUpdateManyAndReturnArgs>(args: SelectSubset<T, MaterialConsumptionLogUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$MaterialConsumptionLogPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one MaterialConsumptionLog.
+     * @param {MaterialConsumptionLogUpsertArgs} args - Arguments to update or create a MaterialConsumptionLog.
+     * @example
+     * // Update or create a MaterialConsumptionLog
+     * const materialConsumptionLog = await prisma.materialConsumptionLog.upsert({
+     *   create: {
+     *     // ... data to create a MaterialConsumptionLog
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the MaterialConsumptionLog we want to update
+     *   }
+     * })
+     */
+    upsert<T extends MaterialConsumptionLogUpsertArgs>(args: SelectSubset<T, MaterialConsumptionLogUpsertArgs<ExtArgs>>): Prisma__MaterialConsumptionLogClient<$Result.GetResult<Prisma.$MaterialConsumptionLogPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of MaterialConsumptionLogs.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {MaterialConsumptionLogCountArgs} args - Arguments to filter MaterialConsumptionLogs to count.
+     * @example
+     * // Count the number of MaterialConsumptionLogs
+     * const count = await prisma.materialConsumptionLog.count({
+     *   where: {
+     *     // ... the filter for the MaterialConsumptionLogs we want to count
+     *   }
+     * })
+    **/
+    count<T extends MaterialConsumptionLogCountArgs>(
+      args?: Subset<T, MaterialConsumptionLogCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], MaterialConsumptionLogCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a MaterialConsumptionLog.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {MaterialConsumptionLogAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends MaterialConsumptionLogAggregateArgs>(args: Subset<T, MaterialConsumptionLogAggregateArgs>): Prisma.PrismaPromise<GetMaterialConsumptionLogAggregateType<T>>
+
+    /**
+     * Group by MaterialConsumptionLog.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {MaterialConsumptionLogGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends MaterialConsumptionLogGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: MaterialConsumptionLogGroupByArgs['orderBy'] }
+        : { orderBy?: MaterialConsumptionLogGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, MaterialConsumptionLogGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetMaterialConsumptionLogGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the MaterialConsumptionLog model
+   */
+  readonly fields: MaterialConsumptionLogFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for MaterialConsumptionLog.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__MaterialConsumptionLogClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    product<T extends ProductDefaultArgs<ExtArgs> = {}>(args?: Subset<T, ProductDefaultArgs<ExtArgs>>): Prisma__ProductClient<$Result.GetResult<Prisma.$ProductPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    branch<T extends BranchDefaultArgs<ExtArgs> = {}>(args?: Subset<T, BranchDefaultArgs<ExtArgs>>): Prisma__BranchClient<$Result.GetResult<Prisma.$BranchPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the MaterialConsumptionLog model
+   */
+  interface MaterialConsumptionLogFieldRefs {
+    readonly id: FieldRef<"MaterialConsumptionLog", 'String'>
+    readonly productId: FieldRef<"MaterialConsumptionLog", 'String'>
+    readonly branchId: FieldRef<"MaterialConsumptionLog", 'String'>
+    readonly ticketId: FieldRef<"MaterialConsumptionLog", 'String'>
+    readonly specialistId: FieldRef<"MaterialConsumptionLog", 'String'>
+    readonly serviceName: FieldRef<"MaterialConsumptionLog", 'String'>
+    readonly quantityConsumed: FieldRef<"MaterialConsumptionLog", 'Float'>
+    readonly unit: FieldRef<"MaterialConsumptionLog", 'String'>
+    readonly reason: FieldRef<"MaterialConsumptionLog", 'String'>
+    readonly date: FieldRef<"MaterialConsumptionLog", 'String'>
+    readonly notes: FieldRef<"MaterialConsumptionLog", 'String'>
+    readonly createdAt: FieldRef<"MaterialConsumptionLog", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * MaterialConsumptionLog findUnique
+   */
+  export type MaterialConsumptionLogFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the MaterialConsumptionLog
+     */
+    select?: MaterialConsumptionLogSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the MaterialConsumptionLog
+     */
+    omit?: MaterialConsumptionLogOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MaterialConsumptionLogInclude<ExtArgs> | null
+    /**
+     * Filter, which MaterialConsumptionLog to fetch.
+     */
+    where: MaterialConsumptionLogWhereUniqueInput
+  }
+
+  /**
+   * MaterialConsumptionLog findUniqueOrThrow
+   */
+  export type MaterialConsumptionLogFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the MaterialConsumptionLog
+     */
+    select?: MaterialConsumptionLogSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the MaterialConsumptionLog
+     */
+    omit?: MaterialConsumptionLogOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MaterialConsumptionLogInclude<ExtArgs> | null
+    /**
+     * Filter, which MaterialConsumptionLog to fetch.
+     */
+    where: MaterialConsumptionLogWhereUniqueInput
+  }
+
+  /**
+   * MaterialConsumptionLog findFirst
+   */
+  export type MaterialConsumptionLogFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the MaterialConsumptionLog
+     */
+    select?: MaterialConsumptionLogSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the MaterialConsumptionLog
+     */
+    omit?: MaterialConsumptionLogOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MaterialConsumptionLogInclude<ExtArgs> | null
+    /**
+     * Filter, which MaterialConsumptionLog to fetch.
+     */
+    where?: MaterialConsumptionLogWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of MaterialConsumptionLogs to fetch.
+     */
+    orderBy?: MaterialConsumptionLogOrderByWithRelationInput | MaterialConsumptionLogOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for MaterialConsumptionLogs.
+     */
+    cursor?: MaterialConsumptionLogWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` MaterialConsumptionLogs from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` MaterialConsumptionLogs.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of MaterialConsumptionLogs.
+     */
+    distinct?: MaterialConsumptionLogScalarFieldEnum | MaterialConsumptionLogScalarFieldEnum[]
+  }
+
+  /**
+   * MaterialConsumptionLog findFirstOrThrow
+   */
+  export type MaterialConsumptionLogFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the MaterialConsumptionLog
+     */
+    select?: MaterialConsumptionLogSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the MaterialConsumptionLog
+     */
+    omit?: MaterialConsumptionLogOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MaterialConsumptionLogInclude<ExtArgs> | null
+    /**
+     * Filter, which MaterialConsumptionLog to fetch.
+     */
+    where?: MaterialConsumptionLogWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of MaterialConsumptionLogs to fetch.
+     */
+    orderBy?: MaterialConsumptionLogOrderByWithRelationInput | MaterialConsumptionLogOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for MaterialConsumptionLogs.
+     */
+    cursor?: MaterialConsumptionLogWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` MaterialConsumptionLogs from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` MaterialConsumptionLogs.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of MaterialConsumptionLogs.
+     */
+    distinct?: MaterialConsumptionLogScalarFieldEnum | MaterialConsumptionLogScalarFieldEnum[]
+  }
+
+  /**
+   * MaterialConsumptionLog findMany
+   */
+  export type MaterialConsumptionLogFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the MaterialConsumptionLog
+     */
+    select?: MaterialConsumptionLogSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the MaterialConsumptionLog
+     */
+    omit?: MaterialConsumptionLogOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MaterialConsumptionLogInclude<ExtArgs> | null
+    /**
+     * Filter, which MaterialConsumptionLogs to fetch.
+     */
+    where?: MaterialConsumptionLogWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of MaterialConsumptionLogs to fetch.
+     */
+    orderBy?: MaterialConsumptionLogOrderByWithRelationInput | MaterialConsumptionLogOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing MaterialConsumptionLogs.
+     */
+    cursor?: MaterialConsumptionLogWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` MaterialConsumptionLogs from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` MaterialConsumptionLogs.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of MaterialConsumptionLogs.
+     */
+    distinct?: MaterialConsumptionLogScalarFieldEnum | MaterialConsumptionLogScalarFieldEnum[]
+  }
+
+  /**
+   * MaterialConsumptionLog create
+   */
+  export type MaterialConsumptionLogCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the MaterialConsumptionLog
+     */
+    select?: MaterialConsumptionLogSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the MaterialConsumptionLog
+     */
+    omit?: MaterialConsumptionLogOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MaterialConsumptionLogInclude<ExtArgs> | null
+    /**
+     * The data needed to create a MaterialConsumptionLog.
+     */
+    data: XOR<MaterialConsumptionLogCreateInput, MaterialConsumptionLogUncheckedCreateInput>
+  }
+
+  /**
+   * MaterialConsumptionLog createMany
+   */
+  export type MaterialConsumptionLogCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many MaterialConsumptionLogs.
+     */
+    data: MaterialConsumptionLogCreateManyInput | MaterialConsumptionLogCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * MaterialConsumptionLog createManyAndReturn
+   */
+  export type MaterialConsumptionLogCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the MaterialConsumptionLog
+     */
+    select?: MaterialConsumptionLogSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the MaterialConsumptionLog
+     */
+    omit?: MaterialConsumptionLogOmit<ExtArgs> | null
+    /**
+     * The data used to create many MaterialConsumptionLogs.
+     */
+    data: MaterialConsumptionLogCreateManyInput | MaterialConsumptionLogCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MaterialConsumptionLogIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * MaterialConsumptionLog update
+   */
+  export type MaterialConsumptionLogUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the MaterialConsumptionLog
+     */
+    select?: MaterialConsumptionLogSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the MaterialConsumptionLog
+     */
+    omit?: MaterialConsumptionLogOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MaterialConsumptionLogInclude<ExtArgs> | null
+    /**
+     * The data needed to update a MaterialConsumptionLog.
+     */
+    data: XOR<MaterialConsumptionLogUpdateInput, MaterialConsumptionLogUncheckedUpdateInput>
+    /**
+     * Choose, which MaterialConsumptionLog to update.
+     */
+    where: MaterialConsumptionLogWhereUniqueInput
+  }
+
+  /**
+   * MaterialConsumptionLog updateMany
+   */
+  export type MaterialConsumptionLogUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update MaterialConsumptionLogs.
+     */
+    data: XOR<MaterialConsumptionLogUpdateManyMutationInput, MaterialConsumptionLogUncheckedUpdateManyInput>
+    /**
+     * Filter which MaterialConsumptionLogs to update
+     */
+    where?: MaterialConsumptionLogWhereInput
+    /**
+     * Limit how many MaterialConsumptionLogs to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * MaterialConsumptionLog updateManyAndReturn
+   */
+  export type MaterialConsumptionLogUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the MaterialConsumptionLog
+     */
+    select?: MaterialConsumptionLogSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the MaterialConsumptionLog
+     */
+    omit?: MaterialConsumptionLogOmit<ExtArgs> | null
+    /**
+     * The data used to update MaterialConsumptionLogs.
+     */
+    data: XOR<MaterialConsumptionLogUpdateManyMutationInput, MaterialConsumptionLogUncheckedUpdateManyInput>
+    /**
+     * Filter which MaterialConsumptionLogs to update
+     */
+    where?: MaterialConsumptionLogWhereInput
+    /**
+     * Limit how many MaterialConsumptionLogs to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MaterialConsumptionLogIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * MaterialConsumptionLog upsert
+   */
+  export type MaterialConsumptionLogUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the MaterialConsumptionLog
+     */
+    select?: MaterialConsumptionLogSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the MaterialConsumptionLog
+     */
+    omit?: MaterialConsumptionLogOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MaterialConsumptionLogInclude<ExtArgs> | null
+    /**
+     * The filter to search for the MaterialConsumptionLog to update in case it exists.
+     */
+    where: MaterialConsumptionLogWhereUniqueInput
+    /**
+     * In case the MaterialConsumptionLog found by the `where` argument doesn't exist, create a new MaterialConsumptionLog with this data.
+     */
+    create: XOR<MaterialConsumptionLogCreateInput, MaterialConsumptionLogUncheckedCreateInput>
+    /**
+     * In case the MaterialConsumptionLog was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<MaterialConsumptionLogUpdateInput, MaterialConsumptionLogUncheckedUpdateInput>
+  }
+
+  /**
+   * MaterialConsumptionLog delete
+   */
+  export type MaterialConsumptionLogDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the MaterialConsumptionLog
+     */
+    select?: MaterialConsumptionLogSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the MaterialConsumptionLog
+     */
+    omit?: MaterialConsumptionLogOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MaterialConsumptionLogInclude<ExtArgs> | null
+    /**
+     * Filter which MaterialConsumptionLog to delete.
+     */
+    where: MaterialConsumptionLogWhereUniqueInput
+  }
+
+  /**
+   * MaterialConsumptionLog deleteMany
+   */
+  export type MaterialConsumptionLogDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which MaterialConsumptionLogs to delete
+     */
+    where?: MaterialConsumptionLogWhereInput
+    /**
+     * Limit how many MaterialConsumptionLogs to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * MaterialConsumptionLog without action
+   */
+  export type MaterialConsumptionLogDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the MaterialConsumptionLog
+     */
+    select?: MaterialConsumptionLogSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the MaterialConsumptionLog
+     */
+    omit?: MaterialConsumptionLogOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MaterialConsumptionLogInclude<ExtArgs> | null
+  }
+
+
+  /**
    * Enums
    */
 
@@ -21335,8 +25508,16 @@ export namespace Prisma {
     minStockAlert: 'minStockAlert',
     image: 'image',
     barcode: 'barcode',
+    barcodeType: 'barcodeType',
+    usageType: 'usageType',
+    unit: 'unit',
+    centralStockQty: 'centralStockQty',
+    consumptionRule: 'consumptionRule',
+    estimatedUsesPerUnit: 'estimatedUsesPerUnit',
+    currentOpenedUnits: 'currentOpenedUnits',
     isActive: 'isActive',
-    createdAt: 'createdAt'
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
   };
 
   export type ProductScalarFieldEnum = (typeof ProductScalarFieldEnum)[keyof typeof ProductScalarFieldEnum]
@@ -21483,6 +25664,59 @@ export namespace Prisma {
   export type AttendanceRecordScalarFieldEnum = (typeof AttendanceRecordScalarFieldEnum)[keyof typeof AttendanceRecordScalarFieldEnum]
 
 
+  export const StockPurchaseScalarFieldEnum: {
+    id: 'id',
+    invoiceNumber: 'invoiceNumber',
+    type: 'type',
+    supplierName: 'supplierName',
+    productId: 'productId',
+    quantity: 'quantity',
+    costPrice: 'costPrice',
+    totalCost: 'totalCost',
+    destination: 'destination',
+    notes: 'notes',
+    recordedBy: 'recordedBy',
+    createdAt: 'createdAt'
+  };
+
+  export type StockPurchaseScalarFieldEnum = (typeof StockPurchaseScalarFieldEnum)[keyof typeof StockPurchaseScalarFieldEnum]
+
+
+  export const StockTransferScalarFieldEnum: {
+    id: 'id',
+    transferNumber: 'transferNumber',
+    productId: 'productId',
+    fromLocation: 'fromLocation',
+    toBranchId: 'toBranchId',
+    quantity: 'quantity',
+    status: 'status',
+    receivedBy: 'receivedBy',
+    dispatchedBy: 'dispatchedBy',
+    notes: 'notes',
+    createdAt: 'createdAt'
+  };
+
+  export type StockTransferScalarFieldEnum = (typeof StockTransferScalarFieldEnum)[keyof typeof StockTransferScalarFieldEnum]
+
+
+  export const MaterialConsumptionLogScalarFieldEnum: {
+    id: 'id',
+    productId: 'productId',
+    branchId: 'branchId',
+    ticketId: 'ticketId',
+    specialistId: 'specialistId',
+    serviceName: 'serviceName',
+    quantityConsumed: 'quantityConsumed',
+    unit: 'unit',
+    reason: 'reason',
+    date: 'date',
+    notes: 'notes',
+    createdAt: 'createdAt'
+  };
+
+  export type MaterialConsumptionLogScalarFieldEnum = (typeof MaterialConsumptionLogScalarFieldEnum)[keyof typeof MaterialConsumptionLogScalarFieldEnum]
+
+
   export const SortOrder: {
     asc: 'asc',
     desc: 'desc'
@@ -21602,6 +25836,8 @@ export namespace Prisma {
     shifts?: CashShiftListRelationFilter
     expenses?: TreasuryExpenseListRelationFilter
     attendances?: AttendanceRecordListRelationFilter
+    transfers?: StockTransferListRelationFilter
+    consumptionLogs?: MaterialConsumptionLogListRelationFilter
   }
 
   export type BranchOrderByWithRelationInput = {
@@ -21625,6 +25861,8 @@ export namespace Prisma {
     shifts?: CashShiftOrderByRelationAggregateInput
     expenses?: TreasuryExpenseOrderByRelationAggregateInput
     attendances?: AttendanceRecordOrderByRelationAggregateInput
+    transfers?: StockTransferOrderByRelationAggregateInput
+    consumptionLogs?: MaterialConsumptionLogOrderByRelationAggregateInput
   }
 
   export type BranchWhereUniqueInput = Prisma.AtLeast<{
@@ -21651,6 +25889,8 @@ export namespace Prisma {
     shifts?: CashShiftListRelationFilter
     expenses?: TreasuryExpenseListRelationFilter
     attendances?: AttendanceRecordListRelationFilter
+    transfers?: StockTransferListRelationFilter
+    consumptionLogs?: MaterialConsumptionLogListRelationFilter
   }, "id" | "code">
 
   export type BranchOrderByWithAggregationInput = {
@@ -22372,9 +26612,20 @@ export namespace Prisma {
     minStockAlert?: IntFilter<"Product"> | number
     image?: StringNullableFilter<"Product"> | string | null
     barcode?: StringNullableFilter<"Product"> | string | null
+    barcodeType?: StringFilter<"Product"> | string
+    usageType?: StringFilter<"Product"> | string
+    unit?: StringFilter<"Product"> | string
+    centralStockQty?: IntFilter<"Product"> | number
+    consumptionRule?: StringNullableFilter<"Product"> | string | null
+    estimatedUsesPerUnit?: IntFilter<"Product"> | number
+    currentOpenedUnits?: IntFilter<"Product"> | number
     isActive?: BoolFilter<"Product"> | boolean
     createdAt?: DateTimeFilter<"Product"> | Date | string
+    updatedAt?: DateTimeFilter<"Product"> | Date | string
     branch?: XOR<BranchNullableScalarRelationFilter, BranchWhereInput> | null
+    purchases?: StockPurchaseListRelationFilter
+    transfers?: StockTransferListRelationFilter
+    consumptionLogs?: MaterialConsumptionLogListRelationFilter
   }
 
   export type ProductOrderByWithRelationInput = {
@@ -22388,9 +26639,20 @@ export namespace Prisma {
     minStockAlert?: SortOrder
     image?: SortOrderInput | SortOrder
     barcode?: SortOrderInput | SortOrder
+    barcodeType?: SortOrder
+    usageType?: SortOrder
+    unit?: SortOrder
+    centralStockQty?: SortOrder
+    consumptionRule?: SortOrderInput | SortOrder
+    estimatedUsesPerUnit?: SortOrder
+    currentOpenedUnits?: SortOrder
     isActive?: SortOrder
     createdAt?: SortOrder
+    updatedAt?: SortOrder
     branch?: BranchOrderByWithRelationInput
+    purchases?: StockPurchaseOrderByRelationAggregateInput
+    transfers?: StockTransferOrderByRelationAggregateInput
+    consumptionLogs?: MaterialConsumptionLogOrderByRelationAggregateInput
   }
 
   export type ProductWhereUniqueInput = Prisma.AtLeast<{
@@ -22407,9 +26669,20 @@ export namespace Prisma {
     minStockAlert?: IntFilter<"Product"> | number
     image?: StringNullableFilter<"Product"> | string | null
     barcode?: StringNullableFilter<"Product"> | string | null
+    barcodeType?: StringFilter<"Product"> | string
+    usageType?: StringFilter<"Product"> | string
+    unit?: StringFilter<"Product"> | string
+    centralStockQty?: IntFilter<"Product"> | number
+    consumptionRule?: StringNullableFilter<"Product"> | string | null
+    estimatedUsesPerUnit?: IntFilter<"Product"> | number
+    currentOpenedUnits?: IntFilter<"Product"> | number
     isActive?: BoolFilter<"Product"> | boolean
     createdAt?: DateTimeFilter<"Product"> | Date | string
+    updatedAt?: DateTimeFilter<"Product"> | Date | string
     branch?: XOR<BranchNullableScalarRelationFilter, BranchWhereInput> | null
+    purchases?: StockPurchaseListRelationFilter
+    transfers?: StockTransferListRelationFilter
+    consumptionLogs?: MaterialConsumptionLogListRelationFilter
   }, "id">
 
   export type ProductOrderByWithAggregationInput = {
@@ -22423,8 +26696,16 @@ export namespace Prisma {
     minStockAlert?: SortOrder
     image?: SortOrderInput | SortOrder
     barcode?: SortOrderInput | SortOrder
+    barcodeType?: SortOrder
+    usageType?: SortOrder
+    unit?: SortOrder
+    centralStockQty?: SortOrder
+    consumptionRule?: SortOrderInput | SortOrder
+    estimatedUsesPerUnit?: SortOrder
+    currentOpenedUnits?: SortOrder
     isActive?: SortOrder
     createdAt?: SortOrder
+    updatedAt?: SortOrder
     _count?: ProductCountOrderByAggregateInput
     _avg?: ProductAvgOrderByAggregateInput
     _max?: ProductMaxOrderByAggregateInput
@@ -22446,8 +26727,16 @@ export namespace Prisma {
     minStockAlert?: IntWithAggregatesFilter<"Product"> | number
     image?: StringNullableWithAggregatesFilter<"Product"> | string | null
     barcode?: StringNullableWithAggregatesFilter<"Product"> | string | null
+    barcodeType?: StringWithAggregatesFilter<"Product"> | string
+    usageType?: StringWithAggregatesFilter<"Product"> | string
+    unit?: StringWithAggregatesFilter<"Product"> | string
+    centralStockQty?: IntWithAggregatesFilter<"Product"> | number
+    consumptionRule?: StringNullableWithAggregatesFilter<"Product"> | string | null
+    estimatedUsesPerUnit?: IntWithAggregatesFilter<"Product"> | number
+    currentOpenedUnits?: IntWithAggregatesFilter<"Product"> | number
     isActive?: BoolWithAggregatesFilter<"Product"> | boolean
     createdAt?: DateTimeWithAggregatesFilter<"Product"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"Product"> | Date | string
   }
 
   export type SpecialistLedgerWhereInput = {
@@ -23168,6 +27457,283 @@ export namespace Prisma {
     updatedAt?: DateTimeWithAggregatesFilter<"AttendanceRecord"> | Date | string
   }
 
+  export type StockPurchaseWhereInput = {
+    AND?: StockPurchaseWhereInput | StockPurchaseWhereInput[]
+    OR?: StockPurchaseWhereInput[]
+    NOT?: StockPurchaseWhereInput | StockPurchaseWhereInput[]
+    id?: StringFilter<"StockPurchase"> | string
+    invoiceNumber?: StringFilter<"StockPurchase"> | string
+    type?: StringFilter<"StockPurchase"> | string
+    supplierName?: StringNullableFilter<"StockPurchase"> | string | null
+    productId?: StringFilter<"StockPurchase"> | string
+    quantity?: IntFilter<"StockPurchase"> | number
+    costPrice?: FloatFilter<"StockPurchase"> | number
+    totalCost?: FloatFilter<"StockPurchase"> | number
+    destination?: StringFilter<"StockPurchase"> | string
+    notes?: StringNullableFilter<"StockPurchase"> | string | null
+    recordedBy?: StringFilter<"StockPurchase"> | string
+    createdAt?: DateTimeFilter<"StockPurchase"> | Date | string
+    product?: XOR<ProductScalarRelationFilter, ProductWhereInput>
+  }
+
+  export type StockPurchaseOrderByWithRelationInput = {
+    id?: SortOrder
+    invoiceNumber?: SortOrder
+    type?: SortOrder
+    supplierName?: SortOrderInput | SortOrder
+    productId?: SortOrder
+    quantity?: SortOrder
+    costPrice?: SortOrder
+    totalCost?: SortOrder
+    destination?: SortOrder
+    notes?: SortOrderInput | SortOrder
+    recordedBy?: SortOrder
+    createdAt?: SortOrder
+    product?: ProductOrderByWithRelationInput
+  }
+
+  export type StockPurchaseWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: StockPurchaseWhereInput | StockPurchaseWhereInput[]
+    OR?: StockPurchaseWhereInput[]
+    NOT?: StockPurchaseWhereInput | StockPurchaseWhereInput[]
+    invoiceNumber?: StringFilter<"StockPurchase"> | string
+    type?: StringFilter<"StockPurchase"> | string
+    supplierName?: StringNullableFilter<"StockPurchase"> | string | null
+    productId?: StringFilter<"StockPurchase"> | string
+    quantity?: IntFilter<"StockPurchase"> | number
+    costPrice?: FloatFilter<"StockPurchase"> | number
+    totalCost?: FloatFilter<"StockPurchase"> | number
+    destination?: StringFilter<"StockPurchase"> | string
+    notes?: StringNullableFilter<"StockPurchase"> | string | null
+    recordedBy?: StringFilter<"StockPurchase"> | string
+    createdAt?: DateTimeFilter<"StockPurchase"> | Date | string
+    product?: XOR<ProductScalarRelationFilter, ProductWhereInput>
+  }, "id">
+
+  export type StockPurchaseOrderByWithAggregationInput = {
+    id?: SortOrder
+    invoiceNumber?: SortOrder
+    type?: SortOrder
+    supplierName?: SortOrderInput | SortOrder
+    productId?: SortOrder
+    quantity?: SortOrder
+    costPrice?: SortOrder
+    totalCost?: SortOrder
+    destination?: SortOrder
+    notes?: SortOrderInput | SortOrder
+    recordedBy?: SortOrder
+    createdAt?: SortOrder
+    _count?: StockPurchaseCountOrderByAggregateInput
+    _avg?: StockPurchaseAvgOrderByAggregateInput
+    _max?: StockPurchaseMaxOrderByAggregateInput
+    _min?: StockPurchaseMinOrderByAggregateInput
+    _sum?: StockPurchaseSumOrderByAggregateInput
+  }
+
+  export type StockPurchaseScalarWhereWithAggregatesInput = {
+    AND?: StockPurchaseScalarWhereWithAggregatesInput | StockPurchaseScalarWhereWithAggregatesInput[]
+    OR?: StockPurchaseScalarWhereWithAggregatesInput[]
+    NOT?: StockPurchaseScalarWhereWithAggregatesInput | StockPurchaseScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"StockPurchase"> | string
+    invoiceNumber?: StringWithAggregatesFilter<"StockPurchase"> | string
+    type?: StringWithAggregatesFilter<"StockPurchase"> | string
+    supplierName?: StringNullableWithAggregatesFilter<"StockPurchase"> | string | null
+    productId?: StringWithAggregatesFilter<"StockPurchase"> | string
+    quantity?: IntWithAggregatesFilter<"StockPurchase"> | number
+    costPrice?: FloatWithAggregatesFilter<"StockPurchase"> | number
+    totalCost?: FloatWithAggregatesFilter<"StockPurchase"> | number
+    destination?: StringWithAggregatesFilter<"StockPurchase"> | string
+    notes?: StringNullableWithAggregatesFilter<"StockPurchase"> | string | null
+    recordedBy?: StringWithAggregatesFilter<"StockPurchase"> | string
+    createdAt?: DateTimeWithAggregatesFilter<"StockPurchase"> | Date | string
+  }
+
+  export type StockTransferWhereInput = {
+    AND?: StockTransferWhereInput | StockTransferWhereInput[]
+    OR?: StockTransferWhereInput[]
+    NOT?: StockTransferWhereInput | StockTransferWhereInput[]
+    id?: StringFilter<"StockTransfer"> | string
+    transferNumber?: StringFilter<"StockTransfer"> | string
+    productId?: StringFilter<"StockTransfer"> | string
+    fromLocation?: StringFilter<"StockTransfer"> | string
+    toBranchId?: StringFilter<"StockTransfer"> | string
+    quantity?: IntFilter<"StockTransfer"> | number
+    status?: StringFilter<"StockTransfer"> | string
+    receivedBy?: StringNullableFilter<"StockTransfer"> | string | null
+    dispatchedBy?: StringFilter<"StockTransfer"> | string
+    notes?: StringNullableFilter<"StockTransfer"> | string | null
+    createdAt?: DateTimeFilter<"StockTransfer"> | Date | string
+    product?: XOR<ProductScalarRelationFilter, ProductWhereInput>
+    toBranch?: XOR<BranchScalarRelationFilter, BranchWhereInput>
+  }
+
+  export type StockTransferOrderByWithRelationInput = {
+    id?: SortOrder
+    transferNumber?: SortOrder
+    productId?: SortOrder
+    fromLocation?: SortOrder
+    toBranchId?: SortOrder
+    quantity?: SortOrder
+    status?: SortOrder
+    receivedBy?: SortOrderInput | SortOrder
+    dispatchedBy?: SortOrder
+    notes?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    product?: ProductOrderByWithRelationInput
+    toBranch?: BranchOrderByWithRelationInput
+  }
+
+  export type StockTransferWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: StockTransferWhereInput | StockTransferWhereInput[]
+    OR?: StockTransferWhereInput[]
+    NOT?: StockTransferWhereInput | StockTransferWhereInput[]
+    transferNumber?: StringFilter<"StockTransfer"> | string
+    productId?: StringFilter<"StockTransfer"> | string
+    fromLocation?: StringFilter<"StockTransfer"> | string
+    toBranchId?: StringFilter<"StockTransfer"> | string
+    quantity?: IntFilter<"StockTransfer"> | number
+    status?: StringFilter<"StockTransfer"> | string
+    receivedBy?: StringNullableFilter<"StockTransfer"> | string | null
+    dispatchedBy?: StringFilter<"StockTransfer"> | string
+    notes?: StringNullableFilter<"StockTransfer"> | string | null
+    createdAt?: DateTimeFilter<"StockTransfer"> | Date | string
+    product?: XOR<ProductScalarRelationFilter, ProductWhereInput>
+    toBranch?: XOR<BranchScalarRelationFilter, BranchWhereInput>
+  }, "id">
+
+  export type StockTransferOrderByWithAggregationInput = {
+    id?: SortOrder
+    transferNumber?: SortOrder
+    productId?: SortOrder
+    fromLocation?: SortOrder
+    toBranchId?: SortOrder
+    quantity?: SortOrder
+    status?: SortOrder
+    receivedBy?: SortOrderInput | SortOrder
+    dispatchedBy?: SortOrder
+    notes?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    _count?: StockTransferCountOrderByAggregateInput
+    _avg?: StockTransferAvgOrderByAggregateInput
+    _max?: StockTransferMaxOrderByAggregateInput
+    _min?: StockTransferMinOrderByAggregateInput
+    _sum?: StockTransferSumOrderByAggregateInput
+  }
+
+  export type StockTransferScalarWhereWithAggregatesInput = {
+    AND?: StockTransferScalarWhereWithAggregatesInput | StockTransferScalarWhereWithAggregatesInput[]
+    OR?: StockTransferScalarWhereWithAggregatesInput[]
+    NOT?: StockTransferScalarWhereWithAggregatesInput | StockTransferScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"StockTransfer"> | string
+    transferNumber?: StringWithAggregatesFilter<"StockTransfer"> | string
+    productId?: StringWithAggregatesFilter<"StockTransfer"> | string
+    fromLocation?: StringWithAggregatesFilter<"StockTransfer"> | string
+    toBranchId?: StringWithAggregatesFilter<"StockTransfer"> | string
+    quantity?: IntWithAggregatesFilter<"StockTransfer"> | number
+    status?: StringWithAggregatesFilter<"StockTransfer"> | string
+    receivedBy?: StringNullableWithAggregatesFilter<"StockTransfer"> | string | null
+    dispatchedBy?: StringWithAggregatesFilter<"StockTransfer"> | string
+    notes?: StringNullableWithAggregatesFilter<"StockTransfer"> | string | null
+    createdAt?: DateTimeWithAggregatesFilter<"StockTransfer"> | Date | string
+  }
+
+  export type MaterialConsumptionLogWhereInput = {
+    AND?: MaterialConsumptionLogWhereInput | MaterialConsumptionLogWhereInput[]
+    OR?: MaterialConsumptionLogWhereInput[]
+    NOT?: MaterialConsumptionLogWhereInput | MaterialConsumptionLogWhereInput[]
+    id?: StringFilter<"MaterialConsumptionLog"> | string
+    productId?: StringFilter<"MaterialConsumptionLog"> | string
+    branchId?: StringFilter<"MaterialConsumptionLog"> | string
+    ticketId?: StringNullableFilter<"MaterialConsumptionLog"> | string | null
+    specialistId?: StringNullableFilter<"MaterialConsumptionLog"> | string | null
+    serviceName?: StringNullableFilter<"MaterialConsumptionLog"> | string | null
+    quantityConsumed?: FloatFilter<"MaterialConsumptionLog"> | number
+    unit?: StringFilter<"MaterialConsumptionLog"> | string
+    reason?: StringFilter<"MaterialConsumptionLog"> | string
+    date?: StringFilter<"MaterialConsumptionLog"> | string
+    notes?: StringNullableFilter<"MaterialConsumptionLog"> | string | null
+    createdAt?: DateTimeFilter<"MaterialConsumptionLog"> | Date | string
+    product?: XOR<ProductScalarRelationFilter, ProductWhereInput>
+    branch?: XOR<BranchScalarRelationFilter, BranchWhereInput>
+  }
+
+  export type MaterialConsumptionLogOrderByWithRelationInput = {
+    id?: SortOrder
+    productId?: SortOrder
+    branchId?: SortOrder
+    ticketId?: SortOrderInput | SortOrder
+    specialistId?: SortOrderInput | SortOrder
+    serviceName?: SortOrderInput | SortOrder
+    quantityConsumed?: SortOrder
+    unit?: SortOrder
+    reason?: SortOrder
+    date?: SortOrder
+    notes?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    product?: ProductOrderByWithRelationInput
+    branch?: BranchOrderByWithRelationInput
+  }
+
+  export type MaterialConsumptionLogWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: MaterialConsumptionLogWhereInput | MaterialConsumptionLogWhereInput[]
+    OR?: MaterialConsumptionLogWhereInput[]
+    NOT?: MaterialConsumptionLogWhereInput | MaterialConsumptionLogWhereInput[]
+    productId?: StringFilter<"MaterialConsumptionLog"> | string
+    branchId?: StringFilter<"MaterialConsumptionLog"> | string
+    ticketId?: StringNullableFilter<"MaterialConsumptionLog"> | string | null
+    specialistId?: StringNullableFilter<"MaterialConsumptionLog"> | string | null
+    serviceName?: StringNullableFilter<"MaterialConsumptionLog"> | string | null
+    quantityConsumed?: FloatFilter<"MaterialConsumptionLog"> | number
+    unit?: StringFilter<"MaterialConsumptionLog"> | string
+    reason?: StringFilter<"MaterialConsumptionLog"> | string
+    date?: StringFilter<"MaterialConsumptionLog"> | string
+    notes?: StringNullableFilter<"MaterialConsumptionLog"> | string | null
+    createdAt?: DateTimeFilter<"MaterialConsumptionLog"> | Date | string
+    product?: XOR<ProductScalarRelationFilter, ProductWhereInput>
+    branch?: XOR<BranchScalarRelationFilter, BranchWhereInput>
+  }, "id">
+
+  export type MaterialConsumptionLogOrderByWithAggregationInput = {
+    id?: SortOrder
+    productId?: SortOrder
+    branchId?: SortOrder
+    ticketId?: SortOrderInput | SortOrder
+    specialistId?: SortOrderInput | SortOrder
+    serviceName?: SortOrderInput | SortOrder
+    quantityConsumed?: SortOrder
+    unit?: SortOrder
+    reason?: SortOrder
+    date?: SortOrder
+    notes?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    _count?: MaterialConsumptionLogCountOrderByAggregateInput
+    _avg?: MaterialConsumptionLogAvgOrderByAggregateInput
+    _max?: MaterialConsumptionLogMaxOrderByAggregateInput
+    _min?: MaterialConsumptionLogMinOrderByAggregateInput
+    _sum?: MaterialConsumptionLogSumOrderByAggregateInput
+  }
+
+  export type MaterialConsumptionLogScalarWhereWithAggregatesInput = {
+    AND?: MaterialConsumptionLogScalarWhereWithAggregatesInput | MaterialConsumptionLogScalarWhereWithAggregatesInput[]
+    OR?: MaterialConsumptionLogScalarWhereWithAggregatesInput[]
+    NOT?: MaterialConsumptionLogScalarWhereWithAggregatesInput | MaterialConsumptionLogScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"MaterialConsumptionLog"> | string
+    productId?: StringWithAggregatesFilter<"MaterialConsumptionLog"> | string
+    branchId?: StringWithAggregatesFilter<"MaterialConsumptionLog"> | string
+    ticketId?: StringNullableWithAggregatesFilter<"MaterialConsumptionLog"> | string | null
+    specialistId?: StringNullableWithAggregatesFilter<"MaterialConsumptionLog"> | string | null
+    serviceName?: StringNullableWithAggregatesFilter<"MaterialConsumptionLog"> | string | null
+    quantityConsumed?: FloatWithAggregatesFilter<"MaterialConsumptionLog"> | number
+    unit?: StringWithAggregatesFilter<"MaterialConsumptionLog"> | string
+    reason?: StringWithAggregatesFilter<"MaterialConsumptionLog"> | string
+    date?: StringWithAggregatesFilter<"MaterialConsumptionLog"> | string
+    notes?: StringNullableWithAggregatesFilter<"MaterialConsumptionLog"> | string | null
+    createdAt?: DateTimeWithAggregatesFilter<"MaterialConsumptionLog"> | Date | string
+  }
+
   export type BranchCreateInput = {
     id?: string
     name: string
@@ -23189,6 +27755,8 @@ export namespace Prisma {
     shifts?: CashShiftCreateNestedManyWithoutBranchInput
     expenses?: TreasuryExpenseCreateNestedManyWithoutBranchInput
     attendances?: AttendanceRecordCreateNestedManyWithoutBranchInput
+    transfers?: StockTransferCreateNestedManyWithoutToBranchInput
+    consumptionLogs?: MaterialConsumptionLogCreateNestedManyWithoutBranchInput
   }
 
   export type BranchUncheckedCreateInput = {
@@ -23212,6 +27780,8 @@ export namespace Prisma {
     shifts?: CashShiftUncheckedCreateNestedManyWithoutBranchInput
     expenses?: TreasuryExpenseUncheckedCreateNestedManyWithoutBranchInput
     attendances?: AttendanceRecordUncheckedCreateNestedManyWithoutBranchInput
+    transfers?: StockTransferUncheckedCreateNestedManyWithoutToBranchInput
+    consumptionLogs?: MaterialConsumptionLogUncheckedCreateNestedManyWithoutBranchInput
   }
 
   export type BranchUpdateInput = {
@@ -23235,6 +27805,8 @@ export namespace Prisma {
     shifts?: CashShiftUpdateManyWithoutBranchNestedInput
     expenses?: TreasuryExpenseUpdateManyWithoutBranchNestedInput
     attendances?: AttendanceRecordUpdateManyWithoutBranchNestedInput
+    transfers?: StockTransferUpdateManyWithoutToBranchNestedInput
+    consumptionLogs?: MaterialConsumptionLogUpdateManyWithoutBranchNestedInput
   }
 
   export type BranchUncheckedUpdateInput = {
@@ -23258,6 +27830,8 @@ export namespace Prisma {
     shifts?: CashShiftUncheckedUpdateManyWithoutBranchNestedInput
     expenses?: TreasuryExpenseUncheckedUpdateManyWithoutBranchNestedInput
     attendances?: AttendanceRecordUncheckedUpdateManyWithoutBranchNestedInput
+    transfers?: StockTransferUncheckedUpdateManyWithoutToBranchNestedInput
+    consumptionLogs?: MaterialConsumptionLogUncheckedUpdateManyWithoutBranchNestedInput
   }
 
   export type BranchCreateManyInput = {
@@ -24088,9 +28662,20 @@ export namespace Prisma {
     minStockAlert?: number
     image?: string | null
     barcode?: string | null
+    barcodeType?: string
+    usageType?: string
+    unit?: string
+    centralStockQty?: number
+    consumptionRule?: string | null
+    estimatedUsesPerUnit?: number
+    currentOpenedUnits?: number
     isActive?: boolean
     createdAt?: Date | string
+    updatedAt?: Date | string
     branch?: BranchCreateNestedOneWithoutProductsInput
+    purchases?: StockPurchaseCreateNestedManyWithoutProductInput
+    transfers?: StockTransferCreateNestedManyWithoutProductInput
+    consumptionLogs?: MaterialConsumptionLogCreateNestedManyWithoutProductInput
   }
 
   export type ProductUncheckedCreateInput = {
@@ -24104,8 +28689,19 @@ export namespace Prisma {
     minStockAlert?: number
     image?: string | null
     barcode?: string | null
+    barcodeType?: string
+    usageType?: string
+    unit?: string
+    centralStockQty?: number
+    consumptionRule?: string | null
+    estimatedUsesPerUnit?: number
+    currentOpenedUnits?: number
     isActive?: boolean
     createdAt?: Date | string
+    updatedAt?: Date | string
+    purchases?: StockPurchaseUncheckedCreateNestedManyWithoutProductInput
+    transfers?: StockTransferUncheckedCreateNestedManyWithoutProductInput
+    consumptionLogs?: MaterialConsumptionLogUncheckedCreateNestedManyWithoutProductInput
   }
 
   export type ProductUpdateInput = {
@@ -24118,9 +28714,20 @@ export namespace Prisma {
     minStockAlert?: IntFieldUpdateOperationsInput | number
     image?: NullableStringFieldUpdateOperationsInput | string | null
     barcode?: NullableStringFieldUpdateOperationsInput | string | null
+    barcodeType?: StringFieldUpdateOperationsInput | string
+    usageType?: StringFieldUpdateOperationsInput | string
+    unit?: StringFieldUpdateOperationsInput | string
+    centralStockQty?: IntFieldUpdateOperationsInput | number
+    consumptionRule?: NullableStringFieldUpdateOperationsInput | string | null
+    estimatedUsesPerUnit?: IntFieldUpdateOperationsInput | number
+    currentOpenedUnits?: IntFieldUpdateOperationsInput | number
     isActive?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     branch?: BranchUpdateOneWithoutProductsNestedInput
+    purchases?: StockPurchaseUpdateManyWithoutProductNestedInput
+    transfers?: StockTransferUpdateManyWithoutProductNestedInput
+    consumptionLogs?: MaterialConsumptionLogUpdateManyWithoutProductNestedInput
   }
 
   export type ProductUncheckedUpdateInput = {
@@ -24134,8 +28741,19 @@ export namespace Prisma {
     minStockAlert?: IntFieldUpdateOperationsInput | number
     image?: NullableStringFieldUpdateOperationsInput | string | null
     barcode?: NullableStringFieldUpdateOperationsInput | string | null
+    barcodeType?: StringFieldUpdateOperationsInput | string
+    usageType?: StringFieldUpdateOperationsInput | string
+    unit?: StringFieldUpdateOperationsInput | string
+    centralStockQty?: IntFieldUpdateOperationsInput | number
+    consumptionRule?: NullableStringFieldUpdateOperationsInput | string | null
+    estimatedUsesPerUnit?: IntFieldUpdateOperationsInput | number
+    currentOpenedUnits?: IntFieldUpdateOperationsInput | number
     isActive?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    purchases?: StockPurchaseUncheckedUpdateManyWithoutProductNestedInput
+    transfers?: StockTransferUncheckedUpdateManyWithoutProductNestedInput
+    consumptionLogs?: MaterialConsumptionLogUncheckedUpdateManyWithoutProductNestedInput
   }
 
   export type ProductCreateManyInput = {
@@ -24149,8 +28767,16 @@ export namespace Prisma {
     minStockAlert?: number
     image?: string | null
     barcode?: string | null
+    barcodeType?: string
+    usageType?: string
+    unit?: string
+    centralStockQty?: number
+    consumptionRule?: string | null
+    estimatedUsesPerUnit?: number
+    currentOpenedUnits?: number
     isActive?: boolean
     createdAt?: Date | string
+    updatedAt?: Date | string
   }
 
   export type ProductUpdateManyMutationInput = {
@@ -24163,8 +28789,16 @@ export namespace Prisma {
     minStockAlert?: IntFieldUpdateOperationsInput | number
     image?: NullableStringFieldUpdateOperationsInput | string | null
     barcode?: NullableStringFieldUpdateOperationsInput | string | null
+    barcodeType?: StringFieldUpdateOperationsInput | string
+    usageType?: StringFieldUpdateOperationsInput | string
+    unit?: StringFieldUpdateOperationsInput | string
+    centralStockQty?: IntFieldUpdateOperationsInput | number
+    consumptionRule?: NullableStringFieldUpdateOperationsInput | string | null
+    estimatedUsesPerUnit?: IntFieldUpdateOperationsInput | number
+    currentOpenedUnits?: IntFieldUpdateOperationsInput | number
     isActive?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type ProductUncheckedUpdateManyInput = {
@@ -24178,8 +28812,16 @@ export namespace Prisma {
     minStockAlert?: IntFieldUpdateOperationsInput | number
     image?: NullableStringFieldUpdateOperationsInput | string | null
     barcode?: NullableStringFieldUpdateOperationsInput | string | null
+    barcodeType?: StringFieldUpdateOperationsInput | string
+    usageType?: StringFieldUpdateOperationsInput | string
+    unit?: StringFieldUpdateOperationsInput | string
+    centralStockQty?: IntFieldUpdateOperationsInput | number
+    consumptionRule?: NullableStringFieldUpdateOperationsInput | string | null
+    estimatedUsesPerUnit?: IntFieldUpdateOperationsInput | number
+    currentOpenedUnits?: IntFieldUpdateOperationsInput | number
     isActive?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type SpecialistLedgerCreateInput = {
@@ -25014,6 +29656,309 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type StockPurchaseCreateInput = {
+    id?: string
+    invoiceNumber: string
+    type?: string
+    supplierName?: string | null
+    quantity: number
+    costPrice: number
+    totalCost: number
+    destination?: string
+    notes?: string | null
+    recordedBy?: string
+    createdAt?: Date | string
+    product: ProductCreateNestedOneWithoutPurchasesInput
+  }
+
+  export type StockPurchaseUncheckedCreateInput = {
+    id?: string
+    invoiceNumber: string
+    type?: string
+    supplierName?: string | null
+    productId: string
+    quantity: number
+    costPrice: number
+    totalCost: number
+    destination?: string
+    notes?: string | null
+    recordedBy?: string
+    createdAt?: Date | string
+  }
+
+  export type StockPurchaseUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    invoiceNumber?: StringFieldUpdateOperationsInput | string
+    type?: StringFieldUpdateOperationsInput | string
+    supplierName?: NullableStringFieldUpdateOperationsInput | string | null
+    quantity?: IntFieldUpdateOperationsInput | number
+    costPrice?: FloatFieldUpdateOperationsInput | number
+    totalCost?: FloatFieldUpdateOperationsInput | number
+    destination?: StringFieldUpdateOperationsInput | string
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    recordedBy?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    product?: ProductUpdateOneRequiredWithoutPurchasesNestedInput
+  }
+
+  export type StockPurchaseUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    invoiceNumber?: StringFieldUpdateOperationsInput | string
+    type?: StringFieldUpdateOperationsInput | string
+    supplierName?: NullableStringFieldUpdateOperationsInput | string | null
+    productId?: StringFieldUpdateOperationsInput | string
+    quantity?: IntFieldUpdateOperationsInput | number
+    costPrice?: FloatFieldUpdateOperationsInput | number
+    totalCost?: FloatFieldUpdateOperationsInput | number
+    destination?: StringFieldUpdateOperationsInput | string
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    recordedBy?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type StockPurchaseCreateManyInput = {
+    id?: string
+    invoiceNumber: string
+    type?: string
+    supplierName?: string | null
+    productId: string
+    quantity: number
+    costPrice: number
+    totalCost: number
+    destination?: string
+    notes?: string | null
+    recordedBy?: string
+    createdAt?: Date | string
+  }
+
+  export type StockPurchaseUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    invoiceNumber?: StringFieldUpdateOperationsInput | string
+    type?: StringFieldUpdateOperationsInput | string
+    supplierName?: NullableStringFieldUpdateOperationsInput | string | null
+    quantity?: IntFieldUpdateOperationsInput | number
+    costPrice?: FloatFieldUpdateOperationsInput | number
+    totalCost?: FloatFieldUpdateOperationsInput | number
+    destination?: StringFieldUpdateOperationsInput | string
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    recordedBy?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type StockPurchaseUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    invoiceNumber?: StringFieldUpdateOperationsInput | string
+    type?: StringFieldUpdateOperationsInput | string
+    supplierName?: NullableStringFieldUpdateOperationsInput | string | null
+    productId?: StringFieldUpdateOperationsInput | string
+    quantity?: IntFieldUpdateOperationsInput | number
+    costPrice?: FloatFieldUpdateOperationsInput | number
+    totalCost?: FloatFieldUpdateOperationsInput | number
+    destination?: StringFieldUpdateOperationsInput | string
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    recordedBy?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type StockTransferCreateInput = {
+    id?: string
+    transferNumber: string
+    fromLocation?: string
+    quantity: number
+    status?: string
+    receivedBy?: string | null
+    dispatchedBy?: string
+    notes?: string | null
+    createdAt?: Date | string
+    product: ProductCreateNestedOneWithoutTransfersInput
+    toBranch: BranchCreateNestedOneWithoutTransfersInput
+  }
+
+  export type StockTransferUncheckedCreateInput = {
+    id?: string
+    transferNumber: string
+    productId: string
+    fromLocation?: string
+    toBranchId: string
+    quantity: number
+    status?: string
+    receivedBy?: string | null
+    dispatchedBy?: string
+    notes?: string | null
+    createdAt?: Date | string
+  }
+
+  export type StockTransferUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    transferNumber?: StringFieldUpdateOperationsInput | string
+    fromLocation?: StringFieldUpdateOperationsInput | string
+    quantity?: IntFieldUpdateOperationsInput | number
+    status?: StringFieldUpdateOperationsInput | string
+    receivedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    dispatchedBy?: StringFieldUpdateOperationsInput | string
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    product?: ProductUpdateOneRequiredWithoutTransfersNestedInput
+    toBranch?: BranchUpdateOneRequiredWithoutTransfersNestedInput
+  }
+
+  export type StockTransferUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    transferNumber?: StringFieldUpdateOperationsInput | string
+    productId?: StringFieldUpdateOperationsInput | string
+    fromLocation?: StringFieldUpdateOperationsInput | string
+    toBranchId?: StringFieldUpdateOperationsInput | string
+    quantity?: IntFieldUpdateOperationsInput | number
+    status?: StringFieldUpdateOperationsInput | string
+    receivedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    dispatchedBy?: StringFieldUpdateOperationsInput | string
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type StockTransferCreateManyInput = {
+    id?: string
+    transferNumber: string
+    productId: string
+    fromLocation?: string
+    toBranchId: string
+    quantity: number
+    status?: string
+    receivedBy?: string | null
+    dispatchedBy?: string
+    notes?: string | null
+    createdAt?: Date | string
+  }
+
+  export type StockTransferUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    transferNumber?: StringFieldUpdateOperationsInput | string
+    fromLocation?: StringFieldUpdateOperationsInput | string
+    quantity?: IntFieldUpdateOperationsInput | number
+    status?: StringFieldUpdateOperationsInput | string
+    receivedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    dispatchedBy?: StringFieldUpdateOperationsInput | string
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type StockTransferUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    transferNumber?: StringFieldUpdateOperationsInput | string
+    productId?: StringFieldUpdateOperationsInput | string
+    fromLocation?: StringFieldUpdateOperationsInput | string
+    toBranchId?: StringFieldUpdateOperationsInput | string
+    quantity?: IntFieldUpdateOperationsInput | number
+    status?: StringFieldUpdateOperationsInput | string
+    receivedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    dispatchedBy?: StringFieldUpdateOperationsInput | string
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type MaterialConsumptionLogCreateInput = {
+    id?: string
+    ticketId?: string | null
+    specialistId?: string | null
+    serviceName?: string | null
+    quantityConsumed: number
+    unit?: string
+    reason?: string
+    date: string
+    notes?: string | null
+    createdAt?: Date | string
+    product: ProductCreateNestedOneWithoutConsumptionLogsInput
+    branch: BranchCreateNestedOneWithoutConsumptionLogsInput
+  }
+
+  export type MaterialConsumptionLogUncheckedCreateInput = {
+    id?: string
+    productId: string
+    branchId: string
+    ticketId?: string | null
+    specialistId?: string | null
+    serviceName?: string | null
+    quantityConsumed: number
+    unit?: string
+    reason?: string
+    date: string
+    notes?: string | null
+    createdAt?: Date | string
+  }
+
+  export type MaterialConsumptionLogUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    ticketId?: NullableStringFieldUpdateOperationsInput | string | null
+    specialistId?: NullableStringFieldUpdateOperationsInput | string | null
+    serviceName?: NullableStringFieldUpdateOperationsInput | string | null
+    quantityConsumed?: FloatFieldUpdateOperationsInput | number
+    unit?: StringFieldUpdateOperationsInput | string
+    reason?: StringFieldUpdateOperationsInput | string
+    date?: StringFieldUpdateOperationsInput | string
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    product?: ProductUpdateOneRequiredWithoutConsumptionLogsNestedInput
+    branch?: BranchUpdateOneRequiredWithoutConsumptionLogsNestedInput
+  }
+
+  export type MaterialConsumptionLogUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    productId?: StringFieldUpdateOperationsInput | string
+    branchId?: StringFieldUpdateOperationsInput | string
+    ticketId?: NullableStringFieldUpdateOperationsInput | string | null
+    specialistId?: NullableStringFieldUpdateOperationsInput | string | null
+    serviceName?: NullableStringFieldUpdateOperationsInput | string | null
+    quantityConsumed?: FloatFieldUpdateOperationsInput | number
+    unit?: StringFieldUpdateOperationsInput | string
+    reason?: StringFieldUpdateOperationsInput | string
+    date?: StringFieldUpdateOperationsInput | string
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type MaterialConsumptionLogCreateManyInput = {
+    id?: string
+    productId: string
+    branchId: string
+    ticketId?: string | null
+    specialistId?: string | null
+    serviceName?: string | null
+    quantityConsumed: number
+    unit?: string
+    reason?: string
+    date: string
+    notes?: string | null
+    createdAt?: Date | string
+  }
+
+  export type MaterialConsumptionLogUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    ticketId?: NullableStringFieldUpdateOperationsInput | string | null
+    specialistId?: NullableStringFieldUpdateOperationsInput | string | null
+    serviceName?: NullableStringFieldUpdateOperationsInput | string | null
+    quantityConsumed?: FloatFieldUpdateOperationsInput | number
+    unit?: StringFieldUpdateOperationsInput | string
+    reason?: StringFieldUpdateOperationsInput | string
+    date?: StringFieldUpdateOperationsInput | string
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type MaterialConsumptionLogUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    productId?: StringFieldUpdateOperationsInput | string
+    branchId?: StringFieldUpdateOperationsInput | string
+    ticketId?: NullableStringFieldUpdateOperationsInput | string | null
+    specialistId?: NullableStringFieldUpdateOperationsInput | string | null
+    serviceName?: NullableStringFieldUpdateOperationsInput | string | null
+    quantityConsumed?: FloatFieldUpdateOperationsInput | number
+    unit?: StringFieldUpdateOperationsInput | string
+    reason?: StringFieldUpdateOperationsInput | string
+    date?: StringFieldUpdateOperationsInput | string
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type StringFilter<$PrismaModel = never> = {
     equals?: string | StringFieldRefInput<$PrismaModel>
     in?: string[] | ListStringFieldRefInput<$PrismaModel>
@@ -25126,6 +30071,18 @@ export namespace Prisma {
     none?: AttendanceRecordWhereInput
   }
 
+  export type StockTransferListRelationFilter = {
+    every?: StockTransferWhereInput
+    some?: StockTransferWhereInput
+    none?: StockTransferWhereInput
+  }
+
+  export type MaterialConsumptionLogListRelationFilter = {
+    every?: MaterialConsumptionLogWhereInput
+    some?: MaterialConsumptionLogWhereInput
+    none?: MaterialConsumptionLogWhereInput
+  }
+
   export type SortOrderInput = {
     sort: SortOrder
     nulls?: NullsOrder
@@ -25172,6 +30129,14 @@ export namespace Prisma {
   }
 
   export type AttendanceRecordOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type StockTransferOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type MaterialConsumptionLogOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -25801,6 +30766,16 @@ export namespace Prisma {
     _max?: NestedIntNullableFilter<$PrismaModel>
   }
 
+  export type StockPurchaseListRelationFilter = {
+    every?: StockPurchaseWhereInput
+    some?: StockPurchaseWhereInput
+    none?: StockPurchaseWhereInput
+  }
+
+  export type StockPurchaseOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
   export type ProductCountOrderByAggregateInput = {
     id?: SortOrder
     branchId?: SortOrder
@@ -25812,8 +30787,16 @@ export namespace Prisma {
     minStockAlert?: SortOrder
     image?: SortOrder
     barcode?: SortOrder
+    barcodeType?: SortOrder
+    usageType?: SortOrder
+    unit?: SortOrder
+    centralStockQty?: SortOrder
+    consumptionRule?: SortOrder
+    estimatedUsesPerUnit?: SortOrder
+    currentOpenedUnits?: SortOrder
     isActive?: SortOrder
     createdAt?: SortOrder
+    updatedAt?: SortOrder
   }
 
   export type ProductAvgOrderByAggregateInput = {
@@ -25821,6 +30804,9 @@ export namespace Prisma {
     costPrice?: SortOrder
     stockQty?: SortOrder
     minStockAlert?: SortOrder
+    centralStockQty?: SortOrder
+    estimatedUsesPerUnit?: SortOrder
+    currentOpenedUnits?: SortOrder
   }
 
   export type ProductMaxOrderByAggregateInput = {
@@ -25834,8 +30820,16 @@ export namespace Prisma {
     minStockAlert?: SortOrder
     image?: SortOrder
     barcode?: SortOrder
+    barcodeType?: SortOrder
+    usageType?: SortOrder
+    unit?: SortOrder
+    centralStockQty?: SortOrder
+    consumptionRule?: SortOrder
+    estimatedUsesPerUnit?: SortOrder
+    currentOpenedUnits?: SortOrder
     isActive?: SortOrder
     createdAt?: SortOrder
+    updatedAt?: SortOrder
   }
 
   export type ProductMinOrderByAggregateInput = {
@@ -25849,8 +30843,16 @@ export namespace Prisma {
     minStockAlert?: SortOrder
     image?: SortOrder
     barcode?: SortOrder
+    barcodeType?: SortOrder
+    usageType?: SortOrder
+    unit?: SortOrder
+    centralStockQty?: SortOrder
+    consumptionRule?: SortOrder
+    estimatedUsesPerUnit?: SortOrder
+    currentOpenedUnits?: SortOrder
     isActive?: SortOrder
     createdAt?: SortOrder
+    updatedAt?: SortOrder
   }
 
   export type ProductSumOrderByAggregateInput = {
@@ -25858,6 +30860,9 @@ export namespace Prisma {
     costPrice?: SortOrder
     stockQty?: SortOrder
     minStockAlert?: SortOrder
+    centralStockQty?: SortOrder
+    estimatedUsesPerUnit?: SortOrder
+    currentOpenedUnits?: SortOrder
   }
 
   export type SpecialistLedgerCountOrderByAggregateInput = {
@@ -26322,6 +31327,171 @@ export namespace Prisma {
     updatedAt?: SortOrder
   }
 
+  export type ProductScalarRelationFilter = {
+    is?: ProductWhereInput
+    isNot?: ProductWhereInput
+  }
+
+  export type StockPurchaseCountOrderByAggregateInput = {
+    id?: SortOrder
+    invoiceNumber?: SortOrder
+    type?: SortOrder
+    supplierName?: SortOrder
+    productId?: SortOrder
+    quantity?: SortOrder
+    costPrice?: SortOrder
+    totalCost?: SortOrder
+    destination?: SortOrder
+    notes?: SortOrder
+    recordedBy?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type StockPurchaseAvgOrderByAggregateInput = {
+    quantity?: SortOrder
+    costPrice?: SortOrder
+    totalCost?: SortOrder
+  }
+
+  export type StockPurchaseMaxOrderByAggregateInput = {
+    id?: SortOrder
+    invoiceNumber?: SortOrder
+    type?: SortOrder
+    supplierName?: SortOrder
+    productId?: SortOrder
+    quantity?: SortOrder
+    costPrice?: SortOrder
+    totalCost?: SortOrder
+    destination?: SortOrder
+    notes?: SortOrder
+    recordedBy?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type StockPurchaseMinOrderByAggregateInput = {
+    id?: SortOrder
+    invoiceNumber?: SortOrder
+    type?: SortOrder
+    supplierName?: SortOrder
+    productId?: SortOrder
+    quantity?: SortOrder
+    costPrice?: SortOrder
+    totalCost?: SortOrder
+    destination?: SortOrder
+    notes?: SortOrder
+    recordedBy?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type StockPurchaseSumOrderByAggregateInput = {
+    quantity?: SortOrder
+    costPrice?: SortOrder
+    totalCost?: SortOrder
+  }
+
+  export type StockTransferCountOrderByAggregateInput = {
+    id?: SortOrder
+    transferNumber?: SortOrder
+    productId?: SortOrder
+    fromLocation?: SortOrder
+    toBranchId?: SortOrder
+    quantity?: SortOrder
+    status?: SortOrder
+    receivedBy?: SortOrder
+    dispatchedBy?: SortOrder
+    notes?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type StockTransferAvgOrderByAggregateInput = {
+    quantity?: SortOrder
+  }
+
+  export type StockTransferMaxOrderByAggregateInput = {
+    id?: SortOrder
+    transferNumber?: SortOrder
+    productId?: SortOrder
+    fromLocation?: SortOrder
+    toBranchId?: SortOrder
+    quantity?: SortOrder
+    status?: SortOrder
+    receivedBy?: SortOrder
+    dispatchedBy?: SortOrder
+    notes?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type StockTransferMinOrderByAggregateInput = {
+    id?: SortOrder
+    transferNumber?: SortOrder
+    productId?: SortOrder
+    fromLocation?: SortOrder
+    toBranchId?: SortOrder
+    quantity?: SortOrder
+    status?: SortOrder
+    receivedBy?: SortOrder
+    dispatchedBy?: SortOrder
+    notes?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type StockTransferSumOrderByAggregateInput = {
+    quantity?: SortOrder
+  }
+
+  export type MaterialConsumptionLogCountOrderByAggregateInput = {
+    id?: SortOrder
+    productId?: SortOrder
+    branchId?: SortOrder
+    ticketId?: SortOrder
+    specialistId?: SortOrder
+    serviceName?: SortOrder
+    quantityConsumed?: SortOrder
+    unit?: SortOrder
+    reason?: SortOrder
+    date?: SortOrder
+    notes?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type MaterialConsumptionLogAvgOrderByAggregateInput = {
+    quantityConsumed?: SortOrder
+  }
+
+  export type MaterialConsumptionLogMaxOrderByAggregateInput = {
+    id?: SortOrder
+    productId?: SortOrder
+    branchId?: SortOrder
+    ticketId?: SortOrder
+    specialistId?: SortOrder
+    serviceName?: SortOrder
+    quantityConsumed?: SortOrder
+    unit?: SortOrder
+    reason?: SortOrder
+    date?: SortOrder
+    notes?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type MaterialConsumptionLogMinOrderByAggregateInput = {
+    id?: SortOrder
+    productId?: SortOrder
+    branchId?: SortOrder
+    ticketId?: SortOrder
+    specialistId?: SortOrder
+    serviceName?: SortOrder
+    quantityConsumed?: SortOrder
+    unit?: SortOrder
+    reason?: SortOrder
+    date?: SortOrder
+    notes?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type MaterialConsumptionLogSumOrderByAggregateInput = {
+    quantityConsumed?: SortOrder
+  }
+
   export type UserCreateNestedManyWithoutBranchInput = {
     create?: XOR<UserCreateWithoutBranchInput, UserUncheckedCreateWithoutBranchInput> | UserCreateWithoutBranchInput[] | UserUncheckedCreateWithoutBranchInput[]
     connectOrCreate?: UserCreateOrConnectWithoutBranchInput | UserCreateOrConnectWithoutBranchInput[]
@@ -26399,6 +31569,20 @@ export namespace Prisma {
     connect?: AttendanceRecordWhereUniqueInput | AttendanceRecordWhereUniqueInput[]
   }
 
+  export type StockTransferCreateNestedManyWithoutToBranchInput = {
+    create?: XOR<StockTransferCreateWithoutToBranchInput, StockTransferUncheckedCreateWithoutToBranchInput> | StockTransferCreateWithoutToBranchInput[] | StockTransferUncheckedCreateWithoutToBranchInput[]
+    connectOrCreate?: StockTransferCreateOrConnectWithoutToBranchInput | StockTransferCreateOrConnectWithoutToBranchInput[]
+    createMany?: StockTransferCreateManyToBranchInputEnvelope
+    connect?: StockTransferWhereUniqueInput | StockTransferWhereUniqueInput[]
+  }
+
+  export type MaterialConsumptionLogCreateNestedManyWithoutBranchInput = {
+    create?: XOR<MaterialConsumptionLogCreateWithoutBranchInput, MaterialConsumptionLogUncheckedCreateWithoutBranchInput> | MaterialConsumptionLogCreateWithoutBranchInput[] | MaterialConsumptionLogUncheckedCreateWithoutBranchInput[]
+    connectOrCreate?: MaterialConsumptionLogCreateOrConnectWithoutBranchInput | MaterialConsumptionLogCreateOrConnectWithoutBranchInput[]
+    createMany?: MaterialConsumptionLogCreateManyBranchInputEnvelope
+    connect?: MaterialConsumptionLogWhereUniqueInput | MaterialConsumptionLogWhereUniqueInput[]
+  }
+
   export type UserUncheckedCreateNestedManyWithoutBranchInput = {
     create?: XOR<UserCreateWithoutBranchInput, UserUncheckedCreateWithoutBranchInput> | UserCreateWithoutBranchInput[] | UserUncheckedCreateWithoutBranchInput[]
     connectOrCreate?: UserCreateOrConnectWithoutBranchInput | UserCreateOrConnectWithoutBranchInput[]
@@ -26474,6 +31658,20 @@ export namespace Prisma {
     connectOrCreate?: AttendanceRecordCreateOrConnectWithoutBranchInput | AttendanceRecordCreateOrConnectWithoutBranchInput[]
     createMany?: AttendanceRecordCreateManyBranchInputEnvelope
     connect?: AttendanceRecordWhereUniqueInput | AttendanceRecordWhereUniqueInput[]
+  }
+
+  export type StockTransferUncheckedCreateNestedManyWithoutToBranchInput = {
+    create?: XOR<StockTransferCreateWithoutToBranchInput, StockTransferUncheckedCreateWithoutToBranchInput> | StockTransferCreateWithoutToBranchInput[] | StockTransferUncheckedCreateWithoutToBranchInput[]
+    connectOrCreate?: StockTransferCreateOrConnectWithoutToBranchInput | StockTransferCreateOrConnectWithoutToBranchInput[]
+    createMany?: StockTransferCreateManyToBranchInputEnvelope
+    connect?: StockTransferWhereUniqueInput | StockTransferWhereUniqueInput[]
+  }
+
+  export type MaterialConsumptionLogUncheckedCreateNestedManyWithoutBranchInput = {
+    create?: XOR<MaterialConsumptionLogCreateWithoutBranchInput, MaterialConsumptionLogUncheckedCreateWithoutBranchInput> | MaterialConsumptionLogCreateWithoutBranchInput[] | MaterialConsumptionLogUncheckedCreateWithoutBranchInput[]
+    connectOrCreate?: MaterialConsumptionLogCreateOrConnectWithoutBranchInput | MaterialConsumptionLogCreateOrConnectWithoutBranchInput[]
+    createMany?: MaterialConsumptionLogCreateManyBranchInputEnvelope
+    connect?: MaterialConsumptionLogWhereUniqueInput | MaterialConsumptionLogWhereUniqueInput[]
   }
 
   export type StringFieldUpdateOperationsInput = {
@@ -26646,6 +31844,34 @@ export namespace Prisma {
     deleteMany?: AttendanceRecordScalarWhereInput | AttendanceRecordScalarWhereInput[]
   }
 
+  export type StockTransferUpdateManyWithoutToBranchNestedInput = {
+    create?: XOR<StockTransferCreateWithoutToBranchInput, StockTransferUncheckedCreateWithoutToBranchInput> | StockTransferCreateWithoutToBranchInput[] | StockTransferUncheckedCreateWithoutToBranchInput[]
+    connectOrCreate?: StockTransferCreateOrConnectWithoutToBranchInput | StockTransferCreateOrConnectWithoutToBranchInput[]
+    upsert?: StockTransferUpsertWithWhereUniqueWithoutToBranchInput | StockTransferUpsertWithWhereUniqueWithoutToBranchInput[]
+    createMany?: StockTransferCreateManyToBranchInputEnvelope
+    set?: StockTransferWhereUniqueInput | StockTransferWhereUniqueInput[]
+    disconnect?: StockTransferWhereUniqueInput | StockTransferWhereUniqueInput[]
+    delete?: StockTransferWhereUniqueInput | StockTransferWhereUniqueInput[]
+    connect?: StockTransferWhereUniqueInput | StockTransferWhereUniqueInput[]
+    update?: StockTransferUpdateWithWhereUniqueWithoutToBranchInput | StockTransferUpdateWithWhereUniqueWithoutToBranchInput[]
+    updateMany?: StockTransferUpdateManyWithWhereWithoutToBranchInput | StockTransferUpdateManyWithWhereWithoutToBranchInput[]
+    deleteMany?: StockTransferScalarWhereInput | StockTransferScalarWhereInput[]
+  }
+
+  export type MaterialConsumptionLogUpdateManyWithoutBranchNestedInput = {
+    create?: XOR<MaterialConsumptionLogCreateWithoutBranchInput, MaterialConsumptionLogUncheckedCreateWithoutBranchInput> | MaterialConsumptionLogCreateWithoutBranchInput[] | MaterialConsumptionLogUncheckedCreateWithoutBranchInput[]
+    connectOrCreate?: MaterialConsumptionLogCreateOrConnectWithoutBranchInput | MaterialConsumptionLogCreateOrConnectWithoutBranchInput[]
+    upsert?: MaterialConsumptionLogUpsertWithWhereUniqueWithoutBranchInput | MaterialConsumptionLogUpsertWithWhereUniqueWithoutBranchInput[]
+    createMany?: MaterialConsumptionLogCreateManyBranchInputEnvelope
+    set?: MaterialConsumptionLogWhereUniqueInput | MaterialConsumptionLogWhereUniqueInput[]
+    disconnect?: MaterialConsumptionLogWhereUniqueInput | MaterialConsumptionLogWhereUniqueInput[]
+    delete?: MaterialConsumptionLogWhereUniqueInput | MaterialConsumptionLogWhereUniqueInput[]
+    connect?: MaterialConsumptionLogWhereUniqueInput | MaterialConsumptionLogWhereUniqueInput[]
+    update?: MaterialConsumptionLogUpdateWithWhereUniqueWithoutBranchInput | MaterialConsumptionLogUpdateWithWhereUniqueWithoutBranchInput[]
+    updateMany?: MaterialConsumptionLogUpdateManyWithWhereWithoutBranchInput | MaterialConsumptionLogUpdateManyWithWhereWithoutBranchInput[]
+    deleteMany?: MaterialConsumptionLogScalarWhereInput | MaterialConsumptionLogScalarWhereInput[]
+  }
+
   export type UserUncheckedUpdateManyWithoutBranchNestedInput = {
     create?: XOR<UserCreateWithoutBranchInput, UserUncheckedCreateWithoutBranchInput> | UserCreateWithoutBranchInput[] | UserUncheckedCreateWithoutBranchInput[]
     connectOrCreate?: UserCreateOrConnectWithoutBranchInput | UserCreateOrConnectWithoutBranchInput[]
@@ -26798,6 +32024,34 @@ export namespace Prisma {
     update?: AttendanceRecordUpdateWithWhereUniqueWithoutBranchInput | AttendanceRecordUpdateWithWhereUniqueWithoutBranchInput[]
     updateMany?: AttendanceRecordUpdateManyWithWhereWithoutBranchInput | AttendanceRecordUpdateManyWithWhereWithoutBranchInput[]
     deleteMany?: AttendanceRecordScalarWhereInput | AttendanceRecordScalarWhereInput[]
+  }
+
+  export type StockTransferUncheckedUpdateManyWithoutToBranchNestedInput = {
+    create?: XOR<StockTransferCreateWithoutToBranchInput, StockTransferUncheckedCreateWithoutToBranchInput> | StockTransferCreateWithoutToBranchInput[] | StockTransferUncheckedCreateWithoutToBranchInput[]
+    connectOrCreate?: StockTransferCreateOrConnectWithoutToBranchInput | StockTransferCreateOrConnectWithoutToBranchInput[]
+    upsert?: StockTransferUpsertWithWhereUniqueWithoutToBranchInput | StockTransferUpsertWithWhereUniqueWithoutToBranchInput[]
+    createMany?: StockTransferCreateManyToBranchInputEnvelope
+    set?: StockTransferWhereUniqueInput | StockTransferWhereUniqueInput[]
+    disconnect?: StockTransferWhereUniqueInput | StockTransferWhereUniqueInput[]
+    delete?: StockTransferWhereUniqueInput | StockTransferWhereUniqueInput[]
+    connect?: StockTransferWhereUniqueInput | StockTransferWhereUniqueInput[]
+    update?: StockTransferUpdateWithWhereUniqueWithoutToBranchInput | StockTransferUpdateWithWhereUniqueWithoutToBranchInput[]
+    updateMany?: StockTransferUpdateManyWithWhereWithoutToBranchInput | StockTransferUpdateManyWithWhereWithoutToBranchInput[]
+    deleteMany?: StockTransferScalarWhereInput | StockTransferScalarWhereInput[]
+  }
+
+  export type MaterialConsumptionLogUncheckedUpdateManyWithoutBranchNestedInput = {
+    create?: XOR<MaterialConsumptionLogCreateWithoutBranchInput, MaterialConsumptionLogUncheckedCreateWithoutBranchInput> | MaterialConsumptionLogCreateWithoutBranchInput[] | MaterialConsumptionLogUncheckedCreateWithoutBranchInput[]
+    connectOrCreate?: MaterialConsumptionLogCreateOrConnectWithoutBranchInput | MaterialConsumptionLogCreateOrConnectWithoutBranchInput[]
+    upsert?: MaterialConsumptionLogUpsertWithWhereUniqueWithoutBranchInput | MaterialConsumptionLogUpsertWithWhereUniqueWithoutBranchInput[]
+    createMany?: MaterialConsumptionLogCreateManyBranchInputEnvelope
+    set?: MaterialConsumptionLogWhereUniqueInput | MaterialConsumptionLogWhereUniqueInput[]
+    disconnect?: MaterialConsumptionLogWhereUniqueInput | MaterialConsumptionLogWhereUniqueInput[]
+    delete?: MaterialConsumptionLogWhereUniqueInput | MaterialConsumptionLogWhereUniqueInput[]
+    connect?: MaterialConsumptionLogWhereUniqueInput | MaterialConsumptionLogWhereUniqueInput[]
+    update?: MaterialConsumptionLogUpdateWithWhereUniqueWithoutBranchInput | MaterialConsumptionLogUpdateWithWhereUniqueWithoutBranchInput[]
+    updateMany?: MaterialConsumptionLogUpdateManyWithWhereWithoutBranchInput | MaterialConsumptionLogUpdateManyWithWhereWithoutBranchInput[]
+    deleteMany?: MaterialConsumptionLogScalarWhereInput | MaterialConsumptionLogScalarWhereInput[]
   }
 
   export type BranchCreateNestedOneWithoutUsersInput = {
@@ -27252,6 +32506,48 @@ export namespace Prisma {
     connect?: BranchWhereUniqueInput
   }
 
+  export type StockPurchaseCreateNestedManyWithoutProductInput = {
+    create?: XOR<StockPurchaseCreateWithoutProductInput, StockPurchaseUncheckedCreateWithoutProductInput> | StockPurchaseCreateWithoutProductInput[] | StockPurchaseUncheckedCreateWithoutProductInput[]
+    connectOrCreate?: StockPurchaseCreateOrConnectWithoutProductInput | StockPurchaseCreateOrConnectWithoutProductInput[]
+    createMany?: StockPurchaseCreateManyProductInputEnvelope
+    connect?: StockPurchaseWhereUniqueInput | StockPurchaseWhereUniqueInput[]
+  }
+
+  export type StockTransferCreateNestedManyWithoutProductInput = {
+    create?: XOR<StockTransferCreateWithoutProductInput, StockTransferUncheckedCreateWithoutProductInput> | StockTransferCreateWithoutProductInput[] | StockTransferUncheckedCreateWithoutProductInput[]
+    connectOrCreate?: StockTransferCreateOrConnectWithoutProductInput | StockTransferCreateOrConnectWithoutProductInput[]
+    createMany?: StockTransferCreateManyProductInputEnvelope
+    connect?: StockTransferWhereUniqueInput | StockTransferWhereUniqueInput[]
+  }
+
+  export type MaterialConsumptionLogCreateNestedManyWithoutProductInput = {
+    create?: XOR<MaterialConsumptionLogCreateWithoutProductInput, MaterialConsumptionLogUncheckedCreateWithoutProductInput> | MaterialConsumptionLogCreateWithoutProductInput[] | MaterialConsumptionLogUncheckedCreateWithoutProductInput[]
+    connectOrCreate?: MaterialConsumptionLogCreateOrConnectWithoutProductInput | MaterialConsumptionLogCreateOrConnectWithoutProductInput[]
+    createMany?: MaterialConsumptionLogCreateManyProductInputEnvelope
+    connect?: MaterialConsumptionLogWhereUniqueInput | MaterialConsumptionLogWhereUniqueInput[]
+  }
+
+  export type StockPurchaseUncheckedCreateNestedManyWithoutProductInput = {
+    create?: XOR<StockPurchaseCreateWithoutProductInput, StockPurchaseUncheckedCreateWithoutProductInput> | StockPurchaseCreateWithoutProductInput[] | StockPurchaseUncheckedCreateWithoutProductInput[]
+    connectOrCreate?: StockPurchaseCreateOrConnectWithoutProductInput | StockPurchaseCreateOrConnectWithoutProductInput[]
+    createMany?: StockPurchaseCreateManyProductInputEnvelope
+    connect?: StockPurchaseWhereUniqueInput | StockPurchaseWhereUniqueInput[]
+  }
+
+  export type StockTransferUncheckedCreateNestedManyWithoutProductInput = {
+    create?: XOR<StockTransferCreateWithoutProductInput, StockTransferUncheckedCreateWithoutProductInput> | StockTransferCreateWithoutProductInput[] | StockTransferUncheckedCreateWithoutProductInput[]
+    connectOrCreate?: StockTransferCreateOrConnectWithoutProductInput | StockTransferCreateOrConnectWithoutProductInput[]
+    createMany?: StockTransferCreateManyProductInputEnvelope
+    connect?: StockTransferWhereUniqueInput | StockTransferWhereUniqueInput[]
+  }
+
+  export type MaterialConsumptionLogUncheckedCreateNestedManyWithoutProductInput = {
+    create?: XOR<MaterialConsumptionLogCreateWithoutProductInput, MaterialConsumptionLogUncheckedCreateWithoutProductInput> | MaterialConsumptionLogCreateWithoutProductInput[] | MaterialConsumptionLogUncheckedCreateWithoutProductInput[]
+    connectOrCreate?: MaterialConsumptionLogCreateOrConnectWithoutProductInput | MaterialConsumptionLogCreateOrConnectWithoutProductInput[]
+    createMany?: MaterialConsumptionLogCreateManyProductInputEnvelope
+    connect?: MaterialConsumptionLogWhereUniqueInput | MaterialConsumptionLogWhereUniqueInput[]
+  }
+
   export type BranchUpdateOneWithoutProductsNestedInput = {
     create?: XOR<BranchCreateWithoutProductsInput, BranchUncheckedCreateWithoutProductsInput>
     connectOrCreate?: BranchCreateOrConnectWithoutProductsInput
@@ -27260,6 +32556,90 @@ export namespace Prisma {
     delete?: BranchWhereInput | boolean
     connect?: BranchWhereUniqueInput
     update?: XOR<XOR<BranchUpdateToOneWithWhereWithoutProductsInput, BranchUpdateWithoutProductsInput>, BranchUncheckedUpdateWithoutProductsInput>
+  }
+
+  export type StockPurchaseUpdateManyWithoutProductNestedInput = {
+    create?: XOR<StockPurchaseCreateWithoutProductInput, StockPurchaseUncheckedCreateWithoutProductInput> | StockPurchaseCreateWithoutProductInput[] | StockPurchaseUncheckedCreateWithoutProductInput[]
+    connectOrCreate?: StockPurchaseCreateOrConnectWithoutProductInput | StockPurchaseCreateOrConnectWithoutProductInput[]
+    upsert?: StockPurchaseUpsertWithWhereUniqueWithoutProductInput | StockPurchaseUpsertWithWhereUniqueWithoutProductInput[]
+    createMany?: StockPurchaseCreateManyProductInputEnvelope
+    set?: StockPurchaseWhereUniqueInput | StockPurchaseWhereUniqueInput[]
+    disconnect?: StockPurchaseWhereUniqueInput | StockPurchaseWhereUniqueInput[]
+    delete?: StockPurchaseWhereUniqueInput | StockPurchaseWhereUniqueInput[]
+    connect?: StockPurchaseWhereUniqueInput | StockPurchaseWhereUniqueInput[]
+    update?: StockPurchaseUpdateWithWhereUniqueWithoutProductInput | StockPurchaseUpdateWithWhereUniqueWithoutProductInput[]
+    updateMany?: StockPurchaseUpdateManyWithWhereWithoutProductInput | StockPurchaseUpdateManyWithWhereWithoutProductInput[]
+    deleteMany?: StockPurchaseScalarWhereInput | StockPurchaseScalarWhereInput[]
+  }
+
+  export type StockTransferUpdateManyWithoutProductNestedInput = {
+    create?: XOR<StockTransferCreateWithoutProductInput, StockTransferUncheckedCreateWithoutProductInput> | StockTransferCreateWithoutProductInput[] | StockTransferUncheckedCreateWithoutProductInput[]
+    connectOrCreate?: StockTransferCreateOrConnectWithoutProductInput | StockTransferCreateOrConnectWithoutProductInput[]
+    upsert?: StockTransferUpsertWithWhereUniqueWithoutProductInput | StockTransferUpsertWithWhereUniqueWithoutProductInput[]
+    createMany?: StockTransferCreateManyProductInputEnvelope
+    set?: StockTransferWhereUniqueInput | StockTransferWhereUniqueInput[]
+    disconnect?: StockTransferWhereUniqueInput | StockTransferWhereUniqueInput[]
+    delete?: StockTransferWhereUniqueInput | StockTransferWhereUniqueInput[]
+    connect?: StockTransferWhereUniqueInput | StockTransferWhereUniqueInput[]
+    update?: StockTransferUpdateWithWhereUniqueWithoutProductInput | StockTransferUpdateWithWhereUniqueWithoutProductInput[]
+    updateMany?: StockTransferUpdateManyWithWhereWithoutProductInput | StockTransferUpdateManyWithWhereWithoutProductInput[]
+    deleteMany?: StockTransferScalarWhereInput | StockTransferScalarWhereInput[]
+  }
+
+  export type MaterialConsumptionLogUpdateManyWithoutProductNestedInput = {
+    create?: XOR<MaterialConsumptionLogCreateWithoutProductInput, MaterialConsumptionLogUncheckedCreateWithoutProductInput> | MaterialConsumptionLogCreateWithoutProductInput[] | MaterialConsumptionLogUncheckedCreateWithoutProductInput[]
+    connectOrCreate?: MaterialConsumptionLogCreateOrConnectWithoutProductInput | MaterialConsumptionLogCreateOrConnectWithoutProductInput[]
+    upsert?: MaterialConsumptionLogUpsertWithWhereUniqueWithoutProductInput | MaterialConsumptionLogUpsertWithWhereUniqueWithoutProductInput[]
+    createMany?: MaterialConsumptionLogCreateManyProductInputEnvelope
+    set?: MaterialConsumptionLogWhereUniqueInput | MaterialConsumptionLogWhereUniqueInput[]
+    disconnect?: MaterialConsumptionLogWhereUniqueInput | MaterialConsumptionLogWhereUniqueInput[]
+    delete?: MaterialConsumptionLogWhereUniqueInput | MaterialConsumptionLogWhereUniqueInput[]
+    connect?: MaterialConsumptionLogWhereUniqueInput | MaterialConsumptionLogWhereUniqueInput[]
+    update?: MaterialConsumptionLogUpdateWithWhereUniqueWithoutProductInput | MaterialConsumptionLogUpdateWithWhereUniqueWithoutProductInput[]
+    updateMany?: MaterialConsumptionLogUpdateManyWithWhereWithoutProductInput | MaterialConsumptionLogUpdateManyWithWhereWithoutProductInput[]
+    deleteMany?: MaterialConsumptionLogScalarWhereInput | MaterialConsumptionLogScalarWhereInput[]
+  }
+
+  export type StockPurchaseUncheckedUpdateManyWithoutProductNestedInput = {
+    create?: XOR<StockPurchaseCreateWithoutProductInput, StockPurchaseUncheckedCreateWithoutProductInput> | StockPurchaseCreateWithoutProductInput[] | StockPurchaseUncheckedCreateWithoutProductInput[]
+    connectOrCreate?: StockPurchaseCreateOrConnectWithoutProductInput | StockPurchaseCreateOrConnectWithoutProductInput[]
+    upsert?: StockPurchaseUpsertWithWhereUniqueWithoutProductInput | StockPurchaseUpsertWithWhereUniqueWithoutProductInput[]
+    createMany?: StockPurchaseCreateManyProductInputEnvelope
+    set?: StockPurchaseWhereUniqueInput | StockPurchaseWhereUniqueInput[]
+    disconnect?: StockPurchaseWhereUniqueInput | StockPurchaseWhereUniqueInput[]
+    delete?: StockPurchaseWhereUniqueInput | StockPurchaseWhereUniqueInput[]
+    connect?: StockPurchaseWhereUniqueInput | StockPurchaseWhereUniqueInput[]
+    update?: StockPurchaseUpdateWithWhereUniqueWithoutProductInput | StockPurchaseUpdateWithWhereUniqueWithoutProductInput[]
+    updateMany?: StockPurchaseUpdateManyWithWhereWithoutProductInput | StockPurchaseUpdateManyWithWhereWithoutProductInput[]
+    deleteMany?: StockPurchaseScalarWhereInput | StockPurchaseScalarWhereInput[]
+  }
+
+  export type StockTransferUncheckedUpdateManyWithoutProductNestedInput = {
+    create?: XOR<StockTransferCreateWithoutProductInput, StockTransferUncheckedCreateWithoutProductInput> | StockTransferCreateWithoutProductInput[] | StockTransferUncheckedCreateWithoutProductInput[]
+    connectOrCreate?: StockTransferCreateOrConnectWithoutProductInput | StockTransferCreateOrConnectWithoutProductInput[]
+    upsert?: StockTransferUpsertWithWhereUniqueWithoutProductInput | StockTransferUpsertWithWhereUniqueWithoutProductInput[]
+    createMany?: StockTransferCreateManyProductInputEnvelope
+    set?: StockTransferWhereUniqueInput | StockTransferWhereUniqueInput[]
+    disconnect?: StockTransferWhereUniqueInput | StockTransferWhereUniqueInput[]
+    delete?: StockTransferWhereUniqueInput | StockTransferWhereUniqueInput[]
+    connect?: StockTransferWhereUniqueInput | StockTransferWhereUniqueInput[]
+    update?: StockTransferUpdateWithWhereUniqueWithoutProductInput | StockTransferUpdateWithWhereUniqueWithoutProductInput[]
+    updateMany?: StockTransferUpdateManyWithWhereWithoutProductInput | StockTransferUpdateManyWithWhereWithoutProductInput[]
+    deleteMany?: StockTransferScalarWhereInput | StockTransferScalarWhereInput[]
+  }
+
+  export type MaterialConsumptionLogUncheckedUpdateManyWithoutProductNestedInput = {
+    create?: XOR<MaterialConsumptionLogCreateWithoutProductInput, MaterialConsumptionLogUncheckedCreateWithoutProductInput> | MaterialConsumptionLogCreateWithoutProductInput[] | MaterialConsumptionLogUncheckedCreateWithoutProductInput[]
+    connectOrCreate?: MaterialConsumptionLogCreateOrConnectWithoutProductInput | MaterialConsumptionLogCreateOrConnectWithoutProductInput[]
+    upsert?: MaterialConsumptionLogUpsertWithWhereUniqueWithoutProductInput | MaterialConsumptionLogUpsertWithWhereUniqueWithoutProductInput[]
+    createMany?: MaterialConsumptionLogCreateManyProductInputEnvelope
+    set?: MaterialConsumptionLogWhereUniqueInput | MaterialConsumptionLogWhereUniqueInput[]
+    disconnect?: MaterialConsumptionLogWhereUniqueInput | MaterialConsumptionLogWhereUniqueInput[]
+    delete?: MaterialConsumptionLogWhereUniqueInput | MaterialConsumptionLogWhereUniqueInput[]
+    connect?: MaterialConsumptionLogWhereUniqueInput | MaterialConsumptionLogWhereUniqueInput[]
+    update?: MaterialConsumptionLogUpdateWithWhereUniqueWithoutProductInput | MaterialConsumptionLogUpdateWithWhereUniqueWithoutProductInput[]
+    updateMany?: MaterialConsumptionLogUpdateManyWithWhereWithoutProductInput | MaterialConsumptionLogUpdateManyWithWhereWithoutProductInput[]
+    deleteMany?: MaterialConsumptionLogScalarWhereInput | MaterialConsumptionLogScalarWhereInput[]
   }
 
   export type SpecialistCreateNestedOneWithoutLedgersInput = {
@@ -27386,6 +32766,76 @@ export namespace Prisma {
     upsert?: BranchUpsertWithoutAttendancesInput
     connect?: BranchWhereUniqueInput
     update?: XOR<XOR<BranchUpdateToOneWithWhereWithoutAttendancesInput, BranchUpdateWithoutAttendancesInput>, BranchUncheckedUpdateWithoutAttendancesInput>
+  }
+
+  export type ProductCreateNestedOneWithoutPurchasesInput = {
+    create?: XOR<ProductCreateWithoutPurchasesInput, ProductUncheckedCreateWithoutPurchasesInput>
+    connectOrCreate?: ProductCreateOrConnectWithoutPurchasesInput
+    connect?: ProductWhereUniqueInput
+  }
+
+  export type ProductUpdateOneRequiredWithoutPurchasesNestedInput = {
+    create?: XOR<ProductCreateWithoutPurchasesInput, ProductUncheckedCreateWithoutPurchasesInput>
+    connectOrCreate?: ProductCreateOrConnectWithoutPurchasesInput
+    upsert?: ProductUpsertWithoutPurchasesInput
+    connect?: ProductWhereUniqueInput
+    update?: XOR<XOR<ProductUpdateToOneWithWhereWithoutPurchasesInput, ProductUpdateWithoutPurchasesInput>, ProductUncheckedUpdateWithoutPurchasesInput>
+  }
+
+  export type ProductCreateNestedOneWithoutTransfersInput = {
+    create?: XOR<ProductCreateWithoutTransfersInput, ProductUncheckedCreateWithoutTransfersInput>
+    connectOrCreate?: ProductCreateOrConnectWithoutTransfersInput
+    connect?: ProductWhereUniqueInput
+  }
+
+  export type BranchCreateNestedOneWithoutTransfersInput = {
+    create?: XOR<BranchCreateWithoutTransfersInput, BranchUncheckedCreateWithoutTransfersInput>
+    connectOrCreate?: BranchCreateOrConnectWithoutTransfersInput
+    connect?: BranchWhereUniqueInput
+  }
+
+  export type ProductUpdateOneRequiredWithoutTransfersNestedInput = {
+    create?: XOR<ProductCreateWithoutTransfersInput, ProductUncheckedCreateWithoutTransfersInput>
+    connectOrCreate?: ProductCreateOrConnectWithoutTransfersInput
+    upsert?: ProductUpsertWithoutTransfersInput
+    connect?: ProductWhereUniqueInput
+    update?: XOR<XOR<ProductUpdateToOneWithWhereWithoutTransfersInput, ProductUpdateWithoutTransfersInput>, ProductUncheckedUpdateWithoutTransfersInput>
+  }
+
+  export type BranchUpdateOneRequiredWithoutTransfersNestedInput = {
+    create?: XOR<BranchCreateWithoutTransfersInput, BranchUncheckedCreateWithoutTransfersInput>
+    connectOrCreate?: BranchCreateOrConnectWithoutTransfersInput
+    upsert?: BranchUpsertWithoutTransfersInput
+    connect?: BranchWhereUniqueInput
+    update?: XOR<XOR<BranchUpdateToOneWithWhereWithoutTransfersInput, BranchUpdateWithoutTransfersInput>, BranchUncheckedUpdateWithoutTransfersInput>
+  }
+
+  export type ProductCreateNestedOneWithoutConsumptionLogsInput = {
+    create?: XOR<ProductCreateWithoutConsumptionLogsInput, ProductUncheckedCreateWithoutConsumptionLogsInput>
+    connectOrCreate?: ProductCreateOrConnectWithoutConsumptionLogsInput
+    connect?: ProductWhereUniqueInput
+  }
+
+  export type BranchCreateNestedOneWithoutConsumptionLogsInput = {
+    create?: XOR<BranchCreateWithoutConsumptionLogsInput, BranchUncheckedCreateWithoutConsumptionLogsInput>
+    connectOrCreate?: BranchCreateOrConnectWithoutConsumptionLogsInput
+    connect?: BranchWhereUniqueInput
+  }
+
+  export type ProductUpdateOneRequiredWithoutConsumptionLogsNestedInput = {
+    create?: XOR<ProductCreateWithoutConsumptionLogsInput, ProductUncheckedCreateWithoutConsumptionLogsInput>
+    connectOrCreate?: ProductCreateOrConnectWithoutConsumptionLogsInput
+    upsert?: ProductUpsertWithoutConsumptionLogsInput
+    connect?: ProductWhereUniqueInput
+    update?: XOR<XOR<ProductUpdateToOneWithWhereWithoutConsumptionLogsInput, ProductUpdateWithoutConsumptionLogsInput>, ProductUncheckedUpdateWithoutConsumptionLogsInput>
+  }
+
+  export type BranchUpdateOneRequiredWithoutConsumptionLogsNestedInput = {
+    create?: XOR<BranchCreateWithoutConsumptionLogsInput, BranchUncheckedCreateWithoutConsumptionLogsInput>
+    connectOrCreate?: BranchCreateOrConnectWithoutConsumptionLogsInput
+    upsert?: BranchUpsertWithoutConsumptionLogsInput
+    connect?: BranchWhereUniqueInput
+    update?: XOR<XOR<BranchUpdateToOneWithWhereWithoutConsumptionLogsInput, BranchUpdateWithoutConsumptionLogsInput>, BranchUncheckedUpdateWithoutConsumptionLogsInput>
   }
 
   export type NestedStringFilter<$PrismaModel = never> = {
@@ -27829,8 +33279,19 @@ export namespace Prisma {
     minStockAlert?: number
     image?: string | null
     barcode?: string | null
+    barcodeType?: string
+    usageType?: string
+    unit?: string
+    centralStockQty?: number
+    consumptionRule?: string | null
+    estimatedUsesPerUnit?: number
+    currentOpenedUnits?: number
     isActive?: boolean
     createdAt?: Date | string
+    updatedAt?: Date | string
+    purchases?: StockPurchaseCreateNestedManyWithoutProductInput
+    transfers?: StockTransferCreateNestedManyWithoutProductInput
+    consumptionLogs?: MaterialConsumptionLogCreateNestedManyWithoutProductInput
   }
 
   export type ProductUncheckedCreateWithoutBranchInput = {
@@ -27843,8 +33304,19 @@ export namespace Prisma {
     minStockAlert?: number
     image?: string | null
     barcode?: string | null
+    barcodeType?: string
+    usageType?: string
+    unit?: string
+    centralStockQty?: number
+    consumptionRule?: string | null
+    estimatedUsesPerUnit?: number
+    currentOpenedUnits?: number
     isActive?: boolean
     createdAt?: Date | string
+    updatedAt?: Date | string
+    purchases?: StockPurchaseUncheckedCreateNestedManyWithoutProductInput
+    transfers?: StockTransferUncheckedCreateNestedManyWithoutProductInput
+    consumptionLogs?: MaterialConsumptionLogUncheckedCreateNestedManyWithoutProductInput
   }
 
   export type ProductCreateOrConnectWithoutBranchInput = {
@@ -28097,6 +33569,80 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type StockTransferCreateWithoutToBranchInput = {
+    id?: string
+    transferNumber: string
+    fromLocation?: string
+    quantity: number
+    status?: string
+    receivedBy?: string | null
+    dispatchedBy?: string
+    notes?: string | null
+    createdAt?: Date | string
+    product: ProductCreateNestedOneWithoutTransfersInput
+  }
+
+  export type StockTransferUncheckedCreateWithoutToBranchInput = {
+    id?: string
+    transferNumber: string
+    productId: string
+    fromLocation?: string
+    quantity: number
+    status?: string
+    receivedBy?: string | null
+    dispatchedBy?: string
+    notes?: string | null
+    createdAt?: Date | string
+  }
+
+  export type StockTransferCreateOrConnectWithoutToBranchInput = {
+    where: StockTransferWhereUniqueInput
+    create: XOR<StockTransferCreateWithoutToBranchInput, StockTransferUncheckedCreateWithoutToBranchInput>
+  }
+
+  export type StockTransferCreateManyToBranchInputEnvelope = {
+    data: StockTransferCreateManyToBranchInput | StockTransferCreateManyToBranchInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type MaterialConsumptionLogCreateWithoutBranchInput = {
+    id?: string
+    ticketId?: string | null
+    specialistId?: string | null
+    serviceName?: string | null
+    quantityConsumed: number
+    unit?: string
+    reason?: string
+    date: string
+    notes?: string | null
+    createdAt?: Date | string
+    product: ProductCreateNestedOneWithoutConsumptionLogsInput
+  }
+
+  export type MaterialConsumptionLogUncheckedCreateWithoutBranchInput = {
+    id?: string
+    productId: string
+    ticketId?: string | null
+    specialistId?: string | null
+    serviceName?: string | null
+    quantityConsumed: number
+    unit?: string
+    reason?: string
+    date: string
+    notes?: string | null
+    createdAt?: Date | string
+  }
+
+  export type MaterialConsumptionLogCreateOrConnectWithoutBranchInput = {
+    where: MaterialConsumptionLogWhereUniqueInput
+    create: XOR<MaterialConsumptionLogCreateWithoutBranchInput, MaterialConsumptionLogUncheckedCreateWithoutBranchInput>
+  }
+
+  export type MaterialConsumptionLogCreateManyBranchInputEnvelope = {
+    data: MaterialConsumptionLogCreateManyBranchInput | MaterialConsumptionLogCreateManyBranchInput[]
+    skipDuplicates?: boolean
+  }
+
   export type UserUpsertWithWhereUniqueWithoutBranchInput = {
     where: UserWhereUniqueInput
     update: XOR<UserUpdateWithoutBranchInput, UserUncheckedUpdateWithoutBranchInput>
@@ -28281,8 +33827,16 @@ export namespace Prisma {
     minStockAlert?: IntFilter<"Product"> | number
     image?: StringNullableFilter<"Product"> | string | null
     barcode?: StringNullableFilter<"Product"> | string | null
+    barcodeType?: StringFilter<"Product"> | string
+    usageType?: StringFilter<"Product"> | string
+    unit?: StringFilter<"Product"> | string
+    centralStockQty?: IntFilter<"Product"> | number
+    consumptionRule?: StringNullableFilter<"Product"> | string | null
+    estimatedUsesPerUnit?: IntFilter<"Product"> | number
+    currentOpenedUnits?: IntFilter<"Product"> | number
     isActive?: BoolFilter<"Product"> | boolean
     createdAt?: DateTimeFilter<"Product"> | Date | string
+    updatedAt?: DateTimeFilter<"Product"> | Date | string
   }
 
   export type SpecialistLedgerUpsertWithWhereUniqueWithoutBranchInput = {
@@ -28495,6 +34049,73 @@ export namespace Prisma {
     updatedAt?: DateTimeFilter<"AttendanceRecord"> | Date | string
   }
 
+  export type StockTransferUpsertWithWhereUniqueWithoutToBranchInput = {
+    where: StockTransferWhereUniqueInput
+    update: XOR<StockTransferUpdateWithoutToBranchInput, StockTransferUncheckedUpdateWithoutToBranchInput>
+    create: XOR<StockTransferCreateWithoutToBranchInput, StockTransferUncheckedCreateWithoutToBranchInput>
+  }
+
+  export type StockTransferUpdateWithWhereUniqueWithoutToBranchInput = {
+    where: StockTransferWhereUniqueInput
+    data: XOR<StockTransferUpdateWithoutToBranchInput, StockTransferUncheckedUpdateWithoutToBranchInput>
+  }
+
+  export type StockTransferUpdateManyWithWhereWithoutToBranchInput = {
+    where: StockTransferScalarWhereInput
+    data: XOR<StockTransferUpdateManyMutationInput, StockTransferUncheckedUpdateManyWithoutToBranchInput>
+  }
+
+  export type StockTransferScalarWhereInput = {
+    AND?: StockTransferScalarWhereInput | StockTransferScalarWhereInput[]
+    OR?: StockTransferScalarWhereInput[]
+    NOT?: StockTransferScalarWhereInput | StockTransferScalarWhereInput[]
+    id?: StringFilter<"StockTransfer"> | string
+    transferNumber?: StringFilter<"StockTransfer"> | string
+    productId?: StringFilter<"StockTransfer"> | string
+    fromLocation?: StringFilter<"StockTransfer"> | string
+    toBranchId?: StringFilter<"StockTransfer"> | string
+    quantity?: IntFilter<"StockTransfer"> | number
+    status?: StringFilter<"StockTransfer"> | string
+    receivedBy?: StringNullableFilter<"StockTransfer"> | string | null
+    dispatchedBy?: StringFilter<"StockTransfer"> | string
+    notes?: StringNullableFilter<"StockTransfer"> | string | null
+    createdAt?: DateTimeFilter<"StockTransfer"> | Date | string
+  }
+
+  export type MaterialConsumptionLogUpsertWithWhereUniqueWithoutBranchInput = {
+    where: MaterialConsumptionLogWhereUniqueInput
+    update: XOR<MaterialConsumptionLogUpdateWithoutBranchInput, MaterialConsumptionLogUncheckedUpdateWithoutBranchInput>
+    create: XOR<MaterialConsumptionLogCreateWithoutBranchInput, MaterialConsumptionLogUncheckedCreateWithoutBranchInput>
+  }
+
+  export type MaterialConsumptionLogUpdateWithWhereUniqueWithoutBranchInput = {
+    where: MaterialConsumptionLogWhereUniqueInput
+    data: XOR<MaterialConsumptionLogUpdateWithoutBranchInput, MaterialConsumptionLogUncheckedUpdateWithoutBranchInput>
+  }
+
+  export type MaterialConsumptionLogUpdateManyWithWhereWithoutBranchInput = {
+    where: MaterialConsumptionLogScalarWhereInput
+    data: XOR<MaterialConsumptionLogUpdateManyMutationInput, MaterialConsumptionLogUncheckedUpdateManyWithoutBranchInput>
+  }
+
+  export type MaterialConsumptionLogScalarWhereInput = {
+    AND?: MaterialConsumptionLogScalarWhereInput | MaterialConsumptionLogScalarWhereInput[]
+    OR?: MaterialConsumptionLogScalarWhereInput[]
+    NOT?: MaterialConsumptionLogScalarWhereInput | MaterialConsumptionLogScalarWhereInput[]
+    id?: StringFilter<"MaterialConsumptionLog"> | string
+    productId?: StringFilter<"MaterialConsumptionLog"> | string
+    branchId?: StringFilter<"MaterialConsumptionLog"> | string
+    ticketId?: StringNullableFilter<"MaterialConsumptionLog"> | string | null
+    specialistId?: StringNullableFilter<"MaterialConsumptionLog"> | string | null
+    serviceName?: StringNullableFilter<"MaterialConsumptionLog"> | string | null
+    quantityConsumed?: FloatFilter<"MaterialConsumptionLog"> | number
+    unit?: StringFilter<"MaterialConsumptionLog"> | string
+    reason?: StringFilter<"MaterialConsumptionLog"> | string
+    date?: StringFilter<"MaterialConsumptionLog"> | string
+    notes?: StringNullableFilter<"MaterialConsumptionLog"> | string | null
+    createdAt?: DateTimeFilter<"MaterialConsumptionLog"> | Date | string
+  }
+
   export type BranchCreateWithoutUsersInput = {
     id?: string
     name: string
@@ -28515,6 +34136,8 @@ export namespace Prisma {
     shifts?: CashShiftCreateNestedManyWithoutBranchInput
     expenses?: TreasuryExpenseCreateNestedManyWithoutBranchInput
     attendances?: AttendanceRecordCreateNestedManyWithoutBranchInput
+    transfers?: StockTransferCreateNestedManyWithoutToBranchInput
+    consumptionLogs?: MaterialConsumptionLogCreateNestedManyWithoutBranchInput
   }
 
   export type BranchUncheckedCreateWithoutUsersInput = {
@@ -28537,6 +34160,8 @@ export namespace Prisma {
     shifts?: CashShiftUncheckedCreateNestedManyWithoutBranchInput
     expenses?: TreasuryExpenseUncheckedCreateNestedManyWithoutBranchInput
     attendances?: AttendanceRecordUncheckedCreateNestedManyWithoutBranchInput
+    transfers?: StockTransferUncheckedCreateNestedManyWithoutToBranchInput
+    consumptionLogs?: MaterialConsumptionLogUncheckedCreateNestedManyWithoutBranchInput
   }
 
   export type BranchCreateOrConnectWithoutUsersInput = {
@@ -28658,6 +34283,8 @@ export namespace Prisma {
     shifts?: CashShiftUpdateManyWithoutBranchNestedInput
     expenses?: TreasuryExpenseUpdateManyWithoutBranchNestedInput
     attendances?: AttendanceRecordUpdateManyWithoutBranchNestedInput
+    transfers?: StockTransferUpdateManyWithoutToBranchNestedInput
+    consumptionLogs?: MaterialConsumptionLogUpdateManyWithoutBranchNestedInput
   }
 
   export type BranchUncheckedUpdateWithoutUsersInput = {
@@ -28680,6 +34307,8 @@ export namespace Prisma {
     shifts?: CashShiftUncheckedUpdateManyWithoutBranchNestedInput
     expenses?: TreasuryExpenseUncheckedUpdateManyWithoutBranchNestedInput
     attendances?: AttendanceRecordUncheckedUpdateManyWithoutBranchNestedInput
+    transfers?: StockTransferUncheckedUpdateManyWithoutToBranchNestedInput
+    consumptionLogs?: MaterialConsumptionLogUncheckedUpdateManyWithoutBranchNestedInput
   }
 
   export type SpecialistUpsertWithoutUserInput = {
@@ -28806,6 +34435,8 @@ export namespace Prisma {
     shifts?: CashShiftCreateNestedManyWithoutBranchInput
     expenses?: TreasuryExpenseCreateNestedManyWithoutBranchInput
     attendances?: AttendanceRecordCreateNestedManyWithoutBranchInput
+    transfers?: StockTransferCreateNestedManyWithoutToBranchInput
+    consumptionLogs?: MaterialConsumptionLogCreateNestedManyWithoutBranchInput
   }
 
   export type BranchUncheckedCreateWithoutSpecialistsInput = {
@@ -28828,6 +34459,8 @@ export namespace Prisma {
     shifts?: CashShiftUncheckedCreateNestedManyWithoutBranchInput
     expenses?: TreasuryExpenseUncheckedCreateNestedManyWithoutBranchInput
     attendances?: AttendanceRecordUncheckedCreateNestedManyWithoutBranchInput
+    transfers?: StockTransferUncheckedCreateNestedManyWithoutToBranchInput
+    consumptionLogs?: MaterialConsumptionLogUncheckedCreateNestedManyWithoutBranchInput
   }
 
   export type BranchCreateOrConnectWithoutSpecialistsInput = {
@@ -29045,6 +34678,8 @@ export namespace Prisma {
     shifts?: CashShiftUpdateManyWithoutBranchNestedInput
     expenses?: TreasuryExpenseUpdateManyWithoutBranchNestedInput
     attendances?: AttendanceRecordUpdateManyWithoutBranchNestedInput
+    transfers?: StockTransferUpdateManyWithoutToBranchNestedInput
+    consumptionLogs?: MaterialConsumptionLogUpdateManyWithoutBranchNestedInput
   }
 
   export type BranchUncheckedUpdateWithoutSpecialistsInput = {
@@ -29067,6 +34702,8 @@ export namespace Prisma {
     shifts?: CashShiftUncheckedUpdateManyWithoutBranchNestedInput
     expenses?: TreasuryExpenseUncheckedUpdateManyWithoutBranchNestedInput
     attendances?: AttendanceRecordUncheckedUpdateManyWithoutBranchNestedInput
+    transfers?: StockTransferUncheckedUpdateManyWithoutToBranchNestedInput
+    consumptionLogs?: MaterialConsumptionLogUncheckedUpdateManyWithoutBranchNestedInput
   }
 
   export type BookingUpsertWithWhereUniqueWithoutSpecialistInput = {
@@ -29316,6 +34953,8 @@ export namespace Prisma {
     shifts?: CashShiftCreateNestedManyWithoutBranchInput
     expenses?: TreasuryExpenseCreateNestedManyWithoutBranchInput
     attendances?: AttendanceRecordCreateNestedManyWithoutBranchInput
+    transfers?: StockTransferCreateNestedManyWithoutToBranchInput
+    consumptionLogs?: MaterialConsumptionLogCreateNestedManyWithoutBranchInput
   }
 
   export type BranchUncheckedCreateWithoutBookingsInput = {
@@ -29338,6 +34977,8 @@ export namespace Prisma {
     shifts?: CashShiftUncheckedCreateNestedManyWithoutBranchInput
     expenses?: TreasuryExpenseUncheckedCreateNestedManyWithoutBranchInput
     attendances?: AttendanceRecordUncheckedCreateNestedManyWithoutBranchInput
+    transfers?: StockTransferUncheckedCreateNestedManyWithoutToBranchInput
+    consumptionLogs?: MaterialConsumptionLogUncheckedCreateNestedManyWithoutBranchInput
   }
 
   export type BranchCreateOrConnectWithoutBookingsInput = {
@@ -29470,6 +35111,8 @@ export namespace Prisma {
     shifts?: CashShiftUpdateManyWithoutBranchNestedInput
     expenses?: TreasuryExpenseUpdateManyWithoutBranchNestedInput
     attendances?: AttendanceRecordUpdateManyWithoutBranchNestedInput
+    transfers?: StockTransferUpdateManyWithoutToBranchNestedInput
+    consumptionLogs?: MaterialConsumptionLogUpdateManyWithoutBranchNestedInput
   }
 
   export type BranchUncheckedUpdateWithoutBookingsInput = {
@@ -29492,6 +35135,8 @@ export namespace Prisma {
     shifts?: CashShiftUncheckedUpdateManyWithoutBranchNestedInput
     expenses?: TreasuryExpenseUncheckedUpdateManyWithoutBranchNestedInput
     attendances?: AttendanceRecordUncheckedUpdateManyWithoutBranchNestedInput
+    transfers?: StockTransferUncheckedUpdateManyWithoutToBranchNestedInput
+    consumptionLogs?: MaterialConsumptionLogUncheckedUpdateManyWithoutBranchNestedInput
   }
 
   export type SpecialistUpsertWithoutBookingsInput = {
@@ -29567,6 +35212,8 @@ export namespace Prisma {
     shifts?: CashShiftCreateNestedManyWithoutBranchInput
     expenses?: TreasuryExpenseCreateNestedManyWithoutBranchInput
     attendances?: AttendanceRecordCreateNestedManyWithoutBranchInput
+    transfers?: StockTransferCreateNestedManyWithoutToBranchInput
+    consumptionLogs?: MaterialConsumptionLogCreateNestedManyWithoutBranchInput
   }
 
   export type BranchUncheckedCreateWithoutTicketsInput = {
@@ -29589,6 +35236,8 @@ export namespace Prisma {
     shifts?: CashShiftUncheckedCreateNestedManyWithoutBranchInput
     expenses?: TreasuryExpenseUncheckedCreateNestedManyWithoutBranchInput
     attendances?: AttendanceRecordUncheckedCreateNestedManyWithoutBranchInput
+    transfers?: StockTransferUncheckedCreateNestedManyWithoutToBranchInput
+    consumptionLogs?: MaterialConsumptionLogUncheckedCreateNestedManyWithoutBranchInput
   }
 
   export type BranchCreateOrConnectWithoutTicketsInput = {
@@ -29715,6 +35364,8 @@ export namespace Prisma {
     shifts?: CashShiftUpdateManyWithoutBranchNestedInput
     expenses?: TreasuryExpenseUpdateManyWithoutBranchNestedInput
     attendances?: AttendanceRecordUpdateManyWithoutBranchNestedInput
+    transfers?: StockTransferUpdateManyWithoutToBranchNestedInput
+    consumptionLogs?: MaterialConsumptionLogUpdateManyWithoutBranchNestedInput
   }
 
   export type BranchUncheckedUpdateWithoutTicketsInput = {
@@ -29737,6 +35388,8 @@ export namespace Prisma {
     shifts?: CashShiftUncheckedUpdateManyWithoutBranchNestedInput
     expenses?: TreasuryExpenseUncheckedUpdateManyWithoutBranchNestedInput
     attendances?: AttendanceRecordUncheckedUpdateManyWithoutBranchNestedInput
+    transfers?: StockTransferUncheckedUpdateManyWithoutToBranchNestedInput
+    consumptionLogs?: MaterialConsumptionLogUncheckedUpdateManyWithoutBranchNestedInput
   }
 
   export type SpecialistUpsertWithoutTicketsInput = {
@@ -29859,6 +35512,8 @@ export namespace Prisma {
     shifts?: CashShiftCreateNestedManyWithoutBranchInput
     expenses?: TreasuryExpenseCreateNestedManyWithoutBranchInput
     attendances?: AttendanceRecordCreateNestedManyWithoutBranchInput
+    transfers?: StockTransferCreateNestedManyWithoutToBranchInput
+    consumptionLogs?: MaterialConsumptionLogCreateNestedManyWithoutBranchInput
   }
 
   export type BranchUncheckedCreateWithoutProductsInput = {
@@ -29881,11 +35536,125 @@ export namespace Prisma {
     shifts?: CashShiftUncheckedCreateNestedManyWithoutBranchInput
     expenses?: TreasuryExpenseUncheckedCreateNestedManyWithoutBranchInput
     attendances?: AttendanceRecordUncheckedCreateNestedManyWithoutBranchInput
+    transfers?: StockTransferUncheckedCreateNestedManyWithoutToBranchInput
+    consumptionLogs?: MaterialConsumptionLogUncheckedCreateNestedManyWithoutBranchInput
   }
 
   export type BranchCreateOrConnectWithoutProductsInput = {
     where: BranchWhereUniqueInput
     create: XOR<BranchCreateWithoutProductsInput, BranchUncheckedCreateWithoutProductsInput>
+  }
+
+  export type StockPurchaseCreateWithoutProductInput = {
+    id?: string
+    invoiceNumber: string
+    type?: string
+    supplierName?: string | null
+    quantity: number
+    costPrice: number
+    totalCost: number
+    destination?: string
+    notes?: string | null
+    recordedBy?: string
+    createdAt?: Date | string
+  }
+
+  export type StockPurchaseUncheckedCreateWithoutProductInput = {
+    id?: string
+    invoiceNumber: string
+    type?: string
+    supplierName?: string | null
+    quantity: number
+    costPrice: number
+    totalCost: number
+    destination?: string
+    notes?: string | null
+    recordedBy?: string
+    createdAt?: Date | string
+  }
+
+  export type StockPurchaseCreateOrConnectWithoutProductInput = {
+    where: StockPurchaseWhereUniqueInput
+    create: XOR<StockPurchaseCreateWithoutProductInput, StockPurchaseUncheckedCreateWithoutProductInput>
+  }
+
+  export type StockPurchaseCreateManyProductInputEnvelope = {
+    data: StockPurchaseCreateManyProductInput | StockPurchaseCreateManyProductInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type StockTransferCreateWithoutProductInput = {
+    id?: string
+    transferNumber: string
+    fromLocation?: string
+    quantity: number
+    status?: string
+    receivedBy?: string | null
+    dispatchedBy?: string
+    notes?: string | null
+    createdAt?: Date | string
+    toBranch: BranchCreateNestedOneWithoutTransfersInput
+  }
+
+  export type StockTransferUncheckedCreateWithoutProductInput = {
+    id?: string
+    transferNumber: string
+    fromLocation?: string
+    toBranchId: string
+    quantity: number
+    status?: string
+    receivedBy?: string | null
+    dispatchedBy?: string
+    notes?: string | null
+    createdAt?: Date | string
+  }
+
+  export type StockTransferCreateOrConnectWithoutProductInput = {
+    where: StockTransferWhereUniqueInput
+    create: XOR<StockTransferCreateWithoutProductInput, StockTransferUncheckedCreateWithoutProductInput>
+  }
+
+  export type StockTransferCreateManyProductInputEnvelope = {
+    data: StockTransferCreateManyProductInput | StockTransferCreateManyProductInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type MaterialConsumptionLogCreateWithoutProductInput = {
+    id?: string
+    ticketId?: string | null
+    specialistId?: string | null
+    serviceName?: string | null
+    quantityConsumed: number
+    unit?: string
+    reason?: string
+    date: string
+    notes?: string | null
+    createdAt?: Date | string
+    branch: BranchCreateNestedOneWithoutConsumptionLogsInput
+  }
+
+  export type MaterialConsumptionLogUncheckedCreateWithoutProductInput = {
+    id?: string
+    branchId: string
+    ticketId?: string | null
+    specialistId?: string | null
+    serviceName?: string | null
+    quantityConsumed: number
+    unit?: string
+    reason?: string
+    date: string
+    notes?: string | null
+    createdAt?: Date | string
+  }
+
+  export type MaterialConsumptionLogCreateOrConnectWithoutProductInput = {
+    where: MaterialConsumptionLogWhereUniqueInput
+    create: XOR<MaterialConsumptionLogCreateWithoutProductInput, MaterialConsumptionLogUncheckedCreateWithoutProductInput>
+  }
+
+  export type MaterialConsumptionLogCreateManyProductInputEnvelope = {
+    data: MaterialConsumptionLogCreateManyProductInput | MaterialConsumptionLogCreateManyProductInput[]
+    skipDuplicates?: boolean
   }
 
   export type BranchUpsertWithoutProductsInput = {
@@ -29919,6 +35688,8 @@ export namespace Prisma {
     shifts?: CashShiftUpdateManyWithoutBranchNestedInput
     expenses?: TreasuryExpenseUpdateManyWithoutBranchNestedInput
     attendances?: AttendanceRecordUpdateManyWithoutBranchNestedInput
+    transfers?: StockTransferUpdateManyWithoutToBranchNestedInput
+    consumptionLogs?: MaterialConsumptionLogUpdateManyWithoutBranchNestedInput
   }
 
   export type BranchUncheckedUpdateWithoutProductsInput = {
@@ -29941,6 +35712,74 @@ export namespace Prisma {
     shifts?: CashShiftUncheckedUpdateManyWithoutBranchNestedInput
     expenses?: TreasuryExpenseUncheckedUpdateManyWithoutBranchNestedInput
     attendances?: AttendanceRecordUncheckedUpdateManyWithoutBranchNestedInput
+    transfers?: StockTransferUncheckedUpdateManyWithoutToBranchNestedInput
+    consumptionLogs?: MaterialConsumptionLogUncheckedUpdateManyWithoutBranchNestedInput
+  }
+
+  export type StockPurchaseUpsertWithWhereUniqueWithoutProductInput = {
+    where: StockPurchaseWhereUniqueInput
+    update: XOR<StockPurchaseUpdateWithoutProductInput, StockPurchaseUncheckedUpdateWithoutProductInput>
+    create: XOR<StockPurchaseCreateWithoutProductInput, StockPurchaseUncheckedCreateWithoutProductInput>
+  }
+
+  export type StockPurchaseUpdateWithWhereUniqueWithoutProductInput = {
+    where: StockPurchaseWhereUniqueInput
+    data: XOR<StockPurchaseUpdateWithoutProductInput, StockPurchaseUncheckedUpdateWithoutProductInput>
+  }
+
+  export type StockPurchaseUpdateManyWithWhereWithoutProductInput = {
+    where: StockPurchaseScalarWhereInput
+    data: XOR<StockPurchaseUpdateManyMutationInput, StockPurchaseUncheckedUpdateManyWithoutProductInput>
+  }
+
+  export type StockPurchaseScalarWhereInput = {
+    AND?: StockPurchaseScalarWhereInput | StockPurchaseScalarWhereInput[]
+    OR?: StockPurchaseScalarWhereInput[]
+    NOT?: StockPurchaseScalarWhereInput | StockPurchaseScalarWhereInput[]
+    id?: StringFilter<"StockPurchase"> | string
+    invoiceNumber?: StringFilter<"StockPurchase"> | string
+    type?: StringFilter<"StockPurchase"> | string
+    supplierName?: StringNullableFilter<"StockPurchase"> | string | null
+    productId?: StringFilter<"StockPurchase"> | string
+    quantity?: IntFilter<"StockPurchase"> | number
+    costPrice?: FloatFilter<"StockPurchase"> | number
+    totalCost?: FloatFilter<"StockPurchase"> | number
+    destination?: StringFilter<"StockPurchase"> | string
+    notes?: StringNullableFilter<"StockPurchase"> | string | null
+    recordedBy?: StringFilter<"StockPurchase"> | string
+    createdAt?: DateTimeFilter<"StockPurchase"> | Date | string
+  }
+
+  export type StockTransferUpsertWithWhereUniqueWithoutProductInput = {
+    where: StockTransferWhereUniqueInput
+    update: XOR<StockTransferUpdateWithoutProductInput, StockTransferUncheckedUpdateWithoutProductInput>
+    create: XOR<StockTransferCreateWithoutProductInput, StockTransferUncheckedCreateWithoutProductInput>
+  }
+
+  export type StockTransferUpdateWithWhereUniqueWithoutProductInput = {
+    where: StockTransferWhereUniqueInput
+    data: XOR<StockTransferUpdateWithoutProductInput, StockTransferUncheckedUpdateWithoutProductInput>
+  }
+
+  export type StockTransferUpdateManyWithWhereWithoutProductInput = {
+    where: StockTransferScalarWhereInput
+    data: XOR<StockTransferUpdateManyMutationInput, StockTransferUncheckedUpdateManyWithoutProductInput>
+  }
+
+  export type MaterialConsumptionLogUpsertWithWhereUniqueWithoutProductInput = {
+    where: MaterialConsumptionLogWhereUniqueInput
+    update: XOR<MaterialConsumptionLogUpdateWithoutProductInput, MaterialConsumptionLogUncheckedUpdateWithoutProductInput>
+    create: XOR<MaterialConsumptionLogCreateWithoutProductInput, MaterialConsumptionLogUncheckedCreateWithoutProductInput>
+  }
+
+  export type MaterialConsumptionLogUpdateWithWhereUniqueWithoutProductInput = {
+    where: MaterialConsumptionLogWhereUniqueInput
+    data: XOR<MaterialConsumptionLogUpdateWithoutProductInput, MaterialConsumptionLogUncheckedUpdateWithoutProductInput>
+  }
+
+  export type MaterialConsumptionLogUpdateManyWithWhereWithoutProductInput = {
+    where: MaterialConsumptionLogScalarWhereInput
+    data: XOR<MaterialConsumptionLogUpdateManyMutationInput, MaterialConsumptionLogUncheckedUpdateManyWithoutProductInput>
   }
 
   export type SpecialistCreateWithoutLedgersInput = {
@@ -30010,6 +35849,8 @@ export namespace Prisma {
     shifts?: CashShiftCreateNestedManyWithoutBranchInput
     expenses?: TreasuryExpenseCreateNestedManyWithoutBranchInput
     attendances?: AttendanceRecordCreateNestedManyWithoutBranchInput
+    transfers?: StockTransferCreateNestedManyWithoutToBranchInput
+    consumptionLogs?: MaterialConsumptionLogCreateNestedManyWithoutBranchInput
   }
 
   export type BranchUncheckedCreateWithoutLedgersInput = {
@@ -30032,6 +35873,8 @@ export namespace Prisma {
     shifts?: CashShiftUncheckedCreateNestedManyWithoutBranchInput
     expenses?: TreasuryExpenseUncheckedCreateNestedManyWithoutBranchInput
     attendances?: AttendanceRecordUncheckedCreateNestedManyWithoutBranchInput
+    transfers?: StockTransferUncheckedCreateNestedManyWithoutToBranchInput
+    consumptionLogs?: MaterialConsumptionLogUncheckedCreateNestedManyWithoutBranchInput
   }
 
   export type BranchCreateOrConnectWithoutLedgersInput = {
@@ -30123,6 +35966,8 @@ export namespace Prisma {
     shifts?: CashShiftUpdateManyWithoutBranchNestedInput
     expenses?: TreasuryExpenseUpdateManyWithoutBranchNestedInput
     attendances?: AttendanceRecordUpdateManyWithoutBranchNestedInput
+    transfers?: StockTransferUpdateManyWithoutToBranchNestedInput
+    consumptionLogs?: MaterialConsumptionLogUpdateManyWithoutBranchNestedInput
   }
 
   export type BranchUncheckedUpdateWithoutLedgersInput = {
@@ -30145,6 +35990,8 @@ export namespace Prisma {
     shifts?: CashShiftUncheckedUpdateManyWithoutBranchNestedInput
     expenses?: TreasuryExpenseUncheckedUpdateManyWithoutBranchNestedInput
     attendances?: AttendanceRecordUncheckedUpdateManyWithoutBranchNestedInput
+    transfers?: StockTransferUncheckedUpdateManyWithoutToBranchNestedInput
+    consumptionLogs?: MaterialConsumptionLogUncheckedUpdateManyWithoutBranchNestedInput
   }
 
   export type BranchCreateWithoutOffersInput = {
@@ -30167,6 +36014,8 @@ export namespace Prisma {
     shifts?: CashShiftCreateNestedManyWithoutBranchInput
     expenses?: TreasuryExpenseCreateNestedManyWithoutBranchInput
     attendances?: AttendanceRecordCreateNestedManyWithoutBranchInput
+    transfers?: StockTransferCreateNestedManyWithoutToBranchInput
+    consumptionLogs?: MaterialConsumptionLogCreateNestedManyWithoutBranchInput
   }
 
   export type BranchUncheckedCreateWithoutOffersInput = {
@@ -30189,6 +36038,8 @@ export namespace Prisma {
     shifts?: CashShiftUncheckedCreateNestedManyWithoutBranchInput
     expenses?: TreasuryExpenseUncheckedCreateNestedManyWithoutBranchInput
     attendances?: AttendanceRecordUncheckedCreateNestedManyWithoutBranchInput
+    transfers?: StockTransferUncheckedCreateNestedManyWithoutToBranchInput
+    consumptionLogs?: MaterialConsumptionLogUncheckedCreateNestedManyWithoutBranchInput
   }
 
   export type BranchCreateOrConnectWithoutOffersInput = {
@@ -30227,6 +36078,8 @@ export namespace Prisma {
     shifts?: CashShiftUpdateManyWithoutBranchNestedInput
     expenses?: TreasuryExpenseUpdateManyWithoutBranchNestedInput
     attendances?: AttendanceRecordUpdateManyWithoutBranchNestedInput
+    transfers?: StockTransferUpdateManyWithoutToBranchNestedInput
+    consumptionLogs?: MaterialConsumptionLogUpdateManyWithoutBranchNestedInput
   }
 
   export type BranchUncheckedUpdateWithoutOffersInput = {
@@ -30249,6 +36102,8 @@ export namespace Prisma {
     shifts?: CashShiftUncheckedUpdateManyWithoutBranchNestedInput
     expenses?: TreasuryExpenseUncheckedUpdateManyWithoutBranchNestedInput
     attendances?: AttendanceRecordUncheckedUpdateManyWithoutBranchNestedInput
+    transfers?: StockTransferUncheckedUpdateManyWithoutToBranchNestedInput
+    consumptionLogs?: MaterialConsumptionLogUncheckedUpdateManyWithoutBranchNestedInput
   }
 
   export type BranchCreateWithoutChatMessagesInput = {
@@ -30271,6 +36126,8 @@ export namespace Prisma {
     shifts?: CashShiftCreateNestedManyWithoutBranchInput
     expenses?: TreasuryExpenseCreateNestedManyWithoutBranchInput
     attendances?: AttendanceRecordCreateNestedManyWithoutBranchInput
+    transfers?: StockTransferCreateNestedManyWithoutToBranchInput
+    consumptionLogs?: MaterialConsumptionLogCreateNestedManyWithoutBranchInput
   }
 
   export type BranchUncheckedCreateWithoutChatMessagesInput = {
@@ -30293,6 +36150,8 @@ export namespace Prisma {
     shifts?: CashShiftUncheckedCreateNestedManyWithoutBranchInput
     expenses?: TreasuryExpenseUncheckedCreateNestedManyWithoutBranchInput
     attendances?: AttendanceRecordUncheckedCreateNestedManyWithoutBranchInput
+    transfers?: StockTransferUncheckedCreateNestedManyWithoutToBranchInput
+    consumptionLogs?: MaterialConsumptionLogUncheckedCreateNestedManyWithoutBranchInput
   }
 
   export type BranchCreateOrConnectWithoutChatMessagesInput = {
@@ -30331,6 +36190,8 @@ export namespace Prisma {
     shifts?: CashShiftUpdateManyWithoutBranchNestedInput
     expenses?: TreasuryExpenseUpdateManyWithoutBranchNestedInput
     attendances?: AttendanceRecordUpdateManyWithoutBranchNestedInput
+    transfers?: StockTransferUpdateManyWithoutToBranchNestedInput
+    consumptionLogs?: MaterialConsumptionLogUpdateManyWithoutBranchNestedInput
   }
 
   export type BranchUncheckedUpdateWithoutChatMessagesInput = {
@@ -30353,6 +36214,8 @@ export namespace Prisma {
     shifts?: CashShiftUncheckedUpdateManyWithoutBranchNestedInput
     expenses?: TreasuryExpenseUncheckedUpdateManyWithoutBranchNestedInput
     attendances?: AttendanceRecordUncheckedUpdateManyWithoutBranchNestedInput
+    transfers?: StockTransferUncheckedUpdateManyWithoutToBranchNestedInput
+    consumptionLogs?: MaterialConsumptionLogUncheckedUpdateManyWithoutBranchNestedInput
   }
 
   export type BranchCreateWithoutShiftsInput = {
@@ -30375,6 +36238,8 @@ export namespace Prisma {
     chatMessages?: ChatMessageCreateNestedManyWithoutBranchInput
     expenses?: TreasuryExpenseCreateNestedManyWithoutBranchInput
     attendances?: AttendanceRecordCreateNestedManyWithoutBranchInput
+    transfers?: StockTransferCreateNestedManyWithoutToBranchInput
+    consumptionLogs?: MaterialConsumptionLogCreateNestedManyWithoutBranchInput
   }
 
   export type BranchUncheckedCreateWithoutShiftsInput = {
@@ -30397,6 +36262,8 @@ export namespace Prisma {
     chatMessages?: ChatMessageUncheckedCreateNestedManyWithoutBranchInput
     expenses?: TreasuryExpenseUncheckedCreateNestedManyWithoutBranchInput
     attendances?: AttendanceRecordUncheckedCreateNestedManyWithoutBranchInput
+    transfers?: StockTransferUncheckedCreateNestedManyWithoutToBranchInput
+    consumptionLogs?: MaterialConsumptionLogUncheckedCreateNestedManyWithoutBranchInput
   }
 
   export type BranchCreateOrConnectWithoutShiftsInput = {
@@ -30435,6 +36302,8 @@ export namespace Prisma {
     chatMessages?: ChatMessageUpdateManyWithoutBranchNestedInput
     expenses?: TreasuryExpenseUpdateManyWithoutBranchNestedInput
     attendances?: AttendanceRecordUpdateManyWithoutBranchNestedInput
+    transfers?: StockTransferUpdateManyWithoutToBranchNestedInput
+    consumptionLogs?: MaterialConsumptionLogUpdateManyWithoutBranchNestedInput
   }
 
   export type BranchUncheckedUpdateWithoutShiftsInput = {
@@ -30457,6 +36326,8 @@ export namespace Prisma {
     chatMessages?: ChatMessageUncheckedUpdateManyWithoutBranchNestedInput
     expenses?: TreasuryExpenseUncheckedUpdateManyWithoutBranchNestedInput
     attendances?: AttendanceRecordUncheckedUpdateManyWithoutBranchNestedInput
+    transfers?: StockTransferUncheckedUpdateManyWithoutToBranchNestedInput
+    consumptionLogs?: MaterialConsumptionLogUncheckedUpdateManyWithoutBranchNestedInput
   }
 
   export type BranchCreateWithoutExpensesInput = {
@@ -30479,6 +36350,8 @@ export namespace Prisma {
     chatMessages?: ChatMessageCreateNestedManyWithoutBranchInput
     shifts?: CashShiftCreateNestedManyWithoutBranchInput
     attendances?: AttendanceRecordCreateNestedManyWithoutBranchInput
+    transfers?: StockTransferCreateNestedManyWithoutToBranchInput
+    consumptionLogs?: MaterialConsumptionLogCreateNestedManyWithoutBranchInput
   }
 
   export type BranchUncheckedCreateWithoutExpensesInput = {
@@ -30501,6 +36374,8 @@ export namespace Prisma {
     chatMessages?: ChatMessageUncheckedCreateNestedManyWithoutBranchInput
     shifts?: CashShiftUncheckedCreateNestedManyWithoutBranchInput
     attendances?: AttendanceRecordUncheckedCreateNestedManyWithoutBranchInput
+    transfers?: StockTransferUncheckedCreateNestedManyWithoutToBranchInput
+    consumptionLogs?: MaterialConsumptionLogUncheckedCreateNestedManyWithoutBranchInput
   }
 
   export type BranchCreateOrConnectWithoutExpensesInput = {
@@ -30539,6 +36414,8 @@ export namespace Prisma {
     chatMessages?: ChatMessageUpdateManyWithoutBranchNestedInput
     shifts?: CashShiftUpdateManyWithoutBranchNestedInput
     attendances?: AttendanceRecordUpdateManyWithoutBranchNestedInput
+    transfers?: StockTransferUpdateManyWithoutToBranchNestedInput
+    consumptionLogs?: MaterialConsumptionLogUpdateManyWithoutBranchNestedInput
   }
 
   export type BranchUncheckedUpdateWithoutExpensesInput = {
@@ -30561,6 +36438,8 @@ export namespace Prisma {
     chatMessages?: ChatMessageUncheckedUpdateManyWithoutBranchNestedInput
     shifts?: CashShiftUncheckedUpdateManyWithoutBranchNestedInput
     attendances?: AttendanceRecordUncheckedUpdateManyWithoutBranchNestedInput
+    transfers?: StockTransferUncheckedUpdateManyWithoutToBranchNestedInput
+    consumptionLogs?: MaterialConsumptionLogUncheckedUpdateManyWithoutBranchNestedInput
   }
 
   export type UserCreateWithoutAttendancesInput = {
@@ -30618,6 +36497,8 @@ export namespace Prisma {
     chatMessages?: ChatMessageCreateNestedManyWithoutBranchInput
     shifts?: CashShiftCreateNestedManyWithoutBranchInput
     expenses?: TreasuryExpenseCreateNestedManyWithoutBranchInput
+    transfers?: StockTransferCreateNestedManyWithoutToBranchInput
+    consumptionLogs?: MaterialConsumptionLogCreateNestedManyWithoutBranchInput
   }
 
   export type BranchUncheckedCreateWithoutAttendancesInput = {
@@ -30640,6 +36521,8 @@ export namespace Prisma {
     chatMessages?: ChatMessageUncheckedCreateNestedManyWithoutBranchInput
     shifts?: CashShiftUncheckedCreateNestedManyWithoutBranchInput
     expenses?: TreasuryExpenseUncheckedCreateNestedManyWithoutBranchInput
+    transfers?: StockTransferUncheckedCreateNestedManyWithoutToBranchInput
+    consumptionLogs?: MaterialConsumptionLogUncheckedCreateNestedManyWithoutBranchInput
   }
 
   export type BranchCreateOrConnectWithoutAttendancesInput = {
@@ -30719,6 +36602,8 @@ export namespace Prisma {
     chatMessages?: ChatMessageUpdateManyWithoutBranchNestedInput
     shifts?: CashShiftUpdateManyWithoutBranchNestedInput
     expenses?: TreasuryExpenseUpdateManyWithoutBranchNestedInput
+    transfers?: StockTransferUpdateManyWithoutToBranchNestedInput
+    consumptionLogs?: MaterialConsumptionLogUpdateManyWithoutBranchNestedInput
   }
 
   export type BranchUncheckedUpdateWithoutAttendancesInput = {
@@ -30741,6 +36626,580 @@ export namespace Prisma {
     chatMessages?: ChatMessageUncheckedUpdateManyWithoutBranchNestedInput
     shifts?: CashShiftUncheckedUpdateManyWithoutBranchNestedInput
     expenses?: TreasuryExpenseUncheckedUpdateManyWithoutBranchNestedInput
+    transfers?: StockTransferUncheckedUpdateManyWithoutToBranchNestedInput
+    consumptionLogs?: MaterialConsumptionLogUncheckedUpdateManyWithoutBranchNestedInput
+  }
+
+  export type ProductCreateWithoutPurchasesInput = {
+    id?: string
+    nameAr: string
+    category?: string
+    price: number
+    costPrice?: number
+    stockQty?: number
+    minStockAlert?: number
+    image?: string | null
+    barcode?: string | null
+    barcodeType?: string
+    usageType?: string
+    unit?: string
+    centralStockQty?: number
+    consumptionRule?: string | null
+    estimatedUsesPerUnit?: number
+    currentOpenedUnits?: number
+    isActive?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    branch?: BranchCreateNestedOneWithoutProductsInput
+    transfers?: StockTransferCreateNestedManyWithoutProductInput
+    consumptionLogs?: MaterialConsumptionLogCreateNestedManyWithoutProductInput
+  }
+
+  export type ProductUncheckedCreateWithoutPurchasesInput = {
+    id?: string
+    branchId?: string | null
+    nameAr: string
+    category?: string
+    price: number
+    costPrice?: number
+    stockQty?: number
+    minStockAlert?: number
+    image?: string | null
+    barcode?: string | null
+    barcodeType?: string
+    usageType?: string
+    unit?: string
+    centralStockQty?: number
+    consumptionRule?: string | null
+    estimatedUsesPerUnit?: number
+    currentOpenedUnits?: number
+    isActive?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    transfers?: StockTransferUncheckedCreateNestedManyWithoutProductInput
+    consumptionLogs?: MaterialConsumptionLogUncheckedCreateNestedManyWithoutProductInput
+  }
+
+  export type ProductCreateOrConnectWithoutPurchasesInput = {
+    where: ProductWhereUniqueInput
+    create: XOR<ProductCreateWithoutPurchasesInput, ProductUncheckedCreateWithoutPurchasesInput>
+  }
+
+  export type ProductUpsertWithoutPurchasesInput = {
+    update: XOR<ProductUpdateWithoutPurchasesInput, ProductUncheckedUpdateWithoutPurchasesInput>
+    create: XOR<ProductCreateWithoutPurchasesInput, ProductUncheckedCreateWithoutPurchasesInput>
+    where?: ProductWhereInput
+  }
+
+  export type ProductUpdateToOneWithWhereWithoutPurchasesInput = {
+    where?: ProductWhereInput
+    data: XOR<ProductUpdateWithoutPurchasesInput, ProductUncheckedUpdateWithoutPurchasesInput>
+  }
+
+  export type ProductUpdateWithoutPurchasesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    nameAr?: StringFieldUpdateOperationsInput | string
+    category?: StringFieldUpdateOperationsInput | string
+    price?: FloatFieldUpdateOperationsInput | number
+    costPrice?: FloatFieldUpdateOperationsInput | number
+    stockQty?: IntFieldUpdateOperationsInput | number
+    minStockAlert?: IntFieldUpdateOperationsInput | number
+    image?: NullableStringFieldUpdateOperationsInput | string | null
+    barcode?: NullableStringFieldUpdateOperationsInput | string | null
+    barcodeType?: StringFieldUpdateOperationsInput | string
+    usageType?: StringFieldUpdateOperationsInput | string
+    unit?: StringFieldUpdateOperationsInput | string
+    centralStockQty?: IntFieldUpdateOperationsInput | number
+    consumptionRule?: NullableStringFieldUpdateOperationsInput | string | null
+    estimatedUsesPerUnit?: IntFieldUpdateOperationsInput | number
+    currentOpenedUnits?: IntFieldUpdateOperationsInput | number
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    branch?: BranchUpdateOneWithoutProductsNestedInput
+    transfers?: StockTransferUpdateManyWithoutProductNestedInput
+    consumptionLogs?: MaterialConsumptionLogUpdateManyWithoutProductNestedInput
+  }
+
+  export type ProductUncheckedUpdateWithoutPurchasesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    branchId?: NullableStringFieldUpdateOperationsInput | string | null
+    nameAr?: StringFieldUpdateOperationsInput | string
+    category?: StringFieldUpdateOperationsInput | string
+    price?: FloatFieldUpdateOperationsInput | number
+    costPrice?: FloatFieldUpdateOperationsInput | number
+    stockQty?: IntFieldUpdateOperationsInput | number
+    minStockAlert?: IntFieldUpdateOperationsInput | number
+    image?: NullableStringFieldUpdateOperationsInput | string | null
+    barcode?: NullableStringFieldUpdateOperationsInput | string | null
+    barcodeType?: StringFieldUpdateOperationsInput | string
+    usageType?: StringFieldUpdateOperationsInput | string
+    unit?: StringFieldUpdateOperationsInput | string
+    centralStockQty?: IntFieldUpdateOperationsInput | number
+    consumptionRule?: NullableStringFieldUpdateOperationsInput | string | null
+    estimatedUsesPerUnit?: IntFieldUpdateOperationsInput | number
+    currentOpenedUnits?: IntFieldUpdateOperationsInput | number
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    transfers?: StockTransferUncheckedUpdateManyWithoutProductNestedInput
+    consumptionLogs?: MaterialConsumptionLogUncheckedUpdateManyWithoutProductNestedInput
+  }
+
+  export type ProductCreateWithoutTransfersInput = {
+    id?: string
+    nameAr: string
+    category?: string
+    price: number
+    costPrice?: number
+    stockQty?: number
+    minStockAlert?: number
+    image?: string | null
+    barcode?: string | null
+    barcodeType?: string
+    usageType?: string
+    unit?: string
+    centralStockQty?: number
+    consumptionRule?: string | null
+    estimatedUsesPerUnit?: number
+    currentOpenedUnits?: number
+    isActive?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    branch?: BranchCreateNestedOneWithoutProductsInput
+    purchases?: StockPurchaseCreateNestedManyWithoutProductInput
+    consumptionLogs?: MaterialConsumptionLogCreateNestedManyWithoutProductInput
+  }
+
+  export type ProductUncheckedCreateWithoutTransfersInput = {
+    id?: string
+    branchId?: string | null
+    nameAr: string
+    category?: string
+    price: number
+    costPrice?: number
+    stockQty?: number
+    minStockAlert?: number
+    image?: string | null
+    barcode?: string | null
+    barcodeType?: string
+    usageType?: string
+    unit?: string
+    centralStockQty?: number
+    consumptionRule?: string | null
+    estimatedUsesPerUnit?: number
+    currentOpenedUnits?: number
+    isActive?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    purchases?: StockPurchaseUncheckedCreateNestedManyWithoutProductInput
+    consumptionLogs?: MaterialConsumptionLogUncheckedCreateNestedManyWithoutProductInput
+  }
+
+  export type ProductCreateOrConnectWithoutTransfersInput = {
+    where: ProductWhereUniqueInput
+    create: XOR<ProductCreateWithoutTransfersInput, ProductUncheckedCreateWithoutTransfersInput>
+  }
+
+  export type BranchCreateWithoutTransfersInput = {
+    id?: string
+    name: string
+    code: string
+    address: string
+    phone: string
+    whatsapp?: string | null
+    googleMapsUrl?: string | null
+    isActive?: boolean
+    createdAt?: Date | string
+    users?: UserCreateNestedManyWithoutBranchInput
+    specialists?: SpecialistCreateNestedManyWithoutBranchInput
+    bookings?: BookingCreateNestedManyWithoutBranchInput
+    tickets?: TicketCreateNestedManyWithoutBranchInput
+    products?: ProductCreateNestedManyWithoutBranchInput
+    ledgers?: SpecialistLedgerCreateNestedManyWithoutBranchInput
+    offers?: OfferCreateNestedManyWithoutBranchInput
+    chatMessages?: ChatMessageCreateNestedManyWithoutBranchInput
+    shifts?: CashShiftCreateNestedManyWithoutBranchInput
+    expenses?: TreasuryExpenseCreateNestedManyWithoutBranchInput
+    attendances?: AttendanceRecordCreateNestedManyWithoutBranchInput
+    consumptionLogs?: MaterialConsumptionLogCreateNestedManyWithoutBranchInput
+  }
+
+  export type BranchUncheckedCreateWithoutTransfersInput = {
+    id?: string
+    name: string
+    code: string
+    address: string
+    phone: string
+    whatsapp?: string | null
+    googleMapsUrl?: string | null
+    isActive?: boolean
+    createdAt?: Date | string
+    users?: UserUncheckedCreateNestedManyWithoutBranchInput
+    specialists?: SpecialistUncheckedCreateNestedManyWithoutBranchInput
+    bookings?: BookingUncheckedCreateNestedManyWithoutBranchInput
+    tickets?: TicketUncheckedCreateNestedManyWithoutBranchInput
+    products?: ProductUncheckedCreateNestedManyWithoutBranchInput
+    ledgers?: SpecialistLedgerUncheckedCreateNestedManyWithoutBranchInput
+    offers?: OfferUncheckedCreateNestedManyWithoutBranchInput
+    chatMessages?: ChatMessageUncheckedCreateNestedManyWithoutBranchInput
+    shifts?: CashShiftUncheckedCreateNestedManyWithoutBranchInput
+    expenses?: TreasuryExpenseUncheckedCreateNestedManyWithoutBranchInput
+    attendances?: AttendanceRecordUncheckedCreateNestedManyWithoutBranchInput
+    consumptionLogs?: MaterialConsumptionLogUncheckedCreateNestedManyWithoutBranchInput
+  }
+
+  export type BranchCreateOrConnectWithoutTransfersInput = {
+    where: BranchWhereUniqueInput
+    create: XOR<BranchCreateWithoutTransfersInput, BranchUncheckedCreateWithoutTransfersInput>
+  }
+
+  export type ProductUpsertWithoutTransfersInput = {
+    update: XOR<ProductUpdateWithoutTransfersInput, ProductUncheckedUpdateWithoutTransfersInput>
+    create: XOR<ProductCreateWithoutTransfersInput, ProductUncheckedCreateWithoutTransfersInput>
+    where?: ProductWhereInput
+  }
+
+  export type ProductUpdateToOneWithWhereWithoutTransfersInput = {
+    where?: ProductWhereInput
+    data: XOR<ProductUpdateWithoutTransfersInput, ProductUncheckedUpdateWithoutTransfersInput>
+  }
+
+  export type ProductUpdateWithoutTransfersInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    nameAr?: StringFieldUpdateOperationsInput | string
+    category?: StringFieldUpdateOperationsInput | string
+    price?: FloatFieldUpdateOperationsInput | number
+    costPrice?: FloatFieldUpdateOperationsInput | number
+    stockQty?: IntFieldUpdateOperationsInput | number
+    minStockAlert?: IntFieldUpdateOperationsInput | number
+    image?: NullableStringFieldUpdateOperationsInput | string | null
+    barcode?: NullableStringFieldUpdateOperationsInput | string | null
+    barcodeType?: StringFieldUpdateOperationsInput | string
+    usageType?: StringFieldUpdateOperationsInput | string
+    unit?: StringFieldUpdateOperationsInput | string
+    centralStockQty?: IntFieldUpdateOperationsInput | number
+    consumptionRule?: NullableStringFieldUpdateOperationsInput | string | null
+    estimatedUsesPerUnit?: IntFieldUpdateOperationsInput | number
+    currentOpenedUnits?: IntFieldUpdateOperationsInput | number
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    branch?: BranchUpdateOneWithoutProductsNestedInput
+    purchases?: StockPurchaseUpdateManyWithoutProductNestedInput
+    consumptionLogs?: MaterialConsumptionLogUpdateManyWithoutProductNestedInput
+  }
+
+  export type ProductUncheckedUpdateWithoutTransfersInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    branchId?: NullableStringFieldUpdateOperationsInput | string | null
+    nameAr?: StringFieldUpdateOperationsInput | string
+    category?: StringFieldUpdateOperationsInput | string
+    price?: FloatFieldUpdateOperationsInput | number
+    costPrice?: FloatFieldUpdateOperationsInput | number
+    stockQty?: IntFieldUpdateOperationsInput | number
+    minStockAlert?: IntFieldUpdateOperationsInput | number
+    image?: NullableStringFieldUpdateOperationsInput | string | null
+    barcode?: NullableStringFieldUpdateOperationsInput | string | null
+    barcodeType?: StringFieldUpdateOperationsInput | string
+    usageType?: StringFieldUpdateOperationsInput | string
+    unit?: StringFieldUpdateOperationsInput | string
+    centralStockQty?: IntFieldUpdateOperationsInput | number
+    consumptionRule?: NullableStringFieldUpdateOperationsInput | string | null
+    estimatedUsesPerUnit?: IntFieldUpdateOperationsInput | number
+    currentOpenedUnits?: IntFieldUpdateOperationsInput | number
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    purchases?: StockPurchaseUncheckedUpdateManyWithoutProductNestedInput
+    consumptionLogs?: MaterialConsumptionLogUncheckedUpdateManyWithoutProductNestedInput
+  }
+
+  export type BranchUpsertWithoutTransfersInput = {
+    update: XOR<BranchUpdateWithoutTransfersInput, BranchUncheckedUpdateWithoutTransfersInput>
+    create: XOR<BranchCreateWithoutTransfersInput, BranchUncheckedCreateWithoutTransfersInput>
+    where?: BranchWhereInput
+  }
+
+  export type BranchUpdateToOneWithWhereWithoutTransfersInput = {
+    where?: BranchWhereInput
+    data: XOR<BranchUpdateWithoutTransfersInput, BranchUncheckedUpdateWithoutTransfersInput>
+  }
+
+  export type BranchUpdateWithoutTransfersInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    code?: StringFieldUpdateOperationsInput | string
+    address?: StringFieldUpdateOperationsInput | string
+    phone?: StringFieldUpdateOperationsInput | string
+    whatsapp?: NullableStringFieldUpdateOperationsInput | string | null
+    googleMapsUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    users?: UserUpdateManyWithoutBranchNestedInput
+    specialists?: SpecialistUpdateManyWithoutBranchNestedInput
+    bookings?: BookingUpdateManyWithoutBranchNestedInput
+    tickets?: TicketUpdateManyWithoutBranchNestedInput
+    products?: ProductUpdateManyWithoutBranchNestedInput
+    ledgers?: SpecialistLedgerUpdateManyWithoutBranchNestedInput
+    offers?: OfferUpdateManyWithoutBranchNestedInput
+    chatMessages?: ChatMessageUpdateManyWithoutBranchNestedInput
+    shifts?: CashShiftUpdateManyWithoutBranchNestedInput
+    expenses?: TreasuryExpenseUpdateManyWithoutBranchNestedInput
+    attendances?: AttendanceRecordUpdateManyWithoutBranchNestedInput
+    consumptionLogs?: MaterialConsumptionLogUpdateManyWithoutBranchNestedInput
+  }
+
+  export type BranchUncheckedUpdateWithoutTransfersInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    code?: StringFieldUpdateOperationsInput | string
+    address?: StringFieldUpdateOperationsInput | string
+    phone?: StringFieldUpdateOperationsInput | string
+    whatsapp?: NullableStringFieldUpdateOperationsInput | string | null
+    googleMapsUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    users?: UserUncheckedUpdateManyWithoutBranchNestedInput
+    specialists?: SpecialistUncheckedUpdateManyWithoutBranchNestedInput
+    bookings?: BookingUncheckedUpdateManyWithoutBranchNestedInput
+    tickets?: TicketUncheckedUpdateManyWithoutBranchNestedInput
+    products?: ProductUncheckedUpdateManyWithoutBranchNestedInput
+    ledgers?: SpecialistLedgerUncheckedUpdateManyWithoutBranchNestedInput
+    offers?: OfferUncheckedUpdateManyWithoutBranchNestedInput
+    chatMessages?: ChatMessageUncheckedUpdateManyWithoutBranchNestedInput
+    shifts?: CashShiftUncheckedUpdateManyWithoutBranchNestedInput
+    expenses?: TreasuryExpenseUncheckedUpdateManyWithoutBranchNestedInput
+    attendances?: AttendanceRecordUncheckedUpdateManyWithoutBranchNestedInput
+    consumptionLogs?: MaterialConsumptionLogUncheckedUpdateManyWithoutBranchNestedInput
+  }
+
+  export type ProductCreateWithoutConsumptionLogsInput = {
+    id?: string
+    nameAr: string
+    category?: string
+    price: number
+    costPrice?: number
+    stockQty?: number
+    minStockAlert?: number
+    image?: string | null
+    barcode?: string | null
+    barcodeType?: string
+    usageType?: string
+    unit?: string
+    centralStockQty?: number
+    consumptionRule?: string | null
+    estimatedUsesPerUnit?: number
+    currentOpenedUnits?: number
+    isActive?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    branch?: BranchCreateNestedOneWithoutProductsInput
+    purchases?: StockPurchaseCreateNestedManyWithoutProductInput
+    transfers?: StockTransferCreateNestedManyWithoutProductInput
+  }
+
+  export type ProductUncheckedCreateWithoutConsumptionLogsInput = {
+    id?: string
+    branchId?: string | null
+    nameAr: string
+    category?: string
+    price: number
+    costPrice?: number
+    stockQty?: number
+    minStockAlert?: number
+    image?: string | null
+    barcode?: string | null
+    barcodeType?: string
+    usageType?: string
+    unit?: string
+    centralStockQty?: number
+    consumptionRule?: string | null
+    estimatedUsesPerUnit?: number
+    currentOpenedUnits?: number
+    isActive?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    purchases?: StockPurchaseUncheckedCreateNestedManyWithoutProductInput
+    transfers?: StockTransferUncheckedCreateNestedManyWithoutProductInput
+  }
+
+  export type ProductCreateOrConnectWithoutConsumptionLogsInput = {
+    where: ProductWhereUniqueInput
+    create: XOR<ProductCreateWithoutConsumptionLogsInput, ProductUncheckedCreateWithoutConsumptionLogsInput>
+  }
+
+  export type BranchCreateWithoutConsumptionLogsInput = {
+    id?: string
+    name: string
+    code: string
+    address: string
+    phone: string
+    whatsapp?: string | null
+    googleMapsUrl?: string | null
+    isActive?: boolean
+    createdAt?: Date | string
+    users?: UserCreateNestedManyWithoutBranchInput
+    specialists?: SpecialistCreateNestedManyWithoutBranchInput
+    bookings?: BookingCreateNestedManyWithoutBranchInput
+    tickets?: TicketCreateNestedManyWithoutBranchInput
+    products?: ProductCreateNestedManyWithoutBranchInput
+    ledgers?: SpecialistLedgerCreateNestedManyWithoutBranchInput
+    offers?: OfferCreateNestedManyWithoutBranchInput
+    chatMessages?: ChatMessageCreateNestedManyWithoutBranchInput
+    shifts?: CashShiftCreateNestedManyWithoutBranchInput
+    expenses?: TreasuryExpenseCreateNestedManyWithoutBranchInput
+    attendances?: AttendanceRecordCreateNestedManyWithoutBranchInput
+    transfers?: StockTransferCreateNestedManyWithoutToBranchInput
+  }
+
+  export type BranchUncheckedCreateWithoutConsumptionLogsInput = {
+    id?: string
+    name: string
+    code: string
+    address: string
+    phone: string
+    whatsapp?: string | null
+    googleMapsUrl?: string | null
+    isActive?: boolean
+    createdAt?: Date | string
+    users?: UserUncheckedCreateNestedManyWithoutBranchInput
+    specialists?: SpecialistUncheckedCreateNestedManyWithoutBranchInput
+    bookings?: BookingUncheckedCreateNestedManyWithoutBranchInput
+    tickets?: TicketUncheckedCreateNestedManyWithoutBranchInput
+    products?: ProductUncheckedCreateNestedManyWithoutBranchInput
+    ledgers?: SpecialistLedgerUncheckedCreateNestedManyWithoutBranchInput
+    offers?: OfferUncheckedCreateNestedManyWithoutBranchInput
+    chatMessages?: ChatMessageUncheckedCreateNestedManyWithoutBranchInput
+    shifts?: CashShiftUncheckedCreateNestedManyWithoutBranchInput
+    expenses?: TreasuryExpenseUncheckedCreateNestedManyWithoutBranchInput
+    attendances?: AttendanceRecordUncheckedCreateNestedManyWithoutBranchInput
+    transfers?: StockTransferUncheckedCreateNestedManyWithoutToBranchInput
+  }
+
+  export type BranchCreateOrConnectWithoutConsumptionLogsInput = {
+    where: BranchWhereUniqueInput
+    create: XOR<BranchCreateWithoutConsumptionLogsInput, BranchUncheckedCreateWithoutConsumptionLogsInput>
+  }
+
+  export type ProductUpsertWithoutConsumptionLogsInput = {
+    update: XOR<ProductUpdateWithoutConsumptionLogsInput, ProductUncheckedUpdateWithoutConsumptionLogsInput>
+    create: XOR<ProductCreateWithoutConsumptionLogsInput, ProductUncheckedCreateWithoutConsumptionLogsInput>
+    where?: ProductWhereInput
+  }
+
+  export type ProductUpdateToOneWithWhereWithoutConsumptionLogsInput = {
+    where?: ProductWhereInput
+    data: XOR<ProductUpdateWithoutConsumptionLogsInput, ProductUncheckedUpdateWithoutConsumptionLogsInput>
+  }
+
+  export type ProductUpdateWithoutConsumptionLogsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    nameAr?: StringFieldUpdateOperationsInput | string
+    category?: StringFieldUpdateOperationsInput | string
+    price?: FloatFieldUpdateOperationsInput | number
+    costPrice?: FloatFieldUpdateOperationsInput | number
+    stockQty?: IntFieldUpdateOperationsInput | number
+    minStockAlert?: IntFieldUpdateOperationsInput | number
+    image?: NullableStringFieldUpdateOperationsInput | string | null
+    barcode?: NullableStringFieldUpdateOperationsInput | string | null
+    barcodeType?: StringFieldUpdateOperationsInput | string
+    usageType?: StringFieldUpdateOperationsInput | string
+    unit?: StringFieldUpdateOperationsInput | string
+    centralStockQty?: IntFieldUpdateOperationsInput | number
+    consumptionRule?: NullableStringFieldUpdateOperationsInput | string | null
+    estimatedUsesPerUnit?: IntFieldUpdateOperationsInput | number
+    currentOpenedUnits?: IntFieldUpdateOperationsInput | number
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    branch?: BranchUpdateOneWithoutProductsNestedInput
+    purchases?: StockPurchaseUpdateManyWithoutProductNestedInput
+    transfers?: StockTransferUpdateManyWithoutProductNestedInput
+  }
+
+  export type ProductUncheckedUpdateWithoutConsumptionLogsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    branchId?: NullableStringFieldUpdateOperationsInput | string | null
+    nameAr?: StringFieldUpdateOperationsInput | string
+    category?: StringFieldUpdateOperationsInput | string
+    price?: FloatFieldUpdateOperationsInput | number
+    costPrice?: FloatFieldUpdateOperationsInput | number
+    stockQty?: IntFieldUpdateOperationsInput | number
+    minStockAlert?: IntFieldUpdateOperationsInput | number
+    image?: NullableStringFieldUpdateOperationsInput | string | null
+    barcode?: NullableStringFieldUpdateOperationsInput | string | null
+    barcodeType?: StringFieldUpdateOperationsInput | string
+    usageType?: StringFieldUpdateOperationsInput | string
+    unit?: StringFieldUpdateOperationsInput | string
+    centralStockQty?: IntFieldUpdateOperationsInput | number
+    consumptionRule?: NullableStringFieldUpdateOperationsInput | string | null
+    estimatedUsesPerUnit?: IntFieldUpdateOperationsInput | number
+    currentOpenedUnits?: IntFieldUpdateOperationsInput | number
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    purchases?: StockPurchaseUncheckedUpdateManyWithoutProductNestedInput
+    transfers?: StockTransferUncheckedUpdateManyWithoutProductNestedInput
+  }
+
+  export type BranchUpsertWithoutConsumptionLogsInput = {
+    update: XOR<BranchUpdateWithoutConsumptionLogsInput, BranchUncheckedUpdateWithoutConsumptionLogsInput>
+    create: XOR<BranchCreateWithoutConsumptionLogsInput, BranchUncheckedCreateWithoutConsumptionLogsInput>
+    where?: BranchWhereInput
+  }
+
+  export type BranchUpdateToOneWithWhereWithoutConsumptionLogsInput = {
+    where?: BranchWhereInput
+    data: XOR<BranchUpdateWithoutConsumptionLogsInput, BranchUncheckedUpdateWithoutConsumptionLogsInput>
+  }
+
+  export type BranchUpdateWithoutConsumptionLogsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    code?: StringFieldUpdateOperationsInput | string
+    address?: StringFieldUpdateOperationsInput | string
+    phone?: StringFieldUpdateOperationsInput | string
+    whatsapp?: NullableStringFieldUpdateOperationsInput | string | null
+    googleMapsUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    users?: UserUpdateManyWithoutBranchNestedInput
+    specialists?: SpecialistUpdateManyWithoutBranchNestedInput
+    bookings?: BookingUpdateManyWithoutBranchNestedInput
+    tickets?: TicketUpdateManyWithoutBranchNestedInput
+    products?: ProductUpdateManyWithoutBranchNestedInput
+    ledgers?: SpecialistLedgerUpdateManyWithoutBranchNestedInput
+    offers?: OfferUpdateManyWithoutBranchNestedInput
+    chatMessages?: ChatMessageUpdateManyWithoutBranchNestedInput
+    shifts?: CashShiftUpdateManyWithoutBranchNestedInput
+    expenses?: TreasuryExpenseUpdateManyWithoutBranchNestedInput
+    attendances?: AttendanceRecordUpdateManyWithoutBranchNestedInput
+    transfers?: StockTransferUpdateManyWithoutToBranchNestedInput
+  }
+
+  export type BranchUncheckedUpdateWithoutConsumptionLogsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    code?: StringFieldUpdateOperationsInput | string
+    address?: StringFieldUpdateOperationsInput | string
+    phone?: StringFieldUpdateOperationsInput | string
+    whatsapp?: NullableStringFieldUpdateOperationsInput | string | null
+    googleMapsUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    users?: UserUncheckedUpdateManyWithoutBranchNestedInput
+    specialists?: SpecialistUncheckedUpdateManyWithoutBranchNestedInput
+    bookings?: BookingUncheckedUpdateManyWithoutBranchNestedInput
+    tickets?: TicketUncheckedUpdateManyWithoutBranchNestedInput
+    products?: ProductUncheckedUpdateManyWithoutBranchNestedInput
+    ledgers?: SpecialistLedgerUncheckedUpdateManyWithoutBranchNestedInput
+    offers?: OfferUncheckedUpdateManyWithoutBranchNestedInput
+    chatMessages?: ChatMessageUncheckedUpdateManyWithoutBranchNestedInput
+    shifts?: CashShiftUncheckedUpdateManyWithoutBranchNestedInput
+    expenses?: TreasuryExpenseUncheckedUpdateManyWithoutBranchNestedInput
+    attendances?: AttendanceRecordUncheckedUpdateManyWithoutBranchNestedInput
+    transfers?: StockTransferUncheckedUpdateManyWithoutToBranchNestedInput
   }
 
   export type UserCreateManyBranchInput = {
@@ -30827,8 +37286,16 @@ export namespace Prisma {
     minStockAlert?: number
     image?: string | null
     barcode?: string | null
+    barcodeType?: string
+    usageType?: string
+    unit?: string
+    centralStockQty?: number
+    consumptionRule?: string | null
+    estimatedUsesPerUnit?: number
+    currentOpenedUnits?: number
     isActive?: boolean
     createdAt?: Date | string
+    updatedAt?: Date | string
   }
 
   export type SpecialistLedgerCreateManyBranchInput = {
@@ -30919,6 +37386,33 @@ export namespace Prisma {
     ipAddress?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+  }
+
+  export type StockTransferCreateManyToBranchInput = {
+    id?: string
+    transferNumber: string
+    productId: string
+    fromLocation?: string
+    quantity: number
+    status?: string
+    receivedBy?: string | null
+    dispatchedBy?: string
+    notes?: string | null
+    createdAt?: Date | string
+  }
+
+  export type MaterialConsumptionLogCreateManyBranchInput = {
+    id?: string
+    productId: string
+    ticketId?: string | null
+    specialistId?: string | null
+    serviceName?: string | null
+    quantityConsumed: number
+    unit?: string
+    reason?: string
+    date: string
+    notes?: string | null
+    createdAt?: Date | string
   }
 
   export type UserUpdateWithoutBranchInput = {
@@ -31163,8 +37657,19 @@ export namespace Prisma {
     minStockAlert?: IntFieldUpdateOperationsInput | number
     image?: NullableStringFieldUpdateOperationsInput | string | null
     barcode?: NullableStringFieldUpdateOperationsInput | string | null
+    barcodeType?: StringFieldUpdateOperationsInput | string
+    usageType?: StringFieldUpdateOperationsInput | string
+    unit?: StringFieldUpdateOperationsInput | string
+    centralStockQty?: IntFieldUpdateOperationsInput | number
+    consumptionRule?: NullableStringFieldUpdateOperationsInput | string | null
+    estimatedUsesPerUnit?: IntFieldUpdateOperationsInput | number
+    currentOpenedUnits?: IntFieldUpdateOperationsInput | number
     isActive?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    purchases?: StockPurchaseUpdateManyWithoutProductNestedInput
+    transfers?: StockTransferUpdateManyWithoutProductNestedInput
+    consumptionLogs?: MaterialConsumptionLogUpdateManyWithoutProductNestedInput
   }
 
   export type ProductUncheckedUpdateWithoutBranchInput = {
@@ -31177,8 +37682,19 @@ export namespace Prisma {
     minStockAlert?: IntFieldUpdateOperationsInput | number
     image?: NullableStringFieldUpdateOperationsInput | string | null
     barcode?: NullableStringFieldUpdateOperationsInput | string | null
+    barcodeType?: StringFieldUpdateOperationsInput | string
+    usageType?: StringFieldUpdateOperationsInput | string
+    unit?: StringFieldUpdateOperationsInput | string
+    centralStockQty?: IntFieldUpdateOperationsInput | number
+    consumptionRule?: NullableStringFieldUpdateOperationsInput | string | null
+    estimatedUsesPerUnit?: IntFieldUpdateOperationsInput | number
+    currentOpenedUnits?: IntFieldUpdateOperationsInput | number
     isActive?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    purchases?: StockPurchaseUncheckedUpdateManyWithoutProductNestedInput
+    transfers?: StockTransferUncheckedUpdateManyWithoutProductNestedInput
+    consumptionLogs?: MaterialConsumptionLogUncheckedUpdateManyWithoutProductNestedInput
   }
 
   export type ProductUncheckedUpdateManyWithoutBranchInput = {
@@ -31191,8 +37707,16 @@ export namespace Prisma {
     minStockAlert?: IntFieldUpdateOperationsInput | number
     image?: NullableStringFieldUpdateOperationsInput | string | null
     barcode?: NullableStringFieldUpdateOperationsInput | string | null
+    barcodeType?: StringFieldUpdateOperationsInput | string
+    usageType?: StringFieldUpdateOperationsInput | string
+    unit?: StringFieldUpdateOperationsInput | string
+    centralStockQty?: IntFieldUpdateOperationsInput | number
+    consumptionRule?: NullableStringFieldUpdateOperationsInput | string | null
+    estimatedUsesPerUnit?: IntFieldUpdateOperationsInput | number
+    currentOpenedUnits?: IntFieldUpdateOperationsInput | number
     isActive?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type SpecialistLedgerUpdateWithoutBranchInput = {
@@ -31463,6 +37987,87 @@ export namespace Prisma {
     ipAddress?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type StockTransferUpdateWithoutToBranchInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    transferNumber?: StringFieldUpdateOperationsInput | string
+    fromLocation?: StringFieldUpdateOperationsInput | string
+    quantity?: IntFieldUpdateOperationsInput | number
+    status?: StringFieldUpdateOperationsInput | string
+    receivedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    dispatchedBy?: StringFieldUpdateOperationsInput | string
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    product?: ProductUpdateOneRequiredWithoutTransfersNestedInput
+  }
+
+  export type StockTransferUncheckedUpdateWithoutToBranchInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    transferNumber?: StringFieldUpdateOperationsInput | string
+    productId?: StringFieldUpdateOperationsInput | string
+    fromLocation?: StringFieldUpdateOperationsInput | string
+    quantity?: IntFieldUpdateOperationsInput | number
+    status?: StringFieldUpdateOperationsInput | string
+    receivedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    dispatchedBy?: StringFieldUpdateOperationsInput | string
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type StockTransferUncheckedUpdateManyWithoutToBranchInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    transferNumber?: StringFieldUpdateOperationsInput | string
+    productId?: StringFieldUpdateOperationsInput | string
+    fromLocation?: StringFieldUpdateOperationsInput | string
+    quantity?: IntFieldUpdateOperationsInput | number
+    status?: StringFieldUpdateOperationsInput | string
+    receivedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    dispatchedBy?: StringFieldUpdateOperationsInput | string
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type MaterialConsumptionLogUpdateWithoutBranchInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    ticketId?: NullableStringFieldUpdateOperationsInput | string | null
+    specialistId?: NullableStringFieldUpdateOperationsInput | string | null
+    serviceName?: NullableStringFieldUpdateOperationsInput | string | null
+    quantityConsumed?: FloatFieldUpdateOperationsInput | number
+    unit?: StringFieldUpdateOperationsInput | string
+    reason?: StringFieldUpdateOperationsInput | string
+    date?: StringFieldUpdateOperationsInput | string
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    product?: ProductUpdateOneRequiredWithoutConsumptionLogsNestedInput
+  }
+
+  export type MaterialConsumptionLogUncheckedUpdateWithoutBranchInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    productId?: StringFieldUpdateOperationsInput | string
+    ticketId?: NullableStringFieldUpdateOperationsInput | string | null
+    specialistId?: NullableStringFieldUpdateOperationsInput | string | null
+    serviceName?: NullableStringFieldUpdateOperationsInput | string | null
+    quantityConsumed?: FloatFieldUpdateOperationsInput | number
+    unit?: StringFieldUpdateOperationsInput | string
+    reason?: StringFieldUpdateOperationsInput | string
+    date?: StringFieldUpdateOperationsInput | string
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type MaterialConsumptionLogUncheckedUpdateManyWithoutBranchInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    productId?: StringFieldUpdateOperationsInput | string
+    ticketId?: NullableStringFieldUpdateOperationsInput | string | null
+    specialistId?: NullableStringFieldUpdateOperationsInput | string | null
+    serviceName?: NullableStringFieldUpdateOperationsInput | string | null
+    quantityConsumed?: FloatFieldUpdateOperationsInput | number
+    unit?: StringFieldUpdateOperationsInput | string
+    reason?: StringFieldUpdateOperationsInput | string
+    date?: StringFieldUpdateOperationsInput | string
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type AttendanceRecordCreateManyUserInput = {
@@ -31903,6 +38508,170 @@ export namespace Prisma {
     notes?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type StockPurchaseCreateManyProductInput = {
+    id?: string
+    invoiceNumber: string
+    type?: string
+    supplierName?: string | null
+    quantity: number
+    costPrice: number
+    totalCost: number
+    destination?: string
+    notes?: string | null
+    recordedBy?: string
+    createdAt?: Date | string
+  }
+
+  export type StockTransferCreateManyProductInput = {
+    id?: string
+    transferNumber: string
+    fromLocation?: string
+    toBranchId: string
+    quantity: number
+    status?: string
+    receivedBy?: string | null
+    dispatchedBy?: string
+    notes?: string | null
+    createdAt?: Date | string
+  }
+
+  export type MaterialConsumptionLogCreateManyProductInput = {
+    id?: string
+    branchId: string
+    ticketId?: string | null
+    specialistId?: string | null
+    serviceName?: string | null
+    quantityConsumed: number
+    unit?: string
+    reason?: string
+    date: string
+    notes?: string | null
+    createdAt?: Date | string
+  }
+
+  export type StockPurchaseUpdateWithoutProductInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    invoiceNumber?: StringFieldUpdateOperationsInput | string
+    type?: StringFieldUpdateOperationsInput | string
+    supplierName?: NullableStringFieldUpdateOperationsInput | string | null
+    quantity?: IntFieldUpdateOperationsInput | number
+    costPrice?: FloatFieldUpdateOperationsInput | number
+    totalCost?: FloatFieldUpdateOperationsInput | number
+    destination?: StringFieldUpdateOperationsInput | string
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    recordedBy?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type StockPurchaseUncheckedUpdateWithoutProductInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    invoiceNumber?: StringFieldUpdateOperationsInput | string
+    type?: StringFieldUpdateOperationsInput | string
+    supplierName?: NullableStringFieldUpdateOperationsInput | string | null
+    quantity?: IntFieldUpdateOperationsInput | number
+    costPrice?: FloatFieldUpdateOperationsInput | number
+    totalCost?: FloatFieldUpdateOperationsInput | number
+    destination?: StringFieldUpdateOperationsInput | string
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    recordedBy?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type StockPurchaseUncheckedUpdateManyWithoutProductInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    invoiceNumber?: StringFieldUpdateOperationsInput | string
+    type?: StringFieldUpdateOperationsInput | string
+    supplierName?: NullableStringFieldUpdateOperationsInput | string | null
+    quantity?: IntFieldUpdateOperationsInput | number
+    costPrice?: FloatFieldUpdateOperationsInput | number
+    totalCost?: FloatFieldUpdateOperationsInput | number
+    destination?: StringFieldUpdateOperationsInput | string
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    recordedBy?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type StockTransferUpdateWithoutProductInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    transferNumber?: StringFieldUpdateOperationsInput | string
+    fromLocation?: StringFieldUpdateOperationsInput | string
+    quantity?: IntFieldUpdateOperationsInput | number
+    status?: StringFieldUpdateOperationsInput | string
+    receivedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    dispatchedBy?: StringFieldUpdateOperationsInput | string
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    toBranch?: BranchUpdateOneRequiredWithoutTransfersNestedInput
+  }
+
+  export type StockTransferUncheckedUpdateWithoutProductInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    transferNumber?: StringFieldUpdateOperationsInput | string
+    fromLocation?: StringFieldUpdateOperationsInput | string
+    toBranchId?: StringFieldUpdateOperationsInput | string
+    quantity?: IntFieldUpdateOperationsInput | number
+    status?: StringFieldUpdateOperationsInput | string
+    receivedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    dispatchedBy?: StringFieldUpdateOperationsInput | string
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type StockTransferUncheckedUpdateManyWithoutProductInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    transferNumber?: StringFieldUpdateOperationsInput | string
+    fromLocation?: StringFieldUpdateOperationsInput | string
+    toBranchId?: StringFieldUpdateOperationsInput | string
+    quantity?: IntFieldUpdateOperationsInput | number
+    status?: StringFieldUpdateOperationsInput | string
+    receivedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    dispatchedBy?: StringFieldUpdateOperationsInput | string
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type MaterialConsumptionLogUpdateWithoutProductInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    ticketId?: NullableStringFieldUpdateOperationsInput | string | null
+    specialistId?: NullableStringFieldUpdateOperationsInput | string | null
+    serviceName?: NullableStringFieldUpdateOperationsInput | string | null
+    quantityConsumed?: FloatFieldUpdateOperationsInput | number
+    unit?: StringFieldUpdateOperationsInput | string
+    reason?: StringFieldUpdateOperationsInput | string
+    date?: StringFieldUpdateOperationsInput | string
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    branch?: BranchUpdateOneRequiredWithoutConsumptionLogsNestedInput
+  }
+
+  export type MaterialConsumptionLogUncheckedUpdateWithoutProductInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    branchId?: StringFieldUpdateOperationsInput | string
+    ticketId?: NullableStringFieldUpdateOperationsInput | string | null
+    specialistId?: NullableStringFieldUpdateOperationsInput | string | null
+    serviceName?: NullableStringFieldUpdateOperationsInput | string | null
+    quantityConsumed?: FloatFieldUpdateOperationsInput | number
+    unit?: StringFieldUpdateOperationsInput | string
+    reason?: StringFieldUpdateOperationsInput | string
+    date?: StringFieldUpdateOperationsInput | string
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type MaterialConsumptionLogUncheckedUpdateManyWithoutProductInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    branchId?: StringFieldUpdateOperationsInput | string
+    ticketId?: NullableStringFieldUpdateOperationsInput | string | null
+    specialistId?: NullableStringFieldUpdateOperationsInput | string | null
+    serviceName?: NullableStringFieldUpdateOperationsInput | string | null
+    quantityConsumed?: FloatFieldUpdateOperationsInput | number
+    unit?: StringFieldUpdateOperationsInput | string
+    reason?: StringFieldUpdateOperationsInput | string
+    date?: StringFieldUpdateOperationsInput | string
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
 

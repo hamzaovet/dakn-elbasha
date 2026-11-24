@@ -415,6 +415,75 @@ export async function PATCH(req: Request) {
         }
       }
 
+      // ----------------------------------------------------
+      // AUTOMATIC RAW MATERIAL CONSUMPTION (خصم استهلاك الخامات الذكي)
+      // ----------------------------------------------------
+      try {
+        const ticketServices: any[] = typeof updated.services === "string" ? JSON.parse(updated.services) : updated.services || [];
+        const hasBeardShave = ticketServices.some(
+          (s) => (s.nameAr && (s.nameAr.includes("دقن") || s.nameAr.includes("ذقن") || s.nameAr.includes("موس"))) || s.category === "BEARD"
+        );
+
+        if (hasBeardShave) {
+          // Find razor blade consumable product
+          let bladeProduct = await prisma.product.findFirst({
+            where: {
+              usageType: "CONSUMABLE",
+              OR: [
+                { nameAr: { contains: "شفرة" } },
+                { nameAr: { contains: "شفرات" } },
+                { nameAr: { contains: "موس" } },
+              ],
+            },
+          });
+
+          // If not exists yet, create it with auto-generated barcode
+          if (!bladeProduct) {
+            bladeProduct = await prisma.product.create({
+              data: {
+                nameAr: "شفرات حلاقة دوركو تيتانيوم معقمة (Dorco Blades)",
+                category: "CONSUMABLES",
+                usageType: "CONSUMABLE",
+                barcode: "DKN-BLADE-01",
+                barcodeType: "AUTO",
+                unit: "شفرة",
+                stockQty: 500,
+                centralStockQty: 5000,
+                minStockAlert: 50,
+                price: 0,
+                costPrice: 2,
+                branchId: ticket.branchId,
+              },
+            });
+          }
+
+          // Decrement 1 blade from branch stock
+          await prisma.product.update({
+            where: { id: bladeProduct.id },
+            data: { stockQty: { decrement: 1 } },
+          });
+
+          // Log in MaterialConsumptionLog
+          const today = new Date().toISOString().split("T")[0];
+          await prisma.materialConsumptionLog.create({
+            data: {
+              productId: bladeProduct.id,
+              branchId: ticket.branchId,
+              ticketId: ticket.id,
+              specialistId: ticket.specialistId,
+              serviceName: "حلاقة وتحديد ذقن بالموس",
+              quantityConsumed: 1,
+              unit: "شفرة",
+              reason: "AUTO_SERVICE_RULE",
+              date: today,
+              notes: `خصم آلي: 1 شفرة حلاقة معقمة لتذكرة #${ticket.ticketNumber} للعميل (${ticket.customerName})`,
+            },
+          });
+        }
+      } catch (matErr) {
+        console.error("Auto material consumption error:", matErr);
+      }
+
       return NextResponse.json({ success: true, ticket: updated });
     }
 

@@ -22,6 +22,7 @@ import {
   TrendingUp,
   AlertCircle,
 } from "lucide-react";
+import { playAttendanceChime } from "@/lib/attendance-sound";
 
 export default function SpecialistChairPage() {
   const router = useRouter();
@@ -122,6 +123,7 @@ export default function SpecialistChairPage() {
       });
       const data = await res.json();
       if (data.success) {
+        playAttendanceChime(action);
         notify("success", data.message);
         checkAttendanceStatus(currentUser.id);
       } else {

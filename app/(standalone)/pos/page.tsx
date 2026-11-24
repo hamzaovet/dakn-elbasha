@@ -29,6 +29,7 @@ import {
   Wallet,
   FileText,
 } from "lucide-react";
+import { playAttendanceChime } from "@/lib/attendance-sound";
 
 export default function CashierPosPage() {
   const router = useRouter();

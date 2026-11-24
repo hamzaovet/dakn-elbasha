@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import CardQRModal from "@/components/CardQRModal";
 import AttendanceManagementTab from "@/components/AttendanceManagementTab";
+import CentralWarehouseTab from "@/components/CentralWarehouseTab";
 import {
   LayoutDashboard,
   Scissors,
@@ -380,7 +381,8 @@ export default function AdminPage() {
         user.role !== "owner" &&
         user.role !== "general_manager" &&
         user.role !== "manager" &&
-        user.role !== "warehouse_manager"
+        user.role !== "warehouse_manager" &&
+        user.role !== "booking_dispatcher"
       ) {
         router.push("/login");
         return;
@@ -388,6 +390,8 @@ export default function AdminPage() {
       setCurrentUser(user);
       if (user.role === "warehouse_manager") {
         setActiveTab("inventory");
+      } else if (user.role === "booking_dispatcher") {
+        setActiveTab("bookings");
       } else if (user.branchId && user.role === "manager") {
         setSelectedBranchId(user.branchId);
       }
@@ -1661,7 +1665,31 @@ export default function AdminPage() {
   const totalRetailSales = filteredTickets.reduce((sum, t) => sum + (t.retailTotal || 0), 0);
 
   // Visible Navigation Tabs
-  const visibleTabs = [
+  const visibleTabs = currentUser?.role === "warehouse_manager"
+    ? [
+        { id: "inventory", label: "المخزن العام وتكويد الباركود 📦", icon: ShoppingBag },
+        { id: "attendance", label: "بصمة الحضور والانصراف ⏰", icon: Clock },
+      ]
+    : currentUser?.role === "booking_dispatcher"
+    ? [
+        {
+          id: "bookings",
+          label: `إدارة الحجوزات المركزية 📅 ${
+            filteredBookings.filter((b) => b.status === "PENDING").length > 0
+              ? `(${filteredBookings.filter((b) => b.status === "PENDING").length})`
+              : ""
+          }`,
+          icon: Calendar,
+        },
+        {
+          id: "chat",
+          label: `شات العملاء 💬 ${unreadChatTotal > 0 ? `(${unreadChatTotal})` : ""}`,
+          icon: MessageSquare,
+        },
+        { id: "customers", label: "قاعدة العملاء 👥", icon: Users },
+        { id: "attendance", label: "بصمة الحضور والانصراف ⏰", icon: Clock },
+      ]
+    : [
     { id: "overview", label: "نظرة عامة 📊", icon: LayoutDashboard },
     { id: "treasury", label: "الخزنة والحسابات 💰", icon: DollarSign },
     {
@@ -3940,9 +3968,22 @@ export default function AdminPage() {
         )}
 
         {/* ========================================================
-            TAB 7: PRODUCTS & SALON SUPPLIES (INVENTORY & RAW MATERIALS)
+            TAB 7: CENTRAL WAREHOUSE & XPRINTER BARCODES
            ======================================================== */}
         {activeTab === "inventory" && (
+          <CentralWarehouseTab
+            branches={branches}
+            activeBranchId={activeBranchId}
+            userRole={currentUser?.role || "owner"}
+            isWomenTheme={isWomenTheme}
+            onRefreshData={loadAllData}
+          />
+        )}
+
+        {/* ========================================================
+            LEGACY TAB 7: HIDDEN
+           ======================================================== */}
+        {false && (
           <div className="space-y-6 animate-fade-in">
             {/* Tab Header & Action */}
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-white/10 pb-4">

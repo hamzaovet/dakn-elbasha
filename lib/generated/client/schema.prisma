@@ -11,26 +11,28 @@ generator client {
 // 1. MULTI-BRANCH SYSTEM (منظومة الفروع المتعددة)
 // ----------------------------------------------------
 model Branch {
-  id            String             @id @default(cuid())
-  name          String // e.g. "فرع حدائق القبة", "فرع مدينة نصر"
-  code          String             @unique // "BR-KOBBA", "BR-NASR-CITY"
-  address       String
-  phone         String
-  whatsapp      String?
-  googleMapsUrl String?
-  isActive      Boolean            @default(true)
-  createdAt     DateTime           @default(now())
-  users         User[]
-  specialists   Specialist[]
-  bookings      Booking[]
-  tickets       Ticket[]
-  products      Product[]
-  ledgers       SpecialistLedger[]
-  offers        Offer[]
-  chatMessages  ChatMessage[]
-  shifts        CashShift[]
-  expenses      TreasuryExpense[]
-  attendances   AttendanceRecord[]
+  id              String                   @id @default(cuid())
+  name            String // e.g. "فرع حدائق القبة", "فرع مدينة نصر"
+  code            String                   @unique // "BR-KOBBA", "BR-NASR-CITY"
+  address         String
+  phone           String
+  whatsapp        String?
+  googleMapsUrl   String?
+  isActive        Boolean                  @default(true)
+  createdAt       DateTime                 @default(now())
+  users           User[]
+  specialists     Specialist[]
+  bookings        Booking[]
+  tickets         Ticket[]
+  products        Product[]
+  ledgers         SpecialistLedger[]
+  offers          Offer[]
+  chatMessages    ChatMessage[]
+  shifts          CashShift[]
+  expenses        TreasuryExpense[]
+  attendances     AttendanceRecord[]
+  transfers       StockTransfer[]
+  consumptionLogs MaterialConsumptionLog[]
 }
 
 // ----------------------------------------------------
@@ -186,22 +188,34 @@ model Ticket {
 }
 
 // ----------------------------------------------------
-// 8. RETAIL BEAUTY PRODUCTS (بضاعة التجميل ومستحضرات العناية)
+// 8. RETAIL & CONSUMABLE BEAUTY PRODUCTS (بضاعة التجميل وخامات التشغيل والمخزن)
 // ----------------------------------------------------
 model Product {
-  id            String   @id @default(cuid())
-  branchId      String?
-  branch        Branch?  @relation(fields: [branchId], references: [id], onDelete: SetNull)
-  nameAr        String
-  category      String   @default("STYLING") // STYLING, BEARD_CARE, SKIN_CARE, PERFUMES, ACCESSORIES
-  price         Float
-  costPrice     Float    @default(0)
-  stockQty      Int      @default(50)
-  minStockAlert Int      @default(10)
-  image         String? // ImgBB URL
-  barcode       String?
-  isActive      Boolean  @default(true)
-  createdAt     DateTime @default(now())
+  id                   String   @id @default(cuid())
+  branchId             String?
+  branch               Branch?  @relation(fields: [branchId], references: [id], onDelete: SetNull)
+  nameAr               String
+  category             String   @default("STYLING") // STYLING, BEARD_CARE, SKIN_CARE, PERFUMES, ACCESSORIES, CONSUMABLES, LASER_SUPPLIES
+  price                Float // سعر البيع للجمهور (إذا كان RETAIL) أو قيمة الخدمة
+  costPrice            Float    @default(0) // تكلفة الشراء
+  stockQty             Int      @default(50) // رصيد الفرع الحالي
+  minStockAlert        Int      @default(10) // حد الطلب والتنبيه
+  image                String? // ImgBB URL
+  barcode              String? // باركود فريد دائم (سواء مولد تلقائي أو دولي)
+  barcodeType          String   @default("AUTO") // AUTO (مولد تلقائي مميز DKN-XXXXXX), EXISTING (باركود المصنع)
+  usageType            String   @default("RETAIL") // RETAIL (بضاعة بيع للعملاء), CONSUMABLE (خامات استهلاك وتشغيل)
+  unit                 String   @default("PIECE") // PIECE (قطعة/شفرة/فوطة), BOTTLE (عبوة), GRAM (جرام), ML (مل), BOX (علبة)
+  centralStockQty      Int      @default(0) // رصيد المخزن الرئيسي العام
+  consumptionRule      String? // JSON rule: e.g. {"type":"PER_SERVICE","serviceCategory":"BEARD","qty":1}
+  estimatedUsesPerUnit Int      @default(1) // عدد مرات الاستخدام الافتراضية لكل عبوة
+  currentOpenedUnits   Int      @default(0) // عدد العبوات المفتوحة قيد الاستهلاك في محطات العمل
+  isActive             Boolean  @default(true)
+  createdAt            DateTime @default(now())
+  updatedAt            DateTime @default(now()) @updatedAt
+
+  purchases       StockPurchase[]
+  transfers       StockTransfer[]
+  consumptionLogs MaterialConsumptionLog[]
 }
 
 // ----------------------------------------------------
@@ -360,4 +374,62 @@ model AttendanceRecord {
   ipAddress    String?
   createdAt    DateTime  @default(now())
   updatedAt    DateTime  @updatedAt
+}
+
+// ----------------------------------------------------
+// 16. CENTRAL WAREHOUSE: PURCHASES & OPENING INVENTORY (المشتريات وجرد أول المدة)
+// ----------------------------------------------------
+model StockPurchase {
+  id            String   @id @default(cuid())
+  invoiceNumber String // e.g. "PUR-2026-001" or "OPEN-BAL-001"
+  type          String   @default("PURCHASE") // "PURCHASE" (فاتورة شراء), "OPENING_BALANCE" (جرد رصيد أول المدة)
+  supplierName  String? // اسم المورد أو الشركة
+  productId     String
+  product       Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  quantity      Int // الكمية المضافة
+  costPrice     Float // سعر الشراء للوحدة
+  totalCost     Float // الإجمالي
+  destination   String   @default("CENTRAL") // "CENTRAL" (المخزن الرئيسي) أو معرف فرع محدد
+  notes         String?
+  recordedBy    String   @default("مسئول المخزن")
+  createdAt     DateTime @default(now())
+}
+
+// ----------------------------------------------------
+// 17. CENTRAL WAREHOUSE: TRANSFERS & DISPATCH (التحويلات وصرف الفروع)
+// ----------------------------------------------------
+model StockTransfer {
+  id             String   @id @default(cuid())
+  transferNumber String // e.g. "TRF-2026-001"
+  productId      String
+  product        Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  fromLocation   String   @default("المخزن الرئيسي")
+  toBranchId     String
+  toBranch       Branch   @relation(fields: [toBranchId], references: [id], onDelete: Cascade)
+  quantity       Int // الكمية المحولة
+  status         String   @default("COMPLETED") // PENDING, COMPLETED, CANCELLED
+  receivedBy     String? // اسم مستلم الفرع (الكاشير أو المدير)
+  dispatchedBy   String   @default("مسئول المخزن العام")
+  notes          String?
+  createdAt      DateTime @default(now())
+}
+
+// ----------------------------------------------------
+// 18. CONSUMABLES DEPLETION LOG (سجل الاستهلاك الذكي للخامات)
+// ----------------------------------------------------
+model MaterialConsumptionLog {
+  id               String   @id @default(cuid())
+  productId        String
+  product          Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  branchId         String
+  branch           Branch   @relation(fields: [branchId], references: [id], onDelete: Cascade)
+  ticketId         String? // معرف الفاتورة/التذكرة إن وجد
+  specialistId     String? // معرف المتخصص/الحلاق إن وجد
+  serviceName      String? // اسم الخدمة المرتبطة (مثل: حلاقة ذقن بالبخار)
+  quantityConsumed Float // الكمية المستهلكة (مثلاً: 1 شفرة، أو 0.04 عبوة = 15 مل)
+  unit             String   @default("PIECE") // PIECE, BOTTLE, ML, GRAM
+  reason           String   @default("AUTO_SERVICE_RULE") // AUTO_SERVICE_RULE, MANUAL_STATION_HANDOVER, WASTAGE
+  date             String // YYYY-MM-DD
+  notes            String?
+  createdAt        DateTime @default(now())
 }
