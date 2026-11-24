@@ -7,7 +7,9 @@ import CardQRModal from "@/components/CardQRModal";
 import AttendanceManagementTab from "@/components/AttendanceManagementTab";
 import CentralWarehouseTab from "@/components/CentralWarehouseTab";
 import CCTVMonitoringTab from "@/components/CCTVMonitoringTab";
+import StaffArchiveManagementTab from "@/components/StaffArchiveManagementTab";
 import {
+  FolderArchive,
   Video,
   LayoutDashboard,
   Scissors,
@@ -95,6 +97,7 @@ export default function AdminPage() {
     | "settings"
     | "attendance"
     | "cctv"
+    | "hr"
   >("overview");
 
   // Data States
@@ -1729,6 +1732,7 @@ export default function AdminPage() {
       icon: ShoppingBag,
     },
     { id: "attendance", label: "بصمة الحضور والانصراف ⏰", icon: Clock },
+    { id: "hr", label: "أرشيف العاملين والتوظيف 📁", icon: FolderArchive },
     { id: "customers", label: "قاعدة العملاء 👥", icon: Users },
     ...(isOwnerOrGM
       ? [
@@ -4933,6 +4937,17 @@ export default function AdminPage() {
         {/* 14. CCTV & LIVE SECURITY SURVEILLANCE TAB (MAESTRO & BASHA ONLY) */}
         {activeTab === "cctv" && isOwnerOrGM && (
           <CCTVMonitoringTab
+            branches={branches}
+            currentUser={currentUser}
+            isWomenTheme={isWomenTheme}
+            isNewSkinTheme={isNewSkinTheme}
+            showToast={showToast}
+          />
+        )}
+
+        {/* 15. STAFF ARCHIVE & CAREERS RECRUITMENT TAB */}
+        {activeTab === "hr" && (
+          <StaffArchiveManagementTab
             branches={branches}
             currentUser={currentUser}
             isWomenTheme={isWomenTheme}

@@ -108,6 +108,16 @@ export type MaterialConsumptionLog = $Result.DefaultSelection<Prisma.$MaterialCo
  * 
  */
 export type SecurityCamera = $Result.DefaultSelection<Prisma.$SecurityCameraPayload>
+/**
+ * Model StaffDossier
+ * 
+ */
+export type StaffDossier = $Result.DefaultSelection<Prisma.$StaffDossierPayload>
+/**
+ * Model JobApplication
+ * 
+ */
+export type JobApplication = $Result.DefaultSelection<Prisma.$JobApplicationPayload>
 
 /**
  * ##  Prisma Client ʲˢ
@@ -419,6 +429,26 @@ export class PrismaClient<
     * ```
     */
   get securityCamera(): Prisma.SecurityCameraDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.staffDossier`: Exposes CRUD operations for the **StaffDossier** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more StaffDossiers
+    * const staffDossiers = await prisma.staffDossier.findMany()
+    * ```
+    */
+  get staffDossier(): Prisma.StaffDossierDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.jobApplication`: Exposes CRUD operations for the **JobApplication** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more JobApplications
+    * const jobApplications = await prisma.jobApplication.findMany()
+    * ```
+    */
+  get jobApplication(): Prisma.JobApplicationDelegate<ExtArgs, ClientOptions>;
 }
 
 export namespace Prisma {
@@ -884,7 +914,9 @@ export namespace Prisma {
     StockPurchase: 'StockPurchase',
     StockTransfer: 'StockTransfer',
     MaterialConsumptionLog: 'MaterialConsumptionLog',
-    SecurityCamera: 'SecurityCamera'
+    SecurityCamera: 'SecurityCamera',
+    StaffDossier: 'StaffDossier',
+    JobApplication: 'JobApplication'
   };
 
   export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -900,7 +932,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "branch" | "user" | "specialist" | "service" | "customer" | "booking" | "ticket" | "product" | "specialistLedger" | "systemSettings" | "offer" | "chatMessage" | "cashShift" | "treasuryExpense" | "attendanceRecord" | "stockPurchase" | "stockTransfer" | "materialConsumptionLog" | "securityCamera"
+      modelProps: "branch" | "user" | "specialist" | "service" | "customer" | "booking" | "ticket" | "product" | "specialistLedger" | "systemSettings" | "offer" | "chatMessage" | "cashShift" | "treasuryExpense" | "attendanceRecord" | "stockPurchase" | "stockTransfer" | "materialConsumptionLog" | "securityCamera" | "staffDossier" | "jobApplication"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -2310,6 +2342,154 @@ export namespace Prisma {
           }
         }
       }
+      StaffDossier: {
+        payload: Prisma.$StaffDossierPayload<ExtArgs>
+        fields: Prisma.StaffDossierFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.StaffDossierFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$StaffDossierPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.StaffDossierFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$StaffDossierPayload>
+          }
+          findFirst: {
+            args: Prisma.StaffDossierFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$StaffDossierPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.StaffDossierFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$StaffDossierPayload>
+          }
+          findMany: {
+            args: Prisma.StaffDossierFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$StaffDossierPayload>[]
+          }
+          create: {
+            args: Prisma.StaffDossierCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$StaffDossierPayload>
+          }
+          createMany: {
+            args: Prisma.StaffDossierCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.StaffDossierCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$StaffDossierPayload>[]
+          }
+          delete: {
+            args: Prisma.StaffDossierDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$StaffDossierPayload>
+          }
+          update: {
+            args: Prisma.StaffDossierUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$StaffDossierPayload>
+          }
+          deleteMany: {
+            args: Prisma.StaffDossierDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.StaffDossierUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.StaffDossierUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$StaffDossierPayload>[]
+          }
+          upsert: {
+            args: Prisma.StaffDossierUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$StaffDossierPayload>
+          }
+          aggregate: {
+            args: Prisma.StaffDossierAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateStaffDossier>
+          }
+          groupBy: {
+            args: Prisma.StaffDossierGroupByArgs<ExtArgs>
+            result: $Utils.Optional<StaffDossierGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.StaffDossierCountArgs<ExtArgs>
+            result: $Utils.Optional<StaffDossierCountAggregateOutputType> | number
+          }
+        }
+      }
+      JobApplication: {
+        payload: Prisma.$JobApplicationPayload<ExtArgs>
+        fields: Prisma.JobApplicationFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.JobApplicationFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$JobApplicationPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.JobApplicationFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$JobApplicationPayload>
+          }
+          findFirst: {
+            args: Prisma.JobApplicationFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$JobApplicationPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.JobApplicationFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$JobApplicationPayload>
+          }
+          findMany: {
+            args: Prisma.JobApplicationFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$JobApplicationPayload>[]
+          }
+          create: {
+            args: Prisma.JobApplicationCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$JobApplicationPayload>
+          }
+          createMany: {
+            args: Prisma.JobApplicationCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.JobApplicationCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$JobApplicationPayload>[]
+          }
+          delete: {
+            args: Prisma.JobApplicationDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$JobApplicationPayload>
+          }
+          update: {
+            args: Prisma.JobApplicationUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$JobApplicationPayload>
+          }
+          deleteMany: {
+            args: Prisma.JobApplicationDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.JobApplicationUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.JobApplicationUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$JobApplicationPayload>[]
+          }
+          upsert: {
+            args: Prisma.JobApplicationUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$JobApplicationPayload>
+          }
+          aggregate: {
+            args: Prisma.JobApplicationAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateJobApplication>
+          }
+          groupBy: {
+            args: Prisma.JobApplicationGroupByArgs<ExtArgs>
+            result: $Utils.Optional<JobApplicationGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.JobApplicationCountArgs<ExtArgs>
+            result: $Utils.Optional<JobApplicationCountAggregateOutputType> | number
+          }
+        }
+      }
     }
   } & {
     other: {
@@ -2452,6 +2632,8 @@ export namespace Prisma {
     stockTransfer?: StockTransferOmit
     materialConsumptionLog?: MaterialConsumptionLogOmit
     securityCamera?: SecurityCameraOmit
+    staffDossier?: StaffDossierOmit
+    jobApplication?: JobApplicationOmit
   }
 
   /* Types for Logging */
@@ -2546,6 +2728,7 @@ export namespace Prisma {
     transfers: number
     consumptionLogs: number
     cameras: number
+    staffDossiers: number
   }
 
   export type BranchCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -2563,6 +2746,7 @@ export namespace Prisma {
     transfers?: boolean | BranchCountOutputTypeCountTransfersArgs
     consumptionLogs?: boolean | BranchCountOutputTypeCountConsumptionLogsArgs
     cameras?: boolean | BranchCountOutputTypeCountCamerasArgs
+    staffDossiers?: boolean | BranchCountOutputTypeCountStaffDossiersArgs
   }
 
   // Custom InputTypes
@@ -2672,6 +2856,13 @@ export namespace Prisma {
    */
   export type BranchCountOutputTypeCountCamerasArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: SecurityCameraWhereInput
+  }
+
+  /**
+   * BranchCountOutputType without action
+   */
+  export type BranchCountOutputTypeCountStaffDossiersArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: StaffDossierWhereInput
   }
 
 
@@ -3058,6 +3249,7 @@ export namespace Prisma {
     transfers?: boolean | Branch$transfersArgs<ExtArgs>
     consumptionLogs?: boolean | Branch$consumptionLogsArgs<ExtArgs>
     cameras?: boolean | Branch$camerasArgs<ExtArgs>
+    staffDossiers?: boolean | Branch$staffDossiersArgs<ExtArgs>
     _count?: boolean | BranchCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["branch"]>
 
@@ -3113,6 +3305,7 @@ export namespace Prisma {
     transfers?: boolean | Branch$transfersArgs<ExtArgs>
     consumptionLogs?: boolean | Branch$consumptionLogsArgs<ExtArgs>
     cameras?: boolean | Branch$camerasArgs<ExtArgs>
+    staffDossiers?: boolean | Branch$staffDossiersArgs<ExtArgs>
     _count?: boolean | BranchCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type BranchIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
@@ -3135,6 +3328,7 @@ export namespace Prisma {
       transfers: Prisma.$StockTransferPayload<ExtArgs>[]
       consumptionLogs: Prisma.$MaterialConsumptionLogPayload<ExtArgs>[]
       cameras: Prisma.$SecurityCameraPayload<ExtArgs>[]
+      staffDossiers: Prisma.$StaffDossierPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -3554,6 +3748,7 @@ export namespace Prisma {
     transfers<T extends Branch$transfersArgs<ExtArgs> = {}>(args?: Subset<T, Branch$transfersArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$StockTransferPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     consumptionLogs<T extends Branch$consumptionLogsArgs<ExtArgs> = {}>(args?: Subset<T, Branch$consumptionLogsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$MaterialConsumptionLogPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     cameras<T extends Branch$camerasArgs<ExtArgs> = {}>(args?: Subset<T, Branch$camerasArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SecurityCameraPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    staffDossiers<T extends Branch$staffDossiersArgs<ExtArgs> = {}>(args?: Subset<T, Branch$staffDossiersArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$StaffDossierPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -4318,6 +4513,30 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: SecurityCameraScalarFieldEnum | SecurityCameraScalarFieldEnum[]
+  }
+
+  /**
+   * Branch.staffDossiers
+   */
+  export type Branch$staffDossiersArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the StaffDossier
+     */
+    select?: StaffDossierSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the StaffDossier
+     */
+    omit?: StaffDossierOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: StaffDossierInclude<ExtArgs> | null
+    where?: StaffDossierWhereInput
+    orderBy?: StaffDossierOrderByWithRelationInput | StaffDossierOrderByWithRelationInput[]
+    cursor?: StaffDossierWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: StaffDossierScalarFieldEnum | StaffDossierScalarFieldEnum[]
   }
 
   /**
@@ -26819,6 +27038,2792 @@ export namespace Prisma {
 
 
   /**
+   * Model StaffDossier
+   */
+
+  export type AggregateStaffDossier = {
+    _count: StaffDossierCountAggregateOutputType | null
+    _avg: StaffDossierAvgAggregateOutputType | null
+    _sum: StaffDossierSumAggregateOutputType | null
+    _min: StaffDossierMinAggregateOutputType | null
+    _max: StaffDossierMaxAggregateOutputType | null
+  }
+
+  export type StaffDossierAvgAggregateOutputType = {
+    salary: number | null
+    commissionRate: number | null
+  }
+
+  export type StaffDossierSumAggregateOutputType = {
+    salary: number | null
+    commissionRate: number | null
+  }
+
+  export type StaffDossierMinAggregateOutputType = {
+    id: string | null
+    fullName: string | null
+    nationalId: string | null
+    phone: string | null
+    phoneSecondary: string | null
+    birthDate: string | null
+    address: string | null
+    gender: string | null
+    maritalStatus: string | null
+    militaryStatus: string | null
+    qualification: string | null
+    jobTitle: string | null
+    department: string | null
+    branchId: string | null
+    hireDate: string | null
+    status: string | null
+    salary: number | null
+    commissionRate: number | null
+    contractType: string | null
+    photoUrl: string | null
+    nationalIdFront: string | null
+    nationalIdBack: string | null
+    certificates: string | null
+    healthCertUrl: string | null
+    healthCertExpiry: string | null
+    criminalRecordUrl: string | null
+    contractDocUrl: string | null
+    additionalDocs: string | null
+    notes: string | null
+    userId: string | null
+    specialistId: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type StaffDossierMaxAggregateOutputType = {
+    id: string | null
+    fullName: string | null
+    nationalId: string | null
+    phone: string | null
+    phoneSecondary: string | null
+    birthDate: string | null
+    address: string | null
+    gender: string | null
+    maritalStatus: string | null
+    militaryStatus: string | null
+    qualification: string | null
+    jobTitle: string | null
+    department: string | null
+    branchId: string | null
+    hireDate: string | null
+    status: string | null
+    salary: number | null
+    commissionRate: number | null
+    contractType: string | null
+    photoUrl: string | null
+    nationalIdFront: string | null
+    nationalIdBack: string | null
+    certificates: string | null
+    healthCertUrl: string | null
+    healthCertExpiry: string | null
+    criminalRecordUrl: string | null
+    contractDocUrl: string | null
+    additionalDocs: string | null
+    notes: string | null
+    userId: string | null
+    specialistId: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type StaffDossierCountAggregateOutputType = {
+    id: number
+    fullName: number
+    nationalId: number
+    phone: number
+    phoneSecondary: number
+    birthDate: number
+    address: number
+    gender: number
+    maritalStatus: number
+    militaryStatus: number
+    qualification: number
+    jobTitle: number
+    department: number
+    branchId: number
+    hireDate: number
+    status: number
+    salary: number
+    commissionRate: number
+    contractType: number
+    photoUrl: number
+    nationalIdFront: number
+    nationalIdBack: number
+    certificates: number
+    healthCertUrl: number
+    healthCertExpiry: number
+    criminalRecordUrl: number
+    contractDocUrl: number
+    additionalDocs: number
+    notes: number
+    userId: number
+    specialistId: number
+    createdAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type StaffDossierAvgAggregateInputType = {
+    salary?: true
+    commissionRate?: true
+  }
+
+  export type StaffDossierSumAggregateInputType = {
+    salary?: true
+    commissionRate?: true
+  }
+
+  export type StaffDossierMinAggregateInputType = {
+    id?: true
+    fullName?: true
+    nationalId?: true
+    phone?: true
+    phoneSecondary?: true
+    birthDate?: true
+    address?: true
+    gender?: true
+    maritalStatus?: true
+    militaryStatus?: true
+    qualification?: true
+    jobTitle?: true
+    department?: true
+    branchId?: true
+    hireDate?: true
+    status?: true
+    salary?: true
+    commissionRate?: true
+    contractType?: true
+    photoUrl?: true
+    nationalIdFront?: true
+    nationalIdBack?: true
+    certificates?: true
+    healthCertUrl?: true
+    healthCertExpiry?: true
+    criminalRecordUrl?: true
+    contractDocUrl?: true
+    additionalDocs?: true
+    notes?: true
+    userId?: true
+    specialistId?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type StaffDossierMaxAggregateInputType = {
+    id?: true
+    fullName?: true
+    nationalId?: true
+    phone?: true
+    phoneSecondary?: true
+    birthDate?: true
+    address?: true
+    gender?: true
+    maritalStatus?: true
+    militaryStatus?: true
+    qualification?: true
+    jobTitle?: true
+    department?: true
+    branchId?: true
+    hireDate?: true
+    status?: true
+    salary?: true
+    commissionRate?: true
+    contractType?: true
+    photoUrl?: true
+    nationalIdFront?: true
+    nationalIdBack?: true
+    certificates?: true
+    healthCertUrl?: true
+    healthCertExpiry?: true
+    criminalRecordUrl?: true
+    contractDocUrl?: true
+    additionalDocs?: true
+    notes?: true
+    userId?: true
+    specialistId?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type StaffDossierCountAggregateInputType = {
+    id?: true
+    fullName?: true
+    nationalId?: true
+    phone?: true
+    phoneSecondary?: true
+    birthDate?: true
+    address?: true
+    gender?: true
+    maritalStatus?: true
+    militaryStatus?: true
+    qualification?: true
+    jobTitle?: true
+    department?: true
+    branchId?: true
+    hireDate?: true
+    status?: true
+    salary?: true
+    commissionRate?: true
+    contractType?: true
+    photoUrl?: true
+    nationalIdFront?: true
+    nationalIdBack?: true
+    certificates?: true
+    healthCertUrl?: true
+    healthCertExpiry?: true
+    criminalRecordUrl?: true
+    contractDocUrl?: true
+    additionalDocs?: true
+    notes?: true
+    userId?: true
+    specialistId?: true
+    createdAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type StaffDossierAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which StaffDossier to aggregate.
+     */
+    where?: StaffDossierWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of StaffDossiers to fetch.
+     */
+    orderBy?: StaffDossierOrderByWithRelationInput | StaffDossierOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: StaffDossierWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` StaffDossiers from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` StaffDossiers.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned StaffDossiers
+    **/
+    _count?: true | StaffDossierCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: StaffDossierAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: StaffDossierSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: StaffDossierMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: StaffDossierMaxAggregateInputType
+  }
+
+  export type GetStaffDossierAggregateType<T extends StaffDossierAggregateArgs> = {
+        [P in keyof T & keyof AggregateStaffDossier]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateStaffDossier[P]>
+      : GetScalarType<T[P], AggregateStaffDossier[P]>
+  }
+
+
+
+
+  export type StaffDossierGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: StaffDossierWhereInput
+    orderBy?: StaffDossierOrderByWithAggregationInput | StaffDossierOrderByWithAggregationInput[]
+    by: StaffDossierScalarFieldEnum[] | StaffDossierScalarFieldEnum
+    having?: StaffDossierScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: StaffDossierCountAggregateInputType | true
+    _avg?: StaffDossierAvgAggregateInputType
+    _sum?: StaffDossierSumAggregateInputType
+    _min?: StaffDossierMinAggregateInputType
+    _max?: StaffDossierMaxAggregateInputType
+  }
+
+  export type StaffDossierGroupByOutputType = {
+    id: string
+    fullName: string
+    nationalId: string | null
+    phone: string
+    phoneSecondary: string | null
+    birthDate: string | null
+    address: string | null
+    gender: string
+    maritalStatus: string | null
+    militaryStatus: string | null
+    qualification: string | null
+    jobTitle: string
+    department: string
+    branchId: string | null
+    hireDate: string | null
+    status: string
+    salary: number
+    commissionRate: number
+    contractType: string
+    photoUrl: string | null
+    nationalIdFront: string | null
+    nationalIdBack: string | null
+    certificates: string | null
+    healthCertUrl: string | null
+    healthCertExpiry: string | null
+    criminalRecordUrl: string | null
+    contractDocUrl: string | null
+    additionalDocs: string | null
+    notes: string | null
+    userId: string | null
+    specialistId: string | null
+    createdAt: Date
+    updatedAt: Date
+    _count: StaffDossierCountAggregateOutputType | null
+    _avg: StaffDossierAvgAggregateOutputType | null
+    _sum: StaffDossierSumAggregateOutputType | null
+    _min: StaffDossierMinAggregateOutputType | null
+    _max: StaffDossierMaxAggregateOutputType | null
+  }
+
+  type GetStaffDossierGroupByPayload<T extends StaffDossierGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<StaffDossierGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof StaffDossierGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], StaffDossierGroupByOutputType[P]>
+            : GetScalarType<T[P], StaffDossierGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type StaffDossierSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    fullName?: boolean
+    nationalId?: boolean
+    phone?: boolean
+    phoneSecondary?: boolean
+    birthDate?: boolean
+    address?: boolean
+    gender?: boolean
+    maritalStatus?: boolean
+    militaryStatus?: boolean
+    qualification?: boolean
+    jobTitle?: boolean
+    department?: boolean
+    branchId?: boolean
+    hireDate?: boolean
+    status?: boolean
+    salary?: boolean
+    commissionRate?: boolean
+    contractType?: boolean
+    photoUrl?: boolean
+    nationalIdFront?: boolean
+    nationalIdBack?: boolean
+    certificates?: boolean
+    healthCertUrl?: boolean
+    healthCertExpiry?: boolean
+    criminalRecordUrl?: boolean
+    contractDocUrl?: boolean
+    additionalDocs?: boolean
+    notes?: boolean
+    userId?: boolean
+    specialistId?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    branch?: boolean | StaffDossier$branchArgs<ExtArgs>
+  }, ExtArgs["result"]["staffDossier"]>
+
+  export type StaffDossierSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    fullName?: boolean
+    nationalId?: boolean
+    phone?: boolean
+    phoneSecondary?: boolean
+    birthDate?: boolean
+    address?: boolean
+    gender?: boolean
+    maritalStatus?: boolean
+    militaryStatus?: boolean
+    qualification?: boolean
+    jobTitle?: boolean
+    department?: boolean
+    branchId?: boolean
+    hireDate?: boolean
+    status?: boolean
+    salary?: boolean
+    commissionRate?: boolean
+    contractType?: boolean
+    photoUrl?: boolean
+    nationalIdFront?: boolean
+    nationalIdBack?: boolean
+    certificates?: boolean
+    healthCertUrl?: boolean
+    healthCertExpiry?: boolean
+    criminalRecordUrl?: boolean
+    contractDocUrl?: boolean
+    additionalDocs?: boolean
+    notes?: boolean
+    userId?: boolean
+    specialistId?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    branch?: boolean | StaffDossier$branchArgs<ExtArgs>
+  }, ExtArgs["result"]["staffDossier"]>
+
+  export type StaffDossierSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    fullName?: boolean
+    nationalId?: boolean
+    phone?: boolean
+    phoneSecondary?: boolean
+    birthDate?: boolean
+    address?: boolean
+    gender?: boolean
+    maritalStatus?: boolean
+    militaryStatus?: boolean
+    qualification?: boolean
+    jobTitle?: boolean
+    department?: boolean
+    branchId?: boolean
+    hireDate?: boolean
+    status?: boolean
+    salary?: boolean
+    commissionRate?: boolean
+    contractType?: boolean
+    photoUrl?: boolean
+    nationalIdFront?: boolean
+    nationalIdBack?: boolean
+    certificates?: boolean
+    healthCertUrl?: boolean
+    healthCertExpiry?: boolean
+    criminalRecordUrl?: boolean
+    contractDocUrl?: boolean
+    additionalDocs?: boolean
+    notes?: boolean
+    userId?: boolean
+    specialistId?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    branch?: boolean | StaffDossier$branchArgs<ExtArgs>
+  }, ExtArgs["result"]["staffDossier"]>
+
+  export type StaffDossierSelectScalar = {
+    id?: boolean
+    fullName?: boolean
+    nationalId?: boolean
+    phone?: boolean
+    phoneSecondary?: boolean
+    birthDate?: boolean
+    address?: boolean
+    gender?: boolean
+    maritalStatus?: boolean
+    militaryStatus?: boolean
+    qualification?: boolean
+    jobTitle?: boolean
+    department?: boolean
+    branchId?: boolean
+    hireDate?: boolean
+    status?: boolean
+    salary?: boolean
+    commissionRate?: boolean
+    contractType?: boolean
+    photoUrl?: boolean
+    nationalIdFront?: boolean
+    nationalIdBack?: boolean
+    certificates?: boolean
+    healthCertUrl?: boolean
+    healthCertExpiry?: boolean
+    criminalRecordUrl?: boolean
+    contractDocUrl?: boolean
+    additionalDocs?: boolean
+    notes?: boolean
+    userId?: boolean
+    specialistId?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }
+
+  export type StaffDossierOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "fullName" | "nationalId" | "phone" | "phoneSecondary" | "birthDate" | "address" | "gender" | "maritalStatus" | "militaryStatus" | "qualification" | "jobTitle" | "department" | "branchId" | "hireDate" | "status" | "salary" | "commissionRate" | "contractType" | "photoUrl" | "nationalIdFront" | "nationalIdBack" | "certificates" | "healthCertUrl" | "healthCertExpiry" | "criminalRecordUrl" | "contractDocUrl" | "additionalDocs" | "notes" | "userId" | "specialistId" | "createdAt" | "updatedAt", ExtArgs["result"]["staffDossier"]>
+  export type StaffDossierInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    branch?: boolean | StaffDossier$branchArgs<ExtArgs>
+  }
+  export type StaffDossierIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    branch?: boolean | StaffDossier$branchArgs<ExtArgs>
+  }
+  export type StaffDossierIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    branch?: boolean | StaffDossier$branchArgs<ExtArgs>
+  }
+
+  export type $StaffDossierPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "StaffDossier"
+    objects: {
+      branch: Prisma.$BranchPayload<ExtArgs> | null
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      fullName: string
+      nationalId: string | null
+      phone: string
+      phoneSecondary: string | null
+      birthDate: string | null
+      address: string | null
+      gender: string
+      maritalStatus: string | null
+      militaryStatus: string | null
+      qualification: string | null
+      jobTitle: string
+      department: string
+      branchId: string | null
+      hireDate: string | null
+      status: string
+      salary: number
+      commissionRate: number
+      contractType: string
+      photoUrl: string | null
+      nationalIdFront: string | null
+      nationalIdBack: string | null
+      certificates: string | null
+      healthCertUrl: string | null
+      healthCertExpiry: string | null
+      criminalRecordUrl: string | null
+      contractDocUrl: string | null
+      additionalDocs: string | null
+      notes: string | null
+      userId: string | null
+      specialistId: string | null
+      createdAt: Date
+      updatedAt: Date
+    }, ExtArgs["result"]["staffDossier"]>
+    composites: {}
+  }
+
+  type StaffDossierGetPayload<S extends boolean | null | undefined | StaffDossierDefaultArgs> = $Result.GetResult<Prisma.$StaffDossierPayload, S>
+
+  type StaffDossierCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<StaffDossierFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: StaffDossierCountAggregateInputType | true
+    }
+
+  export interface StaffDossierDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['StaffDossier'], meta: { name: 'StaffDossier' } }
+    /**
+     * Find zero or one StaffDossier that matches the filter.
+     * @param {StaffDossierFindUniqueArgs} args - Arguments to find a StaffDossier
+     * @example
+     * // Get one StaffDossier
+     * const staffDossier = await prisma.staffDossier.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends StaffDossierFindUniqueArgs>(args: SelectSubset<T, StaffDossierFindUniqueArgs<ExtArgs>>): Prisma__StaffDossierClient<$Result.GetResult<Prisma.$StaffDossierPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one StaffDossier that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {StaffDossierFindUniqueOrThrowArgs} args - Arguments to find a StaffDossier
+     * @example
+     * // Get one StaffDossier
+     * const staffDossier = await prisma.staffDossier.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends StaffDossierFindUniqueOrThrowArgs>(args: SelectSubset<T, StaffDossierFindUniqueOrThrowArgs<ExtArgs>>): Prisma__StaffDossierClient<$Result.GetResult<Prisma.$StaffDossierPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first StaffDossier that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {StaffDossierFindFirstArgs} args - Arguments to find a StaffDossier
+     * @example
+     * // Get one StaffDossier
+     * const staffDossier = await prisma.staffDossier.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends StaffDossierFindFirstArgs>(args?: SelectSubset<T, StaffDossierFindFirstArgs<ExtArgs>>): Prisma__StaffDossierClient<$Result.GetResult<Prisma.$StaffDossierPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first StaffDossier that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {StaffDossierFindFirstOrThrowArgs} args - Arguments to find a StaffDossier
+     * @example
+     * // Get one StaffDossier
+     * const staffDossier = await prisma.staffDossier.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends StaffDossierFindFirstOrThrowArgs>(args?: SelectSubset<T, StaffDossierFindFirstOrThrowArgs<ExtArgs>>): Prisma__StaffDossierClient<$Result.GetResult<Prisma.$StaffDossierPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more StaffDossiers that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {StaffDossierFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all StaffDossiers
+     * const staffDossiers = await prisma.staffDossier.findMany()
+     * 
+     * // Get first 10 StaffDossiers
+     * const staffDossiers = await prisma.staffDossier.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const staffDossierWithIdOnly = await prisma.staffDossier.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends StaffDossierFindManyArgs>(args?: SelectSubset<T, StaffDossierFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$StaffDossierPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a StaffDossier.
+     * @param {StaffDossierCreateArgs} args - Arguments to create a StaffDossier.
+     * @example
+     * // Create one StaffDossier
+     * const StaffDossier = await prisma.staffDossier.create({
+     *   data: {
+     *     // ... data to create a StaffDossier
+     *   }
+     * })
+     * 
+     */
+    create<T extends StaffDossierCreateArgs>(args: SelectSubset<T, StaffDossierCreateArgs<ExtArgs>>): Prisma__StaffDossierClient<$Result.GetResult<Prisma.$StaffDossierPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many StaffDossiers.
+     * @param {StaffDossierCreateManyArgs} args - Arguments to create many StaffDossiers.
+     * @example
+     * // Create many StaffDossiers
+     * const staffDossier = await prisma.staffDossier.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends StaffDossierCreateManyArgs>(args?: SelectSubset<T, StaffDossierCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many StaffDossiers and returns the data saved in the database.
+     * @param {StaffDossierCreateManyAndReturnArgs} args - Arguments to create many StaffDossiers.
+     * @example
+     * // Create many StaffDossiers
+     * const staffDossier = await prisma.staffDossier.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many StaffDossiers and only return the `id`
+     * const staffDossierWithIdOnly = await prisma.staffDossier.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends StaffDossierCreateManyAndReturnArgs>(args?: SelectSubset<T, StaffDossierCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$StaffDossierPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a StaffDossier.
+     * @param {StaffDossierDeleteArgs} args - Arguments to delete one StaffDossier.
+     * @example
+     * // Delete one StaffDossier
+     * const StaffDossier = await prisma.staffDossier.delete({
+     *   where: {
+     *     // ... filter to delete one StaffDossier
+     *   }
+     * })
+     * 
+     */
+    delete<T extends StaffDossierDeleteArgs>(args: SelectSubset<T, StaffDossierDeleteArgs<ExtArgs>>): Prisma__StaffDossierClient<$Result.GetResult<Prisma.$StaffDossierPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one StaffDossier.
+     * @param {StaffDossierUpdateArgs} args - Arguments to update one StaffDossier.
+     * @example
+     * // Update one StaffDossier
+     * const staffDossier = await prisma.staffDossier.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends StaffDossierUpdateArgs>(args: SelectSubset<T, StaffDossierUpdateArgs<ExtArgs>>): Prisma__StaffDossierClient<$Result.GetResult<Prisma.$StaffDossierPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more StaffDossiers.
+     * @param {StaffDossierDeleteManyArgs} args - Arguments to filter StaffDossiers to delete.
+     * @example
+     * // Delete a few StaffDossiers
+     * const { count } = await prisma.staffDossier.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends StaffDossierDeleteManyArgs>(args?: SelectSubset<T, StaffDossierDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more StaffDossiers.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {StaffDossierUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many StaffDossiers
+     * const staffDossier = await prisma.staffDossier.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends StaffDossierUpdateManyArgs>(args: SelectSubset<T, StaffDossierUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more StaffDossiers and returns the data updated in the database.
+     * @param {StaffDossierUpdateManyAndReturnArgs} args - Arguments to update many StaffDossiers.
+     * @example
+     * // Update many StaffDossiers
+     * const staffDossier = await prisma.staffDossier.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more StaffDossiers and only return the `id`
+     * const staffDossierWithIdOnly = await prisma.staffDossier.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends StaffDossierUpdateManyAndReturnArgs>(args: SelectSubset<T, StaffDossierUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$StaffDossierPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one StaffDossier.
+     * @param {StaffDossierUpsertArgs} args - Arguments to update or create a StaffDossier.
+     * @example
+     * // Update or create a StaffDossier
+     * const staffDossier = await prisma.staffDossier.upsert({
+     *   create: {
+     *     // ... data to create a StaffDossier
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the StaffDossier we want to update
+     *   }
+     * })
+     */
+    upsert<T extends StaffDossierUpsertArgs>(args: SelectSubset<T, StaffDossierUpsertArgs<ExtArgs>>): Prisma__StaffDossierClient<$Result.GetResult<Prisma.$StaffDossierPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of StaffDossiers.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {StaffDossierCountArgs} args - Arguments to filter StaffDossiers to count.
+     * @example
+     * // Count the number of StaffDossiers
+     * const count = await prisma.staffDossier.count({
+     *   where: {
+     *     // ... the filter for the StaffDossiers we want to count
+     *   }
+     * })
+    **/
+    count<T extends StaffDossierCountArgs>(
+      args?: Subset<T, StaffDossierCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], StaffDossierCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a StaffDossier.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {StaffDossierAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends StaffDossierAggregateArgs>(args: Subset<T, StaffDossierAggregateArgs>): Prisma.PrismaPromise<GetStaffDossierAggregateType<T>>
+
+    /**
+     * Group by StaffDossier.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {StaffDossierGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends StaffDossierGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: StaffDossierGroupByArgs['orderBy'] }
+        : { orderBy?: StaffDossierGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, StaffDossierGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetStaffDossierGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the StaffDossier model
+   */
+  readonly fields: StaffDossierFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for StaffDossier.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__StaffDossierClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    branch<T extends StaffDossier$branchArgs<ExtArgs> = {}>(args?: Subset<T, StaffDossier$branchArgs<ExtArgs>>): Prisma__BranchClient<$Result.GetResult<Prisma.$BranchPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the StaffDossier model
+   */
+  interface StaffDossierFieldRefs {
+    readonly id: FieldRef<"StaffDossier", 'String'>
+    readonly fullName: FieldRef<"StaffDossier", 'String'>
+    readonly nationalId: FieldRef<"StaffDossier", 'String'>
+    readonly phone: FieldRef<"StaffDossier", 'String'>
+    readonly phoneSecondary: FieldRef<"StaffDossier", 'String'>
+    readonly birthDate: FieldRef<"StaffDossier", 'String'>
+    readonly address: FieldRef<"StaffDossier", 'String'>
+    readonly gender: FieldRef<"StaffDossier", 'String'>
+    readonly maritalStatus: FieldRef<"StaffDossier", 'String'>
+    readonly militaryStatus: FieldRef<"StaffDossier", 'String'>
+    readonly qualification: FieldRef<"StaffDossier", 'String'>
+    readonly jobTitle: FieldRef<"StaffDossier", 'String'>
+    readonly department: FieldRef<"StaffDossier", 'String'>
+    readonly branchId: FieldRef<"StaffDossier", 'String'>
+    readonly hireDate: FieldRef<"StaffDossier", 'String'>
+    readonly status: FieldRef<"StaffDossier", 'String'>
+    readonly salary: FieldRef<"StaffDossier", 'Float'>
+    readonly commissionRate: FieldRef<"StaffDossier", 'Float'>
+    readonly contractType: FieldRef<"StaffDossier", 'String'>
+    readonly photoUrl: FieldRef<"StaffDossier", 'String'>
+    readonly nationalIdFront: FieldRef<"StaffDossier", 'String'>
+    readonly nationalIdBack: FieldRef<"StaffDossier", 'String'>
+    readonly certificates: FieldRef<"StaffDossier", 'String'>
+    readonly healthCertUrl: FieldRef<"StaffDossier", 'String'>
+    readonly healthCertExpiry: FieldRef<"StaffDossier", 'String'>
+    readonly criminalRecordUrl: FieldRef<"StaffDossier", 'String'>
+    readonly contractDocUrl: FieldRef<"StaffDossier", 'String'>
+    readonly additionalDocs: FieldRef<"StaffDossier", 'String'>
+    readonly notes: FieldRef<"StaffDossier", 'String'>
+    readonly userId: FieldRef<"StaffDossier", 'String'>
+    readonly specialistId: FieldRef<"StaffDossier", 'String'>
+    readonly createdAt: FieldRef<"StaffDossier", 'DateTime'>
+    readonly updatedAt: FieldRef<"StaffDossier", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * StaffDossier findUnique
+   */
+  export type StaffDossierFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the StaffDossier
+     */
+    select?: StaffDossierSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the StaffDossier
+     */
+    omit?: StaffDossierOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: StaffDossierInclude<ExtArgs> | null
+    /**
+     * Filter, which StaffDossier to fetch.
+     */
+    where: StaffDossierWhereUniqueInput
+  }
+
+  /**
+   * StaffDossier findUniqueOrThrow
+   */
+  export type StaffDossierFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the StaffDossier
+     */
+    select?: StaffDossierSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the StaffDossier
+     */
+    omit?: StaffDossierOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: StaffDossierInclude<ExtArgs> | null
+    /**
+     * Filter, which StaffDossier to fetch.
+     */
+    where: StaffDossierWhereUniqueInput
+  }
+
+  /**
+   * StaffDossier findFirst
+   */
+  export type StaffDossierFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the StaffDossier
+     */
+    select?: StaffDossierSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the StaffDossier
+     */
+    omit?: StaffDossierOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: StaffDossierInclude<ExtArgs> | null
+    /**
+     * Filter, which StaffDossier to fetch.
+     */
+    where?: StaffDossierWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of StaffDossiers to fetch.
+     */
+    orderBy?: StaffDossierOrderByWithRelationInput | StaffDossierOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for StaffDossiers.
+     */
+    cursor?: StaffDossierWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` StaffDossiers from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` StaffDossiers.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of StaffDossiers.
+     */
+    distinct?: StaffDossierScalarFieldEnum | StaffDossierScalarFieldEnum[]
+  }
+
+  /**
+   * StaffDossier findFirstOrThrow
+   */
+  export type StaffDossierFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the StaffDossier
+     */
+    select?: StaffDossierSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the StaffDossier
+     */
+    omit?: StaffDossierOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: StaffDossierInclude<ExtArgs> | null
+    /**
+     * Filter, which StaffDossier to fetch.
+     */
+    where?: StaffDossierWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of StaffDossiers to fetch.
+     */
+    orderBy?: StaffDossierOrderByWithRelationInput | StaffDossierOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for StaffDossiers.
+     */
+    cursor?: StaffDossierWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` StaffDossiers from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` StaffDossiers.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of StaffDossiers.
+     */
+    distinct?: StaffDossierScalarFieldEnum | StaffDossierScalarFieldEnum[]
+  }
+
+  /**
+   * StaffDossier findMany
+   */
+  export type StaffDossierFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the StaffDossier
+     */
+    select?: StaffDossierSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the StaffDossier
+     */
+    omit?: StaffDossierOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: StaffDossierInclude<ExtArgs> | null
+    /**
+     * Filter, which StaffDossiers to fetch.
+     */
+    where?: StaffDossierWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of StaffDossiers to fetch.
+     */
+    orderBy?: StaffDossierOrderByWithRelationInput | StaffDossierOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing StaffDossiers.
+     */
+    cursor?: StaffDossierWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` StaffDossiers from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` StaffDossiers.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of StaffDossiers.
+     */
+    distinct?: StaffDossierScalarFieldEnum | StaffDossierScalarFieldEnum[]
+  }
+
+  /**
+   * StaffDossier create
+   */
+  export type StaffDossierCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the StaffDossier
+     */
+    select?: StaffDossierSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the StaffDossier
+     */
+    omit?: StaffDossierOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: StaffDossierInclude<ExtArgs> | null
+    /**
+     * The data needed to create a StaffDossier.
+     */
+    data: XOR<StaffDossierCreateInput, StaffDossierUncheckedCreateInput>
+  }
+
+  /**
+   * StaffDossier createMany
+   */
+  export type StaffDossierCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many StaffDossiers.
+     */
+    data: StaffDossierCreateManyInput | StaffDossierCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * StaffDossier createManyAndReturn
+   */
+  export type StaffDossierCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the StaffDossier
+     */
+    select?: StaffDossierSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the StaffDossier
+     */
+    omit?: StaffDossierOmit<ExtArgs> | null
+    /**
+     * The data used to create many StaffDossiers.
+     */
+    data: StaffDossierCreateManyInput | StaffDossierCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: StaffDossierIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * StaffDossier update
+   */
+  export type StaffDossierUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the StaffDossier
+     */
+    select?: StaffDossierSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the StaffDossier
+     */
+    omit?: StaffDossierOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: StaffDossierInclude<ExtArgs> | null
+    /**
+     * The data needed to update a StaffDossier.
+     */
+    data: XOR<StaffDossierUpdateInput, StaffDossierUncheckedUpdateInput>
+    /**
+     * Choose, which StaffDossier to update.
+     */
+    where: StaffDossierWhereUniqueInput
+  }
+
+  /**
+   * StaffDossier updateMany
+   */
+  export type StaffDossierUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update StaffDossiers.
+     */
+    data: XOR<StaffDossierUpdateManyMutationInput, StaffDossierUncheckedUpdateManyInput>
+    /**
+     * Filter which StaffDossiers to update
+     */
+    where?: StaffDossierWhereInput
+    /**
+     * Limit how many StaffDossiers to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * StaffDossier updateManyAndReturn
+   */
+  export type StaffDossierUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the StaffDossier
+     */
+    select?: StaffDossierSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the StaffDossier
+     */
+    omit?: StaffDossierOmit<ExtArgs> | null
+    /**
+     * The data used to update StaffDossiers.
+     */
+    data: XOR<StaffDossierUpdateManyMutationInput, StaffDossierUncheckedUpdateManyInput>
+    /**
+     * Filter which StaffDossiers to update
+     */
+    where?: StaffDossierWhereInput
+    /**
+     * Limit how many StaffDossiers to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: StaffDossierIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * StaffDossier upsert
+   */
+  export type StaffDossierUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the StaffDossier
+     */
+    select?: StaffDossierSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the StaffDossier
+     */
+    omit?: StaffDossierOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: StaffDossierInclude<ExtArgs> | null
+    /**
+     * The filter to search for the StaffDossier to update in case it exists.
+     */
+    where: StaffDossierWhereUniqueInput
+    /**
+     * In case the StaffDossier found by the `where` argument doesn't exist, create a new StaffDossier with this data.
+     */
+    create: XOR<StaffDossierCreateInput, StaffDossierUncheckedCreateInput>
+    /**
+     * In case the StaffDossier was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<StaffDossierUpdateInput, StaffDossierUncheckedUpdateInput>
+  }
+
+  /**
+   * StaffDossier delete
+   */
+  export type StaffDossierDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the StaffDossier
+     */
+    select?: StaffDossierSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the StaffDossier
+     */
+    omit?: StaffDossierOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: StaffDossierInclude<ExtArgs> | null
+    /**
+     * Filter which StaffDossier to delete.
+     */
+    where: StaffDossierWhereUniqueInput
+  }
+
+  /**
+   * StaffDossier deleteMany
+   */
+  export type StaffDossierDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which StaffDossiers to delete
+     */
+    where?: StaffDossierWhereInput
+    /**
+     * Limit how many StaffDossiers to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * StaffDossier.branch
+   */
+  export type StaffDossier$branchArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Branch
+     */
+    select?: BranchSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Branch
+     */
+    omit?: BranchOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: BranchInclude<ExtArgs> | null
+    where?: BranchWhereInput
+  }
+
+  /**
+   * StaffDossier without action
+   */
+  export type StaffDossierDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the StaffDossier
+     */
+    select?: StaffDossierSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the StaffDossier
+     */
+    omit?: StaffDossierOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: StaffDossierInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model JobApplication
+   */
+
+  export type AggregateJobApplication = {
+    _count: JobApplicationCountAggregateOutputType | null
+    _avg: JobApplicationAvgAggregateOutputType | null
+    _sum: JobApplicationSumAggregateOutputType | null
+    _min: JobApplicationMinAggregateOutputType | null
+    _max: JobApplicationMaxAggregateOutputType | null
+  }
+
+  export type JobApplicationAvgAggregateOutputType = {
+    age: number | null
+    experienceYears: number | null
+    expectedSalary: number | null
+  }
+
+  export type JobApplicationSumAggregateOutputType = {
+    age: number | null
+    experienceYears: number | null
+    expectedSalary: number | null
+  }
+
+  export type JobApplicationMinAggregateOutputType = {
+    id: string | null
+    code: string | null
+    fullName: string | null
+    phone: string | null
+    nationalId: string | null
+    age: number | null
+    address: string | null
+    targetJob: string | null
+    targetDepartment: string | null
+    targetBranchId: string | null
+    experienceYears: number | null
+    previousWorkplaces: string | null
+    qualification: string | null
+    expectedSalary: number | null
+    personalPhoto: string | null
+    nationalIdUrl: string | null
+    cvUrl: string | null
+    portfolioUrls: string | null
+    notes: string | null
+    status: string | null
+    interviewDate: string | null
+    interviewNotes: string | null
+    dossierId: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type JobApplicationMaxAggregateOutputType = {
+    id: string | null
+    code: string | null
+    fullName: string | null
+    phone: string | null
+    nationalId: string | null
+    age: number | null
+    address: string | null
+    targetJob: string | null
+    targetDepartment: string | null
+    targetBranchId: string | null
+    experienceYears: number | null
+    previousWorkplaces: string | null
+    qualification: string | null
+    expectedSalary: number | null
+    personalPhoto: string | null
+    nationalIdUrl: string | null
+    cvUrl: string | null
+    portfolioUrls: string | null
+    notes: string | null
+    status: string | null
+    interviewDate: string | null
+    interviewNotes: string | null
+    dossierId: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type JobApplicationCountAggregateOutputType = {
+    id: number
+    code: number
+    fullName: number
+    phone: number
+    nationalId: number
+    age: number
+    address: number
+    targetJob: number
+    targetDepartment: number
+    targetBranchId: number
+    experienceYears: number
+    previousWorkplaces: number
+    qualification: number
+    expectedSalary: number
+    personalPhoto: number
+    nationalIdUrl: number
+    cvUrl: number
+    portfolioUrls: number
+    notes: number
+    status: number
+    interviewDate: number
+    interviewNotes: number
+    dossierId: number
+    createdAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type JobApplicationAvgAggregateInputType = {
+    age?: true
+    experienceYears?: true
+    expectedSalary?: true
+  }
+
+  export type JobApplicationSumAggregateInputType = {
+    age?: true
+    experienceYears?: true
+    expectedSalary?: true
+  }
+
+  export type JobApplicationMinAggregateInputType = {
+    id?: true
+    code?: true
+    fullName?: true
+    phone?: true
+    nationalId?: true
+    age?: true
+    address?: true
+    targetJob?: true
+    targetDepartment?: true
+    targetBranchId?: true
+    experienceYears?: true
+    previousWorkplaces?: true
+    qualification?: true
+    expectedSalary?: true
+    personalPhoto?: true
+    nationalIdUrl?: true
+    cvUrl?: true
+    portfolioUrls?: true
+    notes?: true
+    status?: true
+    interviewDate?: true
+    interviewNotes?: true
+    dossierId?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type JobApplicationMaxAggregateInputType = {
+    id?: true
+    code?: true
+    fullName?: true
+    phone?: true
+    nationalId?: true
+    age?: true
+    address?: true
+    targetJob?: true
+    targetDepartment?: true
+    targetBranchId?: true
+    experienceYears?: true
+    previousWorkplaces?: true
+    qualification?: true
+    expectedSalary?: true
+    personalPhoto?: true
+    nationalIdUrl?: true
+    cvUrl?: true
+    portfolioUrls?: true
+    notes?: true
+    status?: true
+    interviewDate?: true
+    interviewNotes?: true
+    dossierId?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type JobApplicationCountAggregateInputType = {
+    id?: true
+    code?: true
+    fullName?: true
+    phone?: true
+    nationalId?: true
+    age?: true
+    address?: true
+    targetJob?: true
+    targetDepartment?: true
+    targetBranchId?: true
+    experienceYears?: true
+    previousWorkplaces?: true
+    qualification?: true
+    expectedSalary?: true
+    personalPhoto?: true
+    nationalIdUrl?: true
+    cvUrl?: true
+    portfolioUrls?: true
+    notes?: true
+    status?: true
+    interviewDate?: true
+    interviewNotes?: true
+    dossierId?: true
+    createdAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type JobApplicationAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which JobApplication to aggregate.
+     */
+    where?: JobApplicationWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of JobApplications to fetch.
+     */
+    orderBy?: JobApplicationOrderByWithRelationInput | JobApplicationOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: JobApplicationWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` JobApplications from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` JobApplications.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned JobApplications
+    **/
+    _count?: true | JobApplicationCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: JobApplicationAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: JobApplicationSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: JobApplicationMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: JobApplicationMaxAggregateInputType
+  }
+
+  export type GetJobApplicationAggregateType<T extends JobApplicationAggregateArgs> = {
+        [P in keyof T & keyof AggregateJobApplication]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateJobApplication[P]>
+      : GetScalarType<T[P], AggregateJobApplication[P]>
+  }
+
+
+
+
+  export type JobApplicationGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: JobApplicationWhereInput
+    orderBy?: JobApplicationOrderByWithAggregationInput | JobApplicationOrderByWithAggregationInput[]
+    by: JobApplicationScalarFieldEnum[] | JobApplicationScalarFieldEnum
+    having?: JobApplicationScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: JobApplicationCountAggregateInputType | true
+    _avg?: JobApplicationAvgAggregateInputType
+    _sum?: JobApplicationSumAggregateInputType
+    _min?: JobApplicationMinAggregateInputType
+    _max?: JobApplicationMaxAggregateInputType
+  }
+
+  export type JobApplicationGroupByOutputType = {
+    id: string
+    code: string
+    fullName: string
+    phone: string
+    nationalId: string | null
+    age: number | null
+    address: string | null
+    targetJob: string
+    targetDepartment: string
+    targetBranchId: string | null
+    experienceYears: number
+    previousWorkplaces: string | null
+    qualification: string | null
+    expectedSalary: number | null
+    personalPhoto: string | null
+    nationalIdUrl: string | null
+    cvUrl: string | null
+    portfolioUrls: string | null
+    notes: string | null
+    status: string
+    interviewDate: string | null
+    interviewNotes: string | null
+    dossierId: string | null
+    createdAt: Date
+    updatedAt: Date
+    _count: JobApplicationCountAggregateOutputType | null
+    _avg: JobApplicationAvgAggregateOutputType | null
+    _sum: JobApplicationSumAggregateOutputType | null
+    _min: JobApplicationMinAggregateOutputType | null
+    _max: JobApplicationMaxAggregateOutputType | null
+  }
+
+  type GetJobApplicationGroupByPayload<T extends JobApplicationGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<JobApplicationGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof JobApplicationGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], JobApplicationGroupByOutputType[P]>
+            : GetScalarType<T[P], JobApplicationGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type JobApplicationSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    code?: boolean
+    fullName?: boolean
+    phone?: boolean
+    nationalId?: boolean
+    age?: boolean
+    address?: boolean
+    targetJob?: boolean
+    targetDepartment?: boolean
+    targetBranchId?: boolean
+    experienceYears?: boolean
+    previousWorkplaces?: boolean
+    qualification?: boolean
+    expectedSalary?: boolean
+    personalPhoto?: boolean
+    nationalIdUrl?: boolean
+    cvUrl?: boolean
+    portfolioUrls?: boolean
+    notes?: boolean
+    status?: boolean
+    interviewDate?: boolean
+    interviewNotes?: boolean
+    dossierId?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }, ExtArgs["result"]["jobApplication"]>
+
+  export type JobApplicationSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    code?: boolean
+    fullName?: boolean
+    phone?: boolean
+    nationalId?: boolean
+    age?: boolean
+    address?: boolean
+    targetJob?: boolean
+    targetDepartment?: boolean
+    targetBranchId?: boolean
+    experienceYears?: boolean
+    previousWorkplaces?: boolean
+    qualification?: boolean
+    expectedSalary?: boolean
+    personalPhoto?: boolean
+    nationalIdUrl?: boolean
+    cvUrl?: boolean
+    portfolioUrls?: boolean
+    notes?: boolean
+    status?: boolean
+    interviewDate?: boolean
+    interviewNotes?: boolean
+    dossierId?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }, ExtArgs["result"]["jobApplication"]>
+
+  export type JobApplicationSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    code?: boolean
+    fullName?: boolean
+    phone?: boolean
+    nationalId?: boolean
+    age?: boolean
+    address?: boolean
+    targetJob?: boolean
+    targetDepartment?: boolean
+    targetBranchId?: boolean
+    experienceYears?: boolean
+    previousWorkplaces?: boolean
+    qualification?: boolean
+    expectedSalary?: boolean
+    personalPhoto?: boolean
+    nationalIdUrl?: boolean
+    cvUrl?: boolean
+    portfolioUrls?: boolean
+    notes?: boolean
+    status?: boolean
+    interviewDate?: boolean
+    interviewNotes?: boolean
+    dossierId?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }, ExtArgs["result"]["jobApplication"]>
+
+  export type JobApplicationSelectScalar = {
+    id?: boolean
+    code?: boolean
+    fullName?: boolean
+    phone?: boolean
+    nationalId?: boolean
+    age?: boolean
+    address?: boolean
+    targetJob?: boolean
+    targetDepartment?: boolean
+    targetBranchId?: boolean
+    experienceYears?: boolean
+    previousWorkplaces?: boolean
+    qualification?: boolean
+    expectedSalary?: boolean
+    personalPhoto?: boolean
+    nationalIdUrl?: boolean
+    cvUrl?: boolean
+    portfolioUrls?: boolean
+    notes?: boolean
+    status?: boolean
+    interviewDate?: boolean
+    interviewNotes?: boolean
+    dossierId?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }
+
+  export type JobApplicationOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "code" | "fullName" | "phone" | "nationalId" | "age" | "address" | "targetJob" | "targetDepartment" | "targetBranchId" | "experienceYears" | "previousWorkplaces" | "qualification" | "expectedSalary" | "personalPhoto" | "nationalIdUrl" | "cvUrl" | "portfolioUrls" | "notes" | "status" | "interviewDate" | "interviewNotes" | "dossierId" | "createdAt" | "updatedAt", ExtArgs["result"]["jobApplication"]>
+
+  export type $JobApplicationPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "JobApplication"
+    objects: {}
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      code: string
+      fullName: string
+      phone: string
+      nationalId: string | null
+      age: number | null
+      address: string | null
+      targetJob: string
+      targetDepartment: string
+      targetBranchId: string | null
+      experienceYears: number
+      previousWorkplaces: string | null
+      qualification: string | null
+      expectedSalary: number | null
+      personalPhoto: string | null
+      nationalIdUrl: string | null
+      cvUrl: string | null
+      portfolioUrls: string | null
+      notes: string | null
+      status: string
+      interviewDate: string | null
+      interviewNotes: string | null
+      dossierId: string | null
+      createdAt: Date
+      updatedAt: Date
+    }, ExtArgs["result"]["jobApplication"]>
+    composites: {}
+  }
+
+  type JobApplicationGetPayload<S extends boolean | null | undefined | JobApplicationDefaultArgs> = $Result.GetResult<Prisma.$JobApplicationPayload, S>
+
+  type JobApplicationCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<JobApplicationFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: JobApplicationCountAggregateInputType | true
+    }
+
+  export interface JobApplicationDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['JobApplication'], meta: { name: 'JobApplication' } }
+    /**
+     * Find zero or one JobApplication that matches the filter.
+     * @param {JobApplicationFindUniqueArgs} args - Arguments to find a JobApplication
+     * @example
+     * // Get one JobApplication
+     * const jobApplication = await prisma.jobApplication.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends JobApplicationFindUniqueArgs>(args: SelectSubset<T, JobApplicationFindUniqueArgs<ExtArgs>>): Prisma__JobApplicationClient<$Result.GetResult<Prisma.$JobApplicationPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one JobApplication that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {JobApplicationFindUniqueOrThrowArgs} args - Arguments to find a JobApplication
+     * @example
+     * // Get one JobApplication
+     * const jobApplication = await prisma.jobApplication.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends JobApplicationFindUniqueOrThrowArgs>(args: SelectSubset<T, JobApplicationFindUniqueOrThrowArgs<ExtArgs>>): Prisma__JobApplicationClient<$Result.GetResult<Prisma.$JobApplicationPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first JobApplication that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {JobApplicationFindFirstArgs} args - Arguments to find a JobApplication
+     * @example
+     * // Get one JobApplication
+     * const jobApplication = await prisma.jobApplication.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends JobApplicationFindFirstArgs>(args?: SelectSubset<T, JobApplicationFindFirstArgs<ExtArgs>>): Prisma__JobApplicationClient<$Result.GetResult<Prisma.$JobApplicationPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first JobApplication that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {JobApplicationFindFirstOrThrowArgs} args - Arguments to find a JobApplication
+     * @example
+     * // Get one JobApplication
+     * const jobApplication = await prisma.jobApplication.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends JobApplicationFindFirstOrThrowArgs>(args?: SelectSubset<T, JobApplicationFindFirstOrThrowArgs<ExtArgs>>): Prisma__JobApplicationClient<$Result.GetResult<Prisma.$JobApplicationPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more JobApplications that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {JobApplicationFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all JobApplications
+     * const jobApplications = await prisma.jobApplication.findMany()
+     * 
+     * // Get first 10 JobApplications
+     * const jobApplications = await prisma.jobApplication.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const jobApplicationWithIdOnly = await prisma.jobApplication.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends JobApplicationFindManyArgs>(args?: SelectSubset<T, JobApplicationFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$JobApplicationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a JobApplication.
+     * @param {JobApplicationCreateArgs} args - Arguments to create a JobApplication.
+     * @example
+     * // Create one JobApplication
+     * const JobApplication = await prisma.jobApplication.create({
+     *   data: {
+     *     // ... data to create a JobApplication
+     *   }
+     * })
+     * 
+     */
+    create<T extends JobApplicationCreateArgs>(args: SelectSubset<T, JobApplicationCreateArgs<ExtArgs>>): Prisma__JobApplicationClient<$Result.GetResult<Prisma.$JobApplicationPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many JobApplications.
+     * @param {JobApplicationCreateManyArgs} args - Arguments to create many JobApplications.
+     * @example
+     * // Create many JobApplications
+     * const jobApplication = await prisma.jobApplication.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends JobApplicationCreateManyArgs>(args?: SelectSubset<T, JobApplicationCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many JobApplications and returns the data saved in the database.
+     * @param {JobApplicationCreateManyAndReturnArgs} args - Arguments to create many JobApplications.
+     * @example
+     * // Create many JobApplications
+     * const jobApplication = await prisma.jobApplication.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many JobApplications and only return the `id`
+     * const jobApplicationWithIdOnly = await prisma.jobApplication.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends JobApplicationCreateManyAndReturnArgs>(args?: SelectSubset<T, JobApplicationCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$JobApplicationPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a JobApplication.
+     * @param {JobApplicationDeleteArgs} args - Arguments to delete one JobApplication.
+     * @example
+     * // Delete one JobApplication
+     * const JobApplication = await prisma.jobApplication.delete({
+     *   where: {
+     *     // ... filter to delete one JobApplication
+     *   }
+     * })
+     * 
+     */
+    delete<T extends JobApplicationDeleteArgs>(args: SelectSubset<T, JobApplicationDeleteArgs<ExtArgs>>): Prisma__JobApplicationClient<$Result.GetResult<Prisma.$JobApplicationPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one JobApplication.
+     * @param {JobApplicationUpdateArgs} args - Arguments to update one JobApplication.
+     * @example
+     * // Update one JobApplication
+     * const jobApplication = await prisma.jobApplication.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends JobApplicationUpdateArgs>(args: SelectSubset<T, JobApplicationUpdateArgs<ExtArgs>>): Prisma__JobApplicationClient<$Result.GetResult<Prisma.$JobApplicationPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more JobApplications.
+     * @param {JobApplicationDeleteManyArgs} args - Arguments to filter JobApplications to delete.
+     * @example
+     * // Delete a few JobApplications
+     * const { count } = await prisma.jobApplication.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends JobApplicationDeleteManyArgs>(args?: SelectSubset<T, JobApplicationDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more JobApplications.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {JobApplicationUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many JobApplications
+     * const jobApplication = await prisma.jobApplication.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends JobApplicationUpdateManyArgs>(args: SelectSubset<T, JobApplicationUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more JobApplications and returns the data updated in the database.
+     * @param {JobApplicationUpdateManyAndReturnArgs} args - Arguments to update many JobApplications.
+     * @example
+     * // Update many JobApplications
+     * const jobApplication = await prisma.jobApplication.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more JobApplications and only return the `id`
+     * const jobApplicationWithIdOnly = await prisma.jobApplication.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends JobApplicationUpdateManyAndReturnArgs>(args: SelectSubset<T, JobApplicationUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$JobApplicationPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one JobApplication.
+     * @param {JobApplicationUpsertArgs} args - Arguments to update or create a JobApplication.
+     * @example
+     * // Update or create a JobApplication
+     * const jobApplication = await prisma.jobApplication.upsert({
+     *   create: {
+     *     // ... data to create a JobApplication
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the JobApplication we want to update
+     *   }
+     * })
+     */
+    upsert<T extends JobApplicationUpsertArgs>(args: SelectSubset<T, JobApplicationUpsertArgs<ExtArgs>>): Prisma__JobApplicationClient<$Result.GetResult<Prisma.$JobApplicationPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of JobApplications.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {JobApplicationCountArgs} args - Arguments to filter JobApplications to count.
+     * @example
+     * // Count the number of JobApplications
+     * const count = await prisma.jobApplication.count({
+     *   where: {
+     *     // ... the filter for the JobApplications we want to count
+     *   }
+     * })
+    **/
+    count<T extends JobApplicationCountArgs>(
+      args?: Subset<T, JobApplicationCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], JobApplicationCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a JobApplication.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {JobApplicationAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends JobApplicationAggregateArgs>(args: Subset<T, JobApplicationAggregateArgs>): Prisma.PrismaPromise<GetJobApplicationAggregateType<T>>
+
+    /**
+     * Group by JobApplication.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {JobApplicationGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends JobApplicationGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: JobApplicationGroupByArgs['orderBy'] }
+        : { orderBy?: JobApplicationGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, JobApplicationGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetJobApplicationGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the JobApplication model
+   */
+  readonly fields: JobApplicationFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for JobApplication.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__JobApplicationClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the JobApplication model
+   */
+  interface JobApplicationFieldRefs {
+    readonly id: FieldRef<"JobApplication", 'String'>
+    readonly code: FieldRef<"JobApplication", 'String'>
+    readonly fullName: FieldRef<"JobApplication", 'String'>
+    readonly phone: FieldRef<"JobApplication", 'String'>
+    readonly nationalId: FieldRef<"JobApplication", 'String'>
+    readonly age: FieldRef<"JobApplication", 'Int'>
+    readonly address: FieldRef<"JobApplication", 'String'>
+    readonly targetJob: FieldRef<"JobApplication", 'String'>
+    readonly targetDepartment: FieldRef<"JobApplication", 'String'>
+    readonly targetBranchId: FieldRef<"JobApplication", 'String'>
+    readonly experienceYears: FieldRef<"JobApplication", 'Int'>
+    readonly previousWorkplaces: FieldRef<"JobApplication", 'String'>
+    readonly qualification: FieldRef<"JobApplication", 'String'>
+    readonly expectedSalary: FieldRef<"JobApplication", 'Float'>
+    readonly personalPhoto: FieldRef<"JobApplication", 'String'>
+    readonly nationalIdUrl: FieldRef<"JobApplication", 'String'>
+    readonly cvUrl: FieldRef<"JobApplication", 'String'>
+    readonly portfolioUrls: FieldRef<"JobApplication", 'String'>
+    readonly notes: FieldRef<"JobApplication", 'String'>
+    readonly status: FieldRef<"JobApplication", 'String'>
+    readonly interviewDate: FieldRef<"JobApplication", 'String'>
+    readonly interviewNotes: FieldRef<"JobApplication", 'String'>
+    readonly dossierId: FieldRef<"JobApplication", 'String'>
+    readonly createdAt: FieldRef<"JobApplication", 'DateTime'>
+    readonly updatedAt: FieldRef<"JobApplication", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * JobApplication findUnique
+   */
+  export type JobApplicationFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the JobApplication
+     */
+    select?: JobApplicationSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the JobApplication
+     */
+    omit?: JobApplicationOmit<ExtArgs> | null
+    /**
+     * Filter, which JobApplication to fetch.
+     */
+    where: JobApplicationWhereUniqueInput
+  }
+
+  /**
+   * JobApplication findUniqueOrThrow
+   */
+  export type JobApplicationFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the JobApplication
+     */
+    select?: JobApplicationSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the JobApplication
+     */
+    omit?: JobApplicationOmit<ExtArgs> | null
+    /**
+     * Filter, which JobApplication to fetch.
+     */
+    where: JobApplicationWhereUniqueInput
+  }
+
+  /**
+   * JobApplication findFirst
+   */
+  export type JobApplicationFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the JobApplication
+     */
+    select?: JobApplicationSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the JobApplication
+     */
+    omit?: JobApplicationOmit<ExtArgs> | null
+    /**
+     * Filter, which JobApplication to fetch.
+     */
+    where?: JobApplicationWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of JobApplications to fetch.
+     */
+    orderBy?: JobApplicationOrderByWithRelationInput | JobApplicationOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for JobApplications.
+     */
+    cursor?: JobApplicationWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` JobApplications from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` JobApplications.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of JobApplications.
+     */
+    distinct?: JobApplicationScalarFieldEnum | JobApplicationScalarFieldEnum[]
+  }
+
+  /**
+   * JobApplication findFirstOrThrow
+   */
+  export type JobApplicationFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the JobApplication
+     */
+    select?: JobApplicationSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the JobApplication
+     */
+    omit?: JobApplicationOmit<ExtArgs> | null
+    /**
+     * Filter, which JobApplication to fetch.
+     */
+    where?: JobApplicationWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of JobApplications to fetch.
+     */
+    orderBy?: JobApplicationOrderByWithRelationInput | JobApplicationOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for JobApplications.
+     */
+    cursor?: JobApplicationWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` JobApplications from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` JobApplications.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of JobApplications.
+     */
+    distinct?: JobApplicationScalarFieldEnum | JobApplicationScalarFieldEnum[]
+  }
+
+  /**
+   * JobApplication findMany
+   */
+  export type JobApplicationFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the JobApplication
+     */
+    select?: JobApplicationSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the JobApplication
+     */
+    omit?: JobApplicationOmit<ExtArgs> | null
+    /**
+     * Filter, which JobApplications to fetch.
+     */
+    where?: JobApplicationWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of JobApplications to fetch.
+     */
+    orderBy?: JobApplicationOrderByWithRelationInput | JobApplicationOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing JobApplications.
+     */
+    cursor?: JobApplicationWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` JobApplications from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` JobApplications.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of JobApplications.
+     */
+    distinct?: JobApplicationScalarFieldEnum | JobApplicationScalarFieldEnum[]
+  }
+
+  /**
+   * JobApplication create
+   */
+  export type JobApplicationCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the JobApplication
+     */
+    select?: JobApplicationSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the JobApplication
+     */
+    omit?: JobApplicationOmit<ExtArgs> | null
+    /**
+     * The data needed to create a JobApplication.
+     */
+    data: XOR<JobApplicationCreateInput, JobApplicationUncheckedCreateInput>
+  }
+
+  /**
+   * JobApplication createMany
+   */
+  export type JobApplicationCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many JobApplications.
+     */
+    data: JobApplicationCreateManyInput | JobApplicationCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * JobApplication createManyAndReturn
+   */
+  export type JobApplicationCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the JobApplication
+     */
+    select?: JobApplicationSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the JobApplication
+     */
+    omit?: JobApplicationOmit<ExtArgs> | null
+    /**
+     * The data used to create many JobApplications.
+     */
+    data: JobApplicationCreateManyInput | JobApplicationCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * JobApplication update
+   */
+  export type JobApplicationUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the JobApplication
+     */
+    select?: JobApplicationSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the JobApplication
+     */
+    omit?: JobApplicationOmit<ExtArgs> | null
+    /**
+     * The data needed to update a JobApplication.
+     */
+    data: XOR<JobApplicationUpdateInput, JobApplicationUncheckedUpdateInput>
+    /**
+     * Choose, which JobApplication to update.
+     */
+    where: JobApplicationWhereUniqueInput
+  }
+
+  /**
+   * JobApplication updateMany
+   */
+  export type JobApplicationUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update JobApplications.
+     */
+    data: XOR<JobApplicationUpdateManyMutationInput, JobApplicationUncheckedUpdateManyInput>
+    /**
+     * Filter which JobApplications to update
+     */
+    where?: JobApplicationWhereInput
+    /**
+     * Limit how many JobApplications to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * JobApplication updateManyAndReturn
+   */
+  export type JobApplicationUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the JobApplication
+     */
+    select?: JobApplicationSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the JobApplication
+     */
+    omit?: JobApplicationOmit<ExtArgs> | null
+    /**
+     * The data used to update JobApplications.
+     */
+    data: XOR<JobApplicationUpdateManyMutationInput, JobApplicationUncheckedUpdateManyInput>
+    /**
+     * Filter which JobApplications to update
+     */
+    where?: JobApplicationWhereInput
+    /**
+     * Limit how many JobApplications to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * JobApplication upsert
+   */
+  export type JobApplicationUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the JobApplication
+     */
+    select?: JobApplicationSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the JobApplication
+     */
+    omit?: JobApplicationOmit<ExtArgs> | null
+    /**
+     * The filter to search for the JobApplication to update in case it exists.
+     */
+    where: JobApplicationWhereUniqueInput
+    /**
+     * In case the JobApplication found by the `where` argument doesn't exist, create a new JobApplication with this data.
+     */
+    create: XOR<JobApplicationCreateInput, JobApplicationUncheckedCreateInput>
+    /**
+     * In case the JobApplication was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<JobApplicationUpdateInput, JobApplicationUncheckedUpdateInput>
+  }
+
+  /**
+   * JobApplication delete
+   */
+  export type JobApplicationDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the JobApplication
+     */
+    select?: JobApplicationSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the JobApplication
+     */
+    omit?: JobApplicationOmit<ExtArgs> | null
+    /**
+     * Filter which JobApplication to delete.
+     */
+    where: JobApplicationWhereUniqueInput
+  }
+
+  /**
+   * JobApplication deleteMany
+   */
+  export type JobApplicationDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which JobApplications to delete
+     */
+    where?: JobApplicationWhereInput
+    /**
+     * Limit how many JobApplications to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * JobApplication without action
+   */
+  export type JobApplicationDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the JobApplication
+     */
+    select?: JobApplicationSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the JobApplication
+     */
+    omit?: JobApplicationOmit<ExtArgs> | null
+  }
+
+
+  /**
    * Enums
    */
 
@@ -27222,6 +30227,76 @@ export namespace Prisma {
   export type SecurityCameraScalarFieldEnum = (typeof SecurityCameraScalarFieldEnum)[keyof typeof SecurityCameraScalarFieldEnum]
 
 
+  export const StaffDossierScalarFieldEnum: {
+    id: 'id',
+    fullName: 'fullName',
+    nationalId: 'nationalId',
+    phone: 'phone',
+    phoneSecondary: 'phoneSecondary',
+    birthDate: 'birthDate',
+    address: 'address',
+    gender: 'gender',
+    maritalStatus: 'maritalStatus',
+    militaryStatus: 'militaryStatus',
+    qualification: 'qualification',
+    jobTitle: 'jobTitle',
+    department: 'department',
+    branchId: 'branchId',
+    hireDate: 'hireDate',
+    status: 'status',
+    salary: 'salary',
+    commissionRate: 'commissionRate',
+    contractType: 'contractType',
+    photoUrl: 'photoUrl',
+    nationalIdFront: 'nationalIdFront',
+    nationalIdBack: 'nationalIdBack',
+    certificates: 'certificates',
+    healthCertUrl: 'healthCertUrl',
+    healthCertExpiry: 'healthCertExpiry',
+    criminalRecordUrl: 'criminalRecordUrl',
+    contractDocUrl: 'contractDocUrl',
+    additionalDocs: 'additionalDocs',
+    notes: 'notes',
+    userId: 'userId',
+    specialistId: 'specialistId',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type StaffDossierScalarFieldEnum = (typeof StaffDossierScalarFieldEnum)[keyof typeof StaffDossierScalarFieldEnum]
+
+
+  export const JobApplicationScalarFieldEnum: {
+    id: 'id',
+    code: 'code',
+    fullName: 'fullName',
+    phone: 'phone',
+    nationalId: 'nationalId',
+    age: 'age',
+    address: 'address',
+    targetJob: 'targetJob',
+    targetDepartment: 'targetDepartment',
+    targetBranchId: 'targetBranchId',
+    experienceYears: 'experienceYears',
+    previousWorkplaces: 'previousWorkplaces',
+    qualification: 'qualification',
+    expectedSalary: 'expectedSalary',
+    personalPhoto: 'personalPhoto',
+    nationalIdUrl: 'nationalIdUrl',
+    cvUrl: 'cvUrl',
+    portfolioUrls: 'portfolioUrls',
+    notes: 'notes',
+    status: 'status',
+    interviewDate: 'interviewDate',
+    interviewNotes: 'interviewNotes',
+    dossierId: 'dossierId',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type JobApplicationScalarFieldEnum = (typeof JobApplicationScalarFieldEnum)[keyof typeof JobApplicationScalarFieldEnum]
+
+
   export const SortOrder: {
     asc: 'asc',
     desc: 'desc'
@@ -27344,6 +30419,7 @@ export namespace Prisma {
     transfers?: StockTransferListRelationFilter
     consumptionLogs?: MaterialConsumptionLogListRelationFilter
     cameras?: SecurityCameraListRelationFilter
+    staffDossiers?: StaffDossierListRelationFilter
   }
 
   export type BranchOrderByWithRelationInput = {
@@ -27370,6 +30446,7 @@ export namespace Prisma {
     transfers?: StockTransferOrderByRelationAggregateInput
     consumptionLogs?: MaterialConsumptionLogOrderByRelationAggregateInput
     cameras?: SecurityCameraOrderByRelationAggregateInput
+    staffDossiers?: StaffDossierOrderByRelationAggregateInput
   }
 
   export type BranchWhereUniqueInput = Prisma.AtLeast<{
@@ -27399,6 +30476,7 @@ export namespace Prisma {
     transfers?: StockTransferListRelationFilter
     consumptionLogs?: MaterialConsumptionLogListRelationFilter
     cameras?: SecurityCameraListRelationFilter
+    staffDossiers?: StaffDossierListRelationFilter
   }, "id" | "code">
 
   export type BranchOrderByWithAggregationInput = {
@@ -29384,6 +32462,357 @@ export namespace Prisma {
     updatedAt?: DateTimeWithAggregatesFilter<"SecurityCamera"> | Date | string
   }
 
+  export type StaffDossierWhereInput = {
+    AND?: StaffDossierWhereInput | StaffDossierWhereInput[]
+    OR?: StaffDossierWhereInput[]
+    NOT?: StaffDossierWhereInput | StaffDossierWhereInput[]
+    id?: StringFilter<"StaffDossier"> | string
+    fullName?: StringFilter<"StaffDossier"> | string
+    nationalId?: StringNullableFilter<"StaffDossier"> | string | null
+    phone?: StringFilter<"StaffDossier"> | string
+    phoneSecondary?: StringNullableFilter<"StaffDossier"> | string | null
+    birthDate?: StringNullableFilter<"StaffDossier"> | string | null
+    address?: StringNullableFilter<"StaffDossier"> | string | null
+    gender?: StringFilter<"StaffDossier"> | string
+    maritalStatus?: StringNullableFilter<"StaffDossier"> | string | null
+    militaryStatus?: StringNullableFilter<"StaffDossier"> | string | null
+    qualification?: StringNullableFilter<"StaffDossier"> | string | null
+    jobTitle?: StringFilter<"StaffDossier"> | string
+    department?: StringFilter<"StaffDossier"> | string
+    branchId?: StringNullableFilter<"StaffDossier"> | string | null
+    hireDate?: StringNullableFilter<"StaffDossier"> | string | null
+    status?: StringFilter<"StaffDossier"> | string
+    salary?: FloatFilter<"StaffDossier"> | number
+    commissionRate?: FloatFilter<"StaffDossier"> | number
+    contractType?: StringFilter<"StaffDossier"> | string
+    photoUrl?: StringNullableFilter<"StaffDossier"> | string | null
+    nationalIdFront?: StringNullableFilter<"StaffDossier"> | string | null
+    nationalIdBack?: StringNullableFilter<"StaffDossier"> | string | null
+    certificates?: StringNullableFilter<"StaffDossier"> | string | null
+    healthCertUrl?: StringNullableFilter<"StaffDossier"> | string | null
+    healthCertExpiry?: StringNullableFilter<"StaffDossier"> | string | null
+    criminalRecordUrl?: StringNullableFilter<"StaffDossier"> | string | null
+    contractDocUrl?: StringNullableFilter<"StaffDossier"> | string | null
+    additionalDocs?: StringNullableFilter<"StaffDossier"> | string | null
+    notes?: StringNullableFilter<"StaffDossier"> | string | null
+    userId?: StringNullableFilter<"StaffDossier"> | string | null
+    specialistId?: StringNullableFilter<"StaffDossier"> | string | null
+    createdAt?: DateTimeFilter<"StaffDossier"> | Date | string
+    updatedAt?: DateTimeFilter<"StaffDossier"> | Date | string
+    branch?: XOR<BranchNullableScalarRelationFilter, BranchWhereInput> | null
+  }
+
+  export type StaffDossierOrderByWithRelationInput = {
+    id?: SortOrder
+    fullName?: SortOrder
+    nationalId?: SortOrderInput | SortOrder
+    phone?: SortOrder
+    phoneSecondary?: SortOrderInput | SortOrder
+    birthDate?: SortOrderInput | SortOrder
+    address?: SortOrderInput | SortOrder
+    gender?: SortOrder
+    maritalStatus?: SortOrderInput | SortOrder
+    militaryStatus?: SortOrderInput | SortOrder
+    qualification?: SortOrderInput | SortOrder
+    jobTitle?: SortOrder
+    department?: SortOrder
+    branchId?: SortOrderInput | SortOrder
+    hireDate?: SortOrderInput | SortOrder
+    status?: SortOrder
+    salary?: SortOrder
+    commissionRate?: SortOrder
+    contractType?: SortOrder
+    photoUrl?: SortOrderInput | SortOrder
+    nationalIdFront?: SortOrderInput | SortOrder
+    nationalIdBack?: SortOrderInput | SortOrder
+    certificates?: SortOrderInput | SortOrder
+    healthCertUrl?: SortOrderInput | SortOrder
+    healthCertExpiry?: SortOrderInput | SortOrder
+    criminalRecordUrl?: SortOrderInput | SortOrder
+    contractDocUrl?: SortOrderInput | SortOrder
+    additionalDocs?: SortOrderInput | SortOrder
+    notes?: SortOrderInput | SortOrder
+    userId?: SortOrderInput | SortOrder
+    specialistId?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    branch?: BranchOrderByWithRelationInput
+  }
+
+  export type StaffDossierWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: StaffDossierWhereInput | StaffDossierWhereInput[]
+    OR?: StaffDossierWhereInput[]
+    NOT?: StaffDossierWhereInput | StaffDossierWhereInput[]
+    fullName?: StringFilter<"StaffDossier"> | string
+    nationalId?: StringNullableFilter<"StaffDossier"> | string | null
+    phone?: StringFilter<"StaffDossier"> | string
+    phoneSecondary?: StringNullableFilter<"StaffDossier"> | string | null
+    birthDate?: StringNullableFilter<"StaffDossier"> | string | null
+    address?: StringNullableFilter<"StaffDossier"> | string | null
+    gender?: StringFilter<"StaffDossier"> | string
+    maritalStatus?: StringNullableFilter<"StaffDossier"> | string | null
+    militaryStatus?: StringNullableFilter<"StaffDossier"> | string | null
+    qualification?: StringNullableFilter<"StaffDossier"> | string | null
+    jobTitle?: StringFilter<"StaffDossier"> | string
+    department?: StringFilter<"StaffDossier"> | string
+    branchId?: StringNullableFilter<"StaffDossier"> | string | null
+    hireDate?: StringNullableFilter<"StaffDossier"> | string | null
+    status?: StringFilter<"StaffDossier"> | string
+    salary?: FloatFilter<"StaffDossier"> | number
+    commissionRate?: FloatFilter<"StaffDossier"> | number
+    contractType?: StringFilter<"StaffDossier"> | string
+    photoUrl?: StringNullableFilter<"StaffDossier"> | string | null
+    nationalIdFront?: StringNullableFilter<"StaffDossier"> | string | null
+    nationalIdBack?: StringNullableFilter<"StaffDossier"> | string | null
+    certificates?: StringNullableFilter<"StaffDossier"> | string | null
+    healthCertUrl?: StringNullableFilter<"StaffDossier"> | string | null
+    healthCertExpiry?: StringNullableFilter<"StaffDossier"> | string | null
+    criminalRecordUrl?: StringNullableFilter<"StaffDossier"> | string | null
+    contractDocUrl?: StringNullableFilter<"StaffDossier"> | string | null
+    additionalDocs?: StringNullableFilter<"StaffDossier"> | string | null
+    notes?: StringNullableFilter<"StaffDossier"> | string | null
+    userId?: StringNullableFilter<"StaffDossier"> | string | null
+    specialistId?: StringNullableFilter<"StaffDossier"> | string | null
+    createdAt?: DateTimeFilter<"StaffDossier"> | Date | string
+    updatedAt?: DateTimeFilter<"StaffDossier"> | Date | string
+    branch?: XOR<BranchNullableScalarRelationFilter, BranchWhereInput> | null
+  }, "id">
+
+  export type StaffDossierOrderByWithAggregationInput = {
+    id?: SortOrder
+    fullName?: SortOrder
+    nationalId?: SortOrderInput | SortOrder
+    phone?: SortOrder
+    phoneSecondary?: SortOrderInput | SortOrder
+    birthDate?: SortOrderInput | SortOrder
+    address?: SortOrderInput | SortOrder
+    gender?: SortOrder
+    maritalStatus?: SortOrderInput | SortOrder
+    militaryStatus?: SortOrderInput | SortOrder
+    qualification?: SortOrderInput | SortOrder
+    jobTitle?: SortOrder
+    department?: SortOrder
+    branchId?: SortOrderInput | SortOrder
+    hireDate?: SortOrderInput | SortOrder
+    status?: SortOrder
+    salary?: SortOrder
+    commissionRate?: SortOrder
+    contractType?: SortOrder
+    photoUrl?: SortOrderInput | SortOrder
+    nationalIdFront?: SortOrderInput | SortOrder
+    nationalIdBack?: SortOrderInput | SortOrder
+    certificates?: SortOrderInput | SortOrder
+    healthCertUrl?: SortOrderInput | SortOrder
+    healthCertExpiry?: SortOrderInput | SortOrder
+    criminalRecordUrl?: SortOrderInput | SortOrder
+    contractDocUrl?: SortOrderInput | SortOrder
+    additionalDocs?: SortOrderInput | SortOrder
+    notes?: SortOrderInput | SortOrder
+    userId?: SortOrderInput | SortOrder
+    specialistId?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    _count?: StaffDossierCountOrderByAggregateInput
+    _avg?: StaffDossierAvgOrderByAggregateInput
+    _max?: StaffDossierMaxOrderByAggregateInput
+    _min?: StaffDossierMinOrderByAggregateInput
+    _sum?: StaffDossierSumOrderByAggregateInput
+  }
+
+  export type StaffDossierScalarWhereWithAggregatesInput = {
+    AND?: StaffDossierScalarWhereWithAggregatesInput | StaffDossierScalarWhereWithAggregatesInput[]
+    OR?: StaffDossierScalarWhereWithAggregatesInput[]
+    NOT?: StaffDossierScalarWhereWithAggregatesInput | StaffDossierScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"StaffDossier"> | string
+    fullName?: StringWithAggregatesFilter<"StaffDossier"> | string
+    nationalId?: StringNullableWithAggregatesFilter<"StaffDossier"> | string | null
+    phone?: StringWithAggregatesFilter<"StaffDossier"> | string
+    phoneSecondary?: StringNullableWithAggregatesFilter<"StaffDossier"> | string | null
+    birthDate?: StringNullableWithAggregatesFilter<"StaffDossier"> | string | null
+    address?: StringNullableWithAggregatesFilter<"StaffDossier"> | string | null
+    gender?: StringWithAggregatesFilter<"StaffDossier"> | string
+    maritalStatus?: StringNullableWithAggregatesFilter<"StaffDossier"> | string | null
+    militaryStatus?: StringNullableWithAggregatesFilter<"StaffDossier"> | string | null
+    qualification?: StringNullableWithAggregatesFilter<"StaffDossier"> | string | null
+    jobTitle?: StringWithAggregatesFilter<"StaffDossier"> | string
+    department?: StringWithAggregatesFilter<"StaffDossier"> | string
+    branchId?: StringNullableWithAggregatesFilter<"StaffDossier"> | string | null
+    hireDate?: StringNullableWithAggregatesFilter<"StaffDossier"> | string | null
+    status?: StringWithAggregatesFilter<"StaffDossier"> | string
+    salary?: FloatWithAggregatesFilter<"StaffDossier"> | number
+    commissionRate?: FloatWithAggregatesFilter<"StaffDossier"> | number
+    contractType?: StringWithAggregatesFilter<"StaffDossier"> | string
+    photoUrl?: StringNullableWithAggregatesFilter<"StaffDossier"> | string | null
+    nationalIdFront?: StringNullableWithAggregatesFilter<"StaffDossier"> | string | null
+    nationalIdBack?: StringNullableWithAggregatesFilter<"StaffDossier"> | string | null
+    certificates?: StringNullableWithAggregatesFilter<"StaffDossier"> | string | null
+    healthCertUrl?: StringNullableWithAggregatesFilter<"StaffDossier"> | string | null
+    healthCertExpiry?: StringNullableWithAggregatesFilter<"StaffDossier"> | string | null
+    criminalRecordUrl?: StringNullableWithAggregatesFilter<"StaffDossier"> | string | null
+    contractDocUrl?: StringNullableWithAggregatesFilter<"StaffDossier"> | string | null
+    additionalDocs?: StringNullableWithAggregatesFilter<"StaffDossier"> | string | null
+    notes?: StringNullableWithAggregatesFilter<"StaffDossier"> | string | null
+    userId?: StringNullableWithAggregatesFilter<"StaffDossier"> | string | null
+    specialistId?: StringNullableWithAggregatesFilter<"StaffDossier"> | string | null
+    createdAt?: DateTimeWithAggregatesFilter<"StaffDossier"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"StaffDossier"> | Date | string
+  }
+
+  export type JobApplicationWhereInput = {
+    AND?: JobApplicationWhereInput | JobApplicationWhereInput[]
+    OR?: JobApplicationWhereInput[]
+    NOT?: JobApplicationWhereInput | JobApplicationWhereInput[]
+    id?: StringFilter<"JobApplication"> | string
+    code?: StringFilter<"JobApplication"> | string
+    fullName?: StringFilter<"JobApplication"> | string
+    phone?: StringFilter<"JobApplication"> | string
+    nationalId?: StringNullableFilter<"JobApplication"> | string | null
+    age?: IntNullableFilter<"JobApplication"> | number | null
+    address?: StringNullableFilter<"JobApplication"> | string | null
+    targetJob?: StringFilter<"JobApplication"> | string
+    targetDepartment?: StringFilter<"JobApplication"> | string
+    targetBranchId?: StringNullableFilter<"JobApplication"> | string | null
+    experienceYears?: IntFilter<"JobApplication"> | number
+    previousWorkplaces?: StringNullableFilter<"JobApplication"> | string | null
+    qualification?: StringNullableFilter<"JobApplication"> | string | null
+    expectedSalary?: FloatNullableFilter<"JobApplication"> | number | null
+    personalPhoto?: StringNullableFilter<"JobApplication"> | string | null
+    nationalIdUrl?: StringNullableFilter<"JobApplication"> | string | null
+    cvUrl?: StringNullableFilter<"JobApplication"> | string | null
+    portfolioUrls?: StringNullableFilter<"JobApplication"> | string | null
+    notes?: StringNullableFilter<"JobApplication"> | string | null
+    status?: StringFilter<"JobApplication"> | string
+    interviewDate?: StringNullableFilter<"JobApplication"> | string | null
+    interviewNotes?: StringNullableFilter<"JobApplication"> | string | null
+    dossierId?: StringNullableFilter<"JobApplication"> | string | null
+    createdAt?: DateTimeFilter<"JobApplication"> | Date | string
+    updatedAt?: DateTimeFilter<"JobApplication"> | Date | string
+  }
+
+  export type JobApplicationOrderByWithRelationInput = {
+    id?: SortOrder
+    code?: SortOrder
+    fullName?: SortOrder
+    phone?: SortOrder
+    nationalId?: SortOrderInput | SortOrder
+    age?: SortOrderInput | SortOrder
+    address?: SortOrderInput | SortOrder
+    targetJob?: SortOrder
+    targetDepartment?: SortOrder
+    targetBranchId?: SortOrderInput | SortOrder
+    experienceYears?: SortOrder
+    previousWorkplaces?: SortOrderInput | SortOrder
+    qualification?: SortOrderInput | SortOrder
+    expectedSalary?: SortOrderInput | SortOrder
+    personalPhoto?: SortOrderInput | SortOrder
+    nationalIdUrl?: SortOrderInput | SortOrder
+    cvUrl?: SortOrderInput | SortOrder
+    portfolioUrls?: SortOrderInput | SortOrder
+    notes?: SortOrderInput | SortOrder
+    status?: SortOrder
+    interviewDate?: SortOrderInput | SortOrder
+    interviewNotes?: SortOrderInput | SortOrder
+    dossierId?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type JobApplicationWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    code?: string
+    AND?: JobApplicationWhereInput | JobApplicationWhereInput[]
+    OR?: JobApplicationWhereInput[]
+    NOT?: JobApplicationWhereInput | JobApplicationWhereInput[]
+    fullName?: StringFilter<"JobApplication"> | string
+    phone?: StringFilter<"JobApplication"> | string
+    nationalId?: StringNullableFilter<"JobApplication"> | string | null
+    age?: IntNullableFilter<"JobApplication"> | number | null
+    address?: StringNullableFilter<"JobApplication"> | string | null
+    targetJob?: StringFilter<"JobApplication"> | string
+    targetDepartment?: StringFilter<"JobApplication"> | string
+    targetBranchId?: StringNullableFilter<"JobApplication"> | string | null
+    experienceYears?: IntFilter<"JobApplication"> | number
+    previousWorkplaces?: StringNullableFilter<"JobApplication"> | string | null
+    qualification?: StringNullableFilter<"JobApplication"> | string | null
+    expectedSalary?: FloatNullableFilter<"JobApplication"> | number | null
+    personalPhoto?: StringNullableFilter<"JobApplication"> | string | null
+    nationalIdUrl?: StringNullableFilter<"JobApplication"> | string | null
+    cvUrl?: StringNullableFilter<"JobApplication"> | string | null
+    portfolioUrls?: StringNullableFilter<"JobApplication"> | string | null
+    notes?: StringNullableFilter<"JobApplication"> | string | null
+    status?: StringFilter<"JobApplication"> | string
+    interviewDate?: StringNullableFilter<"JobApplication"> | string | null
+    interviewNotes?: StringNullableFilter<"JobApplication"> | string | null
+    dossierId?: StringNullableFilter<"JobApplication"> | string | null
+    createdAt?: DateTimeFilter<"JobApplication"> | Date | string
+    updatedAt?: DateTimeFilter<"JobApplication"> | Date | string
+  }, "id" | "code">
+
+  export type JobApplicationOrderByWithAggregationInput = {
+    id?: SortOrder
+    code?: SortOrder
+    fullName?: SortOrder
+    phone?: SortOrder
+    nationalId?: SortOrderInput | SortOrder
+    age?: SortOrderInput | SortOrder
+    address?: SortOrderInput | SortOrder
+    targetJob?: SortOrder
+    targetDepartment?: SortOrder
+    targetBranchId?: SortOrderInput | SortOrder
+    experienceYears?: SortOrder
+    previousWorkplaces?: SortOrderInput | SortOrder
+    qualification?: SortOrderInput | SortOrder
+    expectedSalary?: SortOrderInput | SortOrder
+    personalPhoto?: SortOrderInput | SortOrder
+    nationalIdUrl?: SortOrderInput | SortOrder
+    cvUrl?: SortOrderInput | SortOrder
+    portfolioUrls?: SortOrderInput | SortOrder
+    notes?: SortOrderInput | SortOrder
+    status?: SortOrder
+    interviewDate?: SortOrderInput | SortOrder
+    interviewNotes?: SortOrderInput | SortOrder
+    dossierId?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    _count?: JobApplicationCountOrderByAggregateInput
+    _avg?: JobApplicationAvgOrderByAggregateInput
+    _max?: JobApplicationMaxOrderByAggregateInput
+    _min?: JobApplicationMinOrderByAggregateInput
+    _sum?: JobApplicationSumOrderByAggregateInput
+  }
+
+  export type JobApplicationScalarWhereWithAggregatesInput = {
+    AND?: JobApplicationScalarWhereWithAggregatesInput | JobApplicationScalarWhereWithAggregatesInput[]
+    OR?: JobApplicationScalarWhereWithAggregatesInput[]
+    NOT?: JobApplicationScalarWhereWithAggregatesInput | JobApplicationScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"JobApplication"> | string
+    code?: StringWithAggregatesFilter<"JobApplication"> | string
+    fullName?: StringWithAggregatesFilter<"JobApplication"> | string
+    phone?: StringWithAggregatesFilter<"JobApplication"> | string
+    nationalId?: StringNullableWithAggregatesFilter<"JobApplication"> | string | null
+    age?: IntNullableWithAggregatesFilter<"JobApplication"> | number | null
+    address?: StringNullableWithAggregatesFilter<"JobApplication"> | string | null
+    targetJob?: StringWithAggregatesFilter<"JobApplication"> | string
+    targetDepartment?: StringWithAggregatesFilter<"JobApplication"> | string
+    targetBranchId?: StringNullableWithAggregatesFilter<"JobApplication"> | string | null
+    experienceYears?: IntWithAggregatesFilter<"JobApplication"> | number
+    previousWorkplaces?: StringNullableWithAggregatesFilter<"JobApplication"> | string | null
+    qualification?: StringNullableWithAggregatesFilter<"JobApplication"> | string | null
+    expectedSalary?: FloatNullableWithAggregatesFilter<"JobApplication"> | number | null
+    personalPhoto?: StringNullableWithAggregatesFilter<"JobApplication"> | string | null
+    nationalIdUrl?: StringNullableWithAggregatesFilter<"JobApplication"> | string | null
+    cvUrl?: StringNullableWithAggregatesFilter<"JobApplication"> | string | null
+    portfolioUrls?: StringNullableWithAggregatesFilter<"JobApplication"> | string | null
+    notes?: StringNullableWithAggregatesFilter<"JobApplication"> | string | null
+    status?: StringWithAggregatesFilter<"JobApplication"> | string
+    interviewDate?: StringNullableWithAggregatesFilter<"JobApplication"> | string | null
+    interviewNotes?: StringNullableWithAggregatesFilter<"JobApplication"> | string | null
+    dossierId?: StringNullableWithAggregatesFilter<"JobApplication"> | string | null
+    createdAt?: DateTimeWithAggregatesFilter<"JobApplication"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"JobApplication"> | Date | string
+  }
+
   export type BranchCreateInput = {
     id?: string
     name: string
@@ -29408,6 +32837,7 @@ export namespace Prisma {
     transfers?: StockTransferCreateNestedManyWithoutToBranchInput
     consumptionLogs?: MaterialConsumptionLogCreateNestedManyWithoutBranchInput
     cameras?: SecurityCameraCreateNestedManyWithoutBranchInput
+    staffDossiers?: StaffDossierCreateNestedManyWithoutBranchInput
   }
 
   export type BranchUncheckedCreateInput = {
@@ -29434,6 +32864,7 @@ export namespace Prisma {
     transfers?: StockTransferUncheckedCreateNestedManyWithoutToBranchInput
     consumptionLogs?: MaterialConsumptionLogUncheckedCreateNestedManyWithoutBranchInput
     cameras?: SecurityCameraUncheckedCreateNestedManyWithoutBranchInput
+    staffDossiers?: StaffDossierUncheckedCreateNestedManyWithoutBranchInput
   }
 
   export type BranchUpdateInput = {
@@ -29460,6 +32891,7 @@ export namespace Prisma {
     transfers?: StockTransferUpdateManyWithoutToBranchNestedInput
     consumptionLogs?: MaterialConsumptionLogUpdateManyWithoutBranchNestedInput
     cameras?: SecurityCameraUpdateManyWithoutBranchNestedInput
+    staffDossiers?: StaffDossierUpdateManyWithoutBranchNestedInput
   }
 
   export type BranchUncheckedUpdateInput = {
@@ -29486,6 +32918,7 @@ export namespace Prisma {
     transfers?: StockTransferUncheckedUpdateManyWithoutToBranchNestedInput
     consumptionLogs?: MaterialConsumptionLogUncheckedUpdateManyWithoutBranchNestedInput
     cameras?: SecurityCameraUncheckedUpdateManyWithoutBranchNestedInput
+    staffDossiers?: StaffDossierUncheckedUpdateManyWithoutBranchNestedInput
   }
 
   export type BranchCreateManyInput = {
@@ -31787,6 +35220,453 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type StaffDossierCreateInput = {
+    id?: string
+    fullName: string
+    nationalId?: string | null
+    phone: string
+    phoneSecondary?: string | null
+    birthDate?: string | null
+    address?: string | null
+    gender?: string
+    maritalStatus?: string | null
+    militaryStatus?: string | null
+    qualification?: string | null
+    jobTitle: string
+    department?: string
+    hireDate?: string | null
+    status?: string
+    salary?: number
+    commissionRate?: number
+    contractType?: string
+    photoUrl?: string | null
+    nationalIdFront?: string | null
+    nationalIdBack?: string | null
+    certificates?: string | null
+    healthCertUrl?: string | null
+    healthCertExpiry?: string | null
+    criminalRecordUrl?: string | null
+    contractDocUrl?: string | null
+    additionalDocs?: string | null
+    notes?: string | null
+    userId?: string | null
+    specialistId?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    branch?: BranchCreateNestedOneWithoutStaffDossiersInput
+  }
+
+  export type StaffDossierUncheckedCreateInput = {
+    id?: string
+    fullName: string
+    nationalId?: string | null
+    phone: string
+    phoneSecondary?: string | null
+    birthDate?: string | null
+    address?: string | null
+    gender?: string
+    maritalStatus?: string | null
+    militaryStatus?: string | null
+    qualification?: string | null
+    jobTitle: string
+    department?: string
+    branchId?: string | null
+    hireDate?: string | null
+    status?: string
+    salary?: number
+    commissionRate?: number
+    contractType?: string
+    photoUrl?: string | null
+    nationalIdFront?: string | null
+    nationalIdBack?: string | null
+    certificates?: string | null
+    healthCertUrl?: string | null
+    healthCertExpiry?: string | null
+    criminalRecordUrl?: string | null
+    contractDocUrl?: string | null
+    additionalDocs?: string | null
+    notes?: string | null
+    userId?: string | null
+    specialistId?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type StaffDossierUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    fullName?: StringFieldUpdateOperationsInput | string
+    nationalId?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: StringFieldUpdateOperationsInput | string
+    phoneSecondary?: NullableStringFieldUpdateOperationsInput | string | null
+    birthDate?: NullableStringFieldUpdateOperationsInput | string | null
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    gender?: StringFieldUpdateOperationsInput | string
+    maritalStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    militaryStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    qualification?: NullableStringFieldUpdateOperationsInput | string | null
+    jobTitle?: StringFieldUpdateOperationsInput | string
+    department?: StringFieldUpdateOperationsInput | string
+    hireDate?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    salary?: FloatFieldUpdateOperationsInput | number
+    commissionRate?: FloatFieldUpdateOperationsInput | number
+    contractType?: StringFieldUpdateOperationsInput | string
+    photoUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    nationalIdFront?: NullableStringFieldUpdateOperationsInput | string | null
+    nationalIdBack?: NullableStringFieldUpdateOperationsInput | string | null
+    certificates?: NullableStringFieldUpdateOperationsInput | string | null
+    healthCertUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    healthCertExpiry?: NullableStringFieldUpdateOperationsInput | string | null
+    criminalRecordUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    contractDocUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    additionalDocs?: NullableStringFieldUpdateOperationsInput | string | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    userId?: NullableStringFieldUpdateOperationsInput | string | null
+    specialistId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    branch?: BranchUpdateOneWithoutStaffDossiersNestedInput
+  }
+
+  export type StaffDossierUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    fullName?: StringFieldUpdateOperationsInput | string
+    nationalId?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: StringFieldUpdateOperationsInput | string
+    phoneSecondary?: NullableStringFieldUpdateOperationsInput | string | null
+    birthDate?: NullableStringFieldUpdateOperationsInput | string | null
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    gender?: StringFieldUpdateOperationsInput | string
+    maritalStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    militaryStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    qualification?: NullableStringFieldUpdateOperationsInput | string | null
+    jobTitle?: StringFieldUpdateOperationsInput | string
+    department?: StringFieldUpdateOperationsInput | string
+    branchId?: NullableStringFieldUpdateOperationsInput | string | null
+    hireDate?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    salary?: FloatFieldUpdateOperationsInput | number
+    commissionRate?: FloatFieldUpdateOperationsInput | number
+    contractType?: StringFieldUpdateOperationsInput | string
+    photoUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    nationalIdFront?: NullableStringFieldUpdateOperationsInput | string | null
+    nationalIdBack?: NullableStringFieldUpdateOperationsInput | string | null
+    certificates?: NullableStringFieldUpdateOperationsInput | string | null
+    healthCertUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    healthCertExpiry?: NullableStringFieldUpdateOperationsInput | string | null
+    criminalRecordUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    contractDocUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    additionalDocs?: NullableStringFieldUpdateOperationsInput | string | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    userId?: NullableStringFieldUpdateOperationsInput | string | null
+    specialistId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type StaffDossierCreateManyInput = {
+    id?: string
+    fullName: string
+    nationalId?: string | null
+    phone: string
+    phoneSecondary?: string | null
+    birthDate?: string | null
+    address?: string | null
+    gender?: string
+    maritalStatus?: string | null
+    militaryStatus?: string | null
+    qualification?: string | null
+    jobTitle: string
+    department?: string
+    branchId?: string | null
+    hireDate?: string | null
+    status?: string
+    salary?: number
+    commissionRate?: number
+    contractType?: string
+    photoUrl?: string | null
+    nationalIdFront?: string | null
+    nationalIdBack?: string | null
+    certificates?: string | null
+    healthCertUrl?: string | null
+    healthCertExpiry?: string | null
+    criminalRecordUrl?: string | null
+    contractDocUrl?: string | null
+    additionalDocs?: string | null
+    notes?: string | null
+    userId?: string | null
+    specialistId?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type StaffDossierUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    fullName?: StringFieldUpdateOperationsInput | string
+    nationalId?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: StringFieldUpdateOperationsInput | string
+    phoneSecondary?: NullableStringFieldUpdateOperationsInput | string | null
+    birthDate?: NullableStringFieldUpdateOperationsInput | string | null
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    gender?: StringFieldUpdateOperationsInput | string
+    maritalStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    militaryStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    qualification?: NullableStringFieldUpdateOperationsInput | string | null
+    jobTitle?: StringFieldUpdateOperationsInput | string
+    department?: StringFieldUpdateOperationsInput | string
+    hireDate?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    salary?: FloatFieldUpdateOperationsInput | number
+    commissionRate?: FloatFieldUpdateOperationsInput | number
+    contractType?: StringFieldUpdateOperationsInput | string
+    photoUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    nationalIdFront?: NullableStringFieldUpdateOperationsInput | string | null
+    nationalIdBack?: NullableStringFieldUpdateOperationsInput | string | null
+    certificates?: NullableStringFieldUpdateOperationsInput | string | null
+    healthCertUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    healthCertExpiry?: NullableStringFieldUpdateOperationsInput | string | null
+    criminalRecordUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    contractDocUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    additionalDocs?: NullableStringFieldUpdateOperationsInput | string | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    userId?: NullableStringFieldUpdateOperationsInput | string | null
+    specialistId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type StaffDossierUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    fullName?: StringFieldUpdateOperationsInput | string
+    nationalId?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: StringFieldUpdateOperationsInput | string
+    phoneSecondary?: NullableStringFieldUpdateOperationsInput | string | null
+    birthDate?: NullableStringFieldUpdateOperationsInput | string | null
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    gender?: StringFieldUpdateOperationsInput | string
+    maritalStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    militaryStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    qualification?: NullableStringFieldUpdateOperationsInput | string | null
+    jobTitle?: StringFieldUpdateOperationsInput | string
+    department?: StringFieldUpdateOperationsInput | string
+    branchId?: NullableStringFieldUpdateOperationsInput | string | null
+    hireDate?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    salary?: FloatFieldUpdateOperationsInput | number
+    commissionRate?: FloatFieldUpdateOperationsInput | number
+    contractType?: StringFieldUpdateOperationsInput | string
+    photoUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    nationalIdFront?: NullableStringFieldUpdateOperationsInput | string | null
+    nationalIdBack?: NullableStringFieldUpdateOperationsInput | string | null
+    certificates?: NullableStringFieldUpdateOperationsInput | string | null
+    healthCertUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    healthCertExpiry?: NullableStringFieldUpdateOperationsInput | string | null
+    criminalRecordUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    contractDocUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    additionalDocs?: NullableStringFieldUpdateOperationsInput | string | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    userId?: NullableStringFieldUpdateOperationsInput | string | null
+    specialistId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type JobApplicationCreateInput = {
+    id?: string
+    code: string
+    fullName: string
+    phone: string
+    nationalId?: string | null
+    age?: number | null
+    address?: string | null
+    targetJob: string
+    targetDepartment?: string
+    targetBranchId?: string | null
+    experienceYears?: number
+    previousWorkplaces?: string | null
+    qualification?: string | null
+    expectedSalary?: number | null
+    personalPhoto?: string | null
+    nationalIdUrl?: string | null
+    cvUrl?: string | null
+    portfolioUrls?: string | null
+    notes?: string | null
+    status?: string
+    interviewDate?: string | null
+    interviewNotes?: string | null
+    dossierId?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type JobApplicationUncheckedCreateInput = {
+    id?: string
+    code: string
+    fullName: string
+    phone: string
+    nationalId?: string | null
+    age?: number | null
+    address?: string | null
+    targetJob: string
+    targetDepartment?: string
+    targetBranchId?: string | null
+    experienceYears?: number
+    previousWorkplaces?: string | null
+    qualification?: string | null
+    expectedSalary?: number | null
+    personalPhoto?: string | null
+    nationalIdUrl?: string | null
+    cvUrl?: string | null
+    portfolioUrls?: string | null
+    notes?: string | null
+    status?: string
+    interviewDate?: string | null
+    interviewNotes?: string | null
+    dossierId?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type JobApplicationUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    code?: StringFieldUpdateOperationsInput | string
+    fullName?: StringFieldUpdateOperationsInput | string
+    phone?: StringFieldUpdateOperationsInput | string
+    nationalId?: NullableStringFieldUpdateOperationsInput | string | null
+    age?: NullableIntFieldUpdateOperationsInput | number | null
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    targetJob?: StringFieldUpdateOperationsInput | string
+    targetDepartment?: StringFieldUpdateOperationsInput | string
+    targetBranchId?: NullableStringFieldUpdateOperationsInput | string | null
+    experienceYears?: IntFieldUpdateOperationsInput | number
+    previousWorkplaces?: NullableStringFieldUpdateOperationsInput | string | null
+    qualification?: NullableStringFieldUpdateOperationsInput | string | null
+    expectedSalary?: NullableFloatFieldUpdateOperationsInput | number | null
+    personalPhoto?: NullableStringFieldUpdateOperationsInput | string | null
+    nationalIdUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    cvUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    portfolioUrls?: NullableStringFieldUpdateOperationsInput | string | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    interviewDate?: NullableStringFieldUpdateOperationsInput | string | null
+    interviewNotes?: NullableStringFieldUpdateOperationsInput | string | null
+    dossierId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type JobApplicationUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    code?: StringFieldUpdateOperationsInput | string
+    fullName?: StringFieldUpdateOperationsInput | string
+    phone?: StringFieldUpdateOperationsInput | string
+    nationalId?: NullableStringFieldUpdateOperationsInput | string | null
+    age?: NullableIntFieldUpdateOperationsInput | number | null
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    targetJob?: StringFieldUpdateOperationsInput | string
+    targetDepartment?: StringFieldUpdateOperationsInput | string
+    targetBranchId?: NullableStringFieldUpdateOperationsInput | string | null
+    experienceYears?: IntFieldUpdateOperationsInput | number
+    previousWorkplaces?: NullableStringFieldUpdateOperationsInput | string | null
+    qualification?: NullableStringFieldUpdateOperationsInput | string | null
+    expectedSalary?: NullableFloatFieldUpdateOperationsInput | number | null
+    personalPhoto?: NullableStringFieldUpdateOperationsInput | string | null
+    nationalIdUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    cvUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    portfolioUrls?: NullableStringFieldUpdateOperationsInput | string | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    interviewDate?: NullableStringFieldUpdateOperationsInput | string | null
+    interviewNotes?: NullableStringFieldUpdateOperationsInput | string | null
+    dossierId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type JobApplicationCreateManyInput = {
+    id?: string
+    code: string
+    fullName: string
+    phone: string
+    nationalId?: string | null
+    age?: number | null
+    address?: string | null
+    targetJob: string
+    targetDepartment?: string
+    targetBranchId?: string | null
+    experienceYears?: number
+    previousWorkplaces?: string | null
+    qualification?: string | null
+    expectedSalary?: number | null
+    personalPhoto?: string | null
+    nationalIdUrl?: string | null
+    cvUrl?: string | null
+    portfolioUrls?: string | null
+    notes?: string | null
+    status?: string
+    interviewDate?: string | null
+    interviewNotes?: string | null
+    dossierId?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type JobApplicationUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    code?: StringFieldUpdateOperationsInput | string
+    fullName?: StringFieldUpdateOperationsInput | string
+    phone?: StringFieldUpdateOperationsInput | string
+    nationalId?: NullableStringFieldUpdateOperationsInput | string | null
+    age?: NullableIntFieldUpdateOperationsInput | number | null
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    targetJob?: StringFieldUpdateOperationsInput | string
+    targetDepartment?: StringFieldUpdateOperationsInput | string
+    targetBranchId?: NullableStringFieldUpdateOperationsInput | string | null
+    experienceYears?: IntFieldUpdateOperationsInput | number
+    previousWorkplaces?: NullableStringFieldUpdateOperationsInput | string | null
+    qualification?: NullableStringFieldUpdateOperationsInput | string | null
+    expectedSalary?: NullableFloatFieldUpdateOperationsInput | number | null
+    personalPhoto?: NullableStringFieldUpdateOperationsInput | string | null
+    nationalIdUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    cvUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    portfolioUrls?: NullableStringFieldUpdateOperationsInput | string | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    interviewDate?: NullableStringFieldUpdateOperationsInput | string | null
+    interviewNotes?: NullableStringFieldUpdateOperationsInput | string | null
+    dossierId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type JobApplicationUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    code?: StringFieldUpdateOperationsInput | string
+    fullName?: StringFieldUpdateOperationsInput | string
+    phone?: StringFieldUpdateOperationsInput | string
+    nationalId?: NullableStringFieldUpdateOperationsInput | string | null
+    age?: NullableIntFieldUpdateOperationsInput | number | null
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    targetJob?: StringFieldUpdateOperationsInput | string
+    targetDepartment?: StringFieldUpdateOperationsInput | string
+    targetBranchId?: NullableStringFieldUpdateOperationsInput | string | null
+    experienceYears?: IntFieldUpdateOperationsInput | number
+    previousWorkplaces?: NullableStringFieldUpdateOperationsInput | string | null
+    qualification?: NullableStringFieldUpdateOperationsInput | string | null
+    expectedSalary?: NullableFloatFieldUpdateOperationsInput | number | null
+    personalPhoto?: NullableStringFieldUpdateOperationsInput | string | null
+    nationalIdUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    cvUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    portfolioUrls?: NullableStringFieldUpdateOperationsInput | string | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    interviewDate?: NullableStringFieldUpdateOperationsInput | string | null
+    interviewNotes?: NullableStringFieldUpdateOperationsInput | string | null
+    dossierId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type StringFilter<$PrismaModel = never> = {
     equals?: string | StringFieldRefInput<$PrismaModel>
     in?: string[] | ListStringFieldRefInput<$PrismaModel>
@@ -31917,6 +35797,12 @@ export namespace Prisma {
     none?: SecurityCameraWhereInput
   }
 
+  export type StaffDossierListRelationFilter = {
+    every?: StaffDossierWhereInput
+    some?: StaffDossierWhereInput
+    none?: StaffDossierWhereInput
+  }
+
   export type SortOrderInput = {
     sort: SortOrder
     nulls?: NullsOrder
@@ -31975,6 +35861,10 @@ export namespace Prisma {
   }
 
   export type SecurityCameraOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type StaffDossierOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -33419,6 +37309,220 @@ export namespace Prisma {
     sortOrder?: SortOrder
   }
 
+  export type StaffDossierCountOrderByAggregateInput = {
+    id?: SortOrder
+    fullName?: SortOrder
+    nationalId?: SortOrder
+    phone?: SortOrder
+    phoneSecondary?: SortOrder
+    birthDate?: SortOrder
+    address?: SortOrder
+    gender?: SortOrder
+    maritalStatus?: SortOrder
+    militaryStatus?: SortOrder
+    qualification?: SortOrder
+    jobTitle?: SortOrder
+    department?: SortOrder
+    branchId?: SortOrder
+    hireDate?: SortOrder
+    status?: SortOrder
+    salary?: SortOrder
+    commissionRate?: SortOrder
+    contractType?: SortOrder
+    photoUrl?: SortOrder
+    nationalIdFront?: SortOrder
+    nationalIdBack?: SortOrder
+    certificates?: SortOrder
+    healthCertUrl?: SortOrder
+    healthCertExpiry?: SortOrder
+    criminalRecordUrl?: SortOrder
+    contractDocUrl?: SortOrder
+    additionalDocs?: SortOrder
+    notes?: SortOrder
+    userId?: SortOrder
+    specialistId?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type StaffDossierAvgOrderByAggregateInput = {
+    salary?: SortOrder
+    commissionRate?: SortOrder
+  }
+
+  export type StaffDossierMaxOrderByAggregateInput = {
+    id?: SortOrder
+    fullName?: SortOrder
+    nationalId?: SortOrder
+    phone?: SortOrder
+    phoneSecondary?: SortOrder
+    birthDate?: SortOrder
+    address?: SortOrder
+    gender?: SortOrder
+    maritalStatus?: SortOrder
+    militaryStatus?: SortOrder
+    qualification?: SortOrder
+    jobTitle?: SortOrder
+    department?: SortOrder
+    branchId?: SortOrder
+    hireDate?: SortOrder
+    status?: SortOrder
+    salary?: SortOrder
+    commissionRate?: SortOrder
+    contractType?: SortOrder
+    photoUrl?: SortOrder
+    nationalIdFront?: SortOrder
+    nationalIdBack?: SortOrder
+    certificates?: SortOrder
+    healthCertUrl?: SortOrder
+    healthCertExpiry?: SortOrder
+    criminalRecordUrl?: SortOrder
+    contractDocUrl?: SortOrder
+    additionalDocs?: SortOrder
+    notes?: SortOrder
+    userId?: SortOrder
+    specialistId?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type StaffDossierMinOrderByAggregateInput = {
+    id?: SortOrder
+    fullName?: SortOrder
+    nationalId?: SortOrder
+    phone?: SortOrder
+    phoneSecondary?: SortOrder
+    birthDate?: SortOrder
+    address?: SortOrder
+    gender?: SortOrder
+    maritalStatus?: SortOrder
+    militaryStatus?: SortOrder
+    qualification?: SortOrder
+    jobTitle?: SortOrder
+    department?: SortOrder
+    branchId?: SortOrder
+    hireDate?: SortOrder
+    status?: SortOrder
+    salary?: SortOrder
+    commissionRate?: SortOrder
+    contractType?: SortOrder
+    photoUrl?: SortOrder
+    nationalIdFront?: SortOrder
+    nationalIdBack?: SortOrder
+    certificates?: SortOrder
+    healthCertUrl?: SortOrder
+    healthCertExpiry?: SortOrder
+    criminalRecordUrl?: SortOrder
+    contractDocUrl?: SortOrder
+    additionalDocs?: SortOrder
+    notes?: SortOrder
+    userId?: SortOrder
+    specialistId?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type StaffDossierSumOrderByAggregateInput = {
+    salary?: SortOrder
+    commissionRate?: SortOrder
+  }
+
+  export type JobApplicationCountOrderByAggregateInput = {
+    id?: SortOrder
+    code?: SortOrder
+    fullName?: SortOrder
+    phone?: SortOrder
+    nationalId?: SortOrder
+    age?: SortOrder
+    address?: SortOrder
+    targetJob?: SortOrder
+    targetDepartment?: SortOrder
+    targetBranchId?: SortOrder
+    experienceYears?: SortOrder
+    previousWorkplaces?: SortOrder
+    qualification?: SortOrder
+    expectedSalary?: SortOrder
+    personalPhoto?: SortOrder
+    nationalIdUrl?: SortOrder
+    cvUrl?: SortOrder
+    portfolioUrls?: SortOrder
+    notes?: SortOrder
+    status?: SortOrder
+    interviewDate?: SortOrder
+    interviewNotes?: SortOrder
+    dossierId?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type JobApplicationAvgOrderByAggregateInput = {
+    age?: SortOrder
+    experienceYears?: SortOrder
+    expectedSalary?: SortOrder
+  }
+
+  export type JobApplicationMaxOrderByAggregateInput = {
+    id?: SortOrder
+    code?: SortOrder
+    fullName?: SortOrder
+    phone?: SortOrder
+    nationalId?: SortOrder
+    age?: SortOrder
+    address?: SortOrder
+    targetJob?: SortOrder
+    targetDepartment?: SortOrder
+    targetBranchId?: SortOrder
+    experienceYears?: SortOrder
+    previousWorkplaces?: SortOrder
+    qualification?: SortOrder
+    expectedSalary?: SortOrder
+    personalPhoto?: SortOrder
+    nationalIdUrl?: SortOrder
+    cvUrl?: SortOrder
+    portfolioUrls?: SortOrder
+    notes?: SortOrder
+    status?: SortOrder
+    interviewDate?: SortOrder
+    interviewNotes?: SortOrder
+    dossierId?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type JobApplicationMinOrderByAggregateInput = {
+    id?: SortOrder
+    code?: SortOrder
+    fullName?: SortOrder
+    phone?: SortOrder
+    nationalId?: SortOrder
+    age?: SortOrder
+    address?: SortOrder
+    targetJob?: SortOrder
+    targetDepartment?: SortOrder
+    targetBranchId?: SortOrder
+    experienceYears?: SortOrder
+    previousWorkplaces?: SortOrder
+    qualification?: SortOrder
+    expectedSalary?: SortOrder
+    personalPhoto?: SortOrder
+    nationalIdUrl?: SortOrder
+    cvUrl?: SortOrder
+    portfolioUrls?: SortOrder
+    notes?: SortOrder
+    status?: SortOrder
+    interviewDate?: SortOrder
+    interviewNotes?: SortOrder
+    dossierId?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type JobApplicationSumOrderByAggregateInput = {
+    age?: SortOrder
+    experienceYears?: SortOrder
+    expectedSalary?: SortOrder
+  }
+
   export type UserCreateNestedManyWithoutBranchInput = {
     create?: XOR<UserCreateWithoutBranchInput, UserUncheckedCreateWithoutBranchInput> | UserCreateWithoutBranchInput[] | UserUncheckedCreateWithoutBranchInput[]
     connectOrCreate?: UserCreateOrConnectWithoutBranchInput | UserCreateOrConnectWithoutBranchInput[]
@@ -33517,6 +37621,13 @@ export namespace Prisma {
     connect?: SecurityCameraWhereUniqueInput | SecurityCameraWhereUniqueInput[]
   }
 
+  export type StaffDossierCreateNestedManyWithoutBranchInput = {
+    create?: XOR<StaffDossierCreateWithoutBranchInput, StaffDossierUncheckedCreateWithoutBranchInput> | StaffDossierCreateWithoutBranchInput[] | StaffDossierUncheckedCreateWithoutBranchInput[]
+    connectOrCreate?: StaffDossierCreateOrConnectWithoutBranchInput | StaffDossierCreateOrConnectWithoutBranchInput[]
+    createMany?: StaffDossierCreateManyBranchInputEnvelope
+    connect?: StaffDossierWhereUniqueInput | StaffDossierWhereUniqueInput[]
+  }
+
   export type UserUncheckedCreateNestedManyWithoutBranchInput = {
     create?: XOR<UserCreateWithoutBranchInput, UserUncheckedCreateWithoutBranchInput> | UserCreateWithoutBranchInput[] | UserUncheckedCreateWithoutBranchInput[]
     connectOrCreate?: UserCreateOrConnectWithoutBranchInput | UserCreateOrConnectWithoutBranchInput[]
@@ -33613,6 +37724,13 @@ export namespace Prisma {
     connectOrCreate?: SecurityCameraCreateOrConnectWithoutBranchInput | SecurityCameraCreateOrConnectWithoutBranchInput[]
     createMany?: SecurityCameraCreateManyBranchInputEnvelope
     connect?: SecurityCameraWhereUniqueInput | SecurityCameraWhereUniqueInput[]
+  }
+
+  export type StaffDossierUncheckedCreateNestedManyWithoutBranchInput = {
+    create?: XOR<StaffDossierCreateWithoutBranchInput, StaffDossierUncheckedCreateWithoutBranchInput> | StaffDossierCreateWithoutBranchInput[] | StaffDossierUncheckedCreateWithoutBranchInput[]
+    connectOrCreate?: StaffDossierCreateOrConnectWithoutBranchInput | StaffDossierCreateOrConnectWithoutBranchInput[]
+    createMany?: StaffDossierCreateManyBranchInputEnvelope
+    connect?: StaffDossierWhereUniqueInput | StaffDossierWhereUniqueInput[]
   }
 
   export type StringFieldUpdateOperationsInput = {
@@ -33827,6 +37945,20 @@ export namespace Prisma {
     deleteMany?: SecurityCameraScalarWhereInput | SecurityCameraScalarWhereInput[]
   }
 
+  export type StaffDossierUpdateManyWithoutBranchNestedInput = {
+    create?: XOR<StaffDossierCreateWithoutBranchInput, StaffDossierUncheckedCreateWithoutBranchInput> | StaffDossierCreateWithoutBranchInput[] | StaffDossierUncheckedCreateWithoutBranchInput[]
+    connectOrCreate?: StaffDossierCreateOrConnectWithoutBranchInput | StaffDossierCreateOrConnectWithoutBranchInput[]
+    upsert?: StaffDossierUpsertWithWhereUniqueWithoutBranchInput | StaffDossierUpsertWithWhereUniqueWithoutBranchInput[]
+    createMany?: StaffDossierCreateManyBranchInputEnvelope
+    set?: StaffDossierWhereUniqueInput | StaffDossierWhereUniqueInput[]
+    disconnect?: StaffDossierWhereUniqueInput | StaffDossierWhereUniqueInput[]
+    delete?: StaffDossierWhereUniqueInput | StaffDossierWhereUniqueInput[]
+    connect?: StaffDossierWhereUniqueInput | StaffDossierWhereUniqueInput[]
+    update?: StaffDossierUpdateWithWhereUniqueWithoutBranchInput | StaffDossierUpdateWithWhereUniqueWithoutBranchInput[]
+    updateMany?: StaffDossierUpdateManyWithWhereWithoutBranchInput | StaffDossierUpdateManyWithWhereWithoutBranchInput[]
+    deleteMany?: StaffDossierScalarWhereInput | StaffDossierScalarWhereInput[]
+  }
+
   export type UserUncheckedUpdateManyWithoutBranchNestedInput = {
     create?: XOR<UserCreateWithoutBranchInput, UserUncheckedCreateWithoutBranchInput> | UserCreateWithoutBranchInput[] | UserUncheckedCreateWithoutBranchInput[]
     connectOrCreate?: UserCreateOrConnectWithoutBranchInput | UserCreateOrConnectWithoutBranchInput[]
@@ -34021,6 +38153,20 @@ export namespace Prisma {
     update?: SecurityCameraUpdateWithWhereUniqueWithoutBranchInput | SecurityCameraUpdateWithWhereUniqueWithoutBranchInput[]
     updateMany?: SecurityCameraUpdateManyWithWhereWithoutBranchInput | SecurityCameraUpdateManyWithWhereWithoutBranchInput[]
     deleteMany?: SecurityCameraScalarWhereInput | SecurityCameraScalarWhereInput[]
+  }
+
+  export type StaffDossierUncheckedUpdateManyWithoutBranchNestedInput = {
+    create?: XOR<StaffDossierCreateWithoutBranchInput, StaffDossierUncheckedCreateWithoutBranchInput> | StaffDossierCreateWithoutBranchInput[] | StaffDossierUncheckedCreateWithoutBranchInput[]
+    connectOrCreate?: StaffDossierCreateOrConnectWithoutBranchInput | StaffDossierCreateOrConnectWithoutBranchInput[]
+    upsert?: StaffDossierUpsertWithWhereUniqueWithoutBranchInput | StaffDossierUpsertWithWhereUniqueWithoutBranchInput[]
+    createMany?: StaffDossierCreateManyBranchInputEnvelope
+    set?: StaffDossierWhereUniqueInput | StaffDossierWhereUniqueInput[]
+    disconnect?: StaffDossierWhereUniqueInput | StaffDossierWhereUniqueInput[]
+    delete?: StaffDossierWhereUniqueInput | StaffDossierWhereUniqueInput[]
+    connect?: StaffDossierWhereUniqueInput | StaffDossierWhereUniqueInput[]
+    update?: StaffDossierUpdateWithWhereUniqueWithoutBranchInput | StaffDossierUpdateWithWhereUniqueWithoutBranchInput[]
+    updateMany?: StaffDossierUpdateManyWithWhereWithoutBranchInput | StaffDossierUpdateManyWithWhereWithoutBranchInput[]
+    deleteMany?: StaffDossierScalarWhereInput | StaffDossierScalarWhereInput[]
   }
 
   export type BranchCreateNestedOneWithoutUsersInput = {
@@ -34821,6 +38967,22 @@ export namespace Prisma {
     delete?: BranchWhereInput | boolean
     connect?: BranchWhereUniqueInput
     update?: XOR<XOR<BranchUpdateToOneWithWhereWithoutCamerasInput, BranchUpdateWithoutCamerasInput>, BranchUncheckedUpdateWithoutCamerasInput>
+  }
+
+  export type BranchCreateNestedOneWithoutStaffDossiersInput = {
+    create?: XOR<BranchCreateWithoutStaffDossiersInput, BranchUncheckedCreateWithoutStaffDossiersInput>
+    connectOrCreate?: BranchCreateOrConnectWithoutStaffDossiersInput
+    connect?: BranchWhereUniqueInput
+  }
+
+  export type BranchUpdateOneWithoutStaffDossiersNestedInput = {
+    create?: XOR<BranchCreateWithoutStaffDossiersInput, BranchUncheckedCreateWithoutStaffDossiersInput>
+    connectOrCreate?: BranchCreateOrConnectWithoutStaffDossiersInput
+    upsert?: BranchUpsertWithoutStaffDossiersInput
+    disconnect?: BranchWhereInput | boolean
+    delete?: BranchWhereInput | boolean
+    connect?: BranchWhereUniqueInput
+    update?: XOR<XOR<BranchUpdateToOneWithWhereWithoutStaffDossiersInput, BranchUpdateWithoutStaffDossiersInput>, BranchUncheckedUpdateWithoutStaffDossiersInput>
   }
 
   export type NestedStringFilter<$PrismaModel = never> = {
@@ -35686,6 +39848,86 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type StaffDossierCreateWithoutBranchInput = {
+    id?: string
+    fullName: string
+    nationalId?: string | null
+    phone: string
+    phoneSecondary?: string | null
+    birthDate?: string | null
+    address?: string | null
+    gender?: string
+    maritalStatus?: string | null
+    militaryStatus?: string | null
+    qualification?: string | null
+    jobTitle: string
+    department?: string
+    hireDate?: string | null
+    status?: string
+    salary?: number
+    commissionRate?: number
+    contractType?: string
+    photoUrl?: string | null
+    nationalIdFront?: string | null
+    nationalIdBack?: string | null
+    certificates?: string | null
+    healthCertUrl?: string | null
+    healthCertExpiry?: string | null
+    criminalRecordUrl?: string | null
+    contractDocUrl?: string | null
+    additionalDocs?: string | null
+    notes?: string | null
+    userId?: string | null
+    specialistId?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type StaffDossierUncheckedCreateWithoutBranchInput = {
+    id?: string
+    fullName: string
+    nationalId?: string | null
+    phone: string
+    phoneSecondary?: string | null
+    birthDate?: string | null
+    address?: string | null
+    gender?: string
+    maritalStatus?: string | null
+    militaryStatus?: string | null
+    qualification?: string | null
+    jobTitle: string
+    department?: string
+    hireDate?: string | null
+    status?: string
+    salary?: number
+    commissionRate?: number
+    contractType?: string
+    photoUrl?: string | null
+    nationalIdFront?: string | null
+    nationalIdBack?: string | null
+    certificates?: string | null
+    healthCertUrl?: string | null
+    healthCertExpiry?: string | null
+    criminalRecordUrl?: string | null
+    contractDocUrl?: string | null
+    additionalDocs?: string | null
+    notes?: string | null
+    userId?: string | null
+    specialistId?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type StaffDossierCreateOrConnectWithoutBranchInput = {
+    where: StaffDossierWhereUniqueInput
+    create: XOR<StaffDossierCreateWithoutBranchInput, StaffDossierUncheckedCreateWithoutBranchInput>
+  }
+
+  export type StaffDossierCreateManyBranchInputEnvelope = {
+    data: StaffDossierCreateManyBranchInput | StaffDossierCreateManyBranchInput[]
+    skipDuplicates?: boolean
+  }
+
   export type UserUpsertWithWhereUniqueWithoutBranchInput = {
     where: UserWhereUniqueInput
     update: XOR<UserUpdateWithoutBranchInput, UserUncheckedUpdateWithoutBranchInput>
@@ -36203,6 +40445,61 @@ export namespace Prisma {
     updatedAt?: DateTimeFilter<"SecurityCamera"> | Date | string
   }
 
+  export type StaffDossierUpsertWithWhereUniqueWithoutBranchInput = {
+    where: StaffDossierWhereUniqueInput
+    update: XOR<StaffDossierUpdateWithoutBranchInput, StaffDossierUncheckedUpdateWithoutBranchInput>
+    create: XOR<StaffDossierCreateWithoutBranchInput, StaffDossierUncheckedCreateWithoutBranchInput>
+  }
+
+  export type StaffDossierUpdateWithWhereUniqueWithoutBranchInput = {
+    where: StaffDossierWhereUniqueInput
+    data: XOR<StaffDossierUpdateWithoutBranchInput, StaffDossierUncheckedUpdateWithoutBranchInput>
+  }
+
+  export type StaffDossierUpdateManyWithWhereWithoutBranchInput = {
+    where: StaffDossierScalarWhereInput
+    data: XOR<StaffDossierUpdateManyMutationInput, StaffDossierUncheckedUpdateManyWithoutBranchInput>
+  }
+
+  export type StaffDossierScalarWhereInput = {
+    AND?: StaffDossierScalarWhereInput | StaffDossierScalarWhereInput[]
+    OR?: StaffDossierScalarWhereInput[]
+    NOT?: StaffDossierScalarWhereInput | StaffDossierScalarWhereInput[]
+    id?: StringFilter<"StaffDossier"> | string
+    fullName?: StringFilter<"StaffDossier"> | string
+    nationalId?: StringNullableFilter<"StaffDossier"> | string | null
+    phone?: StringFilter<"StaffDossier"> | string
+    phoneSecondary?: StringNullableFilter<"StaffDossier"> | string | null
+    birthDate?: StringNullableFilter<"StaffDossier"> | string | null
+    address?: StringNullableFilter<"StaffDossier"> | string | null
+    gender?: StringFilter<"StaffDossier"> | string
+    maritalStatus?: StringNullableFilter<"StaffDossier"> | string | null
+    militaryStatus?: StringNullableFilter<"StaffDossier"> | string | null
+    qualification?: StringNullableFilter<"StaffDossier"> | string | null
+    jobTitle?: StringFilter<"StaffDossier"> | string
+    department?: StringFilter<"StaffDossier"> | string
+    branchId?: StringNullableFilter<"StaffDossier"> | string | null
+    hireDate?: StringNullableFilter<"StaffDossier"> | string | null
+    status?: StringFilter<"StaffDossier"> | string
+    salary?: FloatFilter<"StaffDossier"> | number
+    commissionRate?: FloatFilter<"StaffDossier"> | number
+    contractType?: StringFilter<"StaffDossier"> | string
+    photoUrl?: StringNullableFilter<"StaffDossier"> | string | null
+    nationalIdFront?: StringNullableFilter<"StaffDossier"> | string | null
+    nationalIdBack?: StringNullableFilter<"StaffDossier"> | string | null
+    certificates?: StringNullableFilter<"StaffDossier"> | string | null
+    healthCertUrl?: StringNullableFilter<"StaffDossier"> | string | null
+    healthCertExpiry?: StringNullableFilter<"StaffDossier"> | string | null
+    criminalRecordUrl?: StringNullableFilter<"StaffDossier"> | string | null
+    contractDocUrl?: StringNullableFilter<"StaffDossier"> | string | null
+    additionalDocs?: StringNullableFilter<"StaffDossier"> | string | null
+    notes?: StringNullableFilter<"StaffDossier"> | string | null
+    userId?: StringNullableFilter<"StaffDossier"> | string | null
+    specialistId?: StringNullableFilter<"StaffDossier"> | string | null
+    createdAt?: DateTimeFilter<"StaffDossier"> | Date | string
+    updatedAt?: DateTimeFilter<"StaffDossier"> | Date | string
+  }
+
   export type BranchCreateWithoutUsersInput = {
     id?: string
     name: string
@@ -36226,6 +40523,7 @@ export namespace Prisma {
     transfers?: StockTransferCreateNestedManyWithoutToBranchInput
     consumptionLogs?: MaterialConsumptionLogCreateNestedManyWithoutBranchInput
     cameras?: SecurityCameraCreateNestedManyWithoutBranchInput
+    staffDossiers?: StaffDossierCreateNestedManyWithoutBranchInput
   }
 
   export type BranchUncheckedCreateWithoutUsersInput = {
@@ -36251,6 +40549,7 @@ export namespace Prisma {
     transfers?: StockTransferUncheckedCreateNestedManyWithoutToBranchInput
     consumptionLogs?: MaterialConsumptionLogUncheckedCreateNestedManyWithoutBranchInput
     cameras?: SecurityCameraUncheckedCreateNestedManyWithoutBranchInput
+    staffDossiers?: StaffDossierUncheckedCreateNestedManyWithoutBranchInput
   }
 
   export type BranchCreateOrConnectWithoutUsersInput = {
@@ -36375,6 +40674,7 @@ export namespace Prisma {
     transfers?: StockTransferUpdateManyWithoutToBranchNestedInput
     consumptionLogs?: MaterialConsumptionLogUpdateManyWithoutBranchNestedInput
     cameras?: SecurityCameraUpdateManyWithoutBranchNestedInput
+    staffDossiers?: StaffDossierUpdateManyWithoutBranchNestedInput
   }
 
   export type BranchUncheckedUpdateWithoutUsersInput = {
@@ -36400,6 +40700,7 @@ export namespace Prisma {
     transfers?: StockTransferUncheckedUpdateManyWithoutToBranchNestedInput
     consumptionLogs?: MaterialConsumptionLogUncheckedUpdateManyWithoutBranchNestedInput
     cameras?: SecurityCameraUncheckedUpdateManyWithoutBranchNestedInput
+    staffDossiers?: StaffDossierUncheckedUpdateManyWithoutBranchNestedInput
   }
 
   export type SpecialistUpsertWithoutUserInput = {
@@ -36529,6 +40830,7 @@ export namespace Prisma {
     transfers?: StockTransferCreateNestedManyWithoutToBranchInput
     consumptionLogs?: MaterialConsumptionLogCreateNestedManyWithoutBranchInput
     cameras?: SecurityCameraCreateNestedManyWithoutBranchInput
+    staffDossiers?: StaffDossierCreateNestedManyWithoutBranchInput
   }
 
   export type BranchUncheckedCreateWithoutSpecialistsInput = {
@@ -36554,6 +40856,7 @@ export namespace Prisma {
     transfers?: StockTransferUncheckedCreateNestedManyWithoutToBranchInput
     consumptionLogs?: MaterialConsumptionLogUncheckedCreateNestedManyWithoutBranchInput
     cameras?: SecurityCameraUncheckedCreateNestedManyWithoutBranchInput
+    staffDossiers?: StaffDossierUncheckedCreateNestedManyWithoutBranchInput
   }
 
   export type BranchCreateOrConnectWithoutSpecialistsInput = {
@@ -36774,6 +41077,7 @@ export namespace Prisma {
     transfers?: StockTransferUpdateManyWithoutToBranchNestedInput
     consumptionLogs?: MaterialConsumptionLogUpdateManyWithoutBranchNestedInput
     cameras?: SecurityCameraUpdateManyWithoutBranchNestedInput
+    staffDossiers?: StaffDossierUpdateManyWithoutBranchNestedInput
   }
 
   export type BranchUncheckedUpdateWithoutSpecialistsInput = {
@@ -36799,6 +41103,7 @@ export namespace Prisma {
     transfers?: StockTransferUncheckedUpdateManyWithoutToBranchNestedInput
     consumptionLogs?: MaterialConsumptionLogUncheckedUpdateManyWithoutBranchNestedInput
     cameras?: SecurityCameraUncheckedUpdateManyWithoutBranchNestedInput
+    staffDossiers?: StaffDossierUncheckedUpdateManyWithoutBranchNestedInput
   }
 
   export type BookingUpsertWithWhereUniqueWithoutSpecialistInput = {
@@ -37051,6 +41356,7 @@ export namespace Prisma {
     transfers?: StockTransferCreateNestedManyWithoutToBranchInput
     consumptionLogs?: MaterialConsumptionLogCreateNestedManyWithoutBranchInput
     cameras?: SecurityCameraCreateNestedManyWithoutBranchInput
+    staffDossiers?: StaffDossierCreateNestedManyWithoutBranchInput
   }
 
   export type BranchUncheckedCreateWithoutBookingsInput = {
@@ -37076,6 +41382,7 @@ export namespace Prisma {
     transfers?: StockTransferUncheckedCreateNestedManyWithoutToBranchInput
     consumptionLogs?: MaterialConsumptionLogUncheckedCreateNestedManyWithoutBranchInput
     cameras?: SecurityCameraUncheckedCreateNestedManyWithoutBranchInput
+    staffDossiers?: StaffDossierUncheckedCreateNestedManyWithoutBranchInput
   }
 
   export type BranchCreateOrConnectWithoutBookingsInput = {
@@ -37211,6 +41518,7 @@ export namespace Prisma {
     transfers?: StockTransferUpdateManyWithoutToBranchNestedInput
     consumptionLogs?: MaterialConsumptionLogUpdateManyWithoutBranchNestedInput
     cameras?: SecurityCameraUpdateManyWithoutBranchNestedInput
+    staffDossiers?: StaffDossierUpdateManyWithoutBranchNestedInput
   }
 
   export type BranchUncheckedUpdateWithoutBookingsInput = {
@@ -37236,6 +41544,7 @@ export namespace Prisma {
     transfers?: StockTransferUncheckedUpdateManyWithoutToBranchNestedInput
     consumptionLogs?: MaterialConsumptionLogUncheckedUpdateManyWithoutBranchNestedInput
     cameras?: SecurityCameraUncheckedUpdateManyWithoutBranchNestedInput
+    staffDossiers?: StaffDossierUncheckedUpdateManyWithoutBranchNestedInput
   }
 
   export type SpecialistUpsertWithoutBookingsInput = {
@@ -37314,6 +41623,7 @@ export namespace Prisma {
     transfers?: StockTransferCreateNestedManyWithoutToBranchInput
     consumptionLogs?: MaterialConsumptionLogCreateNestedManyWithoutBranchInput
     cameras?: SecurityCameraCreateNestedManyWithoutBranchInput
+    staffDossiers?: StaffDossierCreateNestedManyWithoutBranchInput
   }
 
   export type BranchUncheckedCreateWithoutTicketsInput = {
@@ -37339,6 +41649,7 @@ export namespace Prisma {
     transfers?: StockTransferUncheckedCreateNestedManyWithoutToBranchInput
     consumptionLogs?: MaterialConsumptionLogUncheckedCreateNestedManyWithoutBranchInput
     cameras?: SecurityCameraUncheckedCreateNestedManyWithoutBranchInput
+    staffDossiers?: StaffDossierUncheckedCreateNestedManyWithoutBranchInput
   }
 
   export type BranchCreateOrConnectWithoutTicketsInput = {
@@ -37468,6 +41779,7 @@ export namespace Prisma {
     transfers?: StockTransferUpdateManyWithoutToBranchNestedInput
     consumptionLogs?: MaterialConsumptionLogUpdateManyWithoutBranchNestedInput
     cameras?: SecurityCameraUpdateManyWithoutBranchNestedInput
+    staffDossiers?: StaffDossierUpdateManyWithoutBranchNestedInput
   }
 
   export type BranchUncheckedUpdateWithoutTicketsInput = {
@@ -37493,6 +41805,7 @@ export namespace Prisma {
     transfers?: StockTransferUncheckedUpdateManyWithoutToBranchNestedInput
     consumptionLogs?: MaterialConsumptionLogUncheckedUpdateManyWithoutBranchNestedInput
     cameras?: SecurityCameraUncheckedUpdateManyWithoutBranchNestedInput
+    staffDossiers?: StaffDossierUncheckedUpdateManyWithoutBranchNestedInput
   }
 
   export type SpecialistUpsertWithoutTicketsInput = {
@@ -37618,6 +41931,7 @@ export namespace Prisma {
     transfers?: StockTransferCreateNestedManyWithoutToBranchInput
     consumptionLogs?: MaterialConsumptionLogCreateNestedManyWithoutBranchInput
     cameras?: SecurityCameraCreateNestedManyWithoutBranchInput
+    staffDossiers?: StaffDossierCreateNestedManyWithoutBranchInput
   }
 
   export type BranchUncheckedCreateWithoutProductsInput = {
@@ -37643,6 +41957,7 @@ export namespace Prisma {
     transfers?: StockTransferUncheckedCreateNestedManyWithoutToBranchInput
     consumptionLogs?: MaterialConsumptionLogUncheckedCreateNestedManyWithoutBranchInput
     cameras?: SecurityCameraUncheckedCreateNestedManyWithoutBranchInput
+    staffDossiers?: StaffDossierUncheckedCreateNestedManyWithoutBranchInput
   }
 
   export type BranchCreateOrConnectWithoutProductsInput = {
@@ -37796,6 +42111,7 @@ export namespace Prisma {
     transfers?: StockTransferUpdateManyWithoutToBranchNestedInput
     consumptionLogs?: MaterialConsumptionLogUpdateManyWithoutBranchNestedInput
     cameras?: SecurityCameraUpdateManyWithoutBranchNestedInput
+    staffDossiers?: StaffDossierUpdateManyWithoutBranchNestedInput
   }
 
   export type BranchUncheckedUpdateWithoutProductsInput = {
@@ -37821,6 +42137,7 @@ export namespace Prisma {
     transfers?: StockTransferUncheckedUpdateManyWithoutToBranchNestedInput
     consumptionLogs?: MaterialConsumptionLogUncheckedUpdateManyWithoutBranchNestedInput
     cameras?: SecurityCameraUncheckedUpdateManyWithoutBranchNestedInput
+    staffDossiers?: StaffDossierUncheckedUpdateManyWithoutBranchNestedInput
   }
 
   export type StockPurchaseUpsertWithWhereUniqueWithoutProductInput = {
@@ -37959,6 +42276,7 @@ export namespace Prisma {
     transfers?: StockTransferCreateNestedManyWithoutToBranchInput
     consumptionLogs?: MaterialConsumptionLogCreateNestedManyWithoutBranchInput
     cameras?: SecurityCameraCreateNestedManyWithoutBranchInput
+    staffDossiers?: StaffDossierCreateNestedManyWithoutBranchInput
   }
 
   export type BranchUncheckedCreateWithoutLedgersInput = {
@@ -37984,6 +42302,7 @@ export namespace Prisma {
     transfers?: StockTransferUncheckedCreateNestedManyWithoutToBranchInput
     consumptionLogs?: MaterialConsumptionLogUncheckedCreateNestedManyWithoutBranchInput
     cameras?: SecurityCameraUncheckedCreateNestedManyWithoutBranchInput
+    staffDossiers?: StaffDossierUncheckedCreateNestedManyWithoutBranchInput
   }
 
   export type BranchCreateOrConnectWithoutLedgersInput = {
@@ -38078,6 +42397,7 @@ export namespace Prisma {
     transfers?: StockTransferUpdateManyWithoutToBranchNestedInput
     consumptionLogs?: MaterialConsumptionLogUpdateManyWithoutBranchNestedInput
     cameras?: SecurityCameraUpdateManyWithoutBranchNestedInput
+    staffDossiers?: StaffDossierUpdateManyWithoutBranchNestedInput
   }
 
   export type BranchUncheckedUpdateWithoutLedgersInput = {
@@ -38103,6 +42423,7 @@ export namespace Prisma {
     transfers?: StockTransferUncheckedUpdateManyWithoutToBranchNestedInput
     consumptionLogs?: MaterialConsumptionLogUncheckedUpdateManyWithoutBranchNestedInput
     cameras?: SecurityCameraUncheckedUpdateManyWithoutBranchNestedInput
+    staffDossiers?: StaffDossierUncheckedUpdateManyWithoutBranchNestedInput
   }
 
   export type BranchCreateWithoutOffersInput = {
@@ -38128,6 +42449,7 @@ export namespace Prisma {
     transfers?: StockTransferCreateNestedManyWithoutToBranchInput
     consumptionLogs?: MaterialConsumptionLogCreateNestedManyWithoutBranchInput
     cameras?: SecurityCameraCreateNestedManyWithoutBranchInput
+    staffDossiers?: StaffDossierCreateNestedManyWithoutBranchInput
   }
 
   export type BranchUncheckedCreateWithoutOffersInput = {
@@ -38153,6 +42475,7 @@ export namespace Prisma {
     transfers?: StockTransferUncheckedCreateNestedManyWithoutToBranchInput
     consumptionLogs?: MaterialConsumptionLogUncheckedCreateNestedManyWithoutBranchInput
     cameras?: SecurityCameraUncheckedCreateNestedManyWithoutBranchInput
+    staffDossiers?: StaffDossierUncheckedCreateNestedManyWithoutBranchInput
   }
 
   export type BranchCreateOrConnectWithoutOffersInput = {
@@ -38194,6 +42517,7 @@ export namespace Prisma {
     transfers?: StockTransferUpdateManyWithoutToBranchNestedInput
     consumptionLogs?: MaterialConsumptionLogUpdateManyWithoutBranchNestedInput
     cameras?: SecurityCameraUpdateManyWithoutBranchNestedInput
+    staffDossiers?: StaffDossierUpdateManyWithoutBranchNestedInput
   }
 
   export type BranchUncheckedUpdateWithoutOffersInput = {
@@ -38219,6 +42543,7 @@ export namespace Prisma {
     transfers?: StockTransferUncheckedUpdateManyWithoutToBranchNestedInput
     consumptionLogs?: MaterialConsumptionLogUncheckedUpdateManyWithoutBranchNestedInput
     cameras?: SecurityCameraUncheckedUpdateManyWithoutBranchNestedInput
+    staffDossiers?: StaffDossierUncheckedUpdateManyWithoutBranchNestedInput
   }
 
   export type BranchCreateWithoutChatMessagesInput = {
@@ -38244,6 +42569,7 @@ export namespace Prisma {
     transfers?: StockTransferCreateNestedManyWithoutToBranchInput
     consumptionLogs?: MaterialConsumptionLogCreateNestedManyWithoutBranchInput
     cameras?: SecurityCameraCreateNestedManyWithoutBranchInput
+    staffDossiers?: StaffDossierCreateNestedManyWithoutBranchInput
   }
 
   export type BranchUncheckedCreateWithoutChatMessagesInput = {
@@ -38269,6 +42595,7 @@ export namespace Prisma {
     transfers?: StockTransferUncheckedCreateNestedManyWithoutToBranchInput
     consumptionLogs?: MaterialConsumptionLogUncheckedCreateNestedManyWithoutBranchInput
     cameras?: SecurityCameraUncheckedCreateNestedManyWithoutBranchInput
+    staffDossiers?: StaffDossierUncheckedCreateNestedManyWithoutBranchInput
   }
 
   export type BranchCreateOrConnectWithoutChatMessagesInput = {
@@ -38310,6 +42637,7 @@ export namespace Prisma {
     transfers?: StockTransferUpdateManyWithoutToBranchNestedInput
     consumptionLogs?: MaterialConsumptionLogUpdateManyWithoutBranchNestedInput
     cameras?: SecurityCameraUpdateManyWithoutBranchNestedInput
+    staffDossiers?: StaffDossierUpdateManyWithoutBranchNestedInput
   }
 
   export type BranchUncheckedUpdateWithoutChatMessagesInput = {
@@ -38335,6 +42663,7 @@ export namespace Prisma {
     transfers?: StockTransferUncheckedUpdateManyWithoutToBranchNestedInput
     consumptionLogs?: MaterialConsumptionLogUncheckedUpdateManyWithoutBranchNestedInput
     cameras?: SecurityCameraUncheckedUpdateManyWithoutBranchNestedInput
+    staffDossiers?: StaffDossierUncheckedUpdateManyWithoutBranchNestedInput
   }
 
   export type BranchCreateWithoutShiftsInput = {
@@ -38360,6 +42689,7 @@ export namespace Prisma {
     transfers?: StockTransferCreateNestedManyWithoutToBranchInput
     consumptionLogs?: MaterialConsumptionLogCreateNestedManyWithoutBranchInput
     cameras?: SecurityCameraCreateNestedManyWithoutBranchInput
+    staffDossiers?: StaffDossierCreateNestedManyWithoutBranchInput
   }
 
   export type BranchUncheckedCreateWithoutShiftsInput = {
@@ -38385,6 +42715,7 @@ export namespace Prisma {
     transfers?: StockTransferUncheckedCreateNestedManyWithoutToBranchInput
     consumptionLogs?: MaterialConsumptionLogUncheckedCreateNestedManyWithoutBranchInput
     cameras?: SecurityCameraUncheckedCreateNestedManyWithoutBranchInput
+    staffDossiers?: StaffDossierUncheckedCreateNestedManyWithoutBranchInput
   }
 
   export type BranchCreateOrConnectWithoutShiftsInput = {
@@ -38426,6 +42757,7 @@ export namespace Prisma {
     transfers?: StockTransferUpdateManyWithoutToBranchNestedInput
     consumptionLogs?: MaterialConsumptionLogUpdateManyWithoutBranchNestedInput
     cameras?: SecurityCameraUpdateManyWithoutBranchNestedInput
+    staffDossiers?: StaffDossierUpdateManyWithoutBranchNestedInput
   }
 
   export type BranchUncheckedUpdateWithoutShiftsInput = {
@@ -38451,6 +42783,7 @@ export namespace Prisma {
     transfers?: StockTransferUncheckedUpdateManyWithoutToBranchNestedInput
     consumptionLogs?: MaterialConsumptionLogUncheckedUpdateManyWithoutBranchNestedInput
     cameras?: SecurityCameraUncheckedUpdateManyWithoutBranchNestedInput
+    staffDossiers?: StaffDossierUncheckedUpdateManyWithoutBranchNestedInput
   }
 
   export type BranchCreateWithoutExpensesInput = {
@@ -38476,6 +42809,7 @@ export namespace Prisma {
     transfers?: StockTransferCreateNestedManyWithoutToBranchInput
     consumptionLogs?: MaterialConsumptionLogCreateNestedManyWithoutBranchInput
     cameras?: SecurityCameraCreateNestedManyWithoutBranchInput
+    staffDossiers?: StaffDossierCreateNestedManyWithoutBranchInput
   }
 
   export type BranchUncheckedCreateWithoutExpensesInput = {
@@ -38501,6 +42835,7 @@ export namespace Prisma {
     transfers?: StockTransferUncheckedCreateNestedManyWithoutToBranchInput
     consumptionLogs?: MaterialConsumptionLogUncheckedCreateNestedManyWithoutBranchInput
     cameras?: SecurityCameraUncheckedCreateNestedManyWithoutBranchInput
+    staffDossiers?: StaffDossierUncheckedCreateNestedManyWithoutBranchInput
   }
 
   export type BranchCreateOrConnectWithoutExpensesInput = {
@@ -38542,6 +42877,7 @@ export namespace Prisma {
     transfers?: StockTransferUpdateManyWithoutToBranchNestedInput
     consumptionLogs?: MaterialConsumptionLogUpdateManyWithoutBranchNestedInput
     cameras?: SecurityCameraUpdateManyWithoutBranchNestedInput
+    staffDossiers?: StaffDossierUpdateManyWithoutBranchNestedInput
   }
 
   export type BranchUncheckedUpdateWithoutExpensesInput = {
@@ -38567,6 +42903,7 @@ export namespace Prisma {
     transfers?: StockTransferUncheckedUpdateManyWithoutToBranchNestedInput
     consumptionLogs?: MaterialConsumptionLogUncheckedUpdateManyWithoutBranchNestedInput
     cameras?: SecurityCameraUncheckedUpdateManyWithoutBranchNestedInput
+    staffDossiers?: StaffDossierUncheckedUpdateManyWithoutBranchNestedInput
   }
 
   export type UserCreateWithoutAttendancesInput = {
@@ -38627,6 +42964,7 @@ export namespace Prisma {
     transfers?: StockTransferCreateNestedManyWithoutToBranchInput
     consumptionLogs?: MaterialConsumptionLogCreateNestedManyWithoutBranchInput
     cameras?: SecurityCameraCreateNestedManyWithoutBranchInput
+    staffDossiers?: StaffDossierCreateNestedManyWithoutBranchInput
   }
 
   export type BranchUncheckedCreateWithoutAttendancesInput = {
@@ -38652,6 +42990,7 @@ export namespace Prisma {
     transfers?: StockTransferUncheckedCreateNestedManyWithoutToBranchInput
     consumptionLogs?: MaterialConsumptionLogUncheckedCreateNestedManyWithoutBranchInput
     cameras?: SecurityCameraUncheckedCreateNestedManyWithoutBranchInput
+    staffDossiers?: StaffDossierUncheckedCreateNestedManyWithoutBranchInput
   }
 
   export type BranchCreateOrConnectWithoutAttendancesInput = {
@@ -38734,6 +43073,7 @@ export namespace Prisma {
     transfers?: StockTransferUpdateManyWithoutToBranchNestedInput
     consumptionLogs?: MaterialConsumptionLogUpdateManyWithoutBranchNestedInput
     cameras?: SecurityCameraUpdateManyWithoutBranchNestedInput
+    staffDossiers?: StaffDossierUpdateManyWithoutBranchNestedInput
   }
 
   export type BranchUncheckedUpdateWithoutAttendancesInput = {
@@ -38759,6 +43099,7 @@ export namespace Prisma {
     transfers?: StockTransferUncheckedUpdateManyWithoutToBranchNestedInput
     consumptionLogs?: MaterialConsumptionLogUncheckedUpdateManyWithoutBranchNestedInput
     cameras?: SecurityCameraUncheckedUpdateManyWithoutBranchNestedInput
+    staffDossiers?: StaffDossierUncheckedUpdateManyWithoutBranchNestedInput
   }
 
   export type ProductCreateWithoutPurchasesInput = {
@@ -38955,6 +43296,7 @@ export namespace Prisma {
     attendances?: AttendanceRecordCreateNestedManyWithoutBranchInput
     consumptionLogs?: MaterialConsumptionLogCreateNestedManyWithoutBranchInput
     cameras?: SecurityCameraCreateNestedManyWithoutBranchInput
+    staffDossiers?: StaffDossierCreateNestedManyWithoutBranchInput
   }
 
   export type BranchUncheckedCreateWithoutTransfersInput = {
@@ -38980,6 +43322,7 @@ export namespace Prisma {
     attendances?: AttendanceRecordUncheckedCreateNestedManyWithoutBranchInput
     consumptionLogs?: MaterialConsumptionLogUncheckedCreateNestedManyWithoutBranchInput
     cameras?: SecurityCameraUncheckedCreateNestedManyWithoutBranchInput
+    staffDossiers?: StaffDossierUncheckedCreateNestedManyWithoutBranchInput
   }
 
   export type BranchCreateOrConnectWithoutTransfersInput = {
@@ -39082,6 +43425,7 @@ export namespace Prisma {
     attendances?: AttendanceRecordUpdateManyWithoutBranchNestedInput
     consumptionLogs?: MaterialConsumptionLogUpdateManyWithoutBranchNestedInput
     cameras?: SecurityCameraUpdateManyWithoutBranchNestedInput
+    staffDossiers?: StaffDossierUpdateManyWithoutBranchNestedInput
   }
 
   export type BranchUncheckedUpdateWithoutTransfersInput = {
@@ -39107,6 +43451,7 @@ export namespace Prisma {
     attendances?: AttendanceRecordUncheckedUpdateManyWithoutBranchNestedInput
     consumptionLogs?: MaterialConsumptionLogUncheckedUpdateManyWithoutBranchNestedInput
     cameras?: SecurityCameraUncheckedUpdateManyWithoutBranchNestedInput
+    staffDossiers?: StaffDossierUncheckedUpdateManyWithoutBranchNestedInput
   }
 
   export type ProductCreateWithoutConsumptionLogsInput = {
@@ -39187,6 +43532,7 @@ export namespace Prisma {
     attendances?: AttendanceRecordCreateNestedManyWithoutBranchInput
     transfers?: StockTransferCreateNestedManyWithoutToBranchInput
     cameras?: SecurityCameraCreateNestedManyWithoutBranchInput
+    staffDossiers?: StaffDossierCreateNestedManyWithoutBranchInput
   }
 
   export type BranchUncheckedCreateWithoutConsumptionLogsInput = {
@@ -39212,6 +43558,7 @@ export namespace Prisma {
     attendances?: AttendanceRecordUncheckedCreateNestedManyWithoutBranchInput
     transfers?: StockTransferUncheckedCreateNestedManyWithoutToBranchInput
     cameras?: SecurityCameraUncheckedCreateNestedManyWithoutBranchInput
+    staffDossiers?: StaffDossierUncheckedCreateNestedManyWithoutBranchInput
   }
 
   export type BranchCreateOrConnectWithoutConsumptionLogsInput = {
@@ -39314,6 +43661,7 @@ export namespace Prisma {
     attendances?: AttendanceRecordUpdateManyWithoutBranchNestedInput
     transfers?: StockTransferUpdateManyWithoutToBranchNestedInput
     cameras?: SecurityCameraUpdateManyWithoutBranchNestedInput
+    staffDossiers?: StaffDossierUpdateManyWithoutBranchNestedInput
   }
 
   export type BranchUncheckedUpdateWithoutConsumptionLogsInput = {
@@ -39339,6 +43687,7 @@ export namespace Prisma {
     attendances?: AttendanceRecordUncheckedUpdateManyWithoutBranchNestedInput
     transfers?: StockTransferUncheckedUpdateManyWithoutToBranchNestedInput
     cameras?: SecurityCameraUncheckedUpdateManyWithoutBranchNestedInput
+    staffDossiers?: StaffDossierUncheckedUpdateManyWithoutBranchNestedInput
   }
 
   export type BranchCreateWithoutCamerasInput = {
@@ -39364,6 +43713,7 @@ export namespace Prisma {
     attendances?: AttendanceRecordCreateNestedManyWithoutBranchInput
     transfers?: StockTransferCreateNestedManyWithoutToBranchInput
     consumptionLogs?: MaterialConsumptionLogCreateNestedManyWithoutBranchInput
+    staffDossiers?: StaffDossierCreateNestedManyWithoutBranchInput
   }
 
   export type BranchUncheckedCreateWithoutCamerasInput = {
@@ -39389,6 +43739,7 @@ export namespace Prisma {
     attendances?: AttendanceRecordUncheckedCreateNestedManyWithoutBranchInput
     transfers?: StockTransferUncheckedCreateNestedManyWithoutToBranchInput
     consumptionLogs?: MaterialConsumptionLogUncheckedCreateNestedManyWithoutBranchInput
+    staffDossiers?: StaffDossierUncheckedCreateNestedManyWithoutBranchInput
   }
 
   export type BranchCreateOrConnectWithoutCamerasInput = {
@@ -39430,6 +43781,7 @@ export namespace Prisma {
     attendances?: AttendanceRecordUpdateManyWithoutBranchNestedInput
     transfers?: StockTransferUpdateManyWithoutToBranchNestedInput
     consumptionLogs?: MaterialConsumptionLogUpdateManyWithoutBranchNestedInput
+    staffDossiers?: StaffDossierUpdateManyWithoutBranchNestedInput
   }
 
   export type BranchUncheckedUpdateWithoutCamerasInput = {
@@ -39455,6 +43807,127 @@ export namespace Prisma {
     attendances?: AttendanceRecordUncheckedUpdateManyWithoutBranchNestedInput
     transfers?: StockTransferUncheckedUpdateManyWithoutToBranchNestedInput
     consumptionLogs?: MaterialConsumptionLogUncheckedUpdateManyWithoutBranchNestedInput
+    staffDossiers?: StaffDossierUncheckedUpdateManyWithoutBranchNestedInput
+  }
+
+  export type BranchCreateWithoutStaffDossiersInput = {
+    id?: string
+    name: string
+    code: string
+    address: string
+    phone: string
+    whatsapp?: string | null
+    googleMapsUrl?: string | null
+    isActive?: boolean
+    createdAt?: Date | string
+    users?: UserCreateNestedManyWithoutBranchInput
+    specialists?: SpecialistCreateNestedManyWithoutBranchInput
+    bookings?: BookingCreateNestedManyWithoutBranchInput
+    tickets?: TicketCreateNestedManyWithoutBranchInput
+    products?: ProductCreateNestedManyWithoutBranchInput
+    ledgers?: SpecialistLedgerCreateNestedManyWithoutBranchInput
+    offers?: OfferCreateNestedManyWithoutBranchInput
+    chatMessages?: ChatMessageCreateNestedManyWithoutBranchInput
+    shifts?: CashShiftCreateNestedManyWithoutBranchInput
+    expenses?: TreasuryExpenseCreateNestedManyWithoutBranchInput
+    attendances?: AttendanceRecordCreateNestedManyWithoutBranchInput
+    transfers?: StockTransferCreateNestedManyWithoutToBranchInput
+    consumptionLogs?: MaterialConsumptionLogCreateNestedManyWithoutBranchInput
+    cameras?: SecurityCameraCreateNestedManyWithoutBranchInput
+  }
+
+  export type BranchUncheckedCreateWithoutStaffDossiersInput = {
+    id?: string
+    name: string
+    code: string
+    address: string
+    phone: string
+    whatsapp?: string | null
+    googleMapsUrl?: string | null
+    isActive?: boolean
+    createdAt?: Date | string
+    users?: UserUncheckedCreateNestedManyWithoutBranchInput
+    specialists?: SpecialistUncheckedCreateNestedManyWithoutBranchInput
+    bookings?: BookingUncheckedCreateNestedManyWithoutBranchInput
+    tickets?: TicketUncheckedCreateNestedManyWithoutBranchInput
+    products?: ProductUncheckedCreateNestedManyWithoutBranchInput
+    ledgers?: SpecialistLedgerUncheckedCreateNestedManyWithoutBranchInput
+    offers?: OfferUncheckedCreateNestedManyWithoutBranchInput
+    chatMessages?: ChatMessageUncheckedCreateNestedManyWithoutBranchInput
+    shifts?: CashShiftUncheckedCreateNestedManyWithoutBranchInput
+    expenses?: TreasuryExpenseUncheckedCreateNestedManyWithoutBranchInput
+    attendances?: AttendanceRecordUncheckedCreateNestedManyWithoutBranchInput
+    transfers?: StockTransferUncheckedCreateNestedManyWithoutToBranchInput
+    consumptionLogs?: MaterialConsumptionLogUncheckedCreateNestedManyWithoutBranchInput
+    cameras?: SecurityCameraUncheckedCreateNestedManyWithoutBranchInput
+  }
+
+  export type BranchCreateOrConnectWithoutStaffDossiersInput = {
+    where: BranchWhereUniqueInput
+    create: XOR<BranchCreateWithoutStaffDossiersInput, BranchUncheckedCreateWithoutStaffDossiersInput>
+  }
+
+  export type BranchUpsertWithoutStaffDossiersInput = {
+    update: XOR<BranchUpdateWithoutStaffDossiersInput, BranchUncheckedUpdateWithoutStaffDossiersInput>
+    create: XOR<BranchCreateWithoutStaffDossiersInput, BranchUncheckedCreateWithoutStaffDossiersInput>
+    where?: BranchWhereInput
+  }
+
+  export type BranchUpdateToOneWithWhereWithoutStaffDossiersInput = {
+    where?: BranchWhereInput
+    data: XOR<BranchUpdateWithoutStaffDossiersInput, BranchUncheckedUpdateWithoutStaffDossiersInput>
+  }
+
+  export type BranchUpdateWithoutStaffDossiersInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    code?: StringFieldUpdateOperationsInput | string
+    address?: StringFieldUpdateOperationsInput | string
+    phone?: StringFieldUpdateOperationsInput | string
+    whatsapp?: NullableStringFieldUpdateOperationsInput | string | null
+    googleMapsUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    users?: UserUpdateManyWithoutBranchNestedInput
+    specialists?: SpecialistUpdateManyWithoutBranchNestedInput
+    bookings?: BookingUpdateManyWithoutBranchNestedInput
+    tickets?: TicketUpdateManyWithoutBranchNestedInput
+    products?: ProductUpdateManyWithoutBranchNestedInput
+    ledgers?: SpecialistLedgerUpdateManyWithoutBranchNestedInput
+    offers?: OfferUpdateManyWithoutBranchNestedInput
+    chatMessages?: ChatMessageUpdateManyWithoutBranchNestedInput
+    shifts?: CashShiftUpdateManyWithoutBranchNestedInput
+    expenses?: TreasuryExpenseUpdateManyWithoutBranchNestedInput
+    attendances?: AttendanceRecordUpdateManyWithoutBranchNestedInput
+    transfers?: StockTransferUpdateManyWithoutToBranchNestedInput
+    consumptionLogs?: MaterialConsumptionLogUpdateManyWithoutBranchNestedInput
+    cameras?: SecurityCameraUpdateManyWithoutBranchNestedInput
+  }
+
+  export type BranchUncheckedUpdateWithoutStaffDossiersInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    code?: StringFieldUpdateOperationsInput | string
+    address?: StringFieldUpdateOperationsInput | string
+    phone?: StringFieldUpdateOperationsInput | string
+    whatsapp?: NullableStringFieldUpdateOperationsInput | string | null
+    googleMapsUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    users?: UserUncheckedUpdateManyWithoutBranchNestedInput
+    specialists?: SpecialistUncheckedUpdateManyWithoutBranchNestedInput
+    bookings?: BookingUncheckedUpdateManyWithoutBranchNestedInput
+    tickets?: TicketUncheckedUpdateManyWithoutBranchNestedInput
+    products?: ProductUncheckedUpdateManyWithoutBranchNestedInput
+    ledgers?: SpecialistLedgerUncheckedUpdateManyWithoutBranchNestedInput
+    offers?: OfferUncheckedUpdateManyWithoutBranchNestedInput
+    chatMessages?: ChatMessageUncheckedUpdateManyWithoutBranchNestedInput
+    shifts?: CashShiftUncheckedUpdateManyWithoutBranchNestedInput
+    expenses?: TreasuryExpenseUncheckedUpdateManyWithoutBranchNestedInput
+    attendances?: AttendanceRecordUncheckedUpdateManyWithoutBranchNestedInput
+    transfers?: StockTransferUncheckedUpdateManyWithoutToBranchNestedInput
+    consumptionLogs?: MaterialConsumptionLogUncheckedUpdateManyWithoutBranchNestedInput
+    cameras?: SecurityCameraUncheckedUpdateManyWithoutBranchNestedInput
   }
 
   export type UserCreateManyBranchInput = {
@@ -39690,6 +44163,41 @@ export namespace Prisma {
     isActive?: boolean
     sortOrder?: number
     notes?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type StaffDossierCreateManyBranchInput = {
+    id?: string
+    fullName: string
+    nationalId?: string | null
+    phone: string
+    phoneSecondary?: string | null
+    birthDate?: string | null
+    address?: string | null
+    gender?: string
+    maritalStatus?: string | null
+    militaryStatus?: string | null
+    qualification?: string | null
+    jobTitle: string
+    department?: string
+    hireDate?: string | null
+    status?: string
+    salary?: number
+    commissionRate?: number
+    contractType?: string
+    photoUrl?: string | null
+    nationalIdFront?: string | null
+    nationalIdBack?: string | null
+    certificates?: string | null
+    healthCertUrl?: string | null
+    healthCertExpiry?: string | null
+    criminalRecordUrl?: string | null
+    contractDocUrl?: string | null
+    additionalDocs?: string | null
+    notes?: string | null
+    userId?: string | null
+    specialistId?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -40417,6 +44925,111 @@ export namespace Prisma {
     isActive?: BoolFieldUpdateOperationsInput | boolean
     sortOrder?: IntFieldUpdateOperationsInput | number
     notes?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type StaffDossierUpdateWithoutBranchInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    fullName?: StringFieldUpdateOperationsInput | string
+    nationalId?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: StringFieldUpdateOperationsInput | string
+    phoneSecondary?: NullableStringFieldUpdateOperationsInput | string | null
+    birthDate?: NullableStringFieldUpdateOperationsInput | string | null
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    gender?: StringFieldUpdateOperationsInput | string
+    maritalStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    militaryStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    qualification?: NullableStringFieldUpdateOperationsInput | string | null
+    jobTitle?: StringFieldUpdateOperationsInput | string
+    department?: StringFieldUpdateOperationsInput | string
+    hireDate?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    salary?: FloatFieldUpdateOperationsInput | number
+    commissionRate?: FloatFieldUpdateOperationsInput | number
+    contractType?: StringFieldUpdateOperationsInput | string
+    photoUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    nationalIdFront?: NullableStringFieldUpdateOperationsInput | string | null
+    nationalIdBack?: NullableStringFieldUpdateOperationsInput | string | null
+    certificates?: NullableStringFieldUpdateOperationsInput | string | null
+    healthCertUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    healthCertExpiry?: NullableStringFieldUpdateOperationsInput | string | null
+    criminalRecordUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    contractDocUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    additionalDocs?: NullableStringFieldUpdateOperationsInput | string | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    userId?: NullableStringFieldUpdateOperationsInput | string | null
+    specialistId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type StaffDossierUncheckedUpdateWithoutBranchInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    fullName?: StringFieldUpdateOperationsInput | string
+    nationalId?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: StringFieldUpdateOperationsInput | string
+    phoneSecondary?: NullableStringFieldUpdateOperationsInput | string | null
+    birthDate?: NullableStringFieldUpdateOperationsInput | string | null
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    gender?: StringFieldUpdateOperationsInput | string
+    maritalStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    militaryStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    qualification?: NullableStringFieldUpdateOperationsInput | string | null
+    jobTitle?: StringFieldUpdateOperationsInput | string
+    department?: StringFieldUpdateOperationsInput | string
+    hireDate?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    salary?: FloatFieldUpdateOperationsInput | number
+    commissionRate?: FloatFieldUpdateOperationsInput | number
+    contractType?: StringFieldUpdateOperationsInput | string
+    photoUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    nationalIdFront?: NullableStringFieldUpdateOperationsInput | string | null
+    nationalIdBack?: NullableStringFieldUpdateOperationsInput | string | null
+    certificates?: NullableStringFieldUpdateOperationsInput | string | null
+    healthCertUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    healthCertExpiry?: NullableStringFieldUpdateOperationsInput | string | null
+    criminalRecordUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    contractDocUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    additionalDocs?: NullableStringFieldUpdateOperationsInput | string | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    userId?: NullableStringFieldUpdateOperationsInput | string | null
+    specialistId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type StaffDossierUncheckedUpdateManyWithoutBranchInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    fullName?: StringFieldUpdateOperationsInput | string
+    nationalId?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: StringFieldUpdateOperationsInput | string
+    phoneSecondary?: NullableStringFieldUpdateOperationsInput | string | null
+    birthDate?: NullableStringFieldUpdateOperationsInput | string | null
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    gender?: StringFieldUpdateOperationsInput | string
+    maritalStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    militaryStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    qualification?: NullableStringFieldUpdateOperationsInput | string | null
+    jobTitle?: StringFieldUpdateOperationsInput | string
+    department?: StringFieldUpdateOperationsInput | string
+    hireDate?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    salary?: FloatFieldUpdateOperationsInput | number
+    commissionRate?: FloatFieldUpdateOperationsInput | number
+    contractType?: StringFieldUpdateOperationsInput | string
+    photoUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    nationalIdFront?: NullableStringFieldUpdateOperationsInput | string | null
+    nationalIdBack?: NullableStringFieldUpdateOperationsInput | string | null
+    certificates?: NullableStringFieldUpdateOperationsInput | string | null
+    healthCertUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    healthCertExpiry?: NullableStringFieldUpdateOperationsInput | string | null
+    criminalRecordUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    contractDocUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    additionalDocs?: NullableStringFieldUpdateOperationsInput | string | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    userId?: NullableStringFieldUpdateOperationsInput | string | null
+    specialistId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }

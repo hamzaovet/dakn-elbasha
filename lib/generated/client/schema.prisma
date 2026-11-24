@@ -34,6 +34,7 @@ model Branch {
   transfers       StockTransfer[]
   consumptionLogs MaterialConsumptionLog[]
   cameras         SecurityCamera[]
+  staffDossiers   StaffDossier[]
 }
 
 // ----------------------------------------------------
@@ -462,4 +463,79 @@ model SecurityCamera {
   notes               String?
   createdAt           DateTime @default(now())
   updatedAt           DateTime @updatedAt
+}
+
+// ----------------------------------------------------
+// 20. STAFF DOSSIER & HR ARCHIVE (أرشيف شؤون العاملين والمستندات)
+// ----------------------------------------------------
+model StaffDossier {
+  id             String  @id @default(cuid())
+  fullName       String // الاسم الرباعي
+  nationalId     String? // الرقم القومي (14 رقم)
+  phone          String
+  phoneSecondary String? // رقم طوارئ
+  birthDate      String? // YYYY-MM-DD
+  address        String? // العنوان ومحل الإقامة
+  gender         String  @default("MALE") // MALE, FEMALE
+  maritalStatus  String? // أعزب، متزوج، يعول
+  militaryStatus String? // معفي، أدى الخدمة، غير مطلوب
+  qualification  String? // المؤهل الدراسي
+  jobTitle       String // المسمى الوظيفي
+  department     String  @default("DAKN") // DAKN, HAMMAM, NEWSKIN, MANAGEMENT, GENERAL
+  branchId       String?
+  branch         Branch? @relation(fields: [branchId], references: [id], onDelete: SetNull)
+  hireDate       String? // YYYY-MM-DD
+  status         String  @default("ACTIVE") // ACTIVE, ON_LEAVE, ARCHIVED, TERMINATED
+  salary         Float   @default(0)
+  commissionRate Float   @default(0)
+  contractType   String  @default("FULL_TIME") // FULL_TIME, PART_TIME, PERCENTAGE
+
+  // Official Documents (روابط المستندات والصور)
+  photoUrl          String? // الصورة الشخصية
+  nationalIdFront   String? // صورة البطاقة وجه
+  nationalIdBack    String? // صورة البطاقة ظهر
+  certificates      String? // JSON Array: [{ title: string, url: string }]
+  healthCertUrl     String? // الشهادة الصحية
+  healthCertExpiry  String? // تاريخ انتهاء الشهادة الصحية
+  criminalRecordUrl String? // الفيش الجنائي
+  contractDocUrl    String? // صورة عقد العمل
+  additionalDocs    String? // JSON Array: [{ title: string, url: string }]
+
+  notes        String? // ملاحظات وتقييمات الإدارة
+  userId       String? // رابط مع حساب الدخول بالسيستم
+  specialistId String? // رابط مع ملف المتخصص
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
+// ----------------------------------------------------
+// 21. JOB APPLICATIONS (بوابة طلبات التوظيف والتقديم الإلكتروني)
+// ----------------------------------------------------
+model JobApplication {
+  id                 String  @id @default(cuid())
+  code               String  @unique // APP-XXXXXX
+  fullName           String // الاسم الرباعي
+  phone              String
+  nationalId         String? // الرقم القومي
+  age                Int?
+  address            String? // المنطقة / المحافظة
+  targetJob          String // الوظيفة المتقدم لها
+  targetDepartment   String  @default("ALL") // DAKN, HAMMAM, NEWSKIN, ALL
+  targetBranchId     String?
+  experienceYears    Int     @default(0)
+  previousWorkplaces String? // الأماكن السابقة
+  qualification      String? // المؤهل الدراسي
+  expectedSalary     Float?
+  personalPhoto      String? // صورة المتقدم
+  nationalIdUrl      String? // صورة البطاقة
+  cvUrl              String? // السيرة الذاتية أو الشهادات
+  portfolioUrls      String? // JSON Array
+  notes              String? // رسالة المتقدم
+
+  status         String   @default("PENDING") // PENDING, REVIEWING, INTERVIEWED, ACCEPTED, REJECTED, ARCHIVED
+  interviewDate  String? // موعد المقابلة
+  interviewNotes String? // تقييم المقابلة
+  dossierId      String? // معرّف ملف الموظف في حال القبول والتعيين
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
 }

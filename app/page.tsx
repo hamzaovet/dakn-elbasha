@@ -2738,6 +2738,11 @@ export default function HomePage() {
                 </Link>
               </li>
               <li>
+                <Link href="/careers" className={`hover:${themeAccentText} transition flex items-center gap-1.5 font-bold text-amber-400`}>
+                  <span>💼 انضم لفريق العمل (وظائف شاغرة)</span>
+                </Link>
+              </li>
+              <li>
                 <button
                   onClick={() => setShowQrModal(true)}
                   className={`hover:${themeAccentText} transition flex items-center gap-1.5 font-bold text-right cursor-pointer`}
