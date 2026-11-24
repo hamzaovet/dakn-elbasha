@@ -20,6 +20,12 @@ import {
   MapPin,
   Clock,
   ShieldCheck,
+  Eye,
+  Trash2,
+  RefreshCw,
+  FolderOpen,
+  Image as ImageIcon,
+  X,
 } from "lucide-react";
 
 export default function CareersApplicationPage() {
@@ -27,6 +33,7 @@ export default function CareersApplicationPage() {
   const [loading, setLoading] = useState(false);
   const [uploadingField, setUploadingField] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [previewLightbox, setPreviewLightbox] = useState<{ url: string; title: string } | null>(null);
 
   // Form State
   const [form, setForm] = useState({
@@ -48,14 +55,66 @@ export default function CareersApplicationPage() {
     notes: "",
   });
 
+  // Client-side image compression to handle high-res mobile photos smoothly
+  const compressImageIfNeeded = async (file: File): Promise<File> => {
+    if (!file.type.startsWith("image/")) return file;
+    return new Promise((resolve) => {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        const img = new Image();
+        img.onload = () => {
+          const MAX_DIM = 1600;
+          let width = img.width;
+          let height = img.height;
+          if (width > MAX_DIM || height > MAX_DIM) {
+            if (width > height) {
+              height = Math.round((height * MAX_DIM) / width);
+              width = MAX_DIM;
+            } else {
+              width = Math.round((width * MAX_DIM) / height);
+              height = MAX_DIM;
+            }
+          }
+          const canvas = document.createElement("canvas");
+          canvas.width = width;
+          canvas.height = height;
+          const ctx = canvas.getContext("2d");
+          if (!ctx) return resolve(file);
+          ctx.drawImage(img, 0, 0, width, height);
+          canvas.toBlob(
+            (blob) => {
+              if (blob && blob.size < file.size) {
+                const compressedFile = new File([blob], file.name.replace(/\.[^/.]+$/, ".jpg"), {
+                  type: "image/jpeg",
+                });
+                resolve(compressedFile);
+              } else {
+                resolve(file);
+              }
+            },
+            "image/jpeg",
+            0.85
+          );
+        };
+        img.onerror = () => resolve(file);
+        img.src = e.target?.result as string;
+      };
+      reader.onerror = () => resolve(file);
+      reader.readAsDataURL(file);
+    });
+  };
+
   // Handle Cloud Image Upload (ImgBB)
   const handleFileUpload = async (field: "personalPhoto" | "nationalIdUrl" | "cvUrl", file: File) => {
     try {
       setUploadingField(field);
       setError(null);
 
+      // Compress large smartphone photos
+      const processedFile = await compressImageIfNeeded(file);
+
       const formData = new FormData();
-      formData.append("image", file);
+      formData.append("image", processedFile);
 
       const res = await fetch("/api/upload", {
         method: "POST",
@@ -394,98 +453,234 @@ export default function CareersApplicationPage() {
 
             {/* 3. Document & Photo Uploads */}
             <div className="space-y-3">
-              <h3 className="text-sm font-black text-amber-300 flex items-center gap-1.5 border-b border-white/10 pb-1.5">
-                <Upload className="w-4 h-4" />
-                <span>3. رفع المستندات والصور (تصوير بالموبايل أو رفع ملف):</span>
-              </h3>
+              <div className="border-b border-white/10 pb-1.5 flex items-center justify-between">
+                <h3 className="text-sm font-black text-amber-300 flex items-center gap-1.5">
+                  <Upload className="w-4 h-4" />
+                  <span>3. رفع المستندات والصور (من المعرض أو بالكاميرا):</span>
+                </h3>
+                <span className="text-[10px] text-slate-400">يمكنك اختيار صورة محفوظة أو التصوير مباشرة</span>
+              </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                 {/* 1. National ID Photo */}
-                <div className="p-3 rounded-2xl bg-black/50 border border-white/10 text-center space-y-2">
-                  <span className="text-[11px] font-bold text-slate-300 block">صورة بطاقة الرقم القومي:</span>
+                <div className="p-3.5 rounded-2xl bg-black/50 border border-white/10 text-center space-y-2.5 flex flex-col justify-between">
+                  <div>
+                    <span className="text-[11px] font-bold text-slate-200 block">🪪 صورة بطاقة الرقم القومي:</span>
+                    <span className="text-[9px] text-slate-400">وجه البطاقة بوضوح</span>
+                  </div>
+
                   {form.nationalIdUrl ? (
-                    <div className="relative w-full h-24 rounded-xl overflow-hidden border border-emerald-400/50">
-                      {/* eslint-disable-next-line @next/next/no-img-element */}
-                      <img src={form.nationalIdUrl} alt="البطاقة" className="w-full h-full object-cover" />
-                      <span className="absolute bottom-1 right-1 bg-emerald-500 text-black text-[9px] font-bold px-1.5 rounded">
-                        تم الرفع ✓
-                      </span>
+                    <div className="space-y-2">
+                      <div className="relative w-full h-24 rounded-xl overflow-hidden border-2 border-emerald-500/50 group bg-black/60 shadow-md">
+                        {/* eslint-disable-next-line @next/next/no-img-element */}
+                        <img src={form.nationalIdUrl} alt="البطاقة" className="w-full h-full object-cover" />
+                        <span className="absolute top-1 right-1 bg-emerald-500 text-black text-[9px] font-black px-1.5 py-0.5 rounded shadow">
+                          تم الرفع بنجاح ✓
+                        </span>
+                      </div>
+                      <div className="flex items-center justify-center gap-1.5">
+                        <button
+                          type="button"
+                          onClick={() => setPreviewLightbox({ url: form.nationalIdUrl, title: "صورة بطاقة الرقم القومي" })}
+                          className="px-2 py-1 rounded-lg bg-white/10 hover:bg-white/20 text-amber-300 text-[10px] font-bold flex items-center gap-1 cursor-pointer transition"
+                        >
+                          <Eye className="w-3 h-3" />
+                          <span>معاينة</span>
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => setForm((prev) => ({ ...prev, nationalIdUrl: "" }))}
+                          className="px-2 py-1 rounded-lg bg-rose-500/20 hover:bg-rose-500/30 text-rose-300 text-[10px] font-bold flex items-center gap-1 cursor-pointer transition"
+                        >
+                          <Trash2 className="w-3 h-3" />
+                          <span>تغيير</span>
+                        </button>
+                      </div>
+                    </div>
+                  ) : uploadingField === "nationalIdUrl" ? (
+                    <div className="h-28 rounded-xl border border-amber-400/40 bg-amber-500/5 flex flex-col items-center justify-center space-y-1.5">
+                      <RefreshCw className="w-6 h-6 text-amber-400 animate-spin" />
+                      <span className="text-[10px] text-amber-300 font-bold">جارٍ ضغط ورفع البطاقة...</span>
                     </div>
                   ) : (
-                    <label className="flex flex-col items-center justify-center h-24 border-2 border-dashed border-white/15 rounded-xl hover:border-amber-400 transition cursor-pointer p-2">
-                      <Camera className="w-6 h-6 text-slate-400 mb-1" />
-                      <span className="text-[10px] text-slate-400 font-bold">
-                        {uploadingField === "nationalIdUrl" ? "جارٍ الرفع..." : "التقاط أو رفع صورة البطاقة"}
-                      </span>
-                      <input
-                        type="file"
-                        accept="image/*"
-                        capture="environment"
-                        className="hidden"
-                        onChange={(e) => {
-                          if (e.target.files?.[0]) handleFileUpload("nationalIdUrl", e.target.files[0]);
-                        }}
-                      />
-                    </label>
+                    <div className="space-y-2">
+                      {/* Option A: Gallery / Files (NO capture attribute) */}
+                      <label className="w-full py-2 px-2.5 rounded-xl bg-white/5 hover:bg-white/10 border border-white/15 text-slate-200 hover:text-white text-[11px] font-bold flex items-center justify-center gap-1.5 cursor-pointer transition">
+                        <FolderOpen className="w-3.5 h-3.5 text-amber-400" />
+                        <span>📁 اختيار من المعرض / الملفات</span>
+                        <input
+                          type="file"
+                          accept="image/*"
+                          className="hidden"
+                          onChange={(e) => {
+                            if (e.target.files?.[0]) handleFileUpload("nationalIdUrl", e.target.files[0]);
+                          }}
+                        />
+                      </label>
+
+                      {/* Option B: Direct Camera Capture */}
+                      <label className="w-full py-2 px-2.5 rounded-xl bg-amber-500/10 hover:bg-amber-500/20 border border-amber-500/30 text-amber-300 hover:text-amber-200 text-[11px] font-bold flex items-center justify-center gap-1.5 cursor-pointer transition">
+                        <Camera className="w-3.5 h-3.5 text-amber-400" />
+                        <span>📸 التقاط فوري بالكاميرا</span>
+                        <input
+                          type="file"
+                          accept="image/*"
+                          capture="environment"
+                          className="hidden"
+                          onChange={(e) => {
+                            if (e.target.files?.[0]) handleFileUpload("nationalIdUrl", e.target.files[0]);
+                          }}
+                        />
+                      </label>
+                    </div>
                   )}
                 </div>
 
                 {/* 2. Personal Photo */}
-                <div className="p-3 rounded-2xl bg-black/50 border border-white/10 text-center space-y-2">
-                  <span className="text-[11px] font-bold text-slate-300 block">الصورة الشخصية:</span>
+                <div className="p-3.5 rounded-2xl bg-black/50 border border-white/10 text-center space-y-2.5 flex flex-col justify-between">
+                  <div>
+                    <span className="text-[11px] font-bold text-slate-200 block">👤 الصورة الشخصية:</span>
+                    <span className="text-[9px] text-slate-400">صورة واضحة للوجه أو سيلفي</span>
+                  </div>
+
                   {form.personalPhoto ? (
-                    <div className="relative w-full h-24 rounded-xl overflow-hidden border border-emerald-400/50">
-                      {/* eslint-disable-next-line @next/next/no-img-element */}
-                      <img src={form.personalPhoto} alt="الصورة الشخصية" className="w-full h-full object-cover" />
-                      <span className="absolute bottom-1 right-1 bg-emerald-500 text-black text-[9px] font-bold px-1.5 rounded">
-                        تم الرفع ✓
-                      </span>
+                    <div className="space-y-2">
+                      <div className="relative w-full h-24 rounded-xl overflow-hidden border-2 border-emerald-500/50 group bg-black/60 shadow-md">
+                        {/* eslint-disable-next-line @next/next/no-img-element */}
+                        <img src={form.personalPhoto} alt="الصورة الشخصية" className="w-full h-full object-cover" />
+                        <span className="absolute top-1 right-1 bg-emerald-500 text-black text-[9px] font-black px-1.5 py-0.5 rounded shadow">
+                          تم الرفع بنجاح ✓
+                        </span>
+                      </div>
+                      <div className="flex items-center justify-center gap-1.5">
+                        <button
+                          type="button"
+                          onClick={() => setPreviewLightbox({ url: form.personalPhoto, title: "الصورة الشخصية للمتقدم" })}
+                          className="px-2 py-1 rounded-lg bg-white/10 hover:bg-white/20 text-amber-300 text-[10px] font-bold flex items-center gap-1 cursor-pointer transition"
+                        >
+                          <Eye className="w-3 h-3" />
+                          <span>معاينة</span>
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => setForm((prev) => ({ ...prev, personalPhoto: "" }))}
+                          className="px-2 py-1 rounded-lg bg-rose-500/20 hover:bg-rose-500/30 text-rose-300 text-[10px] font-bold flex items-center gap-1 cursor-pointer transition"
+                        >
+                          <Trash2 className="w-3 h-3" />
+                          <span>تغيير</span>
+                        </button>
+                      </div>
+                    </div>
+                  ) : uploadingField === "personalPhoto" ? (
+                    <div className="h-28 rounded-xl border border-amber-400/40 bg-amber-500/5 flex flex-col items-center justify-center space-y-1.5">
+                      <RefreshCw className="w-6 h-6 text-amber-400 animate-spin" />
+                      <span className="text-[10px] text-amber-300 font-bold">جارٍ ضغط ورفع الصورة...</span>
                     </div>
                   ) : (
-                    <label className="flex flex-col items-center justify-center h-24 border-2 border-dashed border-white/15 rounded-xl hover:border-amber-400 transition cursor-pointer p-2">
-                      <User className="w-6 h-6 text-slate-400 mb-1" />
-                      <span className="text-[10px] text-slate-400 font-bold">
-                        {uploadingField === "personalPhoto" ? "جارٍ الرفع..." : "التقاط صورة سيلفي / شخصية"}
-                      </span>
-                      <input
-                        type="file"
-                        accept="image/*"
-                        capture="user"
-                        className="hidden"
-                        onChange={(e) => {
-                          if (e.target.files?.[0]) handleFileUpload("personalPhoto", e.target.files[0]);
-                        }}
-                      />
-                    </label>
+                    <div className="space-y-2">
+                      {/* Option A: Gallery / Files (NO capture attribute) */}
+                      <label className="w-full py-2 px-2.5 rounded-xl bg-white/5 hover:bg-white/10 border border-white/15 text-slate-200 hover:text-white text-[11px] font-bold flex items-center justify-center gap-1.5 cursor-pointer transition">
+                        <FolderOpen className="w-3.5 h-3.5 text-amber-400" />
+                        <span>📁 اختيار من المعرض / الألبوم</span>
+                        <input
+                          type="file"
+                          accept="image/*"
+                          className="hidden"
+                          onChange={(e) => {
+                            if (e.target.files?.[0]) handleFileUpload("personalPhoto", e.target.files[0]);
+                          }}
+                        />
+                      </label>
+
+                      {/* Option B: Direct Camera Capture (Selfie) */}
+                      <label className="w-full py-2 px-2.5 rounded-xl bg-amber-500/10 hover:bg-amber-500/20 border border-amber-500/30 text-amber-300 hover:text-amber-200 text-[11px] font-bold flex items-center justify-center gap-1.5 cursor-pointer transition">
+                        <Camera className="w-3.5 h-3.5 text-amber-400" />
+                        <span>📸 التقاط سيلفي بالكاميرا</span>
+                        <input
+                          type="file"
+                          accept="image/*"
+                          capture="user"
+                          className="hidden"
+                          onChange={(e) => {
+                            if (e.target.files?.[0]) handleFileUpload("personalPhoto", e.target.files[0]);
+                          }}
+                        />
+                      </label>
+                    </div>
                   )}
                 </div>
 
                 {/* 3. CV or Certificate */}
-                <div className="p-3 rounded-2xl bg-black/50 border border-white/10 text-center space-y-2">
-                  <span className="text-[11px] font-bold text-slate-300 block">شهادة التخرج / السيرة الذاتية:</span>
+                <div className="p-3.5 rounded-2xl bg-black/50 border border-white/10 text-center space-y-2.5 flex flex-col justify-between">
+                  <div>
+                    <span className="text-[11px] font-bold text-slate-200 block">🎓 شهادة التخرج / السيرة الذاتية:</span>
+                    <span className="text-[9px] text-slate-400">شهادة خبرة أو تدريب أو مؤهل (اختياري)</span>
+                  </div>
+
                   {form.cvUrl ? (
-                    <div className="relative w-full h-24 rounded-xl overflow-hidden border border-emerald-400/50">
-                      {/* eslint-disable-next-line @next/next/no-img-element */}
-                      <img src={form.cvUrl} alt="شهادة" className="w-full h-full object-cover" />
-                      <span className="absolute bottom-1 right-1 bg-emerald-500 text-black text-[9px] font-bold px-1.5 rounded">
-                        تم الرفع ✓
-                      </span>
+                    <div className="space-y-2">
+                      <div className="relative w-full h-24 rounded-xl overflow-hidden border-2 border-emerald-500/50 group bg-black/60 shadow-md">
+                        {/* eslint-disable-next-line @next/next/no-img-element */}
+                        <img src={form.cvUrl} alt="شهادة" className="w-full h-full object-cover" />
+                        <span className="absolute top-1 right-1 bg-emerald-500 text-black text-[9px] font-black px-1.5 py-0.5 rounded shadow">
+                          تم الرفع بنجاح ✓
+                        </span>
+                      </div>
+                      <div className="flex items-center justify-center gap-1.5">
+                        <button
+                          type="button"
+                          onClick={() => setPreviewLightbox({ url: form.cvUrl, title: "شهادة المؤهل / السيرة الذاتية" })}
+                          className="px-2 py-1 rounded-lg bg-white/10 hover:bg-white/20 text-amber-300 text-[10px] font-bold flex items-center gap-1 cursor-pointer transition"
+                        >
+                          <Eye className="w-3 h-3" />
+                          <span>معاينة</span>
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => setForm((prev) => ({ ...prev, cvUrl: "" }))}
+                          className="px-2 py-1 rounded-lg bg-rose-500/20 hover:bg-rose-500/30 text-rose-300 text-[10px] font-bold flex items-center gap-1 cursor-pointer transition"
+                        >
+                          <Trash2 className="w-3 h-3" />
+                          <span>تغيير</span>
+                        </button>
+                      </div>
+                    </div>
+                  ) : uploadingField === "cvUrl" ? (
+                    <div className="h-28 rounded-xl border border-amber-400/40 bg-amber-500/5 flex flex-col items-center justify-center space-y-1.5">
+                      <RefreshCw className="w-6 h-6 text-amber-400 animate-spin" />
+                      <span className="text-[10px] text-amber-300 font-bold">جارٍ رفع الشهادة...</span>
                     </div>
                   ) : (
-                    <label className="flex flex-col items-center justify-center h-24 border-2 border-dashed border-white/15 rounded-xl hover:border-amber-400 transition cursor-pointer p-2">
-                      <FileText className="w-6 h-6 text-slate-400 mb-1" />
-                      <span className="text-[10px] text-slate-400 font-bold">
-                        {uploadingField === "cvUrl" ? "جارٍ الرفع..." : "رفع شهادة أو سيرة ذاتية"}
-                      </span>
-                      <input
-                        type="file"
-                        accept="image/*,application/pdf"
-                        className="hidden"
-                        onChange={(e) => {
-                          if (e.target.files?.[0]) handleFileUpload("cvUrl", e.target.files[0]);
-                        }}
-                      />
-                    </label>
+                    <div className="space-y-2">
+                      {/* Option A: Gallery / Files (NO capture attribute) */}
+                      <label className="w-full py-2 px-2.5 rounded-xl bg-white/5 hover:bg-white/10 border border-white/15 text-slate-200 hover:text-white text-[11px] font-bold flex items-center justify-center gap-1.5 cursor-pointer transition">
+                        <FolderOpen className="w-3.5 h-3.5 text-amber-400" />
+                        <span>📁 اختيار ملف / صورة الشهادة</span>
+                        <input
+                          type="file"
+                          accept="image/*,application/pdf"
+                          className="hidden"
+                          onChange={(e) => {
+                            if (e.target.files?.[0]) handleFileUpload("cvUrl", e.target.files[0]);
+                          }}
+                        />
+                      </label>
+
+                      {/* Option B: Direct Camera Capture */}
+                      <label className="w-full py-2 px-2.5 rounded-xl bg-amber-500/10 hover:bg-amber-500/20 border border-amber-500/30 text-amber-300 hover:text-amber-200 text-[11px] font-bold flex items-center justify-center gap-1.5 cursor-pointer transition">
+                        <Camera className="w-3.5 h-3.5 text-amber-400" />
+                        <span>📸 تصوير الشهادة بالكاميرا</span>
+                        <input
+                          type="file"
+                          accept="image/*"
+                          capture="environment"
+                          className="hidden"
+                          onChange={(e) => {
+                            if (e.target.files?.[0]) handleFileUpload("cvUrl", e.target.files[0]);
+                          }}
+                        />
+                      </label>
+                    </div>
                   )}
                 </div>
               </div>
@@ -532,6 +727,46 @@ export default function CareersApplicationPage() {
           <span>تطوير شركة أوركا للحلول البرمجية (Orca Tech) 🐬</span>
         </div>
       </div>
+
+      {/* Lightbox Preview Modal */}
+      {previewLightbox && (
+        <div
+          className="fixed inset-0 z-50 bg-black/90 backdrop-blur-md flex flex-col items-center justify-center p-4 font-sans"
+          dir="rtl"
+        >
+          <div className="relative max-w-2xl w-full bg-[#12121a] border border-amber-500/40 rounded-3xl overflow-hidden shadow-2xl flex flex-col">
+            <div className="p-4 bg-black/60 flex items-center justify-between border-b border-white/10">
+              <h4 className="text-sm font-bold text-white">{previewLightbox.title}</h4>
+              <button
+                type="button"
+                onClick={() => setPreviewLightbox(null)}
+                className="text-slate-400 hover:text-white p-1 rounded-lg bg-white/10 transition cursor-pointer text-sm"
+              >
+                إغلاق ✕
+              </button>
+            </div>
+
+            <div className="p-4 max-h-[75vh] overflow-auto flex items-center justify-center bg-black/40">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src={previewLightbox.url}
+                alt={previewLightbox.title}
+                className="max-w-full max-h-[65vh] object-contain rounded-xl"
+              />
+            </div>
+
+            <div className="p-3 bg-black/60 flex items-center justify-end border-t border-white/10">
+              <button
+                type="button"
+                onClick={() => setPreviewLightbox(null)}
+                className="px-5 py-2 rounded-xl bg-amber-500 hover:bg-amber-400 text-black font-black text-xs cursor-pointer transition"
+              >
+                تم
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

@@ -368,6 +368,27 @@ export async function POST(req: Request) {
       });
     }
 
+    // 5. Update Application Document / Details directly from Admin
+    if (action === "update_application_doc") {
+      const { id, nationalIdUrl, personalPhoto, cvUrl, notes } = body;
+      const updateData: any = {};
+      if (nationalIdUrl !== undefined) updateData.nationalIdUrl = nationalIdUrl;
+      if (personalPhoto !== undefined) updateData.personalPhoto = personalPhoto;
+      if (cvUrl !== undefined) updateData.cvUrl = cvUrl;
+      if (notes !== undefined) updateData.notes = notes;
+
+      const updated = await (prisma as any).jobApplication.update({
+        where: { id },
+        data: updateData,
+      });
+
+      return NextResponse.json({
+        success: true,
+        message: "تم حفظ وتحديث مستندات المتقدم بنجاح ✓",
+        application: updated,
+      });
+    }
+
     return NextResponse.json({ error: "إجراء غير معروف" }, { status: 400 });
   } catch (error: any) {
     console.error("HR API POST Error:", error);

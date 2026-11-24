@@ -130,6 +130,8 @@ export default function StaffArchiveManagementTab({
 
   // Modals
   const [viewingDossier, setViewingDossier] = useState<StaffDossier | null>(null);
+  const [viewingApplication, setViewingApplication] = useState<JobApplication | null>(null);
+  const [adminUploadingDoc, setAdminUploadingDoc] = useState<string | null>(null);
   const [editingDossier, setEditingDossier] = useState<StaffDossier | null>(null);
   const [showAddDossierModal, setShowAddDossierModal] = useState(false);
   const [lightboxImage, setLightboxImage] = useState<{ url: string; title: string } | null>(null);
@@ -249,6 +251,51 @@ export default function StaffArchiveManagementTab({
     }
   };
 
+  // Upload or attach a document directly to an applicant from Admin
+  const handleAdminUploadAppDoc = async (
+    appId: string,
+    field: "nationalIdUrl" | "personalPhoto" | "cvUrl",
+    file: File
+  ) => {
+    try {
+      setAdminUploadingDoc(field);
+      const formData = new FormData();
+      formData.append("image", file);
+      const res = await fetch("/api/upload", { method: "POST", body: formData });
+      const data = await res.json();
+      if (data.success && (data.url || data.displayUrl)) {
+        const docUrl = data.url || data.displayUrl;
+        const updateRes = await fetch("/api/hr", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            action: "update_application_doc",
+            id: appId,
+            [field]: docUrl,
+          }),
+        });
+        const updateData = await updateRes.json();
+        if (updateData.success) {
+          showToast("success", "تم إرفاق المستند بنجاح ✓");
+          setApplications((prev) =>
+            prev.map((a) => (a.id === appId ? { ...a, [field]: docUrl } : a))
+          );
+          if (viewingApplication?.id === appId) {
+            setViewingApplication((prev) => (prev ? { ...prev, [field]: docUrl } : null));
+          }
+        } else {
+          showToast("error", updateData.error || "فشل حفظ المستند في قاعدة البيانات");
+        }
+      } else {
+        showToast("error", data.error || "فشل رفع الصورة");
+      }
+    } catch {
+      showToast("error", "حدث خطأ أثناء رفع المستند");
+    } finally {
+      setAdminUploadingDoc(null);
+    }
+  };
+
   // Save Dossier (Create or Update)
   const handleSaveDossier = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -322,7 +369,7 @@ export default function StaffArchiveManagementTab({
   // Update Application Status (Interview / Reject / Archive)
   const handleUpdateAppStatus = async (
     appId: string,
-    status: "REVIEWING" | "INTERVIEWED" | "REJECTED" | "ARCHIVED",
+    status: "PENDING" | "REVIEWING" | "INTERVIEWED" | "ACCEPTED" | "REJECTED" | "ARCHIVED",
     iDate?: string,
     iNotes?: string
   ) => {
@@ -343,6 +390,18 @@ export default function StaffArchiveManagementTab({
       if (data.success) {
         showToast("success", data.message);
         setInterviewModalApp(null);
+        if (viewingApplication?.id === appId) {
+          setViewingApplication((prev) =>
+            prev
+              ? {
+                  ...prev,
+                  status,
+                  interviewDate: iDate !== undefined ? iDate : prev.interviewDate,
+                  interviewNotes: iNotes !== undefined ? iNotes : prev.interviewNotes,
+                }
+              : null
+          );
+        }
         fetchData();
       } else {
         showToast("error", data.error || "فشل تحديث الحالة");
@@ -833,20 +892,30 @@ export default function StaffArchiveManagementTab({
                 >
                   {/* Candidate Header */}
                   <div className="flex items-start gap-3">
-                    <div className="w-14 h-14 rounded-2xl overflow-hidden border-2 border-amber-400/50 bg-black shrink-0 shadow-md">
+                    <button
+                      type="button"
+                      onClick={() => setViewingApplication(app)}
+                      className="w-14 h-14 rounded-2xl overflow-hidden border-2 border-amber-400/50 hover:border-amber-400 bg-black shrink-0 shadow-md cursor-pointer transition group"
+                      title="فتح ملف المتقدم"
+                    >
                       {/* eslint-disable-next-line @next/next/no-img-element */}
                       <img
                         src={app.personalPhoto || "/dakn-hero.jpg"}
                         alt={app.fullName}
-                        className="w-full h-full object-cover"
+                        className="w-full h-full object-cover group-hover:scale-105 transition-transform"
                       />
-                    </div>
+                    </button>
 
                     <div className="flex-1 min-w-0 space-y-1">
                       <div className="flex items-center justify-between gap-1">
-                        <h3 className="text-sm font-black text-white truncate" title={app.fullName}>
+                        <button
+                          type="button"
+                          onClick={() => setViewingApplication(app)}
+                          className="text-sm font-black text-white hover:text-amber-300 transition text-right truncate cursor-pointer"
+                          title={app.fullName}
+                        >
                           {app.fullName}
-                        </h3>
+                        </button>
                         <span className="text-[10px] font-mono text-amber-400 font-bold bg-amber-500/10 px-1.5 py-0.5 rounded">
                           {app.code}
                         </span>
@@ -863,6 +932,16 @@ export default function StaffArchiveManagementTab({
                       </div>
                     </div>
                   </div>
+
+                  {/* Primary Button: View Full Application & Dossier */}
+                  <button
+                    type="button"
+                    onClick={() => setViewingApplication(app)}
+                    className="w-full py-2.5 px-3 rounded-2xl bg-gradient-to-r from-amber-500/20 via-amber-400/15 to-amber-500/20 hover:from-amber-500/30 hover:to-amber-400/25 border-2 border-amber-400/50 text-amber-300 hover:text-amber-200 font-black text-xs transition flex items-center justify-center gap-2 cursor-pointer shadow-md group"
+                  >
+                    <Eye className="w-4 h-4 text-amber-400 group-hover:scale-110 transition-transform" />
+                    <span>فتح واستعراض طلب التوظيف والمرفقات بالكامل 📂</span>
+                  </button>
 
                   {/* Previous Experience & Notes */}
                   <div className="p-3 rounded-2xl bg-black/40 border border-white/5 space-y-1.5 text-[11px]">
@@ -902,18 +981,46 @@ export default function StaffArchiveManagementTab({
                       </span>
                     </div>
 
-                    {/* Document Previews */}
-                    <div className="flex items-center gap-1.5 pt-1.5 border-t border-white/5">
-                      {app.nationalIdUrl && (
+                    {/* Contact & Document Quick Bar */}
+                    <div className="flex items-center gap-1.5 pt-1.5 border-t border-white/5 flex-wrap">
+                      <a
+                        href={`tel:${app.phone}`}
+                        className="px-2 py-1 rounded-lg bg-blue-500/15 hover:bg-blue-500/25 border border-blue-400/30 text-[10px] text-blue-300 font-bold flex items-center gap-1 cursor-pointer"
+                        title="اتصال هاتفي"
+                      >
+                        <Phone className="w-3 h-3" />
+                        <span>{app.phone}</span>
+                      </a>
+                      <a
+                        href={`https://wa.me/2${app.phone.replace(/^0/, "")}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="px-2 py-1 rounded-lg bg-emerald-600/20 hover:bg-emerald-600/30 border border-emerald-400/30 text-[10px] text-emerald-300 font-bold flex items-center gap-1 cursor-pointer"
+                        title="محادثة واتساب"
+                      >
+                        <span>واتساب 💬</span>
+                      </a>
+
+                      {app.nationalIdUrl ? (
                         <button
                           type="button"
                           onClick={() => setLightboxImage({ url: app.nationalIdUrl!, title: `بطاقة: ${app.fullName}` })}
-                          className="px-2 py-1 rounded-lg bg-white/5 hover:bg-white/10 text-[10px] text-amber-300 font-bold flex items-center gap-1 cursor-pointer"
+                          className="px-2 py-1 rounded-lg bg-white/5 hover:bg-white/10 text-[10px] text-amber-300 font-bold flex items-center gap-1 cursor-pointer mr-auto"
                         >
                           <Eye className="w-3 h-3" />
-                          <span>معاينة البطاقة</span>
+                          <span>البطاقة</span>
+                        </button>
+                      ) : (
+                        <button
+                          type="button"
+                          onClick={() => setViewingApplication(app)}
+                          className="px-2 py-1 rounded-lg bg-white/5 hover:bg-white/10 text-[10px] text-slate-400 font-bold flex items-center gap-1 cursor-pointer mr-auto"
+                          title="إرفاق مستندات"
+                        >
+                          <span>إرفاق مستند ➕</span>
                         </button>
                       )}
+
                       {app.cvUrl && (
                         <button
                           type="button"
@@ -921,17 +1028,9 @@ export default function StaffArchiveManagementTab({
                           className="px-2 py-1 rounded-lg bg-white/5 hover:bg-white/10 text-[10px] text-emerald-300 font-bold flex items-center gap-1 cursor-pointer"
                         >
                           <FileText className="w-3 h-3" />
-                          <span>معاينة الشهادة</span>
+                          <span>الشهادة</span>
                         </button>
                       )}
-                      <a
-                        href={`https://wa.me/2${app.phone.replace(/^0/, "")}`}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="px-2 py-1 rounded-lg bg-emerald-600/20 hover:bg-emerald-600/40 text-[10px] text-emerald-300 font-bold flex items-center gap-1 cursor-pointer mr-auto"
-                      >
-                        <span>واتساب 💬</span>
-                      </a>
                     </div>
                   </div>
 
@@ -1336,6 +1435,538 @@ export default function StaffArchiveManagementTab({
               >
                 إغلاق الملف
               </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ─────────────────────────────────────────────────────────────
+          5.5. MODAL 1.5: VIEW FULL JOB APPLICATION & APPLICANT DOSSIER
+         ───────────────────────────────────────────────────────────── */}
+      {viewingApplication && (
+        <div
+          className="fixed inset-0 z-50 overflow-y-auto bg-black/85 backdrop-blur-md flex items-center justify-center p-3 sm:p-5 font-sans"
+          dir="rtl"
+        >
+          <div className="relative w-full max-w-3xl bg-[#12121a] border-2 border-amber-500/40 rounded-3xl p-5 sm:p-7 shadow-2xl space-y-5 max-h-[92vh] overflow-y-auto">
+            {/* Header */}
+            <div className="flex items-start justify-between border-b border-white/10 pb-4 gap-3">
+              <div className="flex items-center gap-3.5">
+                <button
+                  type="button"
+                  onClick={() => {
+                    if (viewingApplication.personalPhoto) {
+                      setLightboxImage({
+                        url: viewingApplication.personalPhoto,
+                        title: `الصورة الشخصية: ${viewingApplication.fullName}`,
+                      });
+                    }
+                  }}
+                  className="relative w-16 h-16 rounded-2xl overflow-hidden border-2 border-amber-400 bg-black shadow-md shrink-0 cursor-pointer group"
+                >
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src={viewingApplication.personalPhoto || "/dakn-hero.jpg"}
+                    alt={viewingApplication.fullName}
+                    className="w-full h-full object-cover group-hover:scale-105 transition-transform"
+                  />
+                  {viewingApplication.personalPhoto && (
+                    <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition flex items-center justify-center text-white text-[10px] font-bold">
+                      🔍
+                    </div>
+                  )}
+                </button>
+                <div>
+                  <div className="flex items-center gap-2 flex-wrap">
+                    <h3 className="text-lg font-black text-white">{viewingApplication.fullName}</h3>
+                    <span className="text-xs font-mono font-bold text-amber-400 bg-amber-500/15 border border-amber-400/30 px-2 py-0.5 rounded-lg">
+                      {viewingApplication.code}
+                    </span>
+                  </div>
+                  <p className="text-xs text-amber-300 font-bold">{viewingApplication.targetJob}</p>
+                  <span className="text-[10px] text-slate-400">
+                    تاريخ تقديم الطلب:{" "}
+                    {new Date(viewingApplication.createdAt).toLocaleDateString("ar-EG", {
+                      year: "numeric",
+                      month: "long",
+                      day: "numeric",
+                      hour: "2-digit",
+                      minute: "2-digit",
+                    })}
+                  </span>
+                </div>
+              </div>
+
+              <button
+                onClick={() => setViewingApplication(null)}
+                className="text-slate-400 hover:text-white p-2 rounded-xl bg-white/5 hover:bg-white/10 transition cursor-pointer text-sm"
+              >
+                ✕
+              </button>
+            </div>
+
+            {/* Status Bar */}
+            <div className="p-3 rounded-2xl bg-black/40 border border-white/5 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs">
+              <div className="flex items-center gap-2">
+                <span className="text-slate-400 font-bold">الحالة الحالية للطلب:</span>
+                <span
+                  className={`px-3 py-1 rounded-full text-xs font-black ${
+                    viewingApplication.status === "PENDING"
+                      ? "bg-amber-500/20 text-amber-300 border border-amber-400/30"
+                      : viewingApplication.status === "ACCEPTED"
+                      ? "bg-emerald-500/20 text-emerald-300 border border-emerald-400/30"
+                      : viewingApplication.status === "INTERVIEWED"
+                      ? "bg-blue-500/20 text-blue-300 border border-blue-400/30"
+                      : viewingApplication.status === "ARCHIVED"
+                      ? "bg-purple-500/20 text-purple-300 border border-purple-400/30"
+                      : "bg-rose-500/20 text-rose-300 border border-rose-400/30"
+                  }`}
+                >
+                  {viewingApplication.status === "PENDING" && "⏳ قيد المراجعة والدراسة"}
+                  {viewingApplication.status === "ACCEPTED" && "✅ مقبول ومُعيّن في طاقم العمل"}
+                  {viewingApplication.status === "INTERVIEWED" && "📞 تمت المقابلة الشخصية"}
+                  {viewingApplication.status === "ARCHIVED" && "📁 محفوظ في الأرشيف للاحتياج"}
+                  {viewingApplication.status === "REJECTED" && "✕ مرفوض / معتذر عنه"}
+                </span>
+              </div>
+
+              {/* Change status buttons */}
+              <div className="flex items-center gap-1.5 flex-wrap">
+                <button
+                  type="button"
+                  onClick={() => handleUpdateAppStatus(viewingApplication.id, "PENDING")}
+                  className="px-2 py-1 rounded-lg bg-white/5 hover:bg-white/10 text-[10px] text-amber-300 font-bold cursor-pointer"
+                >
+                  قيد المراجعة
+                </button>
+                <button
+                  type="button"
+                  onClick={() => handleUpdateAppStatus(viewingApplication.id, "INTERVIEWED")}
+                  className="px-2 py-1 rounded-lg bg-blue-500/10 hover:bg-blue-500/20 text-[10px] text-blue-300 font-bold cursor-pointer"
+                >
+                  تمت المقابلة
+                </button>
+                <button
+                  type="button"
+                  onClick={() => handleUpdateAppStatus(viewingApplication.id, "ARCHIVED")}
+                  className="px-2 py-1 rounded-lg bg-purple-500/10 hover:bg-purple-500/20 text-[10px] text-purple-300 font-bold cursor-pointer"
+                >
+                  أرشفة للاحتياج
+                </button>
+                <button
+                  type="button"
+                  onClick={() => handleUpdateAppStatus(viewingApplication.id, "REJECTED")}
+                  className="px-2 py-1 rounded-lg bg-rose-500/10 hover:bg-rose-500/20 text-[10px] text-rose-300 font-bold cursor-pointer"
+                >
+                  رفض
+                </button>
+              </div>
+            </div>
+
+            {/* 1. Personal & Contact Info Grid */}
+            <div className="space-y-2">
+              <h4 className="text-xs font-black text-amber-300 flex items-center gap-1.5">
+                <UserPlus className="w-4 h-4" />
+                <span>1. البيانات الشخصية ووسائل الاتصال:</span>
+              </h4>
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5 text-xs">
+                <div className="p-3 rounded-2xl bg-black/40 border border-white/5 col-span-2 sm:col-span-1">
+                  <span className="text-[10px] text-slate-400 block mb-1">الهاتف والواتساب:</span>
+                  <div className="space-y-1.5">
+                    <span className="text-white font-mono font-bold block">{viewingApplication.phone}</span>
+                    <div className="flex items-center gap-1">
+                      <a
+                        href={`tel:${viewingApplication.phone}`}
+                        className="px-2 py-1 rounded-lg bg-blue-500/20 hover:bg-blue-500/30 text-blue-300 text-[10px] font-bold flex items-center gap-1"
+                      >
+                        <Phone className="w-3 h-3" />
+                        <span>اتصال</span>
+                      </a>
+                      <a
+                        href={`https://wa.me/2${viewingApplication.phone.replace(/^0/, "")}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="px-2 py-1 rounded-lg bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-300 text-[10px] font-bold flex items-center gap-1"
+                      >
+                        <span>واتساب 💬</span>
+                      </a>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="p-3 rounded-2xl bg-black/40 border border-white/5">
+                  <span className="text-[10px] text-slate-400 block mb-1">الرقم القومي (14 رقم):</span>
+                  <span className="text-white font-mono font-bold tracking-wider">
+                    {viewingApplication.nationalId || "لم يُسجل"}
+                  </span>
+                </div>
+
+                <div className="p-3 rounded-2xl bg-black/40 border border-white/5">
+                  <span className="text-[10px] text-slate-400 block mb-1">السن:</span>
+                  <span className="text-white font-bold">
+                    {viewingApplication.age ? `${viewingApplication.age} سنة` : "غير محدد"}
+                  </span>
+                </div>
+
+                <div className="p-3 rounded-2xl bg-black/40 border border-white/5">
+                  <span className="text-[10px] text-slate-400 block mb-1">المؤهل الدراسي:</span>
+                  <span className="text-white font-bold truncate block" title={viewingApplication.qualification || ""}>
+                    {viewingApplication.qualification || "لم يُذكر"}
+                  </span>
+                </div>
+
+                <div className="p-3 rounded-2xl bg-black/40 border border-white/5 col-span-2 sm:col-span-4">
+                  <span className="text-[10px] text-slate-400 block mb-1">محل الإقامة / العنوان:</span>
+                  <span className="text-white font-bold">{viewingApplication.address || "لم يُسجل عنوان"}</span>
+                </div>
+              </div>
+            </div>
+
+            {/* 2. Professional & Career Details */}
+            <div className="space-y-2">
+              <h4 className="text-xs font-black text-amber-300 flex items-center gap-1.5">
+                <Briefcase className="w-4 h-4" />
+                <span>2. الخبرة المهنية والراتب المطلوب:</span>
+              </h4>
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5 text-xs">
+                <div className="p-3 rounded-2xl bg-black/40 border border-white/5">
+                  <span className="text-[10px] text-slate-400 block mb-1">الكيان / القسم المرغوب:</span>
+                  <span className="text-amber-300 font-bold">
+                    {viewingApplication.targetDepartment === "DAKN"
+                      ? "💈 صالون دقن الباشا (رجالي)"
+                      : viewingApplication.targetDepartment === "HAMMAM"
+                      ? "🧖‍♀️ حمام وسبا الباشا (حريمي)"
+                      : viewingApplication.targetDepartment === "NEWSKIN"
+                      ? "✨ عيادة نيو سكين VIP"
+                      : "🌟 متاح لأي قسم"}
+                  </span>
+                </div>
+
+                <div className="p-3 rounded-2xl bg-black/40 border border-white/5">
+                  <span className="text-[10px] text-slate-400 block mb-1">سنوات الخبرة:</span>
+                  <span className="text-white font-bold font-mono">
+                    {viewingApplication.experienceYears > 0
+                      ? `${viewingApplication.experienceYears} سنوات`
+                      : "بدون خبرة سابقة"}
+                  </span>
+                </div>
+
+                <div className="p-3 rounded-2xl bg-black/40 border border-white/5">
+                  <span className="text-[10px] text-slate-400 block mb-1">الراتب الشهري المتوقع:</span>
+                  <span className="text-emerald-400 font-bold font-mono">
+                    {viewingApplication.expectedSalary ? `${viewingApplication.expectedSalary} ج.م` : "قابل للتفاوض"}
+                  </span>
+                </div>
+
+                <div className="p-3 rounded-2xl bg-black/40 border border-white/5 col-span-1 sm:col-span-3">
+                  <span className="text-[10px] text-slate-400 block mb-1">أماكن العمل والصالونات السابقة:</span>
+                  <p className="text-slate-200 font-bold leading-relaxed">
+                    {viewingApplication.previousWorkplaces || "لم يتم إدخال أماكن عمل سابقة"}
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            {/* 3. Official Documents & Photos (Large preview cards + upload if missing) */}
+            <div className="space-y-2">
+              <h4 className="text-xs font-black text-amber-300 flex items-center gap-1.5">
+                <FileText className="w-4 h-4" />
+                <span>3. المستندات والصور المرفقة:</span>
+              </h4>
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs">
+                {/* Card 1: National ID */}
+                <div className="p-3.5 rounded-2xl bg-black/50 border border-white/10 space-y-2 text-center flex flex-col justify-between">
+                  <span className="text-[11px] font-bold text-slate-300 block">🪪 صورة بطاقة الرقم القومي:</span>
+                  {viewingApplication.nationalIdUrl ? (
+                    <div className="space-y-2">
+                      <button
+                        type="button"
+                        onClick={() =>
+                          setLightboxImage({
+                            url: viewingApplication.nationalIdUrl!,
+                            title: `بطاقة الرقم القومي: ${viewingApplication.fullName}`,
+                          })
+                        }
+                        className="relative w-full h-32 rounded-xl overflow-hidden border-2 border-emerald-500/40 group block cursor-pointer bg-black/60 shadow-md"
+                      >
+                        <img
+                          src={viewingApplication.nationalIdUrl}
+                          alt="البطاقة"
+                          className="w-full h-full object-cover group-hover:scale-105 transition-transform"
+                        />
+                        <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition flex items-center justify-center text-white text-xs font-bold gap-1">
+                          <Maximize2 className="w-4 h-4" />
+                          <span>تكبير بالحجم الكامل 🔍</span>
+                        </div>
+                      </button>
+                      <div className="flex items-center justify-between text-[10px]">
+                        <a
+                          href={viewingApplication.nationalIdUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-amber-400 hover:underline font-bold flex items-center gap-1"
+                        >
+                          <ExternalLink className="w-3 h-3" />
+                          <span>فتح برابط خارجي</span>
+                        </a>
+                        <label className="text-slate-400 hover:text-white cursor-pointer font-bold flex items-center gap-1">
+                          <Edit3 className="w-3 h-3" />
+                          <span>استبدال</span>
+                          <input
+                            type="file"
+                            accept="image/*"
+                            className="hidden"
+                            onChange={(e) => {
+                              if (e.target.files?.[0]) {
+                                handleAdminUploadAppDoc(viewingApplication.id, "nationalIdUrl", e.target.files[0]);
+                              }
+                            }}
+                          />
+                        </label>
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="p-4 rounded-xl border-2 border-dashed border-white/15 space-y-2 text-center">
+                      <span className="text-[10px] text-slate-400 block font-bold">لم يقم المتقدم برفع صورة البطاقة</span>
+                      <label className="px-3 py-1.5 rounded-lg bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 font-bold text-[10px] inline-flex items-center gap-1 cursor-pointer">
+                        <Upload className="w-3 h-3" />
+                        <span>{adminUploadingDoc === "nationalIdUrl" ? "جارٍ الرفع..." : "إرفاق صورة البطاقة الآن ➕"}</span>
+                        <input
+                          type="file"
+                          accept="image/*"
+                          className="hidden"
+                          onChange={(e) => {
+                            if (e.target.files?.[0]) {
+                              handleAdminUploadAppDoc(viewingApplication.id, "nationalIdUrl", e.target.files[0]);
+                            }
+                          }}
+                        />
+                      </label>
+                    </div>
+                  )}
+                </div>
+
+                {/* Card 2: Personal Photo */}
+                <div className="p-3.5 rounded-2xl bg-black/50 border border-white/10 space-y-2 text-center flex flex-col justify-between">
+                  <span className="text-[11px] font-bold text-slate-300 block">👤 الصورة الشخصية الرسمية:</span>
+                  {viewingApplication.personalPhoto ? (
+                    <div className="space-y-2">
+                      <button
+                        type="button"
+                        onClick={() =>
+                          setLightboxImage({
+                            url: viewingApplication.personalPhoto!,
+                            title: `الصورة الشخصية: ${viewingApplication.fullName}`,
+                          })
+                        }
+                        className="relative w-full h-32 rounded-xl overflow-hidden border-2 border-emerald-500/40 group block cursor-pointer bg-black/60 shadow-md"
+                      >
+                        <img
+                          src={viewingApplication.personalPhoto}
+                          alt="الصورة الشخصية"
+                          className="w-full h-full object-cover group-hover:scale-105 transition-transform"
+                        />
+                        <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition flex items-center justify-center text-white text-xs font-bold gap-1">
+                          <Maximize2 className="w-4 h-4" />
+                          <span>تكبير بالحجم الكامل 🔍</span>
+                        </div>
+                      </button>
+                      <div className="flex items-center justify-between text-[10px]">
+                        <a
+                          href={viewingApplication.personalPhoto}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-amber-400 hover:underline font-bold flex items-center gap-1"
+                        >
+                          <ExternalLink className="w-3 h-3" />
+                          <span>فتح برابط خارجي</span>
+                        </a>
+                        <label className="text-slate-400 hover:text-white cursor-pointer font-bold flex items-center gap-1">
+                          <Edit3 className="w-3 h-3" />
+                          <span>استبدال</span>
+                          <input
+                            type="file"
+                            accept="image/*"
+                            className="hidden"
+                            onChange={(e) => {
+                              if (e.target.files?.[0]) {
+                                handleAdminUploadAppDoc(viewingApplication.id, "personalPhoto", e.target.files[0]);
+                              }
+                            }}
+                          />
+                        </label>
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="p-4 rounded-xl border-2 border-dashed border-white/15 space-y-2 text-center">
+                      <span className="text-[10px] text-slate-400 block font-bold">لم يقم المتقدم برفع صورة شخصية</span>
+                      <label className="px-3 py-1.5 rounded-lg bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 font-bold text-[10px] inline-flex items-center gap-1 cursor-pointer">
+                        <Upload className="w-3 h-3" />
+                        <span>{adminUploadingDoc === "personalPhoto" ? "جارٍ الرفع..." : "إرفاق صورة شخصية الآن ➕"}</span>
+                        <input
+                          type="file"
+                          accept="image/*"
+                          className="hidden"
+                          onChange={(e) => {
+                            if (e.target.files?.[0]) {
+                              handleAdminUploadAppDoc(viewingApplication.id, "personalPhoto", e.target.files[0]);
+                            }
+                          }}
+                        />
+                      </label>
+                    </div>
+                  )}
+                </div>
+
+                {/* Card 3: CV / Certificate */}
+                <div className="p-3.5 rounded-2xl bg-black/50 border border-white/10 space-y-2 text-center flex flex-col justify-between">
+                  <span className="text-[11px] font-bold text-slate-300 block">🎓 شهادة التخرج / السيرة الذاتية:</span>
+                  {viewingApplication.cvUrl ? (
+                    <div className="space-y-2">
+                      <button
+                        type="button"
+                        onClick={() =>
+                          setLightboxImage({
+                            url: viewingApplication.cvUrl!,
+                            title: `شهادة المؤهل / السيرة: ${viewingApplication.fullName}`,
+                          })
+                        }
+                        className="relative w-full h-32 rounded-xl overflow-hidden border-2 border-emerald-500/40 group block cursor-pointer bg-black/60 shadow-md"
+                      >
+                        <img
+                          src={viewingApplication.cvUrl}
+                          alt="الشهادة"
+                          className="w-full h-full object-cover group-hover:scale-105 transition-transform"
+                        />
+                        <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition flex items-center justify-center text-white text-xs font-bold gap-1">
+                          <Maximize2 className="w-4 h-4" />
+                          <span>تكبير بالحجم الكامل 🔍</span>
+                        </div>
+                      </button>
+                      <div className="flex items-center justify-between text-[10px]">
+                        <a
+                          href={viewingApplication.cvUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-amber-400 hover:underline font-bold flex items-center gap-1"
+                        >
+                          <ExternalLink className="w-3 h-3" />
+                          <span>فتح برابط خارجي</span>
+                        </a>
+                        <label className="text-slate-400 hover:text-white cursor-pointer font-bold flex items-center gap-1">
+                          <Edit3 className="w-3 h-3" />
+                          <span>استبدال</span>
+                          <input
+                            type="file"
+                            accept="image/*,application/pdf"
+                            className="hidden"
+                            onChange={(e) => {
+                              if (e.target.files?.[0]) {
+                                handleAdminUploadAppDoc(viewingApplication.id, "cvUrl", e.target.files[0]);
+                              }
+                            }}
+                          />
+                        </label>
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="p-4 rounded-xl border-2 border-dashed border-white/15 space-y-2 text-center">
+                      <span className="text-[10px] text-slate-400 block font-bold">لم يقم المتقدم برفع شهادات</span>
+                      <label className="px-3 py-1.5 rounded-lg bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 font-bold text-[10px] inline-flex items-center gap-1 cursor-pointer">
+                        <Upload className="w-3 h-3" />
+                        <span>{adminUploadingDoc === "cvUrl" ? "جارٍ الرفع..." : "إرفاق شهادة الآن ➕"}</span>
+                        <input
+                          type="file"
+                          accept="image/*,application/pdf"
+                          className="hidden"
+                          onChange={(e) => {
+                            if (e.target.files?.[0]) {
+                              handleAdminUploadAppDoc(viewingApplication.id, "cvUrl", e.target.files[0]);
+                            }
+                          }}
+                        />
+                      </label>
+                    </div>
+                  )}
+                </div>
+              </div>
+            </div>
+
+            {/* 4. Notes / Cover Letter */}
+            {viewingApplication.notes && (
+              <div className="p-3.5 rounded-2xl bg-black/40 border border-white/5 space-y-1">
+                <span className="text-[10px] text-amber-400 font-bold block">رسالة المتقدم ونبذة عن مهاراته:</span>
+                <p className="text-xs text-slate-200 leading-relaxed font-bold italic">"{viewingApplication.notes}"</p>
+              </div>
+            )}
+
+            {/* 5. Interview Notes if any */}
+            {viewingApplication.interviewDate && (
+              <div className="p-3.5 rounded-2xl bg-blue-950/30 border border-blue-500/30 space-y-1 text-xs">
+                <div className="flex items-center gap-2 text-blue-300 font-bold">
+                  <Calendar className="w-4 h-4" />
+                  <span>موعد المقابلة الشخصية المحدد: {viewingApplication.interviewDate}</span>
+                </div>
+                {viewingApplication.interviewNotes && (
+                  <p className="text-slate-300 text-[11px] pt-1 border-t border-white/5">
+                    ملاحظات المقابلة: {viewingApplication.interviewNotes}
+                  </p>
+                )}
+              </div>
+            )}
+
+            {/* Modal Actions Footer */}
+            <div className="flex flex-col sm:flex-row items-center justify-between gap-2.5 pt-3 border-t border-white/10">
+              <button
+                type="button"
+                onClick={() => window.print()}
+                className="w-full sm:w-auto px-4 py-2.5 rounded-xl bg-white/10 hover:bg-white/20 text-white font-bold text-xs transition flex items-center justify-center gap-1.5 cursor-pointer"
+              >
+                <Printer className="w-4 h-4" />
+                <span>طباعة استمارة التوظيف الرسمية 🖨️</span>
+              </button>
+
+              <div className="flex items-center gap-2 w-full sm:w-auto justify-end flex-wrap">
+                {viewingApplication.status !== "ACCEPTED" && (
+                  <button
+                    type="button"
+                    onClick={() => {
+                      const appToOnboard = viewingApplication;
+                      setViewingApplication(null);
+                      setOnboardModalApp(appToOnboard);
+                      setOnboardSalary(appToOnboard.expectedSalary ? String(appToOnboard.expectedSalary) : "6000");
+                      setOnboardCommission("20");
+                      setOnboardBranchId(appToOnboard.targetBranchId || branches[0]?.id || "");
+                    }}
+                    className="px-4 py-2.5 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 text-slate-950 font-black text-xs transition flex items-center gap-1.5 cursor-pointer shadow-lg shadow-emerald-500/20"
+                  >
+                    <CheckCircle2 className="w-4 h-4" />
+                    <span>قبول وتعيين فوري في طاقم العمل ✅</span>
+                  </button>
+                )}
+
+                <button
+                  type="button"
+                  onClick={() => {
+                    const appToInterview = viewingApplication;
+                    setViewingApplication(null);
+                    setInterviewModalApp(appToInterview);
+                    setInterviewDate(appToInterview.interviewDate || "");
+                    setInterviewNotes(appToInterview.interviewNotes || "");
+                  }}
+                  className="px-3.5 py-2.5 rounded-xl bg-blue-500/20 hover:bg-blue-500/30 border border-blue-400/40 text-blue-300 font-bold text-xs transition cursor-pointer"
+                >
+                  📅 تحديد مقابلة
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => setViewingApplication(null)}
+                  className="px-4 py-2.5 rounded-xl bg-white/10 hover:bg-white/20 text-slate-300 font-bold text-xs transition cursor-pointer"
+                >
+                  إغلاق
+                </button>
+              </div>
             </div>
           </div>
         </div>
