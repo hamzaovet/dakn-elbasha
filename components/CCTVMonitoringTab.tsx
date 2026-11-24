@@ -396,6 +396,46 @@ export default function CCTVMonitoringTab({
     }
   };
 
+  // Bulk Apply go2rtc Live WebRTC Feeds
+  const handleBulkApplyGo2rtc = async () => {
+    try {
+      const res = await fetch("/api/cctv", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ action: "bulk_apply_go2rtc", hostIp: "localhost" }),
+      });
+      const data = await res.json();
+      if (data.success) {
+        showToast("success", "تم تفعيل روابط WebRTC الحية من سيرفر go2rtc لجميع الكاميرات 🚀");
+        fetchCameras();
+      } else {
+        showToast("error", data.error || "فشل تفعيل الروابط");
+      }
+    } catch {
+      showToast("error", "فشل تفعيل الروابط التلقائية");
+    }
+  };
+
+  // Bulk Reset to High-Res Simulation
+  const handleBulkResetSimulation = async () => {
+    try {
+      const res = await fetch("/api/cctv", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ action: "bulk_reset_simulation" }),
+      });
+      const data = await res.json();
+      if (data.success) {
+        showToast("success", "تم العودة للعرض الذكي الافتراضي 👑");
+        fetchCameras();
+      } else {
+        showToast("error", data.error || "فشل إعادة الضبط");
+      }
+    } catch {
+      showToast("error", "فشل إعادة الضبط");
+    }
+  };
+
   return (
     <div className="space-y-6 font-sans text-slate-100" dir="rtl">
       {/* ─────────────────────────────────────────────────────────────
@@ -1297,6 +1337,31 @@ export default function CCTVMonitoringTab({
                       <strong className="text-blue-300">تفعيل تشفير البث (Stream Encryption):</strong> في إعدادات Hikvision، قم بتفعيل تشفير البث بحيث حتى لو استطاع أحد اعتراض الإشارة لن يستطيع فك شفرة الصورة إلا بكود التحقق الخاص بك.
                     </li>
                   </ul>
+                </div>
+              </div>
+
+              {/* 1-Click go2rtc Sync Buttons */}
+              <div className="p-3 rounded-2xl bg-gradient-to-r from-emerald-500/10 to-teal-500/10 border border-emerald-500/30 flex items-center justify-between flex-wrap gap-2">
+                <div>
+                  <span className="text-white font-bold block text-xs">🚀 تحويل كروت الكاميرات في السيستم إلى بث go2rtc المباشر:</span>
+                  <span className="text-[10px] text-slate-400">بمجرد تشغيل السيرفر من ملف سطح المكتب، اضغط لتفعيل البث الحي في كروت شاشتنا فوراً:</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <button
+                    type="button"
+                    onClick={handleBulkApplyGo2rtc}
+                    className="px-3.5 py-2 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-black font-black transition cursor-pointer text-xs shadow-lg shadow-emerald-500/20"
+                  >
+                    ⚡ ربط وتفعيل بث go2rtc المباشر
+                  </button>
+                  <button
+                    type="button"
+                    onClick={handleBulkResetSimulation}
+                    className="px-3 py-2 rounded-xl bg-white/10 hover:bg-white/20 text-slate-300 font-bold transition cursor-pointer text-xs"
+                    title="إعادة الكاميرات للوضع الافتراضي"
+                  >
+                    إعادة ضبط
+                  </button>
                 </div>
               </div>
 

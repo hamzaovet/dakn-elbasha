@@ -221,6 +221,46 @@ export async function POST(req: Request) {
 export async function PATCH(req: Request) {
   try {
     const body = await req.json();
+
+    // Support Bulk Actions
+    if (body.action === "bulk_apply_go2rtc") {
+      const hostIp = body.hostIp || "localhost";
+      const cameras = await (prisma as any).securityCamera.findMany({
+        orderBy: { sortOrder: "asc" },
+      });
+
+      for (let i = 0; i < cameras.length; i++) {
+        const cam = cameras[i];
+        const camIndex = i + 1;
+        await (prisma as any).securityCamera.update({
+          where: { id: cam.id },
+          data: {
+            feedType: "IFRAME",
+            feedUrl: `http://${hostIp}:1984/webrtc.html?src=cam${camIndex}`,
+          },
+        });
+      }
+
+      return NextResponse.json({
+        success: true,
+        message: "تم تفعيل بث go2rtc (WebRTC المباشر) لجميع الكاميرات بنجاح 🚀",
+      });
+    }
+
+    if (body.action === "bulk_reset_simulation") {
+      await (prisma as any).securityCamera.updateMany({
+        data: {
+          feedType: "SIMULATION",
+          feedUrl: null,
+        },
+      });
+
+      return NextResponse.json({
+        success: true,
+        message: "تم العودة لوضع العرض الافتراضي الفاخر بنجاح 👑",
+      });
+    }
+
     const { id, ...updateData } = body;
 
     if (!id) {
