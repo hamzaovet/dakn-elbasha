@@ -13,7 +13,6 @@ import {
   AlertCircle,
   Scissors,
   CheckCircle2,
-  Users,
 } from "lucide-react";
 
 export default function StaffLoginPage() {
@@ -91,28 +90,32 @@ export default function StaffLoginPage() {
       <div className="absolute w-96 h-96 bg-rose-500/10 blur-[120px] rounded-full pointer-events-none -bottom-10 -left-10" />
 
       <div className="relative w-full max-w-md bg-[#12121a]/95 border-2 border-amber-500/30 rounded-3xl p-6 sm:p-8 shadow-2xl space-y-6">
-        {/* Dual Logos and Brand Header */}
+        {/* Triple Logos and Brand Header */}
         <div className="text-center space-y-3">
           <div className="flex items-center justify-center gap-3">
-            <div className="w-14 h-14 rounded-2xl overflow-hidden border-2 border-amber-400 bg-black shadow-lg shadow-amber-500/20">
+            <div className="w-13 h-13 sm:w-14 sm:h-14 rounded-2xl overflow-hidden border-2 border-amber-400 bg-black shadow-lg shadow-amber-500/20" title="صالون دقن الباشا (رجالي VIP)">
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img src="/dakn-logo.jpg" alt="دقن الباشا" className="w-full h-full object-cover" />
             </div>
-            <div className="w-14 h-14 rounded-2xl overflow-hidden border-2 border-rose-400 bg-black shadow-lg shadow-rose-500/20">
+            <div className="w-13 h-13 sm:w-14 sm:h-14 rounded-2xl overflow-hidden border-2 border-rose-400 bg-black shadow-lg shadow-rose-500/20" title="حمام وسبا الباشا (حريمي VIP)">
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img src="/hammam-logo.jpg" alt="حمام الباشا" className="w-full h-full object-cover" />
+            </div>
+            <div className="w-13 h-13 sm:w-14 sm:h-14 rounded-2xl overflow-hidden border-2 border-teal-400 bg-black shadow-lg shadow-teal-500/20" title="عيادة نيو سكين VIP (ليزر وتجميل)">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src="/newskin-logo.jpg" alt="نيو سكين New Skin VIP" className="w-full h-full object-cover" />
             </div>
           </div>
 
           <div>
             <h1 className="text-xl sm:text-2xl font-black text-white">
-              بوابة طاقم العمل والإدارة
+              بوابة طاقم العمل والإدارة VIP
             </h1>
             <p className="text-xs text-amber-300 font-bold mt-1">
-              مجموعة صالونات وسبا الباشا VIP
+              مجموعة صالونات وسبا وعيادات الباشا VIP
             </p>
             <p className="text-[10px] text-slate-400 font-mono font-bold tracking-wider">
-              DAKN EL BASHA & HAMMAM EL BASHA VIP
+              DAKN EL BASHA • HAMMAM EL BASHA • NEW SKIN VIP
             </p>
           </div>
         </div>
@@ -141,7 +144,7 @@ export default function StaffLoginPage() {
               required
               value={username}
               onChange={(e) => setUsername(e.target.value)}
-              placeholder="مثال: maestro أو basha أو coordinator"
+              placeholder="اسم المستخدم الخاص بك"
               className="w-full py-2.5 px-3.5 rounded-xl bg-black/60 border border-amber-500/30 text-xs text-white font-mono font-bold focus:outline-none focus:border-amber-400"
             />
           </div>
@@ -193,22 +196,6 @@ export default function StaffLoginPage() {
             <span>{loading ? "جارٍ التحقق..." : "تسجيل الدخول للمنظومة 🔒"}</span>
           </button>
         </form>
-
-        {/* Staff Quick Guide (Single-Word Users) */}
-        <div className="bg-white/5 border border-white/10 rounded-2xl p-3 text-[11px] text-slate-400 space-y-1">
-          <div className="flex items-center gap-1.5 text-amber-300 font-bold">
-            <Users className="w-3.5 h-3.5" />
-            <span>حسابات الطاقم المعتمدة (قابلة للتعديل من الإعدادات):</span>
-          </div>
-          <div className="grid grid-cols-2 gap-1 text-[10px] text-slate-300 font-mono pt-1">
-            <div>👑 <strong className="text-amber-400">maestro</strong>: المالك</div>
-            <div>👔 <strong className="text-amber-400">basha</strong>: مدير عام</div>
-            <div>💅 <strong className="text-rose-400">hammam</strong>: مديرة السبا</div>
-            <div>✂️ <strong className="text-teal-400">coordinator</strong>: منسق الصالة</div>
-            <div>🌸 <strong className="text-rose-400">reception</strong>: استقبال حريمي</div>
-            <div>💵 <strong className="text-emerald-400">cashier</strong>: الكاشير</div>
-          </div>
-        </div>
 
         {/* Back to Homepage */}
         <div className="text-center pt-1">

@@ -103,6 +103,11 @@ export type StockTransfer = $Result.DefaultSelection<Prisma.$StockTransferPayloa
  * 
  */
 export type MaterialConsumptionLog = $Result.DefaultSelection<Prisma.$MaterialConsumptionLogPayload>
+/**
+ * Model SecurityCamera
+ * 
+ */
+export type SecurityCamera = $Result.DefaultSelection<Prisma.$SecurityCameraPayload>
 
 /**
  * ##  Prisma Client ʲˢ
@@ -404,6 +409,16 @@ export class PrismaClient<
     * ```
     */
   get materialConsumptionLog(): Prisma.MaterialConsumptionLogDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.securityCamera`: Exposes CRUD operations for the **SecurityCamera** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more SecurityCameras
+    * const securityCameras = await prisma.securityCamera.findMany()
+    * ```
+    */
+  get securityCamera(): Prisma.SecurityCameraDelegate<ExtArgs, ClientOptions>;
 }
 
 export namespace Prisma {
@@ -868,7 +883,8 @@ export namespace Prisma {
     AttendanceRecord: 'AttendanceRecord',
     StockPurchase: 'StockPurchase',
     StockTransfer: 'StockTransfer',
-    MaterialConsumptionLog: 'MaterialConsumptionLog'
+    MaterialConsumptionLog: 'MaterialConsumptionLog',
+    SecurityCamera: 'SecurityCamera'
   };
 
   export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -884,7 +900,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "branch" | "user" | "specialist" | "service" | "customer" | "booking" | "ticket" | "product" | "specialistLedger" | "systemSettings" | "offer" | "chatMessage" | "cashShift" | "treasuryExpense" | "attendanceRecord" | "stockPurchase" | "stockTransfer" | "materialConsumptionLog"
+      modelProps: "branch" | "user" | "specialist" | "service" | "customer" | "booking" | "ticket" | "product" | "specialistLedger" | "systemSettings" | "offer" | "chatMessage" | "cashShift" | "treasuryExpense" | "attendanceRecord" | "stockPurchase" | "stockTransfer" | "materialConsumptionLog" | "securityCamera"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -2220,6 +2236,80 @@ export namespace Prisma {
           }
         }
       }
+      SecurityCamera: {
+        payload: Prisma.$SecurityCameraPayload<ExtArgs>
+        fields: Prisma.SecurityCameraFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.SecurityCameraFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SecurityCameraPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.SecurityCameraFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SecurityCameraPayload>
+          }
+          findFirst: {
+            args: Prisma.SecurityCameraFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SecurityCameraPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.SecurityCameraFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SecurityCameraPayload>
+          }
+          findMany: {
+            args: Prisma.SecurityCameraFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SecurityCameraPayload>[]
+          }
+          create: {
+            args: Prisma.SecurityCameraCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SecurityCameraPayload>
+          }
+          createMany: {
+            args: Prisma.SecurityCameraCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.SecurityCameraCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SecurityCameraPayload>[]
+          }
+          delete: {
+            args: Prisma.SecurityCameraDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SecurityCameraPayload>
+          }
+          update: {
+            args: Prisma.SecurityCameraUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SecurityCameraPayload>
+          }
+          deleteMany: {
+            args: Prisma.SecurityCameraDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.SecurityCameraUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.SecurityCameraUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SecurityCameraPayload>[]
+          }
+          upsert: {
+            args: Prisma.SecurityCameraUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SecurityCameraPayload>
+          }
+          aggregate: {
+            args: Prisma.SecurityCameraAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateSecurityCamera>
+          }
+          groupBy: {
+            args: Prisma.SecurityCameraGroupByArgs<ExtArgs>
+            result: $Utils.Optional<SecurityCameraGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.SecurityCameraCountArgs<ExtArgs>
+            result: $Utils.Optional<SecurityCameraCountAggregateOutputType> | number
+          }
+        }
+      }
     }
   } & {
     other: {
@@ -2361,6 +2451,7 @@ export namespace Prisma {
     stockPurchase?: StockPurchaseOmit
     stockTransfer?: StockTransferOmit
     materialConsumptionLog?: MaterialConsumptionLogOmit
+    securityCamera?: SecurityCameraOmit
   }
 
   /* Types for Logging */
@@ -2454,6 +2545,7 @@ export namespace Prisma {
     attendances: number
     transfers: number
     consumptionLogs: number
+    cameras: number
   }
 
   export type BranchCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -2470,6 +2562,7 @@ export namespace Prisma {
     attendances?: boolean | BranchCountOutputTypeCountAttendancesArgs
     transfers?: boolean | BranchCountOutputTypeCountTransfersArgs
     consumptionLogs?: boolean | BranchCountOutputTypeCountConsumptionLogsArgs
+    cameras?: boolean | BranchCountOutputTypeCountCamerasArgs
   }
 
   // Custom InputTypes
@@ -2572,6 +2665,13 @@ export namespace Prisma {
    */
   export type BranchCountOutputTypeCountConsumptionLogsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: MaterialConsumptionLogWhereInput
+  }
+
+  /**
+   * BranchCountOutputType without action
+   */
+  export type BranchCountOutputTypeCountCamerasArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: SecurityCameraWhereInput
   }
 
 
@@ -2957,6 +3057,7 @@ export namespace Prisma {
     attendances?: boolean | Branch$attendancesArgs<ExtArgs>
     transfers?: boolean | Branch$transfersArgs<ExtArgs>
     consumptionLogs?: boolean | Branch$consumptionLogsArgs<ExtArgs>
+    cameras?: boolean | Branch$camerasArgs<ExtArgs>
     _count?: boolean | BranchCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["branch"]>
 
@@ -3011,6 +3112,7 @@ export namespace Prisma {
     attendances?: boolean | Branch$attendancesArgs<ExtArgs>
     transfers?: boolean | Branch$transfersArgs<ExtArgs>
     consumptionLogs?: boolean | Branch$consumptionLogsArgs<ExtArgs>
+    cameras?: boolean | Branch$camerasArgs<ExtArgs>
     _count?: boolean | BranchCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type BranchIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
@@ -3032,6 +3134,7 @@ export namespace Prisma {
       attendances: Prisma.$AttendanceRecordPayload<ExtArgs>[]
       transfers: Prisma.$StockTransferPayload<ExtArgs>[]
       consumptionLogs: Prisma.$MaterialConsumptionLogPayload<ExtArgs>[]
+      cameras: Prisma.$SecurityCameraPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -3450,6 +3553,7 @@ export namespace Prisma {
     attendances<T extends Branch$attendancesArgs<ExtArgs> = {}>(args?: Subset<T, Branch$attendancesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$AttendanceRecordPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     transfers<T extends Branch$transfersArgs<ExtArgs> = {}>(args?: Subset<T, Branch$transfersArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$StockTransferPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     consumptionLogs<T extends Branch$consumptionLogsArgs<ExtArgs> = {}>(args?: Subset<T, Branch$consumptionLogsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$MaterialConsumptionLogPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    cameras<T extends Branch$camerasArgs<ExtArgs> = {}>(args?: Subset<T, Branch$camerasArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SecurityCameraPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -4190,6 +4294,30 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: MaterialConsumptionLogScalarFieldEnum | MaterialConsumptionLogScalarFieldEnum[]
+  }
+
+  /**
+   * Branch.cameras
+   */
+  export type Branch$camerasArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SecurityCamera
+     */
+    select?: SecurityCameraSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SecurityCamera
+     */
+    omit?: SecurityCameraOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SecurityCameraInclude<ExtArgs> | null
+    where?: SecurityCameraWhereInput
+    orderBy?: SecurityCameraOrderByWithRelationInput | SecurityCameraOrderByWithRelationInput[]
+    cursor?: SecurityCameraWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: SecurityCameraScalarFieldEnum | SecurityCameraScalarFieldEnum[]
   }
 
   /**
@@ -25342,6 +25470,1355 @@ export namespace Prisma {
 
 
   /**
+   * Model SecurityCamera
+   */
+
+  export type AggregateSecurityCamera = {
+    _count: SecurityCameraCountAggregateOutputType | null
+    _avg: SecurityCameraAvgAggregateOutputType | null
+    _sum: SecurityCameraSumAggregateOutputType | null
+    _min: SecurityCameraMinAggregateOutputType | null
+    _max: SecurityCameraMaxAggregateOutputType | null
+  }
+
+  export type SecurityCameraAvgAggregateOutputType = {
+    port: number | null
+    channelNumber: number | null
+    fps: number | null
+    sortOrder: number | null
+  }
+
+  export type SecurityCameraSumAggregateOutputType = {
+    port: number | null
+    channelNumber: number | null
+    fps: number | null
+    sortOrder: number | null
+  }
+
+  export type SecurityCameraMinAggregateOutputType = {
+    id: string | null
+    name: string | null
+    branchId: string | null
+    venueType: string | null
+    locationDescription: string | null
+    feedType: string | null
+    feedUrl: string | null
+    snapshotUrl: string | null
+    rtspUrl: string | null
+    ipAddress: string | null
+    port: number | null
+    channelNumber: number | null
+    streamQuality: string | null
+    fps: number | null
+    hasNightVision: boolean | null
+    hasPTZ: boolean | null
+    hasAudio: boolean | null
+    isActive: boolean | null
+    sortOrder: number | null
+    notes: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type SecurityCameraMaxAggregateOutputType = {
+    id: string | null
+    name: string | null
+    branchId: string | null
+    venueType: string | null
+    locationDescription: string | null
+    feedType: string | null
+    feedUrl: string | null
+    snapshotUrl: string | null
+    rtspUrl: string | null
+    ipAddress: string | null
+    port: number | null
+    channelNumber: number | null
+    streamQuality: string | null
+    fps: number | null
+    hasNightVision: boolean | null
+    hasPTZ: boolean | null
+    hasAudio: boolean | null
+    isActive: boolean | null
+    sortOrder: number | null
+    notes: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type SecurityCameraCountAggregateOutputType = {
+    id: number
+    name: number
+    branchId: number
+    venueType: number
+    locationDescription: number
+    feedType: number
+    feedUrl: number
+    snapshotUrl: number
+    rtspUrl: number
+    ipAddress: number
+    port: number
+    channelNumber: number
+    streamQuality: number
+    fps: number
+    hasNightVision: number
+    hasPTZ: number
+    hasAudio: number
+    isActive: number
+    sortOrder: number
+    notes: number
+    createdAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type SecurityCameraAvgAggregateInputType = {
+    port?: true
+    channelNumber?: true
+    fps?: true
+    sortOrder?: true
+  }
+
+  export type SecurityCameraSumAggregateInputType = {
+    port?: true
+    channelNumber?: true
+    fps?: true
+    sortOrder?: true
+  }
+
+  export type SecurityCameraMinAggregateInputType = {
+    id?: true
+    name?: true
+    branchId?: true
+    venueType?: true
+    locationDescription?: true
+    feedType?: true
+    feedUrl?: true
+    snapshotUrl?: true
+    rtspUrl?: true
+    ipAddress?: true
+    port?: true
+    channelNumber?: true
+    streamQuality?: true
+    fps?: true
+    hasNightVision?: true
+    hasPTZ?: true
+    hasAudio?: true
+    isActive?: true
+    sortOrder?: true
+    notes?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type SecurityCameraMaxAggregateInputType = {
+    id?: true
+    name?: true
+    branchId?: true
+    venueType?: true
+    locationDescription?: true
+    feedType?: true
+    feedUrl?: true
+    snapshotUrl?: true
+    rtspUrl?: true
+    ipAddress?: true
+    port?: true
+    channelNumber?: true
+    streamQuality?: true
+    fps?: true
+    hasNightVision?: true
+    hasPTZ?: true
+    hasAudio?: true
+    isActive?: true
+    sortOrder?: true
+    notes?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type SecurityCameraCountAggregateInputType = {
+    id?: true
+    name?: true
+    branchId?: true
+    venueType?: true
+    locationDescription?: true
+    feedType?: true
+    feedUrl?: true
+    snapshotUrl?: true
+    rtspUrl?: true
+    ipAddress?: true
+    port?: true
+    channelNumber?: true
+    streamQuality?: true
+    fps?: true
+    hasNightVision?: true
+    hasPTZ?: true
+    hasAudio?: true
+    isActive?: true
+    sortOrder?: true
+    notes?: true
+    createdAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type SecurityCameraAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which SecurityCamera to aggregate.
+     */
+    where?: SecurityCameraWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of SecurityCameras to fetch.
+     */
+    orderBy?: SecurityCameraOrderByWithRelationInput | SecurityCameraOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: SecurityCameraWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` SecurityCameras from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` SecurityCameras.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned SecurityCameras
+    **/
+    _count?: true | SecurityCameraCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: SecurityCameraAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: SecurityCameraSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: SecurityCameraMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: SecurityCameraMaxAggregateInputType
+  }
+
+  export type GetSecurityCameraAggregateType<T extends SecurityCameraAggregateArgs> = {
+        [P in keyof T & keyof AggregateSecurityCamera]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateSecurityCamera[P]>
+      : GetScalarType<T[P], AggregateSecurityCamera[P]>
+  }
+
+
+
+
+  export type SecurityCameraGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: SecurityCameraWhereInput
+    orderBy?: SecurityCameraOrderByWithAggregationInput | SecurityCameraOrderByWithAggregationInput[]
+    by: SecurityCameraScalarFieldEnum[] | SecurityCameraScalarFieldEnum
+    having?: SecurityCameraScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: SecurityCameraCountAggregateInputType | true
+    _avg?: SecurityCameraAvgAggregateInputType
+    _sum?: SecurityCameraSumAggregateInputType
+    _min?: SecurityCameraMinAggregateInputType
+    _max?: SecurityCameraMaxAggregateInputType
+  }
+
+  export type SecurityCameraGroupByOutputType = {
+    id: string
+    name: string
+    branchId: string | null
+    venueType: string
+    locationDescription: string
+    feedType: string
+    feedUrl: string | null
+    snapshotUrl: string | null
+    rtspUrl: string | null
+    ipAddress: string | null
+    port: number | null
+    channelNumber: number
+    streamQuality: string
+    fps: number
+    hasNightVision: boolean
+    hasPTZ: boolean
+    hasAudio: boolean
+    isActive: boolean
+    sortOrder: number
+    notes: string | null
+    createdAt: Date
+    updatedAt: Date
+    _count: SecurityCameraCountAggregateOutputType | null
+    _avg: SecurityCameraAvgAggregateOutputType | null
+    _sum: SecurityCameraSumAggregateOutputType | null
+    _min: SecurityCameraMinAggregateOutputType | null
+    _max: SecurityCameraMaxAggregateOutputType | null
+  }
+
+  type GetSecurityCameraGroupByPayload<T extends SecurityCameraGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<SecurityCameraGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof SecurityCameraGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], SecurityCameraGroupByOutputType[P]>
+            : GetScalarType<T[P], SecurityCameraGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type SecurityCameraSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    name?: boolean
+    branchId?: boolean
+    venueType?: boolean
+    locationDescription?: boolean
+    feedType?: boolean
+    feedUrl?: boolean
+    snapshotUrl?: boolean
+    rtspUrl?: boolean
+    ipAddress?: boolean
+    port?: boolean
+    channelNumber?: boolean
+    streamQuality?: boolean
+    fps?: boolean
+    hasNightVision?: boolean
+    hasPTZ?: boolean
+    hasAudio?: boolean
+    isActive?: boolean
+    sortOrder?: boolean
+    notes?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    branch?: boolean | SecurityCamera$branchArgs<ExtArgs>
+  }, ExtArgs["result"]["securityCamera"]>
+
+  export type SecurityCameraSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    name?: boolean
+    branchId?: boolean
+    venueType?: boolean
+    locationDescription?: boolean
+    feedType?: boolean
+    feedUrl?: boolean
+    snapshotUrl?: boolean
+    rtspUrl?: boolean
+    ipAddress?: boolean
+    port?: boolean
+    channelNumber?: boolean
+    streamQuality?: boolean
+    fps?: boolean
+    hasNightVision?: boolean
+    hasPTZ?: boolean
+    hasAudio?: boolean
+    isActive?: boolean
+    sortOrder?: boolean
+    notes?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    branch?: boolean | SecurityCamera$branchArgs<ExtArgs>
+  }, ExtArgs["result"]["securityCamera"]>
+
+  export type SecurityCameraSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    name?: boolean
+    branchId?: boolean
+    venueType?: boolean
+    locationDescription?: boolean
+    feedType?: boolean
+    feedUrl?: boolean
+    snapshotUrl?: boolean
+    rtspUrl?: boolean
+    ipAddress?: boolean
+    port?: boolean
+    channelNumber?: boolean
+    streamQuality?: boolean
+    fps?: boolean
+    hasNightVision?: boolean
+    hasPTZ?: boolean
+    hasAudio?: boolean
+    isActive?: boolean
+    sortOrder?: boolean
+    notes?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    branch?: boolean | SecurityCamera$branchArgs<ExtArgs>
+  }, ExtArgs["result"]["securityCamera"]>
+
+  export type SecurityCameraSelectScalar = {
+    id?: boolean
+    name?: boolean
+    branchId?: boolean
+    venueType?: boolean
+    locationDescription?: boolean
+    feedType?: boolean
+    feedUrl?: boolean
+    snapshotUrl?: boolean
+    rtspUrl?: boolean
+    ipAddress?: boolean
+    port?: boolean
+    channelNumber?: boolean
+    streamQuality?: boolean
+    fps?: boolean
+    hasNightVision?: boolean
+    hasPTZ?: boolean
+    hasAudio?: boolean
+    isActive?: boolean
+    sortOrder?: boolean
+    notes?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }
+
+  export type SecurityCameraOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "branchId" | "venueType" | "locationDescription" | "feedType" | "feedUrl" | "snapshotUrl" | "rtspUrl" | "ipAddress" | "port" | "channelNumber" | "streamQuality" | "fps" | "hasNightVision" | "hasPTZ" | "hasAudio" | "isActive" | "sortOrder" | "notes" | "createdAt" | "updatedAt", ExtArgs["result"]["securityCamera"]>
+  export type SecurityCameraInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    branch?: boolean | SecurityCamera$branchArgs<ExtArgs>
+  }
+  export type SecurityCameraIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    branch?: boolean | SecurityCamera$branchArgs<ExtArgs>
+  }
+  export type SecurityCameraIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    branch?: boolean | SecurityCamera$branchArgs<ExtArgs>
+  }
+
+  export type $SecurityCameraPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "SecurityCamera"
+    objects: {
+      branch: Prisma.$BranchPayload<ExtArgs> | null
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      name: string
+      branchId: string | null
+      venueType: string
+      locationDescription: string
+      feedType: string
+      feedUrl: string | null
+      snapshotUrl: string | null
+      rtspUrl: string | null
+      ipAddress: string | null
+      port: number | null
+      channelNumber: number
+      streamQuality: string
+      fps: number
+      hasNightVision: boolean
+      hasPTZ: boolean
+      hasAudio: boolean
+      isActive: boolean
+      sortOrder: number
+      notes: string | null
+      createdAt: Date
+      updatedAt: Date
+    }, ExtArgs["result"]["securityCamera"]>
+    composites: {}
+  }
+
+  type SecurityCameraGetPayload<S extends boolean | null | undefined | SecurityCameraDefaultArgs> = $Result.GetResult<Prisma.$SecurityCameraPayload, S>
+
+  type SecurityCameraCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<SecurityCameraFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: SecurityCameraCountAggregateInputType | true
+    }
+
+  export interface SecurityCameraDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['SecurityCamera'], meta: { name: 'SecurityCamera' } }
+    /**
+     * Find zero or one SecurityCamera that matches the filter.
+     * @param {SecurityCameraFindUniqueArgs} args - Arguments to find a SecurityCamera
+     * @example
+     * // Get one SecurityCamera
+     * const securityCamera = await prisma.securityCamera.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends SecurityCameraFindUniqueArgs>(args: SelectSubset<T, SecurityCameraFindUniqueArgs<ExtArgs>>): Prisma__SecurityCameraClient<$Result.GetResult<Prisma.$SecurityCameraPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one SecurityCamera that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {SecurityCameraFindUniqueOrThrowArgs} args - Arguments to find a SecurityCamera
+     * @example
+     * // Get one SecurityCamera
+     * const securityCamera = await prisma.securityCamera.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends SecurityCameraFindUniqueOrThrowArgs>(args: SelectSubset<T, SecurityCameraFindUniqueOrThrowArgs<ExtArgs>>): Prisma__SecurityCameraClient<$Result.GetResult<Prisma.$SecurityCameraPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first SecurityCamera that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SecurityCameraFindFirstArgs} args - Arguments to find a SecurityCamera
+     * @example
+     * // Get one SecurityCamera
+     * const securityCamera = await prisma.securityCamera.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends SecurityCameraFindFirstArgs>(args?: SelectSubset<T, SecurityCameraFindFirstArgs<ExtArgs>>): Prisma__SecurityCameraClient<$Result.GetResult<Prisma.$SecurityCameraPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first SecurityCamera that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SecurityCameraFindFirstOrThrowArgs} args - Arguments to find a SecurityCamera
+     * @example
+     * // Get one SecurityCamera
+     * const securityCamera = await prisma.securityCamera.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends SecurityCameraFindFirstOrThrowArgs>(args?: SelectSubset<T, SecurityCameraFindFirstOrThrowArgs<ExtArgs>>): Prisma__SecurityCameraClient<$Result.GetResult<Prisma.$SecurityCameraPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more SecurityCameras that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SecurityCameraFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all SecurityCameras
+     * const securityCameras = await prisma.securityCamera.findMany()
+     * 
+     * // Get first 10 SecurityCameras
+     * const securityCameras = await prisma.securityCamera.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const securityCameraWithIdOnly = await prisma.securityCamera.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends SecurityCameraFindManyArgs>(args?: SelectSubset<T, SecurityCameraFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SecurityCameraPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a SecurityCamera.
+     * @param {SecurityCameraCreateArgs} args - Arguments to create a SecurityCamera.
+     * @example
+     * // Create one SecurityCamera
+     * const SecurityCamera = await prisma.securityCamera.create({
+     *   data: {
+     *     // ... data to create a SecurityCamera
+     *   }
+     * })
+     * 
+     */
+    create<T extends SecurityCameraCreateArgs>(args: SelectSubset<T, SecurityCameraCreateArgs<ExtArgs>>): Prisma__SecurityCameraClient<$Result.GetResult<Prisma.$SecurityCameraPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many SecurityCameras.
+     * @param {SecurityCameraCreateManyArgs} args - Arguments to create many SecurityCameras.
+     * @example
+     * // Create many SecurityCameras
+     * const securityCamera = await prisma.securityCamera.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends SecurityCameraCreateManyArgs>(args?: SelectSubset<T, SecurityCameraCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many SecurityCameras and returns the data saved in the database.
+     * @param {SecurityCameraCreateManyAndReturnArgs} args - Arguments to create many SecurityCameras.
+     * @example
+     * // Create many SecurityCameras
+     * const securityCamera = await prisma.securityCamera.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many SecurityCameras and only return the `id`
+     * const securityCameraWithIdOnly = await prisma.securityCamera.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends SecurityCameraCreateManyAndReturnArgs>(args?: SelectSubset<T, SecurityCameraCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SecurityCameraPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a SecurityCamera.
+     * @param {SecurityCameraDeleteArgs} args - Arguments to delete one SecurityCamera.
+     * @example
+     * // Delete one SecurityCamera
+     * const SecurityCamera = await prisma.securityCamera.delete({
+     *   where: {
+     *     // ... filter to delete one SecurityCamera
+     *   }
+     * })
+     * 
+     */
+    delete<T extends SecurityCameraDeleteArgs>(args: SelectSubset<T, SecurityCameraDeleteArgs<ExtArgs>>): Prisma__SecurityCameraClient<$Result.GetResult<Prisma.$SecurityCameraPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one SecurityCamera.
+     * @param {SecurityCameraUpdateArgs} args - Arguments to update one SecurityCamera.
+     * @example
+     * // Update one SecurityCamera
+     * const securityCamera = await prisma.securityCamera.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends SecurityCameraUpdateArgs>(args: SelectSubset<T, SecurityCameraUpdateArgs<ExtArgs>>): Prisma__SecurityCameraClient<$Result.GetResult<Prisma.$SecurityCameraPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more SecurityCameras.
+     * @param {SecurityCameraDeleteManyArgs} args - Arguments to filter SecurityCameras to delete.
+     * @example
+     * // Delete a few SecurityCameras
+     * const { count } = await prisma.securityCamera.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends SecurityCameraDeleteManyArgs>(args?: SelectSubset<T, SecurityCameraDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more SecurityCameras.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SecurityCameraUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many SecurityCameras
+     * const securityCamera = await prisma.securityCamera.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends SecurityCameraUpdateManyArgs>(args: SelectSubset<T, SecurityCameraUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more SecurityCameras and returns the data updated in the database.
+     * @param {SecurityCameraUpdateManyAndReturnArgs} args - Arguments to update many SecurityCameras.
+     * @example
+     * // Update many SecurityCameras
+     * const securityCamera = await prisma.securityCamera.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more SecurityCameras and only return the `id`
+     * const securityCameraWithIdOnly = await prisma.securityCamera.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends SecurityCameraUpdateManyAndReturnArgs>(args: SelectSubset<T, SecurityCameraUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SecurityCameraPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one SecurityCamera.
+     * @param {SecurityCameraUpsertArgs} args - Arguments to update or create a SecurityCamera.
+     * @example
+     * // Update or create a SecurityCamera
+     * const securityCamera = await prisma.securityCamera.upsert({
+     *   create: {
+     *     // ... data to create a SecurityCamera
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the SecurityCamera we want to update
+     *   }
+     * })
+     */
+    upsert<T extends SecurityCameraUpsertArgs>(args: SelectSubset<T, SecurityCameraUpsertArgs<ExtArgs>>): Prisma__SecurityCameraClient<$Result.GetResult<Prisma.$SecurityCameraPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of SecurityCameras.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SecurityCameraCountArgs} args - Arguments to filter SecurityCameras to count.
+     * @example
+     * // Count the number of SecurityCameras
+     * const count = await prisma.securityCamera.count({
+     *   where: {
+     *     // ... the filter for the SecurityCameras we want to count
+     *   }
+     * })
+    **/
+    count<T extends SecurityCameraCountArgs>(
+      args?: Subset<T, SecurityCameraCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], SecurityCameraCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a SecurityCamera.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SecurityCameraAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends SecurityCameraAggregateArgs>(args: Subset<T, SecurityCameraAggregateArgs>): Prisma.PrismaPromise<GetSecurityCameraAggregateType<T>>
+
+    /**
+     * Group by SecurityCamera.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SecurityCameraGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends SecurityCameraGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: SecurityCameraGroupByArgs['orderBy'] }
+        : { orderBy?: SecurityCameraGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, SecurityCameraGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetSecurityCameraGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the SecurityCamera model
+   */
+  readonly fields: SecurityCameraFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for SecurityCamera.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__SecurityCameraClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    branch<T extends SecurityCamera$branchArgs<ExtArgs> = {}>(args?: Subset<T, SecurityCamera$branchArgs<ExtArgs>>): Prisma__BranchClient<$Result.GetResult<Prisma.$BranchPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the SecurityCamera model
+   */
+  interface SecurityCameraFieldRefs {
+    readonly id: FieldRef<"SecurityCamera", 'String'>
+    readonly name: FieldRef<"SecurityCamera", 'String'>
+    readonly branchId: FieldRef<"SecurityCamera", 'String'>
+    readonly venueType: FieldRef<"SecurityCamera", 'String'>
+    readonly locationDescription: FieldRef<"SecurityCamera", 'String'>
+    readonly feedType: FieldRef<"SecurityCamera", 'String'>
+    readonly feedUrl: FieldRef<"SecurityCamera", 'String'>
+    readonly snapshotUrl: FieldRef<"SecurityCamera", 'String'>
+    readonly rtspUrl: FieldRef<"SecurityCamera", 'String'>
+    readonly ipAddress: FieldRef<"SecurityCamera", 'String'>
+    readonly port: FieldRef<"SecurityCamera", 'Int'>
+    readonly channelNumber: FieldRef<"SecurityCamera", 'Int'>
+    readonly streamQuality: FieldRef<"SecurityCamera", 'String'>
+    readonly fps: FieldRef<"SecurityCamera", 'Int'>
+    readonly hasNightVision: FieldRef<"SecurityCamera", 'Boolean'>
+    readonly hasPTZ: FieldRef<"SecurityCamera", 'Boolean'>
+    readonly hasAudio: FieldRef<"SecurityCamera", 'Boolean'>
+    readonly isActive: FieldRef<"SecurityCamera", 'Boolean'>
+    readonly sortOrder: FieldRef<"SecurityCamera", 'Int'>
+    readonly notes: FieldRef<"SecurityCamera", 'String'>
+    readonly createdAt: FieldRef<"SecurityCamera", 'DateTime'>
+    readonly updatedAt: FieldRef<"SecurityCamera", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * SecurityCamera findUnique
+   */
+  export type SecurityCameraFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SecurityCamera
+     */
+    select?: SecurityCameraSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SecurityCamera
+     */
+    omit?: SecurityCameraOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SecurityCameraInclude<ExtArgs> | null
+    /**
+     * Filter, which SecurityCamera to fetch.
+     */
+    where: SecurityCameraWhereUniqueInput
+  }
+
+  /**
+   * SecurityCamera findUniqueOrThrow
+   */
+  export type SecurityCameraFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SecurityCamera
+     */
+    select?: SecurityCameraSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SecurityCamera
+     */
+    omit?: SecurityCameraOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SecurityCameraInclude<ExtArgs> | null
+    /**
+     * Filter, which SecurityCamera to fetch.
+     */
+    where: SecurityCameraWhereUniqueInput
+  }
+
+  /**
+   * SecurityCamera findFirst
+   */
+  export type SecurityCameraFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SecurityCamera
+     */
+    select?: SecurityCameraSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SecurityCamera
+     */
+    omit?: SecurityCameraOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SecurityCameraInclude<ExtArgs> | null
+    /**
+     * Filter, which SecurityCamera to fetch.
+     */
+    where?: SecurityCameraWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of SecurityCameras to fetch.
+     */
+    orderBy?: SecurityCameraOrderByWithRelationInput | SecurityCameraOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for SecurityCameras.
+     */
+    cursor?: SecurityCameraWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` SecurityCameras from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` SecurityCameras.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of SecurityCameras.
+     */
+    distinct?: SecurityCameraScalarFieldEnum | SecurityCameraScalarFieldEnum[]
+  }
+
+  /**
+   * SecurityCamera findFirstOrThrow
+   */
+  export type SecurityCameraFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SecurityCamera
+     */
+    select?: SecurityCameraSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SecurityCamera
+     */
+    omit?: SecurityCameraOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SecurityCameraInclude<ExtArgs> | null
+    /**
+     * Filter, which SecurityCamera to fetch.
+     */
+    where?: SecurityCameraWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of SecurityCameras to fetch.
+     */
+    orderBy?: SecurityCameraOrderByWithRelationInput | SecurityCameraOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for SecurityCameras.
+     */
+    cursor?: SecurityCameraWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` SecurityCameras from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` SecurityCameras.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of SecurityCameras.
+     */
+    distinct?: SecurityCameraScalarFieldEnum | SecurityCameraScalarFieldEnum[]
+  }
+
+  /**
+   * SecurityCamera findMany
+   */
+  export type SecurityCameraFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SecurityCamera
+     */
+    select?: SecurityCameraSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SecurityCamera
+     */
+    omit?: SecurityCameraOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SecurityCameraInclude<ExtArgs> | null
+    /**
+     * Filter, which SecurityCameras to fetch.
+     */
+    where?: SecurityCameraWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of SecurityCameras to fetch.
+     */
+    orderBy?: SecurityCameraOrderByWithRelationInput | SecurityCameraOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing SecurityCameras.
+     */
+    cursor?: SecurityCameraWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` SecurityCameras from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` SecurityCameras.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of SecurityCameras.
+     */
+    distinct?: SecurityCameraScalarFieldEnum | SecurityCameraScalarFieldEnum[]
+  }
+
+  /**
+   * SecurityCamera create
+   */
+  export type SecurityCameraCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SecurityCamera
+     */
+    select?: SecurityCameraSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SecurityCamera
+     */
+    omit?: SecurityCameraOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SecurityCameraInclude<ExtArgs> | null
+    /**
+     * The data needed to create a SecurityCamera.
+     */
+    data: XOR<SecurityCameraCreateInput, SecurityCameraUncheckedCreateInput>
+  }
+
+  /**
+   * SecurityCamera createMany
+   */
+  export type SecurityCameraCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many SecurityCameras.
+     */
+    data: SecurityCameraCreateManyInput | SecurityCameraCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * SecurityCamera createManyAndReturn
+   */
+  export type SecurityCameraCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SecurityCamera
+     */
+    select?: SecurityCameraSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the SecurityCamera
+     */
+    omit?: SecurityCameraOmit<ExtArgs> | null
+    /**
+     * The data used to create many SecurityCameras.
+     */
+    data: SecurityCameraCreateManyInput | SecurityCameraCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SecurityCameraIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * SecurityCamera update
+   */
+  export type SecurityCameraUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SecurityCamera
+     */
+    select?: SecurityCameraSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SecurityCamera
+     */
+    omit?: SecurityCameraOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SecurityCameraInclude<ExtArgs> | null
+    /**
+     * The data needed to update a SecurityCamera.
+     */
+    data: XOR<SecurityCameraUpdateInput, SecurityCameraUncheckedUpdateInput>
+    /**
+     * Choose, which SecurityCamera to update.
+     */
+    where: SecurityCameraWhereUniqueInput
+  }
+
+  /**
+   * SecurityCamera updateMany
+   */
+  export type SecurityCameraUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update SecurityCameras.
+     */
+    data: XOR<SecurityCameraUpdateManyMutationInput, SecurityCameraUncheckedUpdateManyInput>
+    /**
+     * Filter which SecurityCameras to update
+     */
+    where?: SecurityCameraWhereInput
+    /**
+     * Limit how many SecurityCameras to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * SecurityCamera updateManyAndReturn
+   */
+  export type SecurityCameraUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SecurityCamera
+     */
+    select?: SecurityCameraSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the SecurityCamera
+     */
+    omit?: SecurityCameraOmit<ExtArgs> | null
+    /**
+     * The data used to update SecurityCameras.
+     */
+    data: XOR<SecurityCameraUpdateManyMutationInput, SecurityCameraUncheckedUpdateManyInput>
+    /**
+     * Filter which SecurityCameras to update
+     */
+    where?: SecurityCameraWhereInput
+    /**
+     * Limit how many SecurityCameras to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SecurityCameraIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * SecurityCamera upsert
+   */
+  export type SecurityCameraUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SecurityCamera
+     */
+    select?: SecurityCameraSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SecurityCamera
+     */
+    omit?: SecurityCameraOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SecurityCameraInclude<ExtArgs> | null
+    /**
+     * The filter to search for the SecurityCamera to update in case it exists.
+     */
+    where: SecurityCameraWhereUniqueInput
+    /**
+     * In case the SecurityCamera found by the `where` argument doesn't exist, create a new SecurityCamera with this data.
+     */
+    create: XOR<SecurityCameraCreateInput, SecurityCameraUncheckedCreateInput>
+    /**
+     * In case the SecurityCamera was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<SecurityCameraUpdateInput, SecurityCameraUncheckedUpdateInput>
+  }
+
+  /**
+   * SecurityCamera delete
+   */
+  export type SecurityCameraDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SecurityCamera
+     */
+    select?: SecurityCameraSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SecurityCamera
+     */
+    omit?: SecurityCameraOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SecurityCameraInclude<ExtArgs> | null
+    /**
+     * Filter which SecurityCamera to delete.
+     */
+    where: SecurityCameraWhereUniqueInput
+  }
+
+  /**
+   * SecurityCamera deleteMany
+   */
+  export type SecurityCameraDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which SecurityCameras to delete
+     */
+    where?: SecurityCameraWhereInput
+    /**
+     * Limit how many SecurityCameras to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * SecurityCamera.branch
+   */
+  export type SecurityCamera$branchArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Branch
+     */
+    select?: BranchSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Branch
+     */
+    omit?: BranchOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: BranchInclude<ExtArgs> | null
+    where?: BranchWhereInput
+  }
+
+  /**
+   * SecurityCamera without action
+   */
+  export type SecurityCameraDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SecurityCamera
+     */
+    select?: SecurityCameraSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SecurityCamera
+     */
+    omit?: SecurityCameraOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SecurityCameraInclude<ExtArgs> | null
+  }
+
+
+  /**
    * Enums
    */
 
@@ -25717,6 +27194,34 @@ export namespace Prisma {
   export type MaterialConsumptionLogScalarFieldEnum = (typeof MaterialConsumptionLogScalarFieldEnum)[keyof typeof MaterialConsumptionLogScalarFieldEnum]
 
 
+  export const SecurityCameraScalarFieldEnum: {
+    id: 'id',
+    name: 'name',
+    branchId: 'branchId',
+    venueType: 'venueType',
+    locationDescription: 'locationDescription',
+    feedType: 'feedType',
+    feedUrl: 'feedUrl',
+    snapshotUrl: 'snapshotUrl',
+    rtspUrl: 'rtspUrl',
+    ipAddress: 'ipAddress',
+    port: 'port',
+    channelNumber: 'channelNumber',
+    streamQuality: 'streamQuality',
+    fps: 'fps',
+    hasNightVision: 'hasNightVision',
+    hasPTZ: 'hasPTZ',
+    hasAudio: 'hasAudio',
+    isActive: 'isActive',
+    sortOrder: 'sortOrder',
+    notes: 'notes',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type SecurityCameraScalarFieldEnum = (typeof SecurityCameraScalarFieldEnum)[keyof typeof SecurityCameraScalarFieldEnum]
+
+
   export const SortOrder: {
     asc: 'asc',
     desc: 'desc'
@@ -25838,6 +27343,7 @@ export namespace Prisma {
     attendances?: AttendanceRecordListRelationFilter
     transfers?: StockTransferListRelationFilter
     consumptionLogs?: MaterialConsumptionLogListRelationFilter
+    cameras?: SecurityCameraListRelationFilter
   }
 
   export type BranchOrderByWithRelationInput = {
@@ -25863,6 +27369,7 @@ export namespace Prisma {
     attendances?: AttendanceRecordOrderByRelationAggregateInput
     transfers?: StockTransferOrderByRelationAggregateInput
     consumptionLogs?: MaterialConsumptionLogOrderByRelationAggregateInput
+    cameras?: SecurityCameraOrderByRelationAggregateInput
   }
 
   export type BranchWhereUniqueInput = Prisma.AtLeast<{
@@ -25891,6 +27398,7 @@ export namespace Prisma {
     attendances?: AttendanceRecordListRelationFilter
     transfers?: StockTransferListRelationFilter
     consumptionLogs?: MaterialConsumptionLogListRelationFilter
+    cameras?: SecurityCameraListRelationFilter
   }, "id" | "code">
 
   export type BranchOrderByWithAggregationInput = {
@@ -27734,6 +29242,148 @@ export namespace Prisma {
     createdAt?: DateTimeWithAggregatesFilter<"MaterialConsumptionLog"> | Date | string
   }
 
+  export type SecurityCameraWhereInput = {
+    AND?: SecurityCameraWhereInput | SecurityCameraWhereInput[]
+    OR?: SecurityCameraWhereInput[]
+    NOT?: SecurityCameraWhereInput | SecurityCameraWhereInput[]
+    id?: StringFilter<"SecurityCamera"> | string
+    name?: StringFilter<"SecurityCamera"> | string
+    branchId?: StringNullableFilter<"SecurityCamera"> | string | null
+    venueType?: StringFilter<"SecurityCamera"> | string
+    locationDescription?: StringFilter<"SecurityCamera"> | string
+    feedType?: StringFilter<"SecurityCamera"> | string
+    feedUrl?: StringNullableFilter<"SecurityCamera"> | string | null
+    snapshotUrl?: StringNullableFilter<"SecurityCamera"> | string | null
+    rtspUrl?: StringNullableFilter<"SecurityCamera"> | string | null
+    ipAddress?: StringNullableFilter<"SecurityCamera"> | string | null
+    port?: IntNullableFilter<"SecurityCamera"> | number | null
+    channelNumber?: IntFilter<"SecurityCamera"> | number
+    streamQuality?: StringFilter<"SecurityCamera"> | string
+    fps?: IntFilter<"SecurityCamera"> | number
+    hasNightVision?: BoolFilter<"SecurityCamera"> | boolean
+    hasPTZ?: BoolFilter<"SecurityCamera"> | boolean
+    hasAudio?: BoolFilter<"SecurityCamera"> | boolean
+    isActive?: BoolFilter<"SecurityCamera"> | boolean
+    sortOrder?: IntFilter<"SecurityCamera"> | number
+    notes?: StringNullableFilter<"SecurityCamera"> | string | null
+    createdAt?: DateTimeFilter<"SecurityCamera"> | Date | string
+    updatedAt?: DateTimeFilter<"SecurityCamera"> | Date | string
+    branch?: XOR<BranchNullableScalarRelationFilter, BranchWhereInput> | null
+  }
+
+  export type SecurityCameraOrderByWithRelationInput = {
+    id?: SortOrder
+    name?: SortOrder
+    branchId?: SortOrderInput | SortOrder
+    venueType?: SortOrder
+    locationDescription?: SortOrder
+    feedType?: SortOrder
+    feedUrl?: SortOrderInput | SortOrder
+    snapshotUrl?: SortOrderInput | SortOrder
+    rtspUrl?: SortOrderInput | SortOrder
+    ipAddress?: SortOrderInput | SortOrder
+    port?: SortOrderInput | SortOrder
+    channelNumber?: SortOrder
+    streamQuality?: SortOrder
+    fps?: SortOrder
+    hasNightVision?: SortOrder
+    hasPTZ?: SortOrder
+    hasAudio?: SortOrder
+    isActive?: SortOrder
+    sortOrder?: SortOrder
+    notes?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    branch?: BranchOrderByWithRelationInput
+  }
+
+  export type SecurityCameraWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: SecurityCameraWhereInput | SecurityCameraWhereInput[]
+    OR?: SecurityCameraWhereInput[]
+    NOT?: SecurityCameraWhereInput | SecurityCameraWhereInput[]
+    name?: StringFilter<"SecurityCamera"> | string
+    branchId?: StringNullableFilter<"SecurityCamera"> | string | null
+    venueType?: StringFilter<"SecurityCamera"> | string
+    locationDescription?: StringFilter<"SecurityCamera"> | string
+    feedType?: StringFilter<"SecurityCamera"> | string
+    feedUrl?: StringNullableFilter<"SecurityCamera"> | string | null
+    snapshotUrl?: StringNullableFilter<"SecurityCamera"> | string | null
+    rtspUrl?: StringNullableFilter<"SecurityCamera"> | string | null
+    ipAddress?: StringNullableFilter<"SecurityCamera"> | string | null
+    port?: IntNullableFilter<"SecurityCamera"> | number | null
+    channelNumber?: IntFilter<"SecurityCamera"> | number
+    streamQuality?: StringFilter<"SecurityCamera"> | string
+    fps?: IntFilter<"SecurityCamera"> | number
+    hasNightVision?: BoolFilter<"SecurityCamera"> | boolean
+    hasPTZ?: BoolFilter<"SecurityCamera"> | boolean
+    hasAudio?: BoolFilter<"SecurityCamera"> | boolean
+    isActive?: BoolFilter<"SecurityCamera"> | boolean
+    sortOrder?: IntFilter<"SecurityCamera"> | number
+    notes?: StringNullableFilter<"SecurityCamera"> | string | null
+    createdAt?: DateTimeFilter<"SecurityCamera"> | Date | string
+    updatedAt?: DateTimeFilter<"SecurityCamera"> | Date | string
+    branch?: XOR<BranchNullableScalarRelationFilter, BranchWhereInput> | null
+  }, "id">
+
+  export type SecurityCameraOrderByWithAggregationInput = {
+    id?: SortOrder
+    name?: SortOrder
+    branchId?: SortOrderInput | SortOrder
+    venueType?: SortOrder
+    locationDescription?: SortOrder
+    feedType?: SortOrder
+    feedUrl?: SortOrderInput | SortOrder
+    snapshotUrl?: SortOrderInput | SortOrder
+    rtspUrl?: SortOrderInput | SortOrder
+    ipAddress?: SortOrderInput | SortOrder
+    port?: SortOrderInput | SortOrder
+    channelNumber?: SortOrder
+    streamQuality?: SortOrder
+    fps?: SortOrder
+    hasNightVision?: SortOrder
+    hasPTZ?: SortOrder
+    hasAudio?: SortOrder
+    isActive?: SortOrder
+    sortOrder?: SortOrder
+    notes?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    _count?: SecurityCameraCountOrderByAggregateInput
+    _avg?: SecurityCameraAvgOrderByAggregateInput
+    _max?: SecurityCameraMaxOrderByAggregateInput
+    _min?: SecurityCameraMinOrderByAggregateInput
+    _sum?: SecurityCameraSumOrderByAggregateInput
+  }
+
+  export type SecurityCameraScalarWhereWithAggregatesInput = {
+    AND?: SecurityCameraScalarWhereWithAggregatesInput | SecurityCameraScalarWhereWithAggregatesInput[]
+    OR?: SecurityCameraScalarWhereWithAggregatesInput[]
+    NOT?: SecurityCameraScalarWhereWithAggregatesInput | SecurityCameraScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"SecurityCamera"> | string
+    name?: StringWithAggregatesFilter<"SecurityCamera"> | string
+    branchId?: StringNullableWithAggregatesFilter<"SecurityCamera"> | string | null
+    venueType?: StringWithAggregatesFilter<"SecurityCamera"> | string
+    locationDescription?: StringWithAggregatesFilter<"SecurityCamera"> | string
+    feedType?: StringWithAggregatesFilter<"SecurityCamera"> | string
+    feedUrl?: StringNullableWithAggregatesFilter<"SecurityCamera"> | string | null
+    snapshotUrl?: StringNullableWithAggregatesFilter<"SecurityCamera"> | string | null
+    rtspUrl?: StringNullableWithAggregatesFilter<"SecurityCamera"> | string | null
+    ipAddress?: StringNullableWithAggregatesFilter<"SecurityCamera"> | string | null
+    port?: IntNullableWithAggregatesFilter<"SecurityCamera"> | number | null
+    channelNumber?: IntWithAggregatesFilter<"SecurityCamera"> | number
+    streamQuality?: StringWithAggregatesFilter<"SecurityCamera"> | string
+    fps?: IntWithAggregatesFilter<"SecurityCamera"> | number
+    hasNightVision?: BoolWithAggregatesFilter<"SecurityCamera"> | boolean
+    hasPTZ?: BoolWithAggregatesFilter<"SecurityCamera"> | boolean
+    hasAudio?: BoolWithAggregatesFilter<"SecurityCamera"> | boolean
+    isActive?: BoolWithAggregatesFilter<"SecurityCamera"> | boolean
+    sortOrder?: IntWithAggregatesFilter<"SecurityCamera"> | number
+    notes?: StringNullableWithAggregatesFilter<"SecurityCamera"> | string | null
+    createdAt?: DateTimeWithAggregatesFilter<"SecurityCamera"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"SecurityCamera"> | Date | string
+  }
+
   export type BranchCreateInput = {
     id?: string
     name: string
@@ -27757,6 +29407,7 @@ export namespace Prisma {
     attendances?: AttendanceRecordCreateNestedManyWithoutBranchInput
     transfers?: StockTransferCreateNestedManyWithoutToBranchInput
     consumptionLogs?: MaterialConsumptionLogCreateNestedManyWithoutBranchInput
+    cameras?: SecurityCameraCreateNestedManyWithoutBranchInput
   }
 
   export type BranchUncheckedCreateInput = {
@@ -27782,6 +29433,7 @@ export namespace Prisma {
     attendances?: AttendanceRecordUncheckedCreateNestedManyWithoutBranchInput
     transfers?: StockTransferUncheckedCreateNestedManyWithoutToBranchInput
     consumptionLogs?: MaterialConsumptionLogUncheckedCreateNestedManyWithoutBranchInput
+    cameras?: SecurityCameraUncheckedCreateNestedManyWithoutBranchInput
   }
 
   export type BranchUpdateInput = {
@@ -27807,6 +29459,7 @@ export namespace Prisma {
     attendances?: AttendanceRecordUpdateManyWithoutBranchNestedInput
     transfers?: StockTransferUpdateManyWithoutToBranchNestedInput
     consumptionLogs?: MaterialConsumptionLogUpdateManyWithoutBranchNestedInput
+    cameras?: SecurityCameraUpdateManyWithoutBranchNestedInput
   }
 
   export type BranchUncheckedUpdateInput = {
@@ -27832,6 +29485,7 @@ export namespace Prisma {
     attendances?: AttendanceRecordUncheckedUpdateManyWithoutBranchNestedInput
     transfers?: StockTransferUncheckedUpdateManyWithoutToBranchNestedInput
     consumptionLogs?: MaterialConsumptionLogUncheckedUpdateManyWithoutBranchNestedInput
+    cameras?: SecurityCameraUncheckedUpdateManyWithoutBranchNestedInput
   }
 
   export type BranchCreateManyInput = {
@@ -29959,6 +31613,180 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type SecurityCameraCreateInput = {
+    id?: string
+    name: string
+    venueType?: string
+    locationDescription: string
+    feedType?: string
+    feedUrl?: string | null
+    snapshotUrl?: string | null
+    rtspUrl?: string | null
+    ipAddress?: string | null
+    port?: number | null
+    channelNumber?: number
+    streamQuality?: string
+    fps?: number
+    hasNightVision?: boolean
+    hasPTZ?: boolean
+    hasAudio?: boolean
+    isActive?: boolean
+    sortOrder?: number
+    notes?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    branch?: BranchCreateNestedOneWithoutCamerasInput
+  }
+
+  export type SecurityCameraUncheckedCreateInput = {
+    id?: string
+    name: string
+    branchId?: string | null
+    venueType?: string
+    locationDescription: string
+    feedType?: string
+    feedUrl?: string | null
+    snapshotUrl?: string | null
+    rtspUrl?: string | null
+    ipAddress?: string | null
+    port?: number | null
+    channelNumber?: number
+    streamQuality?: string
+    fps?: number
+    hasNightVision?: boolean
+    hasPTZ?: boolean
+    hasAudio?: boolean
+    isActive?: boolean
+    sortOrder?: number
+    notes?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type SecurityCameraUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    venueType?: StringFieldUpdateOperationsInput | string
+    locationDescription?: StringFieldUpdateOperationsInput | string
+    feedType?: StringFieldUpdateOperationsInput | string
+    feedUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    snapshotUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    rtspUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    ipAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    port?: NullableIntFieldUpdateOperationsInput | number | null
+    channelNumber?: IntFieldUpdateOperationsInput | number
+    streamQuality?: StringFieldUpdateOperationsInput | string
+    fps?: IntFieldUpdateOperationsInput | number
+    hasNightVision?: BoolFieldUpdateOperationsInput | boolean
+    hasPTZ?: BoolFieldUpdateOperationsInput | boolean
+    hasAudio?: BoolFieldUpdateOperationsInput | boolean
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    sortOrder?: IntFieldUpdateOperationsInput | number
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    branch?: BranchUpdateOneWithoutCamerasNestedInput
+  }
+
+  export type SecurityCameraUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    branchId?: NullableStringFieldUpdateOperationsInput | string | null
+    venueType?: StringFieldUpdateOperationsInput | string
+    locationDescription?: StringFieldUpdateOperationsInput | string
+    feedType?: StringFieldUpdateOperationsInput | string
+    feedUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    snapshotUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    rtspUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    ipAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    port?: NullableIntFieldUpdateOperationsInput | number | null
+    channelNumber?: IntFieldUpdateOperationsInput | number
+    streamQuality?: StringFieldUpdateOperationsInput | string
+    fps?: IntFieldUpdateOperationsInput | number
+    hasNightVision?: BoolFieldUpdateOperationsInput | boolean
+    hasPTZ?: BoolFieldUpdateOperationsInput | boolean
+    hasAudio?: BoolFieldUpdateOperationsInput | boolean
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    sortOrder?: IntFieldUpdateOperationsInput | number
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type SecurityCameraCreateManyInput = {
+    id?: string
+    name: string
+    branchId?: string | null
+    venueType?: string
+    locationDescription: string
+    feedType?: string
+    feedUrl?: string | null
+    snapshotUrl?: string | null
+    rtspUrl?: string | null
+    ipAddress?: string | null
+    port?: number | null
+    channelNumber?: number
+    streamQuality?: string
+    fps?: number
+    hasNightVision?: boolean
+    hasPTZ?: boolean
+    hasAudio?: boolean
+    isActive?: boolean
+    sortOrder?: number
+    notes?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type SecurityCameraUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    venueType?: StringFieldUpdateOperationsInput | string
+    locationDescription?: StringFieldUpdateOperationsInput | string
+    feedType?: StringFieldUpdateOperationsInput | string
+    feedUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    snapshotUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    rtspUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    ipAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    port?: NullableIntFieldUpdateOperationsInput | number | null
+    channelNumber?: IntFieldUpdateOperationsInput | number
+    streamQuality?: StringFieldUpdateOperationsInput | string
+    fps?: IntFieldUpdateOperationsInput | number
+    hasNightVision?: BoolFieldUpdateOperationsInput | boolean
+    hasPTZ?: BoolFieldUpdateOperationsInput | boolean
+    hasAudio?: BoolFieldUpdateOperationsInput | boolean
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    sortOrder?: IntFieldUpdateOperationsInput | number
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type SecurityCameraUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    branchId?: NullableStringFieldUpdateOperationsInput | string | null
+    venueType?: StringFieldUpdateOperationsInput | string
+    locationDescription?: StringFieldUpdateOperationsInput | string
+    feedType?: StringFieldUpdateOperationsInput | string
+    feedUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    snapshotUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    rtspUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    ipAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    port?: NullableIntFieldUpdateOperationsInput | number | null
+    channelNumber?: IntFieldUpdateOperationsInput | number
+    streamQuality?: StringFieldUpdateOperationsInput | string
+    fps?: IntFieldUpdateOperationsInput | number
+    hasNightVision?: BoolFieldUpdateOperationsInput | boolean
+    hasPTZ?: BoolFieldUpdateOperationsInput | boolean
+    hasAudio?: BoolFieldUpdateOperationsInput | boolean
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    sortOrder?: IntFieldUpdateOperationsInput | number
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type StringFilter<$PrismaModel = never> = {
     equals?: string | StringFieldRefInput<$PrismaModel>
     in?: string[] | ListStringFieldRefInput<$PrismaModel>
@@ -30083,6 +31911,12 @@ export namespace Prisma {
     none?: MaterialConsumptionLogWhereInput
   }
 
+  export type SecurityCameraListRelationFilter = {
+    every?: SecurityCameraWhereInput
+    some?: SecurityCameraWhereInput
+    none?: SecurityCameraWhereInput
+  }
+
   export type SortOrderInput = {
     sort: SortOrder
     nulls?: NullsOrder
@@ -30137,6 +31971,10 @@ export namespace Prisma {
   }
 
   export type MaterialConsumptionLogOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type SecurityCameraOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -31492,6 +33330,95 @@ export namespace Prisma {
     quantityConsumed?: SortOrder
   }
 
+  export type SecurityCameraCountOrderByAggregateInput = {
+    id?: SortOrder
+    name?: SortOrder
+    branchId?: SortOrder
+    venueType?: SortOrder
+    locationDescription?: SortOrder
+    feedType?: SortOrder
+    feedUrl?: SortOrder
+    snapshotUrl?: SortOrder
+    rtspUrl?: SortOrder
+    ipAddress?: SortOrder
+    port?: SortOrder
+    channelNumber?: SortOrder
+    streamQuality?: SortOrder
+    fps?: SortOrder
+    hasNightVision?: SortOrder
+    hasPTZ?: SortOrder
+    hasAudio?: SortOrder
+    isActive?: SortOrder
+    sortOrder?: SortOrder
+    notes?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type SecurityCameraAvgOrderByAggregateInput = {
+    port?: SortOrder
+    channelNumber?: SortOrder
+    fps?: SortOrder
+    sortOrder?: SortOrder
+  }
+
+  export type SecurityCameraMaxOrderByAggregateInput = {
+    id?: SortOrder
+    name?: SortOrder
+    branchId?: SortOrder
+    venueType?: SortOrder
+    locationDescription?: SortOrder
+    feedType?: SortOrder
+    feedUrl?: SortOrder
+    snapshotUrl?: SortOrder
+    rtspUrl?: SortOrder
+    ipAddress?: SortOrder
+    port?: SortOrder
+    channelNumber?: SortOrder
+    streamQuality?: SortOrder
+    fps?: SortOrder
+    hasNightVision?: SortOrder
+    hasPTZ?: SortOrder
+    hasAudio?: SortOrder
+    isActive?: SortOrder
+    sortOrder?: SortOrder
+    notes?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type SecurityCameraMinOrderByAggregateInput = {
+    id?: SortOrder
+    name?: SortOrder
+    branchId?: SortOrder
+    venueType?: SortOrder
+    locationDescription?: SortOrder
+    feedType?: SortOrder
+    feedUrl?: SortOrder
+    snapshotUrl?: SortOrder
+    rtspUrl?: SortOrder
+    ipAddress?: SortOrder
+    port?: SortOrder
+    channelNumber?: SortOrder
+    streamQuality?: SortOrder
+    fps?: SortOrder
+    hasNightVision?: SortOrder
+    hasPTZ?: SortOrder
+    hasAudio?: SortOrder
+    isActive?: SortOrder
+    sortOrder?: SortOrder
+    notes?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type SecurityCameraSumOrderByAggregateInput = {
+    port?: SortOrder
+    channelNumber?: SortOrder
+    fps?: SortOrder
+    sortOrder?: SortOrder
+  }
+
   export type UserCreateNestedManyWithoutBranchInput = {
     create?: XOR<UserCreateWithoutBranchInput, UserUncheckedCreateWithoutBranchInput> | UserCreateWithoutBranchInput[] | UserUncheckedCreateWithoutBranchInput[]
     connectOrCreate?: UserCreateOrConnectWithoutBranchInput | UserCreateOrConnectWithoutBranchInput[]
@@ -31583,6 +33510,13 @@ export namespace Prisma {
     connect?: MaterialConsumptionLogWhereUniqueInput | MaterialConsumptionLogWhereUniqueInput[]
   }
 
+  export type SecurityCameraCreateNestedManyWithoutBranchInput = {
+    create?: XOR<SecurityCameraCreateWithoutBranchInput, SecurityCameraUncheckedCreateWithoutBranchInput> | SecurityCameraCreateWithoutBranchInput[] | SecurityCameraUncheckedCreateWithoutBranchInput[]
+    connectOrCreate?: SecurityCameraCreateOrConnectWithoutBranchInput | SecurityCameraCreateOrConnectWithoutBranchInput[]
+    createMany?: SecurityCameraCreateManyBranchInputEnvelope
+    connect?: SecurityCameraWhereUniqueInput | SecurityCameraWhereUniqueInput[]
+  }
+
   export type UserUncheckedCreateNestedManyWithoutBranchInput = {
     create?: XOR<UserCreateWithoutBranchInput, UserUncheckedCreateWithoutBranchInput> | UserCreateWithoutBranchInput[] | UserUncheckedCreateWithoutBranchInput[]
     connectOrCreate?: UserCreateOrConnectWithoutBranchInput | UserCreateOrConnectWithoutBranchInput[]
@@ -31672,6 +33606,13 @@ export namespace Prisma {
     connectOrCreate?: MaterialConsumptionLogCreateOrConnectWithoutBranchInput | MaterialConsumptionLogCreateOrConnectWithoutBranchInput[]
     createMany?: MaterialConsumptionLogCreateManyBranchInputEnvelope
     connect?: MaterialConsumptionLogWhereUniqueInput | MaterialConsumptionLogWhereUniqueInput[]
+  }
+
+  export type SecurityCameraUncheckedCreateNestedManyWithoutBranchInput = {
+    create?: XOR<SecurityCameraCreateWithoutBranchInput, SecurityCameraUncheckedCreateWithoutBranchInput> | SecurityCameraCreateWithoutBranchInput[] | SecurityCameraUncheckedCreateWithoutBranchInput[]
+    connectOrCreate?: SecurityCameraCreateOrConnectWithoutBranchInput | SecurityCameraCreateOrConnectWithoutBranchInput[]
+    createMany?: SecurityCameraCreateManyBranchInputEnvelope
+    connect?: SecurityCameraWhereUniqueInput | SecurityCameraWhereUniqueInput[]
   }
 
   export type StringFieldUpdateOperationsInput = {
@@ -31872,6 +33813,20 @@ export namespace Prisma {
     deleteMany?: MaterialConsumptionLogScalarWhereInput | MaterialConsumptionLogScalarWhereInput[]
   }
 
+  export type SecurityCameraUpdateManyWithoutBranchNestedInput = {
+    create?: XOR<SecurityCameraCreateWithoutBranchInput, SecurityCameraUncheckedCreateWithoutBranchInput> | SecurityCameraCreateWithoutBranchInput[] | SecurityCameraUncheckedCreateWithoutBranchInput[]
+    connectOrCreate?: SecurityCameraCreateOrConnectWithoutBranchInput | SecurityCameraCreateOrConnectWithoutBranchInput[]
+    upsert?: SecurityCameraUpsertWithWhereUniqueWithoutBranchInput | SecurityCameraUpsertWithWhereUniqueWithoutBranchInput[]
+    createMany?: SecurityCameraCreateManyBranchInputEnvelope
+    set?: SecurityCameraWhereUniqueInput | SecurityCameraWhereUniqueInput[]
+    disconnect?: SecurityCameraWhereUniqueInput | SecurityCameraWhereUniqueInput[]
+    delete?: SecurityCameraWhereUniqueInput | SecurityCameraWhereUniqueInput[]
+    connect?: SecurityCameraWhereUniqueInput | SecurityCameraWhereUniqueInput[]
+    update?: SecurityCameraUpdateWithWhereUniqueWithoutBranchInput | SecurityCameraUpdateWithWhereUniqueWithoutBranchInput[]
+    updateMany?: SecurityCameraUpdateManyWithWhereWithoutBranchInput | SecurityCameraUpdateManyWithWhereWithoutBranchInput[]
+    deleteMany?: SecurityCameraScalarWhereInput | SecurityCameraScalarWhereInput[]
+  }
+
   export type UserUncheckedUpdateManyWithoutBranchNestedInput = {
     create?: XOR<UserCreateWithoutBranchInput, UserUncheckedCreateWithoutBranchInput> | UserCreateWithoutBranchInput[] | UserUncheckedCreateWithoutBranchInput[]
     connectOrCreate?: UserCreateOrConnectWithoutBranchInput | UserCreateOrConnectWithoutBranchInput[]
@@ -32052,6 +34007,20 @@ export namespace Prisma {
     update?: MaterialConsumptionLogUpdateWithWhereUniqueWithoutBranchInput | MaterialConsumptionLogUpdateWithWhereUniqueWithoutBranchInput[]
     updateMany?: MaterialConsumptionLogUpdateManyWithWhereWithoutBranchInput | MaterialConsumptionLogUpdateManyWithWhereWithoutBranchInput[]
     deleteMany?: MaterialConsumptionLogScalarWhereInput | MaterialConsumptionLogScalarWhereInput[]
+  }
+
+  export type SecurityCameraUncheckedUpdateManyWithoutBranchNestedInput = {
+    create?: XOR<SecurityCameraCreateWithoutBranchInput, SecurityCameraUncheckedCreateWithoutBranchInput> | SecurityCameraCreateWithoutBranchInput[] | SecurityCameraUncheckedCreateWithoutBranchInput[]
+    connectOrCreate?: SecurityCameraCreateOrConnectWithoutBranchInput | SecurityCameraCreateOrConnectWithoutBranchInput[]
+    upsert?: SecurityCameraUpsertWithWhereUniqueWithoutBranchInput | SecurityCameraUpsertWithWhereUniqueWithoutBranchInput[]
+    createMany?: SecurityCameraCreateManyBranchInputEnvelope
+    set?: SecurityCameraWhereUniqueInput | SecurityCameraWhereUniqueInput[]
+    disconnect?: SecurityCameraWhereUniqueInput | SecurityCameraWhereUniqueInput[]
+    delete?: SecurityCameraWhereUniqueInput | SecurityCameraWhereUniqueInput[]
+    connect?: SecurityCameraWhereUniqueInput | SecurityCameraWhereUniqueInput[]
+    update?: SecurityCameraUpdateWithWhereUniqueWithoutBranchInput | SecurityCameraUpdateWithWhereUniqueWithoutBranchInput[]
+    updateMany?: SecurityCameraUpdateManyWithWhereWithoutBranchInput | SecurityCameraUpdateManyWithWhereWithoutBranchInput[]
+    deleteMany?: SecurityCameraScalarWhereInput | SecurityCameraScalarWhereInput[]
   }
 
   export type BranchCreateNestedOneWithoutUsersInput = {
@@ -32836,6 +34805,22 @@ export namespace Prisma {
     upsert?: BranchUpsertWithoutConsumptionLogsInput
     connect?: BranchWhereUniqueInput
     update?: XOR<XOR<BranchUpdateToOneWithWhereWithoutConsumptionLogsInput, BranchUpdateWithoutConsumptionLogsInput>, BranchUncheckedUpdateWithoutConsumptionLogsInput>
+  }
+
+  export type BranchCreateNestedOneWithoutCamerasInput = {
+    create?: XOR<BranchCreateWithoutCamerasInput, BranchUncheckedCreateWithoutCamerasInput>
+    connectOrCreate?: BranchCreateOrConnectWithoutCamerasInput
+    connect?: BranchWhereUniqueInput
+  }
+
+  export type BranchUpdateOneWithoutCamerasNestedInput = {
+    create?: XOR<BranchCreateWithoutCamerasInput, BranchUncheckedCreateWithoutCamerasInput>
+    connectOrCreate?: BranchCreateOrConnectWithoutCamerasInput
+    upsert?: BranchUpsertWithoutCamerasInput
+    disconnect?: BranchWhereInput | boolean
+    delete?: BranchWhereInput | boolean
+    connect?: BranchWhereUniqueInput
+    update?: XOR<XOR<BranchUpdateToOneWithWhereWithoutCamerasInput, BranchUpdateWithoutCamerasInput>, BranchUncheckedUpdateWithoutCamerasInput>
   }
 
   export type NestedStringFilter<$PrismaModel = never> = {
@@ -33643,6 +35628,64 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type SecurityCameraCreateWithoutBranchInput = {
+    id?: string
+    name: string
+    venueType?: string
+    locationDescription: string
+    feedType?: string
+    feedUrl?: string | null
+    snapshotUrl?: string | null
+    rtspUrl?: string | null
+    ipAddress?: string | null
+    port?: number | null
+    channelNumber?: number
+    streamQuality?: string
+    fps?: number
+    hasNightVision?: boolean
+    hasPTZ?: boolean
+    hasAudio?: boolean
+    isActive?: boolean
+    sortOrder?: number
+    notes?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type SecurityCameraUncheckedCreateWithoutBranchInput = {
+    id?: string
+    name: string
+    venueType?: string
+    locationDescription: string
+    feedType?: string
+    feedUrl?: string | null
+    snapshotUrl?: string | null
+    rtspUrl?: string | null
+    ipAddress?: string | null
+    port?: number | null
+    channelNumber?: number
+    streamQuality?: string
+    fps?: number
+    hasNightVision?: boolean
+    hasPTZ?: boolean
+    hasAudio?: boolean
+    isActive?: boolean
+    sortOrder?: number
+    notes?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type SecurityCameraCreateOrConnectWithoutBranchInput = {
+    where: SecurityCameraWhereUniqueInput
+    create: XOR<SecurityCameraCreateWithoutBranchInput, SecurityCameraUncheckedCreateWithoutBranchInput>
+  }
+
+  export type SecurityCameraCreateManyBranchInputEnvelope = {
+    data: SecurityCameraCreateManyBranchInput | SecurityCameraCreateManyBranchInput[]
+    skipDuplicates?: boolean
+  }
+
   export type UserUpsertWithWhereUniqueWithoutBranchInput = {
     where: UserWhereUniqueInput
     update: XOR<UserUpdateWithoutBranchInput, UserUncheckedUpdateWithoutBranchInput>
@@ -34116,6 +36159,50 @@ export namespace Prisma {
     createdAt?: DateTimeFilter<"MaterialConsumptionLog"> | Date | string
   }
 
+  export type SecurityCameraUpsertWithWhereUniqueWithoutBranchInput = {
+    where: SecurityCameraWhereUniqueInput
+    update: XOR<SecurityCameraUpdateWithoutBranchInput, SecurityCameraUncheckedUpdateWithoutBranchInput>
+    create: XOR<SecurityCameraCreateWithoutBranchInput, SecurityCameraUncheckedCreateWithoutBranchInput>
+  }
+
+  export type SecurityCameraUpdateWithWhereUniqueWithoutBranchInput = {
+    where: SecurityCameraWhereUniqueInput
+    data: XOR<SecurityCameraUpdateWithoutBranchInput, SecurityCameraUncheckedUpdateWithoutBranchInput>
+  }
+
+  export type SecurityCameraUpdateManyWithWhereWithoutBranchInput = {
+    where: SecurityCameraScalarWhereInput
+    data: XOR<SecurityCameraUpdateManyMutationInput, SecurityCameraUncheckedUpdateManyWithoutBranchInput>
+  }
+
+  export type SecurityCameraScalarWhereInput = {
+    AND?: SecurityCameraScalarWhereInput | SecurityCameraScalarWhereInput[]
+    OR?: SecurityCameraScalarWhereInput[]
+    NOT?: SecurityCameraScalarWhereInput | SecurityCameraScalarWhereInput[]
+    id?: StringFilter<"SecurityCamera"> | string
+    name?: StringFilter<"SecurityCamera"> | string
+    branchId?: StringNullableFilter<"SecurityCamera"> | string | null
+    venueType?: StringFilter<"SecurityCamera"> | string
+    locationDescription?: StringFilter<"SecurityCamera"> | string
+    feedType?: StringFilter<"SecurityCamera"> | string
+    feedUrl?: StringNullableFilter<"SecurityCamera"> | string | null
+    snapshotUrl?: StringNullableFilter<"SecurityCamera"> | string | null
+    rtspUrl?: StringNullableFilter<"SecurityCamera"> | string | null
+    ipAddress?: StringNullableFilter<"SecurityCamera"> | string | null
+    port?: IntNullableFilter<"SecurityCamera"> | number | null
+    channelNumber?: IntFilter<"SecurityCamera"> | number
+    streamQuality?: StringFilter<"SecurityCamera"> | string
+    fps?: IntFilter<"SecurityCamera"> | number
+    hasNightVision?: BoolFilter<"SecurityCamera"> | boolean
+    hasPTZ?: BoolFilter<"SecurityCamera"> | boolean
+    hasAudio?: BoolFilter<"SecurityCamera"> | boolean
+    isActive?: BoolFilter<"SecurityCamera"> | boolean
+    sortOrder?: IntFilter<"SecurityCamera"> | number
+    notes?: StringNullableFilter<"SecurityCamera"> | string | null
+    createdAt?: DateTimeFilter<"SecurityCamera"> | Date | string
+    updatedAt?: DateTimeFilter<"SecurityCamera"> | Date | string
+  }
+
   export type BranchCreateWithoutUsersInput = {
     id?: string
     name: string
@@ -34138,6 +36225,7 @@ export namespace Prisma {
     attendances?: AttendanceRecordCreateNestedManyWithoutBranchInput
     transfers?: StockTransferCreateNestedManyWithoutToBranchInput
     consumptionLogs?: MaterialConsumptionLogCreateNestedManyWithoutBranchInput
+    cameras?: SecurityCameraCreateNestedManyWithoutBranchInput
   }
 
   export type BranchUncheckedCreateWithoutUsersInput = {
@@ -34162,6 +36250,7 @@ export namespace Prisma {
     attendances?: AttendanceRecordUncheckedCreateNestedManyWithoutBranchInput
     transfers?: StockTransferUncheckedCreateNestedManyWithoutToBranchInput
     consumptionLogs?: MaterialConsumptionLogUncheckedCreateNestedManyWithoutBranchInput
+    cameras?: SecurityCameraUncheckedCreateNestedManyWithoutBranchInput
   }
 
   export type BranchCreateOrConnectWithoutUsersInput = {
@@ -34285,6 +36374,7 @@ export namespace Prisma {
     attendances?: AttendanceRecordUpdateManyWithoutBranchNestedInput
     transfers?: StockTransferUpdateManyWithoutToBranchNestedInput
     consumptionLogs?: MaterialConsumptionLogUpdateManyWithoutBranchNestedInput
+    cameras?: SecurityCameraUpdateManyWithoutBranchNestedInput
   }
 
   export type BranchUncheckedUpdateWithoutUsersInput = {
@@ -34309,6 +36399,7 @@ export namespace Prisma {
     attendances?: AttendanceRecordUncheckedUpdateManyWithoutBranchNestedInput
     transfers?: StockTransferUncheckedUpdateManyWithoutToBranchNestedInput
     consumptionLogs?: MaterialConsumptionLogUncheckedUpdateManyWithoutBranchNestedInput
+    cameras?: SecurityCameraUncheckedUpdateManyWithoutBranchNestedInput
   }
 
   export type SpecialistUpsertWithoutUserInput = {
@@ -34437,6 +36528,7 @@ export namespace Prisma {
     attendances?: AttendanceRecordCreateNestedManyWithoutBranchInput
     transfers?: StockTransferCreateNestedManyWithoutToBranchInput
     consumptionLogs?: MaterialConsumptionLogCreateNestedManyWithoutBranchInput
+    cameras?: SecurityCameraCreateNestedManyWithoutBranchInput
   }
 
   export type BranchUncheckedCreateWithoutSpecialistsInput = {
@@ -34461,6 +36553,7 @@ export namespace Prisma {
     attendances?: AttendanceRecordUncheckedCreateNestedManyWithoutBranchInput
     transfers?: StockTransferUncheckedCreateNestedManyWithoutToBranchInput
     consumptionLogs?: MaterialConsumptionLogUncheckedCreateNestedManyWithoutBranchInput
+    cameras?: SecurityCameraUncheckedCreateNestedManyWithoutBranchInput
   }
 
   export type BranchCreateOrConnectWithoutSpecialistsInput = {
@@ -34680,6 +36773,7 @@ export namespace Prisma {
     attendances?: AttendanceRecordUpdateManyWithoutBranchNestedInput
     transfers?: StockTransferUpdateManyWithoutToBranchNestedInput
     consumptionLogs?: MaterialConsumptionLogUpdateManyWithoutBranchNestedInput
+    cameras?: SecurityCameraUpdateManyWithoutBranchNestedInput
   }
 
   export type BranchUncheckedUpdateWithoutSpecialistsInput = {
@@ -34704,6 +36798,7 @@ export namespace Prisma {
     attendances?: AttendanceRecordUncheckedUpdateManyWithoutBranchNestedInput
     transfers?: StockTransferUncheckedUpdateManyWithoutToBranchNestedInput
     consumptionLogs?: MaterialConsumptionLogUncheckedUpdateManyWithoutBranchNestedInput
+    cameras?: SecurityCameraUncheckedUpdateManyWithoutBranchNestedInput
   }
 
   export type BookingUpsertWithWhereUniqueWithoutSpecialistInput = {
@@ -34955,6 +37050,7 @@ export namespace Prisma {
     attendances?: AttendanceRecordCreateNestedManyWithoutBranchInput
     transfers?: StockTransferCreateNestedManyWithoutToBranchInput
     consumptionLogs?: MaterialConsumptionLogCreateNestedManyWithoutBranchInput
+    cameras?: SecurityCameraCreateNestedManyWithoutBranchInput
   }
 
   export type BranchUncheckedCreateWithoutBookingsInput = {
@@ -34979,6 +37075,7 @@ export namespace Prisma {
     attendances?: AttendanceRecordUncheckedCreateNestedManyWithoutBranchInput
     transfers?: StockTransferUncheckedCreateNestedManyWithoutToBranchInput
     consumptionLogs?: MaterialConsumptionLogUncheckedCreateNestedManyWithoutBranchInput
+    cameras?: SecurityCameraUncheckedCreateNestedManyWithoutBranchInput
   }
 
   export type BranchCreateOrConnectWithoutBookingsInput = {
@@ -35113,6 +37210,7 @@ export namespace Prisma {
     attendances?: AttendanceRecordUpdateManyWithoutBranchNestedInput
     transfers?: StockTransferUpdateManyWithoutToBranchNestedInput
     consumptionLogs?: MaterialConsumptionLogUpdateManyWithoutBranchNestedInput
+    cameras?: SecurityCameraUpdateManyWithoutBranchNestedInput
   }
 
   export type BranchUncheckedUpdateWithoutBookingsInput = {
@@ -35137,6 +37235,7 @@ export namespace Prisma {
     attendances?: AttendanceRecordUncheckedUpdateManyWithoutBranchNestedInput
     transfers?: StockTransferUncheckedUpdateManyWithoutToBranchNestedInput
     consumptionLogs?: MaterialConsumptionLogUncheckedUpdateManyWithoutBranchNestedInput
+    cameras?: SecurityCameraUncheckedUpdateManyWithoutBranchNestedInput
   }
 
   export type SpecialistUpsertWithoutBookingsInput = {
@@ -35214,6 +37313,7 @@ export namespace Prisma {
     attendances?: AttendanceRecordCreateNestedManyWithoutBranchInput
     transfers?: StockTransferCreateNestedManyWithoutToBranchInput
     consumptionLogs?: MaterialConsumptionLogCreateNestedManyWithoutBranchInput
+    cameras?: SecurityCameraCreateNestedManyWithoutBranchInput
   }
 
   export type BranchUncheckedCreateWithoutTicketsInput = {
@@ -35238,6 +37338,7 @@ export namespace Prisma {
     attendances?: AttendanceRecordUncheckedCreateNestedManyWithoutBranchInput
     transfers?: StockTransferUncheckedCreateNestedManyWithoutToBranchInput
     consumptionLogs?: MaterialConsumptionLogUncheckedCreateNestedManyWithoutBranchInput
+    cameras?: SecurityCameraUncheckedCreateNestedManyWithoutBranchInput
   }
 
   export type BranchCreateOrConnectWithoutTicketsInput = {
@@ -35366,6 +37467,7 @@ export namespace Prisma {
     attendances?: AttendanceRecordUpdateManyWithoutBranchNestedInput
     transfers?: StockTransferUpdateManyWithoutToBranchNestedInput
     consumptionLogs?: MaterialConsumptionLogUpdateManyWithoutBranchNestedInput
+    cameras?: SecurityCameraUpdateManyWithoutBranchNestedInput
   }
 
   export type BranchUncheckedUpdateWithoutTicketsInput = {
@@ -35390,6 +37492,7 @@ export namespace Prisma {
     attendances?: AttendanceRecordUncheckedUpdateManyWithoutBranchNestedInput
     transfers?: StockTransferUncheckedUpdateManyWithoutToBranchNestedInput
     consumptionLogs?: MaterialConsumptionLogUncheckedUpdateManyWithoutBranchNestedInput
+    cameras?: SecurityCameraUncheckedUpdateManyWithoutBranchNestedInput
   }
 
   export type SpecialistUpsertWithoutTicketsInput = {
@@ -35514,6 +37617,7 @@ export namespace Prisma {
     attendances?: AttendanceRecordCreateNestedManyWithoutBranchInput
     transfers?: StockTransferCreateNestedManyWithoutToBranchInput
     consumptionLogs?: MaterialConsumptionLogCreateNestedManyWithoutBranchInput
+    cameras?: SecurityCameraCreateNestedManyWithoutBranchInput
   }
 
   export type BranchUncheckedCreateWithoutProductsInput = {
@@ -35538,6 +37642,7 @@ export namespace Prisma {
     attendances?: AttendanceRecordUncheckedCreateNestedManyWithoutBranchInput
     transfers?: StockTransferUncheckedCreateNestedManyWithoutToBranchInput
     consumptionLogs?: MaterialConsumptionLogUncheckedCreateNestedManyWithoutBranchInput
+    cameras?: SecurityCameraUncheckedCreateNestedManyWithoutBranchInput
   }
 
   export type BranchCreateOrConnectWithoutProductsInput = {
@@ -35690,6 +37795,7 @@ export namespace Prisma {
     attendances?: AttendanceRecordUpdateManyWithoutBranchNestedInput
     transfers?: StockTransferUpdateManyWithoutToBranchNestedInput
     consumptionLogs?: MaterialConsumptionLogUpdateManyWithoutBranchNestedInput
+    cameras?: SecurityCameraUpdateManyWithoutBranchNestedInput
   }
 
   export type BranchUncheckedUpdateWithoutProductsInput = {
@@ -35714,6 +37820,7 @@ export namespace Prisma {
     attendances?: AttendanceRecordUncheckedUpdateManyWithoutBranchNestedInput
     transfers?: StockTransferUncheckedUpdateManyWithoutToBranchNestedInput
     consumptionLogs?: MaterialConsumptionLogUncheckedUpdateManyWithoutBranchNestedInput
+    cameras?: SecurityCameraUncheckedUpdateManyWithoutBranchNestedInput
   }
 
   export type StockPurchaseUpsertWithWhereUniqueWithoutProductInput = {
@@ -35851,6 +37958,7 @@ export namespace Prisma {
     attendances?: AttendanceRecordCreateNestedManyWithoutBranchInput
     transfers?: StockTransferCreateNestedManyWithoutToBranchInput
     consumptionLogs?: MaterialConsumptionLogCreateNestedManyWithoutBranchInput
+    cameras?: SecurityCameraCreateNestedManyWithoutBranchInput
   }
 
   export type BranchUncheckedCreateWithoutLedgersInput = {
@@ -35875,6 +37983,7 @@ export namespace Prisma {
     attendances?: AttendanceRecordUncheckedCreateNestedManyWithoutBranchInput
     transfers?: StockTransferUncheckedCreateNestedManyWithoutToBranchInput
     consumptionLogs?: MaterialConsumptionLogUncheckedCreateNestedManyWithoutBranchInput
+    cameras?: SecurityCameraUncheckedCreateNestedManyWithoutBranchInput
   }
 
   export type BranchCreateOrConnectWithoutLedgersInput = {
@@ -35968,6 +38077,7 @@ export namespace Prisma {
     attendances?: AttendanceRecordUpdateManyWithoutBranchNestedInput
     transfers?: StockTransferUpdateManyWithoutToBranchNestedInput
     consumptionLogs?: MaterialConsumptionLogUpdateManyWithoutBranchNestedInput
+    cameras?: SecurityCameraUpdateManyWithoutBranchNestedInput
   }
 
   export type BranchUncheckedUpdateWithoutLedgersInput = {
@@ -35992,6 +38102,7 @@ export namespace Prisma {
     attendances?: AttendanceRecordUncheckedUpdateManyWithoutBranchNestedInput
     transfers?: StockTransferUncheckedUpdateManyWithoutToBranchNestedInput
     consumptionLogs?: MaterialConsumptionLogUncheckedUpdateManyWithoutBranchNestedInput
+    cameras?: SecurityCameraUncheckedUpdateManyWithoutBranchNestedInput
   }
 
   export type BranchCreateWithoutOffersInput = {
@@ -36016,6 +38127,7 @@ export namespace Prisma {
     attendances?: AttendanceRecordCreateNestedManyWithoutBranchInput
     transfers?: StockTransferCreateNestedManyWithoutToBranchInput
     consumptionLogs?: MaterialConsumptionLogCreateNestedManyWithoutBranchInput
+    cameras?: SecurityCameraCreateNestedManyWithoutBranchInput
   }
 
   export type BranchUncheckedCreateWithoutOffersInput = {
@@ -36040,6 +38152,7 @@ export namespace Prisma {
     attendances?: AttendanceRecordUncheckedCreateNestedManyWithoutBranchInput
     transfers?: StockTransferUncheckedCreateNestedManyWithoutToBranchInput
     consumptionLogs?: MaterialConsumptionLogUncheckedCreateNestedManyWithoutBranchInput
+    cameras?: SecurityCameraUncheckedCreateNestedManyWithoutBranchInput
   }
 
   export type BranchCreateOrConnectWithoutOffersInput = {
@@ -36080,6 +38193,7 @@ export namespace Prisma {
     attendances?: AttendanceRecordUpdateManyWithoutBranchNestedInput
     transfers?: StockTransferUpdateManyWithoutToBranchNestedInput
     consumptionLogs?: MaterialConsumptionLogUpdateManyWithoutBranchNestedInput
+    cameras?: SecurityCameraUpdateManyWithoutBranchNestedInput
   }
 
   export type BranchUncheckedUpdateWithoutOffersInput = {
@@ -36104,6 +38218,7 @@ export namespace Prisma {
     attendances?: AttendanceRecordUncheckedUpdateManyWithoutBranchNestedInput
     transfers?: StockTransferUncheckedUpdateManyWithoutToBranchNestedInput
     consumptionLogs?: MaterialConsumptionLogUncheckedUpdateManyWithoutBranchNestedInput
+    cameras?: SecurityCameraUncheckedUpdateManyWithoutBranchNestedInput
   }
 
   export type BranchCreateWithoutChatMessagesInput = {
@@ -36128,6 +38243,7 @@ export namespace Prisma {
     attendances?: AttendanceRecordCreateNestedManyWithoutBranchInput
     transfers?: StockTransferCreateNestedManyWithoutToBranchInput
     consumptionLogs?: MaterialConsumptionLogCreateNestedManyWithoutBranchInput
+    cameras?: SecurityCameraCreateNestedManyWithoutBranchInput
   }
 
   export type BranchUncheckedCreateWithoutChatMessagesInput = {
@@ -36152,6 +38268,7 @@ export namespace Prisma {
     attendances?: AttendanceRecordUncheckedCreateNestedManyWithoutBranchInput
     transfers?: StockTransferUncheckedCreateNestedManyWithoutToBranchInput
     consumptionLogs?: MaterialConsumptionLogUncheckedCreateNestedManyWithoutBranchInput
+    cameras?: SecurityCameraUncheckedCreateNestedManyWithoutBranchInput
   }
 
   export type BranchCreateOrConnectWithoutChatMessagesInput = {
@@ -36192,6 +38309,7 @@ export namespace Prisma {
     attendances?: AttendanceRecordUpdateManyWithoutBranchNestedInput
     transfers?: StockTransferUpdateManyWithoutToBranchNestedInput
     consumptionLogs?: MaterialConsumptionLogUpdateManyWithoutBranchNestedInput
+    cameras?: SecurityCameraUpdateManyWithoutBranchNestedInput
   }
 
   export type BranchUncheckedUpdateWithoutChatMessagesInput = {
@@ -36216,6 +38334,7 @@ export namespace Prisma {
     attendances?: AttendanceRecordUncheckedUpdateManyWithoutBranchNestedInput
     transfers?: StockTransferUncheckedUpdateManyWithoutToBranchNestedInput
     consumptionLogs?: MaterialConsumptionLogUncheckedUpdateManyWithoutBranchNestedInput
+    cameras?: SecurityCameraUncheckedUpdateManyWithoutBranchNestedInput
   }
 
   export type BranchCreateWithoutShiftsInput = {
@@ -36240,6 +38359,7 @@ export namespace Prisma {
     attendances?: AttendanceRecordCreateNestedManyWithoutBranchInput
     transfers?: StockTransferCreateNestedManyWithoutToBranchInput
     consumptionLogs?: MaterialConsumptionLogCreateNestedManyWithoutBranchInput
+    cameras?: SecurityCameraCreateNestedManyWithoutBranchInput
   }
 
   export type BranchUncheckedCreateWithoutShiftsInput = {
@@ -36264,6 +38384,7 @@ export namespace Prisma {
     attendances?: AttendanceRecordUncheckedCreateNestedManyWithoutBranchInput
     transfers?: StockTransferUncheckedCreateNestedManyWithoutToBranchInput
     consumptionLogs?: MaterialConsumptionLogUncheckedCreateNestedManyWithoutBranchInput
+    cameras?: SecurityCameraUncheckedCreateNestedManyWithoutBranchInput
   }
 
   export type BranchCreateOrConnectWithoutShiftsInput = {
@@ -36304,6 +38425,7 @@ export namespace Prisma {
     attendances?: AttendanceRecordUpdateManyWithoutBranchNestedInput
     transfers?: StockTransferUpdateManyWithoutToBranchNestedInput
     consumptionLogs?: MaterialConsumptionLogUpdateManyWithoutBranchNestedInput
+    cameras?: SecurityCameraUpdateManyWithoutBranchNestedInput
   }
 
   export type BranchUncheckedUpdateWithoutShiftsInput = {
@@ -36328,6 +38450,7 @@ export namespace Prisma {
     attendances?: AttendanceRecordUncheckedUpdateManyWithoutBranchNestedInput
     transfers?: StockTransferUncheckedUpdateManyWithoutToBranchNestedInput
     consumptionLogs?: MaterialConsumptionLogUncheckedUpdateManyWithoutBranchNestedInput
+    cameras?: SecurityCameraUncheckedUpdateManyWithoutBranchNestedInput
   }
 
   export type BranchCreateWithoutExpensesInput = {
@@ -36352,6 +38475,7 @@ export namespace Prisma {
     attendances?: AttendanceRecordCreateNestedManyWithoutBranchInput
     transfers?: StockTransferCreateNestedManyWithoutToBranchInput
     consumptionLogs?: MaterialConsumptionLogCreateNestedManyWithoutBranchInput
+    cameras?: SecurityCameraCreateNestedManyWithoutBranchInput
   }
 
   export type BranchUncheckedCreateWithoutExpensesInput = {
@@ -36376,6 +38500,7 @@ export namespace Prisma {
     attendances?: AttendanceRecordUncheckedCreateNestedManyWithoutBranchInput
     transfers?: StockTransferUncheckedCreateNestedManyWithoutToBranchInput
     consumptionLogs?: MaterialConsumptionLogUncheckedCreateNestedManyWithoutBranchInput
+    cameras?: SecurityCameraUncheckedCreateNestedManyWithoutBranchInput
   }
 
   export type BranchCreateOrConnectWithoutExpensesInput = {
@@ -36416,6 +38541,7 @@ export namespace Prisma {
     attendances?: AttendanceRecordUpdateManyWithoutBranchNestedInput
     transfers?: StockTransferUpdateManyWithoutToBranchNestedInput
     consumptionLogs?: MaterialConsumptionLogUpdateManyWithoutBranchNestedInput
+    cameras?: SecurityCameraUpdateManyWithoutBranchNestedInput
   }
 
   export type BranchUncheckedUpdateWithoutExpensesInput = {
@@ -36440,6 +38566,7 @@ export namespace Prisma {
     attendances?: AttendanceRecordUncheckedUpdateManyWithoutBranchNestedInput
     transfers?: StockTransferUncheckedUpdateManyWithoutToBranchNestedInput
     consumptionLogs?: MaterialConsumptionLogUncheckedUpdateManyWithoutBranchNestedInput
+    cameras?: SecurityCameraUncheckedUpdateManyWithoutBranchNestedInput
   }
 
   export type UserCreateWithoutAttendancesInput = {
@@ -36499,6 +38626,7 @@ export namespace Prisma {
     expenses?: TreasuryExpenseCreateNestedManyWithoutBranchInput
     transfers?: StockTransferCreateNestedManyWithoutToBranchInput
     consumptionLogs?: MaterialConsumptionLogCreateNestedManyWithoutBranchInput
+    cameras?: SecurityCameraCreateNestedManyWithoutBranchInput
   }
 
   export type BranchUncheckedCreateWithoutAttendancesInput = {
@@ -36523,6 +38651,7 @@ export namespace Prisma {
     expenses?: TreasuryExpenseUncheckedCreateNestedManyWithoutBranchInput
     transfers?: StockTransferUncheckedCreateNestedManyWithoutToBranchInput
     consumptionLogs?: MaterialConsumptionLogUncheckedCreateNestedManyWithoutBranchInput
+    cameras?: SecurityCameraUncheckedCreateNestedManyWithoutBranchInput
   }
 
   export type BranchCreateOrConnectWithoutAttendancesInput = {
@@ -36604,6 +38733,7 @@ export namespace Prisma {
     expenses?: TreasuryExpenseUpdateManyWithoutBranchNestedInput
     transfers?: StockTransferUpdateManyWithoutToBranchNestedInput
     consumptionLogs?: MaterialConsumptionLogUpdateManyWithoutBranchNestedInput
+    cameras?: SecurityCameraUpdateManyWithoutBranchNestedInput
   }
 
   export type BranchUncheckedUpdateWithoutAttendancesInput = {
@@ -36628,6 +38758,7 @@ export namespace Prisma {
     expenses?: TreasuryExpenseUncheckedUpdateManyWithoutBranchNestedInput
     transfers?: StockTransferUncheckedUpdateManyWithoutToBranchNestedInput
     consumptionLogs?: MaterialConsumptionLogUncheckedUpdateManyWithoutBranchNestedInput
+    cameras?: SecurityCameraUncheckedUpdateManyWithoutBranchNestedInput
   }
 
   export type ProductCreateWithoutPurchasesInput = {
@@ -36823,6 +38954,7 @@ export namespace Prisma {
     expenses?: TreasuryExpenseCreateNestedManyWithoutBranchInput
     attendances?: AttendanceRecordCreateNestedManyWithoutBranchInput
     consumptionLogs?: MaterialConsumptionLogCreateNestedManyWithoutBranchInput
+    cameras?: SecurityCameraCreateNestedManyWithoutBranchInput
   }
 
   export type BranchUncheckedCreateWithoutTransfersInput = {
@@ -36847,6 +38979,7 @@ export namespace Prisma {
     expenses?: TreasuryExpenseUncheckedCreateNestedManyWithoutBranchInput
     attendances?: AttendanceRecordUncheckedCreateNestedManyWithoutBranchInput
     consumptionLogs?: MaterialConsumptionLogUncheckedCreateNestedManyWithoutBranchInput
+    cameras?: SecurityCameraUncheckedCreateNestedManyWithoutBranchInput
   }
 
   export type BranchCreateOrConnectWithoutTransfersInput = {
@@ -36948,6 +39081,7 @@ export namespace Prisma {
     expenses?: TreasuryExpenseUpdateManyWithoutBranchNestedInput
     attendances?: AttendanceRecordUpdateManyWithoutBranchNestedInput
     consumptionLogs?: MaterialConsumptionLogUpdateManyWithoutBranchNestedInput
+    cameras?: SecurityCameraUpdateManyWithoutBranchNestedInput
   }
 
   export type BranchUncheckedUpdateWithoutTransfersInput = {
@@ -36972,6 +39106,7 @@ export namespace Prisma {
     expenses?: TreasuryExpenseUncheckedUpdateManyWithoutBranchNestedInput
     attendances?: AttendanceRecordUncheckedUpdateManyWithoutBranchNestedInput
     consumptionLogs?: MaterialConsumptionLogUncheckedUpdateManyWithoutBranchNestedInput
+    cameras?: SecurityCameraUncheckedUpdateManyWithoutBranchNestedInput
   }
 
   export type ProductCreateWithoutConsumptionLogsInput = {
@@ -37051,6 +39186,7 @@ export namespace Prisma {
     expenses?: TreasuryExpenseCreateNestedManyWithoutBranchInput
     attendances?: AttendanceRecordCreateNestedManyWithoutBranchInput
     transfers?: StockTransferCreateNestedManyWithoutToBranchInput
+    cameras?: SecurityCameraCreateNestedManyWithoutBranchInput
   }
 
   export type BranchUncheckedCreateWithoutConsumptionLogsInput = {
@@ -37075,6 +39211,7 @@ export namespace Prisma {
     expenses?: TreasuryExpenseUncheckedCreateNestedManyWithoutBranchInput
     attendances?: AttendanceRecordUncheckedCreateNestedManyWithoutBranchInput
     transfers?: StockTransferUncheckedCreateNestedManyWithoutToBranchInput
+    cameras?: SecurityCameraUncheckedCreateNestedManyWithoutBranchInput
   }
 
   export type BranchCreateOrConnectWithoutConsumptionLogsInput = {
@@ -37176,6 +39313,7 @@ export namespace Prisma {
     expenses?: TreasuryExpenseUpdateManyWithoutBranchNestedInput
     attendances?: AttendanceRecordUpdateManyWithoutBranchNestedInput
     transfers?: StockTransferUpdateManyWithoutToBranchNestedInput
+    cameras?: SecurityCameraUpdateManyWithoutBranchNestedInput
   }
 
   export type BranchUncheckedUpdateWithoutConsumptionLogsInput = {
@@ -37200,6 +39338,123 @@ export namespace Prisma {
     expenses?: TreasuryExpenseUncheckedUpdateManyWithoutBranchNestedInput
     attendances?: AttendanceRecordUncheckedUpdateManyWithoutBranchNestedInput
     transfers?: StockTransferUncheckedUpdateManyWithoutToBranchNestedInput
+    cameras?: SecurityCameraUncheckedUpdateManyWithoutBranchNestedInput
+  }
+
+  export type BranchCreateWithoutCamerasInput = {
+    id?: string
+    name: string
+    code: string
+    address: string
+    phone: string
+    whatsapp?: string | null
+    googleMapsUrl?: string | null
+    isActive?: boolean
+    createdAt?: Date | string
+    users?: UserCreateNestedManyWithoutBranchInput
+    specialists?: SpecialistCreateNestedManyWithoutBranchInput
+    bookings?: BookingCreateNestedManyWithoutBranchInput
+    tickets?: TicketCreateNestedManyWithoutBranchInput
+    products?: ProductCreateNestedManyWithoutBranchInput
+    ledgers?: SpecialistLedgerCreateNestedManyWithoutBranchInput
+    offers?: OfferCreateNestedManyWithoutBranchInput
+    chatMessages?: ChatMessageCreateNestedManyWithoutBranchInput
+    shifts?: CashShiftCreateNestedManyWithoutBranchInput
+    expenses?: TreasuryExpenseCreateNestedManyWithoutBranchInput
+    attendances?: AttendanceRecordCreateNestedManyWithoutBranchInput
+    transfers?: StockTransferCreateNestedManyWithoutToBranchInput
+    consumptionLogs?: MaterialConsumptionLogCreateNestedManyWithoutBranchInput
+  }
+
+  export type BranchUncheckedCreateWithoutCamerasInput = {
+    id?: string
+    name: string
+    code: string
+    address: string
+    phone: string
+    whatsapp?: string | null
+    googleMapsUrl?: string | null
+    isActive?: boolean
+    createdAt?: Date | string
+    users?: UserUncheckedCreateNestedManyWithoutBranchInput
+    specialists?: SpecialistUncheckedCreateNestedManyWithoutBranchInput
+    bookings?: BookingUncheckedCreateNestedManyWithoutBranchInput
+    tickets?: TicketUncheckedCreateNestedManyWithoutBranchInput
+    products?: ProductUncheckedCreateNestedManyWithoutBranchInput
+    ledgers?: SpecialistLedgerUncheckedCreateNestedManyWithoutBranchInput
+    offers?: OfferUncheckedCreateNestedManyWithoutBranchInput
+    chatMessages?: ChatMessageUncheckedCreateNestedManyWithoutBranchInput
+    shifts?: CashShiftUncheckedCreateNestedManyWithoutBranchInput
+    expenses?: TreasuryExpenseUncheckedCreateNestedManyWithoutBranchInput
+    attendances?: AttendanceRecordUncheckedCreateNestedManyWithoutBranchInput
+    transfers?: StockTransferUncheckedCreateNestedManyWithoutToBranchInput
+    consumptionLogs?: MaterialConsumptionLogUncheckedCreateNestedManyWithoutBranchInput
+  }
+
+  export type BranchCreateOrConnectWithoutCamerasInput = {
+    where: BranchWhereUniqueInput
+    create: XOR<BranchCreateWithoutCamerasInput, BranchUncheckedCreateWithoutCamerasInput>
+  }
+
+  export type BranchUpsertWithoutCamerasInput = {
+    update: XOR<BranchUpdateWithoutCamerasInput, BranchUncheckedUpdateWithoutCamerasInput>
+    create: XOR<BranchCreateWithoutCamerasInput, BranchUncheckedCreateWithoutCamerasInput>
+    where?: BranchWhereInput
+  }
+
+  export type BranchUpdateToOneWithWhereWithoutCamerasInput = {
+    where?: BranchWhereInput
+    data: XOR<BranchUpdateWithoutCamerasInput, BranchUncheckedUpdateWithoutCamerasInput>
+  }
+
+  export type BranchUpdateWithoutCamerasInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    code?: StringFieldUpdateOperationsInput | string
+    address?: StringFieldUpdateOperationsInput | string
+    phone?: StringFieldUpdateOperationsInput | string
+    whatsapp?: NullableStringFieldUpdateOperationsInput | string | null
+    googleMapsUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    users?: UserUpdateManyWithoutBranchNestedInput
+    specialists?: SpecialistUpdateManyWithoutBranchNestedInput
+    bookings?: BookingUpdateManyWithoutBranchNestedInput
+    tickets?: TicketUpdateManyWithoutBranchNestedInput
+    products?: ProductUpdateManyWithoutBranchNestedInput
+    ledgers?: SpecialistLedgerUpdateManyWithoutBranchNestedInput
+    offers?: OfferUpdateManyWithoutBranchNestedInput
+    chatMessages?: ChatMessageUpdateManyWithoutBranchNestedInput
+    shifts?: CashShiftUpdateManyWithoutBranchNestedInput
+    expenses?: TreasuryExpenseUpdateManyWithoutBranchNestedInput
+    attendances?: AttendanceRecordUpdateManyWithoutBranchNestedInput
+    transfers?: StockTransferUpdateManyWithoutToBranchNestedInput
+    consumptionLogs?: MaterialConsumptionLogUpdateManyWithoutBranchNestedInput
+  }
+
+  export type BranchUncheckedUpdateWithoutCamerasInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    code?: StringFieldUpdateOperationsInput | string
+    address?: StringFieldUpdateOperationsInput | string
+    phone?: StringFieldUpdateOperationsInput | string
+    whatsapp?: NullableStringFieldUpdateOperationsInput | string | null
+    googleMapsUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    users?: UserUncheckedUpdateManyWithoutBranchNestedInput
+    specialists?: SpecialistUncheckedUpdateManyWithoutBranchNestedInput
+    bookings?: BookingUncheckedUpdateManyWithoutBranchNestedInput
+    tickets?: TicketUncheckedUpdateManyWithoutBranchNestedInput
+    products?: ProductUncheckedUpdateManyWithoutBranchNestedInput
+    ledgers?: SpecialistLedgerUncheckedUpdateManyWithoutBranchNestedInput
+    offers?: OfferUncheckedUpdateManyWithoutBranchNestedInput
+    chatMessages?: ChatMessageUncheckedUpdateManyWithoutBranchNestedInput
+    shifts?: CashShiftUncheckedUpdateManyWithoutBranchNestedInput
+    expenses?: TreasuryExpenseUncheckedUpdateManyWithoutBranchNestedInput
+    attendances?: AttendanceRecordUncheckedUpdateManyWithoutBranchNestedInput
+    transfers?: StockTransferUncheckedUpdateManyWithoutToBranchNestedInput
+    consumptionLogs?: MaterialConsumptionLogUncheckedUpdateManyWithoutBranchNestedInput
   }
 
   export type UserCreateManyBranchInput = {
@@ -37413,6 +39668,30 @@ export namespace Prisma {
     date: string
     notes?: string | null
     createdAt?: Date | string
+  }
+
+  export type SecurityCameraCreateManyBranchInput = {
+    id?: string
+    name: string
+    venueType?: string
+    locationDescription: string
+    feedType?: string
+    feedUrl?: string | null
+    snapshotUrl?: string | null
+    rtspUrl?: string | null
+    ipAddress?: string | null
+    port?: number | null
+    channelNumber?: number
+    streamQuality?: string
+    fps?: number
+    hasNightVision?: boolean
+    hasPTZ?: boolean
+    hasAudio?: boolean
+    isActive?: boolean
+    sortOrder?: number
+    notes?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
   }
 
   export type UserUpdateWithoutBranchInput = {
@@ -38068,6 +40347,78 @@ export namespace Prisma {
     date?: StringFieldUpdateOperationsInput | string
     notes?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type SecurityCameraUpdateWithoutBranchInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    venueType?: StringFieldUpdateOperationsInput | string
+    locationDescription?: StringFieldUpdateOperationsInput | string
+    feedType?: StringFieldUpdateOperationsInput | string
+    feedUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    snapshotUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    rtspUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    ipAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    port?: NullableIntFieldUpdateOperationsInput | number | null
+    channelNumber?: IntFieldUpdateOperationsInput | number
+    streamQuality?: StringFieldUpdateOperationsInput | string
+    fps?: IntFieldUpdateOperationsInput | number
+    hasNightVision?: BoolFieldUpdateOperationsInput | boolean
+    hasPTZ?: BoolFieldUpdateOperationsInput | boolean
+    hasAudio?: BoolFieldUpdateOperationsInput | boolean
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    sortOrder?: IntFieldUpdateOperationsInput | number
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type SecurityCameraUncheckedUpdateWithoutBranchInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    venueType?: StringFieldUpdateOperationsInput | string
+    locationDescription?: StringFieldUpdateOperationsInput | string
+    feedType?: StringFieldUpdateOperationsInput | string
+    feedUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    snapshotUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    rtspUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    ipAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    port?: NullableIntFieldUpdateOperationsInput | number | null
+    channelNumber?: IntFieldUpdateOperationsInput | number
+    streamQuality?: StringFieldUpdateOperationsInput | string
+    fps?: IntFieldUpdateOperationsInput | number
+    hasNightVision?: BoolFieldUpdateOperationsInput | boolean
+    hasPTZ?: BoolFieldUpdateOperationsInput | boolean
+    hasAudio?: BoolFieldUpdateOperationsInput | boolean
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    sortOrder?: IntFieldUpdateOperationsInput | number
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type SecurityCameraUncheckedUpdateManyWithoutBranchInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    venueType?: StringFieldUpdateOperationsInput | string
+    locationDescription?: StringFieldUpdateOperationsInput | string
+    feedType?: StringFieldUpdateOperationsInput | string
+    feedUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    snapshotUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    rtspUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    ipAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    port?: NullableIntFieldUpdateOperationsInput | number | null
+    channelNumber?: IntFieldUpdateOperationsInput | number
+    streamQuality?: StringFieldUpdateOperationsInput | string
+    fps?: IntFieldUpdateOperationsInput | number
+    hasNightVision?: BoolFieldUpdateOperationsInput | boolean
+    hasPTZ?: BoolFieldUpdateOperationsInput | boolean
+    hasAudio?: BoolFieldUpdateOperationsInput | boolean
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    sortOrder?: IntFieldUpdateOperationsInput | number
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type AttendanceRecordCreateManyUserInput = {

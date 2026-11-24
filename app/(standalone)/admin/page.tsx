@@ -6,7 +6,9 @@ import Link from "next/link";
 import CardQRModal from "@/components/CardQRModal";
 import AttendanceManagementTab from "@/components/AttendanceManagementTab";
 import CentralWarehouseTab from "@/components/CentralWarehouseTab";
+import CCTVMonitoringTab from "@/components/CCTVMonitoringTab";
 import {
+  Video,
   LayoutDashboard,
   Scissors,
   Users,
@@ -92,6 +94,7 @@ export default function AdminPage() {
     | "branches"
     | "settings"
     | "attendance"
+    | "cctv"
   >("overview");
 
   // Data States
@@ -400,12 +403,15 @@ export default function AdminPage() {
     }
   }, [router]);
 
-  // Tab Protection: Branch Managers cannot access global settings or branch architecture
+  // Tab Protection: Only Owner and GM can access CCTV Surveillance, Settings, or Branches
   useEffect(() => {
+    if (!isOwnerOrGM && activeTab === "cctv") {
+      setActiveTab("overview");
+    }
     if (isBranchManager && (activeTab === "branches" || activeTab === "settings")) {
       setActiveTab("overview");
     }
-  }, [isBranchManager, activeTab]);
+  }, [isBranchManager, isOwnerOrGM, activeTab]);
 
   // Audio Alarm Logic (Web Audio API Synthesizer - Royal Chime)
   const startAlarmSound = () => {
@@ -1726,6 +1732,7 @@ export default function AdminPage() {
     { id: "customers", label: "قاعدة العملاء 👥", icon: Users },
     ...(isOwnerOrGM
       ? [
+          { id: "cctv", label: "كاميرات المراقبة الحية 📹", icon: Video },
           { id: "users", label: "الصلاحيات والمستخدمين 🔒", icon: ShieldCheck },
           { id: "branches", label: "الفروع 📍", icon: MapPin },
           { id: "settings", label: "الإعدادات ⚙️", icon: Settings },
@@ -4920,6 +4927,17 @@ export default function AdminPage() {
             activeBranchId={activeBranchId}
             showToast={showToast}
             currentUser={currentUser}
+          />
+        )}
+
+        {/* 14. CCTV & LIVE SECURITY SURVEILLANCE TAB (MAESTRO & BASHA ONLY) */}
+        {activeTab === "cctv" && isOwnerOrGM && (
+          <CCTVMonitoringTab
+            branches={branches}
+            currentUser={currentUser}
+            isWomenTheme={isWomenTheme}
+            isNewSkinTheme={isNewSkinTheme}
+            showToast={showToast}
           />
         )}
       </main>

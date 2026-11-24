@@ -33,6 +33,7 @@ model Branch {
   attendances     AttendanceRecord[]
   transfers       StockTransfer[]
   consumptionLogs MaterialConsumptionLog[]
+  cameras         SecurityCamera[]
 }
 
 // ----------------------------------------------------
@@ -432,6 +433,35 @@ model MaterialConsumptionLog {
   date             String    // YYYY-MM-DD
   notes            String?
   createdAt        DateTime  @default(now())
+}
+
+// ----------------------------------------------------
+// 19. CCTV SECURITY SURVEILLANCE (منظومة كاميرات المراقبة الحية VIP)
+// ----------------------------------------------------
+model SecurityCamera {
+  id                  String    @id @default(cuid())
+  name                String    // اسم الكاميرا، مثلاً: "كاميرا 1: صالة كراسي الحلاقة الكبرى"
+  branchId            String?   // الفرع التابعة له أو null للإدارة العامة / الخزنة
+  branch              Branch?   @relation(fields: [branchId], references: [id], onDelete: SetNull)
+  venueType           String    @default("DAKN") // "DAKN" (رجالي), "HAMMAM" (حريمي), "NEWSKIN" (عيادة), "TREASURY" (خزنة وكاشير), "OFFICE" (مكتب)
+  locationDescription String    // e.g. "صالة الحلاقة الكبرى - 6 كراسي"
+  feedType            String    @default("SIMULATION") // "STREAM" (HLS/WebRTC), "SNAPSHOT" (MJPEG/HTTP Refresh), "IFRAME" (Cloud P2P / Web Portal), "SIMULATION" (Real-time VIP Surveillance Simulation)
+  feedUrl             String?   // e.g. Stream m3u8 or iframe URL
+  snapshotUrl         String?   // e.g. HTTP snapshot image URL
+  rtspUrl             String?   // e.g. rtsp://admin:pass@192.168.1.108:554/cam/realmonitor...
+  ipAddress           String?   // IP or DDNS (e.g. 192.168.1.108)
+  port                Int?      @default(80)
+  channelNumber       Int       @default(1)
+  streamQuality       String    @default("2K") // 4K, 2K, 1080P, 720P
+  fps                 Int       @default(30)
+  hasNightVision      Boolean   @default(true)
+  hasPTZ              Boolean   @default(true)
+  hasAudio            Boolean   @default(false)
+  isActive            Boolean   @default(true)
+  sortOrder           Int       @default(1)
+  notes               String?
+  createdAt           DateTime  @default(now())
+  updatedAt           DateTime  @updatedAt
 }
 
 
