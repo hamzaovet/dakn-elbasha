@@ -136,23 +136,36 @@ export default function CashierPosPage() {
   const daknBranch = branches.find(
     (b) => b.code === "BR-DAKN-MEN" || b.name?.includes("دقن") || b.name?.includes("رجالي")
   );
+  const newSkinBranch = branches.find(
+    (b) => b.code === "BR-NEWSKIN" || b.name?.includes("نيو سكين") || b.name?.includes("Skin")
+  );
 
   // Effective Active Branch ID: Strictly locked to user branch if staff/manager
   const activeBranchId = isOwnerOrGM ? selectedBranchId : (currentUser?.branchId || branches[0]?.id || "ALL");
 
-  // Women's Spa Theme (Hammam El Basha) vs Men's Theme (Dakn El Basha)
+  // Visual Themes: New Skin (Clinic) vs Women's Spa (Hammam) vs Men's (Dakn)
+  const isNewSkinTheme = Boolean(
+    currentUser?.branch?.name?.includes("نيو سكين") ||
+    currentUser?.branch?.code === "BR-NEWSKIN" ||
+    currentUser?.username?.includes("skin") ||
+    (newSkinBranch && activeBranchId === newSkinBranch.id) ||
+    (branches.find((b) => b.id === activeBranchId)?.name?.includes("نيو سكين")) ||
+    (branches.find((b) => b.id === activeBranchId)?.code === "BR-NEWSKIN")
+  );
   const isWomenTheme = Boolean(
-    currentUser?.branch?.name?.includes("حمام") ||
-    currentUser?.branch?.name?.includes("حريمي") ||
-    currentUser?.branch?.code === "BR-HAMMAM-WOMEN" ||
-    currentUser?.username?.includes("hammam") ||
-    (hammamBranch && activeBranchId === hammamBranch.id) ||
-    (branches.find((b) => b.id === activeBranchId)?.name?.includes("حمام")) ||
-    (branches.find((b) => b.id === activeBranchId)?.name?.includes("حريمي")) ||
-    (branches.find((b) => b.id === activeBranchId)?.code === "BR-HAMMAM-WOMEN")
+    !isNewSkinTheme && (
+      currentUser?.branch?.name?.includes("حمام") ||
+      currentUser?.branch?.name?.includes("حريمي") ||
+      currentUser?.branch?.code === "BR-HAMMAM-WOMEN" ||
+      currentUser?.username?.includes("hammam") ||
+      (hammamBranch && activeBranchId === hammamBranch.id) ||
+      (branches.find((b) => b.id === activeBranchId)?.name?.includes("حمام")) ||
+      (branches.find((b) => b.id === activeBranchId)?.name?.includes("حريمي")) ||
+      (branches.find((b) => b.id === activeBranchId)?.code === "BR-HAMMAM-WOMEN")
+    )
   );
   const isMenTheme = Boolean(
-    !isWomenTheme && (
+    !isWomenTheme && !isNewSkinTheme && (
       currentUser?.branch?.name?.includes("دقن") ||
       currentUser?.branch?.name?.includes("رجالي") ||
       currentUser?.branch?.code === "BR-DAKN-MEN" ||

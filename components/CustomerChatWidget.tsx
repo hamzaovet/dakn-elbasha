@@ -8,7 +8,7 @@ interface CustomerChatWidgetProps {
   branches?: any[];
   selectedBranchId?: string;
   hasActiveSelection?: boolean;
-  activeMode?: "MEN" | "WOMEN";
+  activeMode?: "MEN" | "WOMEN" | "NEWSKIN";
 }
 
 export default function CustomerChatWidget({
@@ -30,13 +30,38 @@ export default function CustomerChatWidget({
 
   const messagesEndRef = useRef<HTMLDivElement | null>(null);
 
+  const isNewSkin = activeMode === "NEWSKIN";
   const isWomen = activeMode === "WOMEN";
-  const brandName = isWomen ? "حمام الباشا (حريمي وسبا VIP)" : "دقن الباشا (رجالي VIP)";
-  const brandLogo = isWomen ? "/hammam-logo.jpg" : "/dakn-logo.jpg";
-  const accentColor = isWomen ? "from-rose-500 via-pink-400 to-rose-600" : "from-amber-500 via-amber-400 to-amber-500";
-  const accentBorder = isWomen ? "border-rose-400/50" : "border-amber-400/50";
-  const accentText = isWomen ? "text-rose-300" : "text-amber-400";
-  const buttonBg = isWomen ? "bg-rose-500 hover:bg-rose-400 text-white" : "bg-amber-500 hover:bg-amber-400 text-slate-950";
+  const brandName = isNewSkin
+    ? "نيو سكين (New Skin VIP)"
+    : isWomen
+    ? "حمام الباشا (حريمي وسبا VIP)"
+    : "دقن الباشا (رجالي VIP)";
+  const brandLogo = isNewSkin
+    ? "/newskin-logo.jpg"
+    : isWomen
+    ? "/hammam-logo.jpg"
+    : "/dakn-logo.jpg";
+  const accentColor = isNewSkin
+    ? "from-teal-400 via-cyan-400 to-sky-400"
+    : isWomen
+    ? "from-rose-500 via-pink-400 to-rose-600"
+    : "from-amber-500 via-amber-400 to-amber-500";
+  const accentBorder = isNewSkin
+    ? "border-cyan-400/50"
+    : isWomen
+    ? "border-rose-400/50"
+    : "border-amber-400/50";
+  const accentText = isNewSkin
+    ? "text-cyan-300"
+    : isWomen
+    ? "text-rose-300"
+    : "text-amber-400";
+  const buttonBg = isNewSkin
+    ? "bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-black"
+    : isWomen
+    ? "bg-rose-500 hover:bg-rose-400 text-white font-black"
+    : "bg-amber-500 hover:bg-amber-400 text-slate-950 font-black";
 
   // Initialize guest info from localStorage
   useEffect(() => {

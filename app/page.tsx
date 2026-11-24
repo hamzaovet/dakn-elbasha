@@ -40,6 +40,7 @@ import {
   Monitor,
   Download,
   RefreshCw,
+  Zap,
 } from "lucide-react";
 
 export default function HomePage() {
@@ -51,8 +52,8 @@ export default function HomePage() {
   const [offers, setOffers] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
 
-  // 👑 DUAL MODE STATE: "MEN" (دقن الباشا) | "WOMEN" (حمام الباشا)
-  const [activeMode, setActiveMode] = useState<"MEN" | "WOMEN">("MEN");
+  // 👑 MULTI-BRAND STATE: "MEN" (دقن الباشا) | "WOMEN" (حمام الباشا) | "NEWSKIN" (نيو سكين)
+  const [activeMode, setActiveMode] = useState<"MEN" | "WOMEN" | "NEWSKIN">("MEN");
   const [showBranchGateway, setShowBranchGateway] = useState<boolean>(true);
   const [mobileMenuOpen, setMobileMenuOpen] = useState<boolean>(false);
 
@@ -120,24 +121,33 @@ export default function HomePage() {
   const hammamBranch = branches.find(
     (b) => b.code === "BR-HAMMAM-WOMEN" || b.name?.includes("حمام") || b.name?.includes("حريمي")
   );
+  const newSkinBranch = branches.find(
+    (b) => b.code === "BR-NEWSKIN" || b.name?.includes("نيو سكين") || b.name?.includes("Skin")
+  );
 
-  // Switch Mode Handler
-  const handleSwitchMode = (mode: "MEN" | "WOMEN") => {
+  // Switch Mode Handler (Clean & Permanent)
+  const handleSwitchMode = (mode: "MEN" | "WOMEN" | "NEWSKIN") => {
     setActiveMode(mode);
     setActiveCategory("ALL");
     setSelectedSpecialistId("");
     setSelectedServices([]);
-
-    if (typeof window !== "undefined") {
-      try {
-        localStorage.setItem("basha_chosen_branch", mode);
-      } catch {}
-    }
+    setShowBranchGateway(false);
 
     if (mode === "MEN" && daknBranch) {
       setSelectedBranchId(daknBranch.id);
     } else if (mode === "WOMEN" && hammamBranch) {
       setSelectedBranchId(hammamBranch.id);
+    } else if (mode === "NEWSKIN" && newSkinBranch) {
+      setSelectedBranchId(newSkinBranch.id);
+    }
+
+    if (typeof window !== "undefined") {
+      try {
+        localStorage.setItem("basha_chosen_branch", mode);
+        const url = new URL(window.location.href);
+        url.searchParams.set("branch", mode === "MEN" ? "men" : mode === "WOMEN" ? "women" : "newskin");
+        window.history.replaceState({}, "", url.toString());
+      } catch {}
     }
   };
 
@@ -390,24 +400,27 @@ export default function HomePage() {
         if (dataB.success && dataB.branches) {
           setBranches(dataB.branches);
 
-          let forceGateway = false;
+          let chosenBranchParam: string | null = null;
           if (typeof window !== "undefined") {
             const urlParams = new URLSearchParams(window.location.search);
-            if (urlParams.get("gateway") === "1" || urlParams.get("selectBranch") === "1") {
-              forceGateway = true;
-            }
+            chosenBranchParam = urlParams.get("branch");
           }
 
-          const savedBranchMode = typeof window !== "undefined" ? localStorage.getItem("basha_chosen_branch") : null;
-
-          if (!forceGateway && savedBranchMode === "WOMEN") {
+          if (chosenBranchParam === "women") {
             setActiveMode("WOMEN");
             const wB = dataB.branches.find(
               (b: any) => b.code === "BR-HAMMAM-WOMEN" || b.name?.includes("حمام") || b.name?.includes("حريمي")
             );
             if (wB) setSelectedBranchId(wB.id);
             setShowBranchGateway(false);
-          } else if (!forceGateway && savedBranchMode === "MEN") {
+          } else if (chosenBranchParam === "newskin") {
+            setActiveMode("NEWSKIN");
+            const nB = dataB.branches.find(
+              (b: any) => b.code === "BR-NEWSKIN" || b.name?.includes("نيو سكين") || b.name?.includes("Skin")
+            );
+            if (nB) setSelectedBranchId(nB.id);
+            setShowBranchGateway(false);
+          } else if (chosenBranchParam === "men") {
             setActiveMode("MEN");
             const mB = dataB.branches.find(
               (b: any) => b.code === "BR-DAKN-MEN" || b.name?.includes("دقن") || b.name?.includes("رجالي")
@@ -415,7 +428,7 @@ export default function HomePage() {
             if (mB) setSelectedBranchId(mB.id);
             setShowBranchGateway(false);
           } else {
-            // First time or forced gateway
+            // First time on / or no ?branch param -> ALWAYS STAY ON GATEWAY MODAL!
             setShowBranchGateway(true);
             const mB = dataB.branches.find(
               (b: any) => b.code === "BR-DAKN-MEN" || b.name?.includes("دقن") || b.name?.includes("رجالي")
@@ -436,9 +449,15 @@ export default function HomePage() {
   }, []);
 
   const isWomen = activeMode === "WOMEN";
+  const isNewSkin = activeMode === "NEWSKIN";
+  const isMen = activeMode === "MEN";
 
   // Active Branch based on Mode
-  const currentModeBranch = isWomen ? hammamBranch : daknBranch;
+  const currentModeBranch = isWomen
+    ? hammamBranch
+    : isNewSkin
+    ? newSkinBranch
+    : daknBranch;
 
   // Specialists Filtered by Mode/Branch
   const filteredSpecialists = specialists
@@ -470,13 +489,30 @@ export default function HomePage() {
 
   // Services Filtered by Mode & Category
   const womenCategoryIds = ["LADIES_SPA", "LADIES_SKIN", "LADIES_HAIR"];
-  const filteredServices = services.filter((s) => {
-    // Mode match
-    const isServiceWomen = womenCategoryIds.includes(s.category);
-    if (isWomen && !isServiceWomen) return false;
-    if (!isWomen && isServiceWomen) return false;
+  const newSkinCategoryIds = ["NEWSKIN_PEDICURE", "NEWSKIN_MICRO", "NEWSKIN_DERMA", "NEWSKIN_LASER"];
+  const skinRoomCategoryIds = ["NEWSKIN_PEDICURE", "NEWSKIN_MICRO", "NEWSKIN_DERMA"];
+  const laserRoomCategoryIds = ["NEWSKIN_LASER"];
 
-    // Category match
+  const filteredServices = services.filter((s) => {
+    if (isNewSkin) {
+      if (!newSkinCategoryIds.includes(s.category)) return false;
+      if (activeCategory === "ALL") return true;
+      if (activeCategory === "ROOM_SKIN") return skinRoomCategoryIds.includes(s.category);
+      if (activeCategory === "ROOM_LASER") return laserRoomCategoryIds.includes(s.category);
+      return s.category === activeCategory;
+    }
+
+    if (isWomen) {
+      if (!womenCategoryIds.includes(s.category)) return false;
+      if (activeCategory === "ALL") return true;
+      return s.category === activeCategory;
+    }
+
+    // MEN mode
+    const isServiceWomen = womenCategoryIds.includes(s.category);
+    const isServiceNewSkin = newSkinCategoryIds.includes(s.category);
+    if (isServiceWomen || isServiceNewSkin) return false;
+
     if (activeCategory === "ALL") return true;
     return s.category === activeCategory;
   });
@@ -675,24 +711,104 @@ export default function HomePage() {
   const selectedBranch = branches.find((b) => b.id === (currentModeBranch?.id || selectedBranchId));
 
   // Visual Theme Classes
-  const themePageBg = isWomen ? "bg-[#0b0308]" : "bg-[#07070a]";
-  const themeHeaderBg = isWomen ? "bg-[#140610]/95 border-rose-500/25" : "bg-[#0c0c12]/95 border-amber-500/25";
-  const themeCardBg = isWomen ? "bg-[#160813]" : "bg-[#101018]";
-  const themeBorder = isWomen ? "border-rose-500/35" : "border-amber-500/30";
-  const themeAccentText = isWomen ? "text-rose-400" : "text-amber-400";
-  const themeSubText = isWomen ? "text-rose-200/70" : "text-amber-200/60";
-  const themeGradientBtn = isWomen
+  const themePageBg = isNewSkin
+    ? "bg-[#040d12]"
+    : isWomen
+    ? "bg-[#0b0308]"
+    : "bg-[#07070a]";
+
+  const themeHeaderBg = isNewSkin
+    ? "bg-[#061820]/95 border-teal-500/30"
+    : isWomen
+    ? "bg-[#140610]/95 border-rose-500/25"
+    : "bg-[#0c0c12]/95 border-amber-500/25";
+
+  const themeCardBg = isNewSkin
+    ? "bg-[#081e28]"
+    : isWomen
+    ? "bg-[#160813]"
+    : "bg-[#101018]";
+
+  const themeBorder = isNewSkin
+    ? "border-teal-500/35"
+    : isWomen
+    ? "border-rose-500/35"
+    : "border-amber-500/30";
+
+  const themeAccentText = isNewSkin
+    ? "text-teal-400"
+    : isWomen
+    ? "text-rose-400"
+    : "text-amber-400";
+
+  const themeSubText = isNewSkin
+    ? "text-teal-200/70"
+    : isWomen
+    ? "text-rose-200/70"
+    : "text-amber-200/60";
+
+  const themeGradientBtn = isNewSkin
+    ? "bg-gradient-to-r from-teal-500 via-cyan-500 to-sky-500 hover:from-teal-400 hover:to-cyan-400 text-slate-950 font-black shadow-teal-500/30"
+    : isWomen
     ? "bg-gradient-to-r from-rose-600 via-pink-500 to-rose-600 hover:from-rose-500 hover:to-pink-400 text-white shadow-rose-600/30"
     : "bg-gradient-to-r from-amber-500 via-amber-400 to-amber-500 hover:from-amber-400 hover:to-amber-300 text-slate-950 shadow-amber-500/30";
-  const themeActiveTab = isWomen
+
+  const themeActiveTab = isNewSkin
+    ? "bg-gradient-to-r from-teal-500 to-cyan-500 text-slate-950 shadow-teal-500/30 font-black"
+    : isWomen
     ? "bg-rose-600 text-white shadow-rose-600/30 font-black"
     : "bg-amber-500 text-slate-950 shadow-amber-500/30 font-black";
-  const themePillBorder = isWomen ? "border-rose-400/50" : "border-amber-400/50";
-  const themeBrandLogo = isWomen ? "/hammam-logo.jpg" : "/dakn-logo.jpg";
-  const themeHeroBanner = isWomen ? "/hammam-hero.jpg" : "/dakn-hero.jpg";
+
+  const themePillBorder = isNewSkin
+    ? "border-teal-400/50"
+    : isWomen
+    ? "border-rose-400/50"
+    : "border-amber-400/50";
+
+  const themeBrandLogo = isNewSkin
+    ? "/newskin-logo.jpg"
+    : isWomen
+    ? "/hammam-logo.jpg"
+    : "/dakn-logo.jpg";
+
+  const themeHeroBanner = isNewSkin
+    ? "/newskin-hero.jpg"
+    : isWomen
+    ? "/hammam-hero.jpg"
+    : "/dakn-hero.jpg";
+
+  // Category labels helper for badges
+  const getCategoryBadgeLabel = (cat: string) => {
+    const map: Record<string, string> = {
+      NEWSKIN_PEDICURE: "حجرة الاسكين • باديكير 💅",
+      NEWSKIN_MICRO: "حجرة الاسكين • ميكرو ✨",
+      NEWSKIN_DERMA: "حجرة الاسكين • ديرمابن 🔬",
+      NEWSKIN_LASER: "حجرة الليزر • إزالة الشعر ⚡",
+      LADIES_SPA: "حمام مغربي وسبا 🧖‍♀️",
+      LADIES_SKIN: "بشرة وهيدروفيشل ✨",
+      LADIES_HAIR: "شعر وبروتين 💇‍♀️",
+      HAIR: "قص وتصفيف ✂️",
+      BEARD: "تحديد دقن 🧔",
+      VIP_PACKAGES: "باقة VIP 👑",
+      SKIN_CARE: "بشرة وبخار 🧖",
+      COLOR_KERATIN: "صبغة ومعالج 🎨",
+      KIDS: "أطفال 👦",
+    };
+    return map[cat] || cat;
+  };
 
   // Categories list per mode
-  const currentCategories = isWomen
+  const currentCategories = isNewSkin
+    ? [
+        { id: "ALL", label: "جميع خدمات نيو سكين 💎" },
+        { id: "ROOM_SKIN", label: "🧖‍♀️ حجرة الاسكين (باديكير • ميكرو • ديرما)" },
+        { id: "NEWSKIN_PEDICURE", label: "💅 باديكير سبا إيطالي" },
+        { id: "NEWSKIN_MICRO", label: "✨ ميكرو ومايكروبليدينج" },
+        { id: "NEWSKIN_DERMA", label: "🔬 ديرمابن وميزوثيرابي" },
+        { id: "ROOM_LASER", label: "⚡ حجرة الليزر (إزالة الشعر)" },
+        { id: "NEWSKIN_LASER", label: "🌟 باقات الليزر الكاملة" },
+      ]
+    : isWomen
     ? [
         { id: "ALL", label: "جميع خدمات السبا والحمام 🌸" },
         { id: "LADIES_SPA", label: "حمام مغربي ودلال وسبا 🧖‍♀️" },
@@ -851,8 +967,8 @@ export default function HomePage() {
               </p>
             </div>
 
-            {/* Two Majestic Portals */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full max-w-4xl">
+            {/* Three Majestic Portals */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 w-full max-w-6xl">
               {/* Card 1: صالون دقن الباشا (رجالي VIP) */}
               <div
                 onClick={() => {
@@ -860,10 +976,10 @@ export default function HomePage() {
                   setShowBranchGateway(false);
                   showToast("success", "أهلاً بك في صالون دقن الباشا (رجالي VIP) 🎩✨");
                 }}
-                className="group relative rounded-3xl overflow-hidden border-2 border-amber-500/30 hover:border-amber-400 bg-gradient-to-b from-slate-900/90 to-black p-6 sm:p-8 cursor-pointer transition-all duration-300 hover:scale-[1.02] hover:shadow-2xl hover:shadow-amber-500/20 flex flex-col justify-between"
+                className="group relative rounded-3xl overflow-hidden border-2 border-amber-500/30 hover:border-amber-400 bg-gradient-to-b from-slate-900/90 to-black p-5 sm:p-6 cursor-pointer transition-all duration-300 hover:scale-[1.02] hover:shadow-2xl hover:shadow-amber-500/20 flex flex-col justify-between"
               >
                 {/* Card Image Cover */}
-                <div className="h-44 sm:h-52 w-full rounded-2xl overflow-hidden relative mb-5">
+                <div className="h-40 sm:h-48 w-full rounded-2xl overflow-hidden relative mb-4">
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img
                     src="/dakn-hero.jpg"
@@ -880,10 +996,10 @@ export default function HomePage() {
                     <img
                       src="/dakn-logo.jpg"
                       alt="شعار دقن الباشا"
-                      className="w-12 h-12 rounded-xl object-cover border-2 border-amber-400 bg-black shrink-0 shadow-lg"
+                      className="w-11 h-11 rounded-xl object-cover border-2 border-amber-400 bg-black shrink-0 shadow-lg"
                     />
                     <div className="text-white">
-                      <h3 className="font-black text-lg text-amber-300 leading-tight">صالون دقن الباشا</h3>
+                      <h3 className="font-black text-base sm:text-lg text-amber-300 leading-tight">صالون دقن الباشا</h3>
                       <p className="text-[11px] text-slate-300">73 شارع ترعة الجبل، حدائق القبة</p>
                     </div>
                   </div>
@@ -910,10 +1026,10 @@ export default function HomePage() {
                   setShowBranchGateway(false);
                   showToast("success", "أهلاً بكِ في حمام الباشا (حريمي وسبا VIP) 👑🌸");
                 }}
-                className="group relative rounded-3xl overflow-hidden border-2 border-rose-500/30 hover:border-rose-400 bg-gradient-to-b from-slate-900/90 to-black p-6 sm:p-8 cursor-pointer transition-all duration-300 hover:scale-[1.02] hover:shadow-2xl hover:shadow-rose-500/20 flex flex-col justify-between"
+                className="group relative rounded-3xl overflow-hidden border-2 border-rose-500/30 hover:border-rose-400 bg-gradient-to-b from-slate-900/90 to-black p-5 sm:p-6 cursor-pointer transition-all duration-300 hover:scale-[1.02] hover:shadow-2xl hover:shadow-rose-500/20 flex flex-col justify-between"
               >
                 {/* Card Image Cover */}
-                <div className="h-44 sm:h-52 w-full rounded-2xl overflow-hidden relative mb-5">
+                <div className="h-40 sm:h-48 w-full rounded-2xl overflow-hidden relative mb-4">
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img
                     src="/hammam-hero.jpg"
@@ -930,10 +1046,10 @@ export default function HomePage() {
                     <img
                       src="/hammam-logo.jpg"
                       alt="شعار حمام الباشا"
-                      className="w-12 h-12 rounded-xl object-cover border-2 border-rose-400 bg-black shrink-0 shadow-lg"
+                      className="w-11 h-11 rounded-xl object-cover border-2 border-rose-400 bg-black shrink-0 shadow-lg"
                     />
                     <div className="text-white">
-                      <h3 className="font-black text-lg text-rose-300 leading-tight">حمام الباشا الملكي</h3>
+                      <h3 className="font-black text-base sm:text-lg text-rose-300 leading-tight">حمام الباشا الملكي</h3>
                       <p className="text-[11px] text-slate-300">84 ترعة الجبل، كينج بارك مول</p>
                     </div>
                   </div>
@@ -952,6 +1068,63 @@ export default function HomePage() {
                   </button>
                 </div>
               </div>
+
+              {/* Card 3: عيادة نيو سكين (New Skin VIP) */}
+              <div
+                onClick={() => {
+                  handleSwitchMode("NEWSKIN");
+                  setShowBranchGateway(false);
+                  showToast("success", "أهلاً بكِ في عيادة نيو سكين (New Skin VIP) 💎✨");
+                }}
+                className="group relative rounded-3xl overflow-hidden border-2 border-teal-500/30 hover:border-teal-400 bg-gradient-to-b from-[#081e28] to-black p-5 sm:p-6 cursor-pointer transition-all duration-300 hover:scale-[1.02] hover:shadow-2xl hover:shadow-teal-500/20 flex flex-col justify-between"
+              >
+                {/* Card Image Cover */}
+                <div className="h-40 sm:h-48 w-full rounded-2xl overflow-hidden relative mb-4">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src="/newskin-hero.jpg"
+                    alt="نيو سكين New Skin VIP"
+                    className="w-full h-full object-cover group-hover:scale-105 transition duration-500"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black via-black/30 to-transparent" />
+                  <div className="absolute top-3 right-3 flex items-center gap-1.5 bg-black/80 backdrop-blur-md px-3 py-1 rounded-full border border-teal-500/40 text-[11px] font-black text-teal-300">
+                    <Sparkles className="w-3.5 h-3.5" />
+                    <span>عيادة وليزر VIP</span>
+                  </div>
+                  <div className="absolute bottom-3 right-3 left-3 flex items-center gap-3">
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img
+                      src="/newskin-logo.jpg"
+                      alt="شعار نيو سكين"
+                      className="w-11 h-11 rounded-xl object-cover border-2 border-teal-400 bg-black shrink-0 shadow-lg"
+                    />
+                    <div className="text-white">
+                      <h3 className="font-black text-base sm:text-lg text-teal-300 leading-tight">نيو سكين New Skin</h3>
+                      <p className="text-[11px] text-slate-300">73 شارع ترعة الجبل، حدائق القبة</p>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="space-y-4">
+                  <div className="p-2.5 rounded-2xl bg-black/50 border border-teal-500/20 text-xs text-slate-300 leading-relaxed space-y-1">
+                    <p className="text-teal-300 font-bold flex items-center gap-1.5 text-[11px]">
+                      <span>🧖‍♀️ حجرة الاسكين:</span>
+                      <span className="text-white font-normal">باديكير سبا • ميكرو • ديرما</span>
+                    </p>
+                    <p className="text-cyan-300 font-bold flex items-center gap-1.5 text-[11px]">
+                      <span>⚡ حجرة الليزر:</span>
+                      <span className="text-white font-normal">إزالة شعر بأحدث أجهزة التبريد</span>
+                    </p>
+                  </div>
+                  <button
+                    type="button"
+                    className="w-full py-3 px-4 rounded-xl bg-gradient-to-r from-teal-500 via-cyan-500 to-sky-500 text-slate-950 font-black text-sm shadow-lg shadow-teal-500/20 group-hover:shadow-teal-500/40 transition flex items-center justify-center gap-2 cursor-pointer"
+                  >
+                    <span>دخول عيادة نيو سكين VIP</span>
+                    <ChevronLeft className="w-4 h-4 rtl:rotate-0 ltr:rotate-180" />
+                  </button>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -965,54 +1138,47 @@ export default function HomePage() {
         <Link href="/" className="flex items-center gap-2 sm:gap-3 group shrink-0">
           <div className={`w-10 h-10 sm:w-12 sm:h-12 rounded-xl sm:rounded-2xl overflow-hidden border-2 ${themePillBorder} shadow-lg bg-black shrink-0 group-hover:scale-105 transition`}>
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src={themeBrandLogo} alt={isWomen ? "حمام الباشا" : "دقن الباشا"} className="w-full h-full object-cover" />
+            <img
+              src={themeBrandLogo}
+              alt={isNewSkin ? "نيو سكين" : isWomen ? "حمام الباشا" : "دقن الباشا"}
+              className="w-full h-full object-cover"
+            />
           </div>
           <div className="leading-tight">
             <div className="flex items-center gap-1.5">
               <h1 className={`text-sm sm:text-lg md:text-xl font-black ${themeAccentText} tracking-wide whitespace-nowrap`}>
-                {isWomen ? "حمام الباشا" : "دقن الباشا"}{" "}
-                <span className="hidden sm:inline">{isWomen ? "(حريمي وسبا)" : "(رجالي VIP)"}</span>
+                {isNewSkin
+                  ? "عيادة نيو سكين"
+                  : isWomen
+                  ? "حمام الباشا"
+                  : "صالون دقن الباشا"}{" "}
+                <span className="hidden sm:inline">
+                  {isNewSkin ? "(ليزر وعناية VIP)" : isWomen ? "(حريمي وسبا VIP)" : "(رجالي VIP)"}
+                </span>
               </h1>
               <Sparkles className={`w-3.5 h-3.5 ${themeAccentText} animate-pulse hidden sm:block`} />
             </div>
             <p className={`text-[9px] sm:text-xs ${themeSubText} font-mono font-bold tracking-widest uppercase hidden md:block`}>
-              {isWomen ? "HAMMAM EL BASHA • ROYAL SPA & BRIDAL" : "DAKN EL BASHA • ROYAL MEN EXPERIENCE"}
+              {isNewSkin
+                ? "NEW SKIN VIP • LASER & ADVANCED CLINIC"
+                : isWomen
+                ? "HAMMAM EL BASHA • ROYAL SPA & BRIDAL"
+                : "DAKN EL BASHA • ROYAL MEN EXPERIENCE"}
             </p>
           </div>
         </Link>
 
-        {/* 🎩👑 DUAL MODE QUICK SWITCHER (DESKTOP / TABLET PILL) */}
-        <div className="hidden md:flex items-center bg-black/60 border border-white/10 rounded-2xl p-1 gap-1">
-          <button
-            type="button"
-            onClick={() => handleSwitchMode("MEN")}
-            className={`py-1.5 px-3.5 rounded-xl text-xs font-black transition flex items-center gap-1.5 cursor-pointer ${
-              !isWomen
-                ? "bg-amber-500 text-slate-950 shadow-md shadow-amber-500/30"
-                : "text-slate-400 hover:text-white"
-            }`}
-          >
-            <span>🎩 دقن الباشا (رجالي)</span>
-          </button>
-          <button
-            type="button"
-            onClick={() => handleSwitchMode("WOMEN")}
-            className={`py-1.5 px-3.5 rounded-xl text-xs font-black transition flex items-center gap-1.5 cursor-pointer ${
-              isWomen
-                ? "bg-rose-500 text-white shadow-md shadow-rose-500/30"
-                : "text-slate-400 hover:text-white"
-            }`}
-          >
-            <span>👑 حمام الباشا (حريمي)</span>
-          </button>
+        {/* Clean Single Branch Switcher (Return to Gateway) */}
+        <div className="hidden md:flex items-center">
           <button
             type="button"
             onClick={() => setShowBranchGateway(true)}
-            className="py-1.5 px-2.5 rounded-xl text-xs font-bold text-slate-300 hover:text-white hover:bg-white/10 transition flex items-center gap-1 cursor-pointer"
-            title="تغيير القسم / فتح البوابة الملكية"
+            className={`py-2 px-4 rounded-2xl bg-black/70 hover:bg-black/90 border ${themeBorder} text-white text-xs font-black shadow-lg transition flex items-center gap-2 cursor-pointer hover:scale-105`}
+            title="تغيير القسم / العودة لبوابة الاختيار الملكية"
           >
-            <RefreshCw className="w-3.5 h-3.5 text-amber-400" />
-            <span>تغيير 🔄</span>
+            <RefreshCw className={`w-3.5 h-3.5 ${themeAccentText}`} />
+            <span className="text-slate-400">صرح الباشا •</span>
+            <span className={themeAccentText}>تغيير الصالون 🔄</span>
           </button>
         </div>
 
@@ -1135,14 +1301,16 @@ export default function HomePage() {
             type="button"
             onClick={() => setShowBranchGateway(true)}
             className={`py-1 px-2.5 rounded-xl border text-[11px] font-black flex items-center gap-1 transition ${
-              isWomen
+              isNewSkin
+                ? "bg-teal-500/20 border-teal-400/50 text-teal-300"
+                : isWomen
                 ? "bg-rose-500/20 border-rose-400/50 text-rose-300"
                 : "bg-amber-500/20 border-amber-400/50 text-amber-300"
             }`}
-            title="تبديل القسم أو فتح البوابة"
+            title="تبديل الصالون أو فتح البوابة"
           >
-            <span>{isWomen ? "👑 حريمي" : "🎩 رجالي"}</span>
-            <RefreshCw className="w-3 h-3 text-amber-400" />
+            <span>{isNewSkin ? "💎 نيو سكين" : isWomen ? "👑 حريمي" : "🎩 رجالي"}</span>
+            <RefreshCw className="w-3 h-3" />
           </button>
 
           {/* Quick Staff Login */}
@@ -1169,38 +1337,18 @@ export default function HomePage() {
       {/* 📱 Mobile Drawer Menu (Never Crowded, Never Colliding!) */}
       {mobileMenuOpen && (
         <div className={`md:hidden ${themeCardBg} border-b ${themeBorder} px-4 py-4 space-y-3 shadow-2xl animate-fade-in relative z-30`}>
-          {/* Fast Mode Switch in Drawer */}
-          <div className="grid grid-cols-2 gap-2 pb-2 border-b border-white/10">
+          {/* Fast Return to Gateway */}
+          <div className="pb-2 border-b border-white/10">
             <button
               type="button"
               onClick={() => {
-                handleSwitchMode("MEN");
                 setMobileMenuOpen(false);
+                setShowBranchGateway(true);
               }}
-              className={`flex items-center justify-center gap-1.5 p-2.5 rounded-xl text-xs font-black border transition ${
-                !isWomen
-                  ? "bg-amber-500 text-slate-950 border-amber-400 shadow-md"
-                  : "bg-white/5 text-slate-300 border-white/10"
-              }`}
+              className={`w-full flex items-center justify-center gap-2 p-3 rounded-2xl ${themeBorder} border bg-black/60 text-xs font-black text-white shadow-md cursor-pointer`}
             >
-              <Scissors className="w-3.5 h-3.5" />
-              <span>دقن الباشا (رجالي)</span>
-            </button>
-
-            <button
-              type="button"
-              onClick={() => {
-                handleSwitchMode("WOMEN");
-                setMobileMenuOpen(false);
-              }}
-              className={`flex items-center justify-center gap-1.5 p-2.5 rounded-xl text-xs font-black border transition ${
-                isWomen
-                  ? "bg-rose-500 text-white border-rose-400 shadow-md"
-                  : "bg-white/5 text-slate-300 border-white/10"
-              }`}
-            >
-              <Sparkles className="w-3.5 h-3.5" />
-              <span>حمام الباشا (حريمي)</span>
+              <Crown className={`w-4 h-4 ${themeAccentText}`} />
+              <span>🏛️ صرح الباشا VIP • تغيير الصالون أو العيادة 🔄</span>
             </button>
           </div>
 
@@ -1327,38 +1475,33 @@ export default function HomePage() {
         />
         <div
           className={`absolute inset-0 pointer-events-none transition-colors duration-700 ${
-            isWomen
+            isNewSkin
+              ? "bg-gradient-to-b from-[#040d12]/90 via-[#061820]/95 to-[#040d12]"
+              : isWomen
               ? "bg-gradient-to-b from-[#0b0308]/90 via-[#160612]/95 to-[#0b0308]"
               : "bg-gradient-to-b from-[#07070a]/90 via-[#0a0a0f]/95 to-[#07070a]"
           }`}
         />
 
         <div className="relative max-w-4xl mx-auto text-center space-y-6">
-          {/* 🌟 PROMINENT DUAL SWITCHER TABS (MEN VS WOMEN) */}
-          <div className="inline-flex items-center p-1.5 rounded-3xl bg-black/80 border-2 border-white/20 shadow-2xl backdrop-blur-xl">
+          {/* 🌟 SINGLE BRAND EMBLEM & DIRECT RETURN BUTTON (NO DUAL TAB CLUTTER) */}
+          <div className="inline-flex items-center gap-2 py-1.5 px-4 rounded-full bg-black/80 border border-white/20 shadow-xl backdrop-blur-xl">
+            <span className="text-base">
+              {isNewSkin ? "💎" : isWomen ? "👑" : "🎩"}
+            </span>
+            <span className={`text-xs sm:text-sm font-black ${themeAccentText}`}>
+              {isNewSkin
+                ? "عيادة نيو سكين VIP (حجرة الاسكين & حجرة الليزر)"
+                : isWomen
+                ? "حمام الباشا (حريمي وصبايا وسبا VIP)"
+                : "صالون دقن الباشا (رجالي VIP)"}
+            </span>
             <button
               type="button"
-              onClick={() => handleSwitchMode("MEN")}
-              className={`py-3 px-5 sm:px-7 rounded-2xl font-black text-xs sm:text-sm transition flex items-center gap-2 cursor-pointer ${
-                !isWomen
-                  ? "bg-gradient-to-r from-amber-500 to-amber-400 text-slate-950 shadow-xl shadow-amber-500/30 scale-105"
-                  : "text-slate-400 hover:text-white"
-              }`}
+              onClick={() => setShowBranchGateway(true)}
+              className="mr-2 py-0.5 px-2.5 rounded-lg bg-white/10 hover:bg-white/20 text-[10px] text-white font-bold transition flex items-center gap-1 cursor-pointer"
             >
-              <span className="text-base">🎩</span>
-              <span>صالون دقن الباشا (رجالي VIP)</span>
-            </button>
-            <button
-              type="button"
-              onClick={() => handleSwitchMode("WOMEN")}
-              className={`py-3 px-5 sm:px-7 rounded-2xl font-black text-xs sm:text-sm transition flex items-center gap-2 cursor-pointer ${
-                isWomen
-                  ? "bg-gradient-to-r from-rose-600 via-pink-500 to-rose-600 text-white shadow-xl shadow-rose-600/30 scale-105"
-                  : "text-slate-400 hover:text-white"
-              }`}
-            >
-              <span className="text-base">👑</span>
-              <span>حمام الباشا (حريمي وسبا VIP)</span>
+              <span>تغيير الصالون 🔄</span>
             </button>
           </div>
 
@@ -1367,23 +1510,32 @@ export default function HomePage() {
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src={themeBrandLogo}
-              alt={isWomen ? "حمام الباشا" : "دقن الباشا"}
+              alt={isNewSkin ? "نيو سكين" : isWomen ? "حمام الباشا" : "دقن الباشا"}
               className="w-full h-full object-cover rounded-2xl"
             />
           </div>
 
           {/* Brand Slogan */}
           <div className="space-y-2">
-            <div className={`inline-flex items-center gap-2 py-1 px-4 rounded-full ${isWomen ? "bg-rose-500/15 border-rose-400/40 text-rose-300" : "bg-amber-500/15 border-amber-400/40 text-amber-300"} border text-xs font-black shadow-lg`}>
+            <div className={`inline-flex items-center gap-2 py-1 px-4 rounded-full ${isNewSkin ? "bg-teal-500/15 border-teal-400/40 text-teal-300" : isWomen ? "bg-rose-500/15 border-rose-400/40 text-rose-300" : "bg-amber-500/15 border-amber-400/40 text-amber-300"} border text-xs font-black shadow-lg`}>
               <span>
-                {isWomen
+                {isNewSkin
+                  ? "💎 NEW SKIN CLINIC • VIP LASER & ADVANCED SKINCARE 💎"
+                  : isWomen
                   ? "👑 HAMMAM EL BASHA • ROYAL SPA & BRIDAL CARE 🌸"
                   : "👑 DAKN EL BASHA • VIP MEN ROYAL EXPERIENCE 👑"}
               </span>
             </div>
 
             <h2 className="text-3xl sm:text-5xl lg:text-6xl font-black text-white leading-tight">
-              {isWomen ? (
+              {isNewSkin ? (
+                <>
+                  جمال بشرتك بلمسة طبية ملكية ... <br className="hidden sm:inline" />
+                  <span className="bg-gradient-to-r from-teal-300 via-cyan-400 to-sky-300 bg-clip-text text-transparent">
+                    عيادة نيو سكين وليزر VIP 💎
+                  </span>
+                </>
+              ) : isWomen ? (
                 <>
                   عالم الدلال والجمال ... <br className="hidden sm:inline" />
                   <span className="bg-gradient-to-r from-rose-400 via-pink-300 to-rose-400 bg-clip-text text-transparent">
@@ -1400,7 +1552,12 @@ export default function HomePage() {
           </div>
 
           <p className="text-xs sm:text-sm text-slate-300 font-medium max-w-xl mx-auto leading-relaxed">
-            {isWomen ? (
+            {isNewSkin ? (
+              <>
+                عيادة التجميل والليزر المتقدمة بفرع{" "}
+                <strong className="text-teal-400">حدائق القبة (73 شارع ترعة الجبل، أمام مستشفى سان بول)</strong> — حجرة الاسكين المتخصصة (باديكير سبا، ميكرو، ديرما) وحجرة أحدث أجهزة الليزر البارد.
+              </>
+            ) : isWomen ? (
               <>
                 الوجهة الملكية للعرائس والدلال والاسترخاء والسبا المغربي بفرع{" "}
                 <strong className="text-rose-400">كينج بارك مول (84 ترعة الجبل، أمام سان بولا)</strong>.
@@ -1418,25 +1575,25 @@ export default function HomePage() {
             <div className={`p-2.5 rounded-2xl ${themeCardBg} border ${themeBorder} flex items-center justify-center gap-2`}>
               <Award className={`w-4 h-4 ${themeAccentText} shrink-0`} />
               <span className="font-bold text-white">
-                {isWomen ? "صابون مغربي بلدي أصلي" : "خامات إيطالية أصلية"}
+                {isNewSkin ? "أحدث أجهزة ليزر وتبريد" : isWomen ? "صابون مغربي بلدي أصلي" : "خامات إيطالية أصلية"}
               </span>
             </div>
             <div className={`p-2.5 rounded-2xl ${themeCardBg} border ${themeBorder} flex items-center justify-center gap-2`}>
               <ShieldCheck className={`w-4 h-4 ${themeAccentText} shrink-0`} />
               <span className="font-bold text-white">
-                {isWomen ? "خصوصية تامة وطاقم خبيرات" : "تعقيم طبي متكامل"}
+                {isNewSkin ? "معايير طبية وتعقيم كامل" : isWomen ? "خصوصية تامة وطاقم خبيرات" : "تعقيم طبي متكامل"}
               </span>
             </div>
             <div className={`p-2.5 rounded-2xl ${themeCardBg} border ${themeBorder} flex items-center justify-center gap-2`}>
               <Clock className={`w-4 h-4 ${themeAccentText} shrink-0`} />
               <span className="font-bold text-white">
-                {isWomen ? "جاكوزي وساونا استرخائية" : "دقة تامة في المواعيد"}
+                {isNewSkin ? "جلسات سريعة وبدون ألم" : isWomen ? "جاكوزي وساونا استرخائية" : "دقة تامة في المواعيد"}
               </span>
             </div>
             <div className={`p-2.5 rounded-2xl ${themeCardBg} border ${themeBorder} flex items-center justify-center gap-2`}>
               <Coffee className={`w-4 h-4 ${themeAccentText} shrink-0`} />
               <span className="font-bold text-white">
-                {isWomen ? "ضيافة ودلال VIP" : "ضيافة الباشا الملكية"}
+                {isNewSkin ? "استشارة ومتابعة متخصصة" : isWomen ? "ضيافة ودلال VIP" : "ضيافة الباشا الملكية"}
               </span>
             </div>
           </div>
@@ -1446,14 +1603,16 @@ export default function HomePage() {
             <div className="py-2 px-4 rounded-2xl bg-black/60 border border-white/10 flex items-center gap-2">
               <MapPin className={`w-4 h-4 ${themeAccentText}`} />
               <span className="text-slate-300">
-                {isWomen
+                {isNewSkin
+                  ? "73 شارع ترعة الجبل، أمام مستشفى سان بول، حدائق القبة"
+                  : isWomen
                   ? "84 ترعة الجبل، كينج بارك مول، أمام سان بولا، حدائق القبة"
                   : "73 شارع ترعة الجبل، أمام مستشفى سان بول، حدائق القبة"}
               </span>
             </div>
             <a
               href={`tel:${isWomen ? "01556782015" : "01210103025"}`}
-              className={`py-2 px-4 rounded-2xl ${isWomen ? "bg-rose-500/20 text-rose-300 border-rose-500/30" : "bg-amber-500/20 text-amber-300 border-amber-500/30"} border font-mono font-bold flex items-center gap-2 hover:scale-105 transition`}
+              className={`py-2 px-4 rounded-2xl ${isNewSkin ? "bg-teal-500/20 text-teal-300 border-teal-500/30" : isWomen ? "bg-rose-500/20 text-rose-300 border-rose-500/30" : "bg-amber-500/20 text-amber-300 border-amber-500/30"} border font-mono font-bold flex items-center gap-2 hover:scale-105 transition`}
             >
               <Phone className="w-3.5 h-3.5" />
               <span>{isWomen ? "01556782015" : "01210103025"}</span>
@@ -1818,17 +1977,21 @@ export default function HomePage() {
         <section className="space-y-5">
           <div className={`flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b ${themeBorder} pb-3`}>
             <div className="flex items-center gap-2.5">
-              <div className={`w-8 h-8 rounded-xl ${isWomen ? "bg-rose-500 text-white" : "bg-amber-500 text-slate-950"} flex items-center justify-center font-black text-sm`}>
+              <div className={`w-8 h-8 rounded-xl ${isNewSkin ? "bg-teal-500 text-slate-950 font-black" : isWomen ? "bg-rose-500 text-white" : "bg-amber-500 text-slate-950"} flex items-center justify-center font-black text-sm`}>
                 2
               </div>
               <div>
                 <h3 className="text-lg font-black text-white">
-                  {isWomen
+                  {isNewSkin
+                    ? "اختاري خدمات عيادة نيو سكين VIP (حجرة الاسكين أو حجرة الليزر)"
+                    : isWomen
                     ? "اختاري خدمات السبا والعناية المطلوبة"
                     : "اختر الخدمات التجميلية والعناية المطلوبة"}
                 </h3>
                 <p className="text-xs text-slate-400">
-                  شاهد صور كل خدمة، مدتها بالدقائق، وسعرها الواضح
+                  {isNewSkin
+                    ? "خدمات ديناميكية متكاملة: باديكير، ميكرو، ديرما، وجلسات إزالة الشعر بالليزر"
+                    : "شاهد صور كل خدمة، مدتها بالدقائق، وسعرها الواضح"}
                 </p>
               </div>
             </div>
@@ -1851,6 +2014,57 @@ export default function HomePage() {
             </div>
           </div>
 
+          {/* 💎 NEW SKIN TWO-ROOM DEDICATED CARDS */}
+          {isNewSkin && (
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 w-full">
+              {/* Room 1: حجرة الاسكين */}
+              <div
+                onClick={() => setActiveCategory(activeCategory === "ROOM_SKIN" ? "ALL" : "ROOM_SKIN")}
+                className={`p-4 rounded-3xl border-2 transition cursor-pointer flex items-center justify-between gap-3 ${
+                  activeCategory === "ROOM_SKIN" || ["NEWSKIN_PEDICURE", "NEWSKIN_MICRO", "NEWSKIN_DERMA"].includes(activeCategory)
+                    ? "bg-teal-500/20 border-teal-400 ring-2 ring-teal-400/50 shadow-lg shadow-teal-500/20"
+                    : "bg-[#081e28] border-teal-500/30 hover:border-teal-400"
+                }`}
+              >
+                <div className="flex items-center gap-3">
+                  <div className="w-12 h-12 rounded-2xl bg-teal-500/20 text-teal-300 flex items-center justify-center text-2xl font-black shrink-0 border border-teal-400/30">
+                    🧖‍♀️
+                  </div>
+                  <div>
+                    <h4 className="font-black text-sm sm:text-base text-white">حجرة الاسكين (Skin Care Room)</h4>
+                    <p className="text-xs text-teal-300/80">باديكير سبا إيطالي • ميكرو • ديرما</p>
+                  </div>
+                </div>
+                <span className="py-1 px-3 rounded-xl bg-teal-500/20 border border-teal-400/30 text-teal-300 text-xs font-bold shrink-0">
+                  9 خدمات 💅
+                </span>
+              </div>
+
+              {/* Room 2: حجرة الليزر */}
+              <div
+                onClick={() => setActiveCategory(activeCategory === "ROOM_LASER" ? "ALL" : "ROOM_LASER")}
+                className={`p-4 rounded-3xl border-2 transition cursor-pointer flex items-center justify-between gap-3 ${
+                  activeCategory === "ROOM_LASER" || activeCategory === "NEWSKIN_LASER"
+                    ? "bg-cyan-500/20 border-cyan-400 ring-2 ring-cyan-400/50 shadow-lg shadow-cyan-500/20"
+                    : "bg-[#081e28] border-cyan-500/30 hover:border-cyan-400"
+                }`}
+              >
+                <div className="flex items-center gap-3">
+                  <div className="w-12 h-12 rounded-2xl bg-cyan-500/20 text-cyan-300 flex items-center justify-center text-2xl font-black shrink-0 border border-cyan-400/30">
+                    ⚡
+                  </div>
+                  <div>
+                    <h4 className="font-black text-sm sm:text-base text-white">حجرة الليزر (Laser Room)</h4>
+                    <p className="text-xs text-cyan-300/80">إزالة الشعر بأحدث أجهزة التبريد الإيطالي</p>
+                  </div>
+                </div>
+                <span className="py-1 px-3 rounded-xl bg-cyan-500/20 border border-cyan-400/30 text-cyan-300 text-xs font-bold shrink-0">
+                  5 باقات 🌟
+                </span>
+              </div>
+            </div>
+          )}
+
           {/* VISUAL SERVICES GRID */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
             {filteredServices.map((srv) => {
@@ -1861,7 +2075,9 @@ export default function HomePage() {
                   onClick={() => toggleService(srv)}
                   className={`cursor-pointer rounded-3xl border overflow-hidden transition flex flex-col justify-between group ${
                     isSelected
-                      ? isWomen
+                      ? isNewSkin
+                        ? "bg-teal-500/15 border-teal-400 shadow-xl shadow-teal-500/15 ring-2 ring-teal-400"
+                        : isWomen
                         ? "bg-rose-500/15 border-rose-400 shadow-xl shadow-rose-500/15 ring-2 ring-rose-400"
                         : "bg-amber-500/15 border-amber-400 shadow-xl shadow-amber-500/15 ring-2 ring-amber-400"
                       : `${themeCardBg} hover:opacity-90 border-white/10`
@@ -1879,7 +2095,7 @@ export default function HomePage() {
 
                     {/* Category Badge & Duration */}
                     <span className={`absolute top-2.5 right-2.5 px-2.5 py-1 rounded-xl bg-black/70 backdrop-blur-md border border-white/10 text-[10px] font-bold ${themeAccentText}`}>
-                      {srv.category}
+                      {getCategoryBadgeLabel(srv.category)}
                     </span>
 
                     <span className="absolute top-2.5 left-2.5 px-2.5 py-1 rounded-xl bg-black/70 backdrop-blur-md border border-white/10 text-[10px] font-bold text-slate-300 flex items-center gap-1 font-mono">
@@ -2431,7 +2647,7 @@ export default function HomePage() {
       )}
 
       {/* ─────────────────────────────────────────────────────────────
-          6. SIGNATURE GRAND ORCA FOOTER (DUAL BRANDING)
+          6. SIGNATURE GRAND ORCA FOOTER (TRIO LUXURY BRANDING)
          ───────────────────────────────────────────────────────────── */}
       <footer className={`mt-auto border-t-2 ${themeBorder} bg-[#040407] text-slate-300 font-sans`}>
         <div className="max-w-7xl mx-auto px-4 sm:px-8 py-12 grid grid-cols-1 md:grid-cols-3 gap-8">
@@ -2444,18 +2660,19 @@ export default function HomePage() {
               </div>
               <div>
                 <h4 className={`text-base font-black ${themeAccentText}`}>
-                  مجموعة صالونات وسبا الباشا VIP
+                  مجموعة صالونات وعيادات الباشا VIP
                 </h4>
                 <p className={`text-[10px] ${themeSubText} font-mono tracking-widest uppercase`}>
-                  DAKN EL BASHA & HAMMAM EL BASHA
+                  DAKN • HAMMAM • NEW SKIN CLINIC
                 </p>
               </div>
             </div>
 
             <p className="text-xs text-slate-400 leading-relaxed">
-              المجموعة الرائدة في العناية الملكية بالرجال والسيدات. نقدم أحدث صيحات قص وتدريج الشعر واللحية في{" "}
+              المجموعة الرائدة في العناية الملكية والتجميل والليزر بالرجال والسيدات. نقدم أحدث صيحات قص وتدريج الشعر واللحية في{" "}
               <strong className="text-amber-400">صالون دقن الباشا</strong>، وأرقى خدمات الحمام المغربي والسبا والجاكوزي وتجهيز العرائس في{" "}
-              <strong className="text-rose-400">حمام الباشا</strong>.
+              <strong className="text-rose-400">حمام الباشا</strong>، وأحدث تقنيات الليزر والعناية المتقدمة بالبشرة والباديكير في{" "}
+              <strong className="text-teal-400">عيادة نيو سكين VIP</strong>.
             </p>
 
             <div className={`flex items-center gap-2 text-xs font-mono font-bold ${themeAccentText}`}>
@@ -2468,21 +2685,28 @@ export default function HomePage() {
           <div className="space-y-3 text-xs">
             <h4 className="text-sm font-black text-white border-b border-white/10 pb-2 flex items-center gap-2">
               <MapPin className={`w-4 h-4 ${themeAccentText}`} />
-              <span>فروعنا الرسمية في حدائق القبة</span>
+              <span>فروعنا ومراكزنا الرسمية في حدائق القبة</span>
             </h4>
 
             {/* Men Branch */}
             <div className="p-3 rounded-2xl bg-white/5 border border-amber-500/20 space-y-1">
-              <strong className="text-amber-300 block font-black">📍 فرع صالون دقن الباشا (رجالي VIP):</strong>
+              <strong className="text-amber-300 block font-black">📍 صالون دقن الباشا (رجالي VIP):</strong>
               <p className="text-slate-300">73 شارع ترعة الجبل، أمام مستشفى سان بول، حدائق القبة، القاهرة</p>
               <p className="font-mono text-amber-300 font-bold">هاتف وواتساب: 01210103025</p>
             </div>
 
             {/* Women Branch */}
             <div className="p-3 rounded-2xl bg-white/5 border border-rose-500/20 space-y-1">
-              <strong className="text-rose-300 block font-black">👑 فرع حمام الباشا (حريمي وسبا VIP):</strong>
+              <strong className="text-rose-300 block font-black">👑 حمام الباشا الملكي (حريمي وسبا VIP):</strong>
               <p className="text-slate-300">84 ترعة الجبل، كينج بارك مول، أمام سان بولا، حدائق القبة، القاهرة</p>
               <p className="font-mono text-rose-300 font-bold">هاتف وواتساب: 01556782015</p>
+            </div>
+
+            {/* New Skin Clinic Branch */}
+            <div className="p-3 rounded-2xl bg-white/5 border border-teal-500/20 space-y-1">
+              <strong className="text-teal-300 block font-black">💎 عيادة نيو سكين New Skin (ليزر وعناية بالبشرة):</strong>
+              <p className="text-slate-300">73 شارع ترعة الجبل، أمام مستشفى سان بول، حدائق القبة، القاهرة</p>
+              <p className="font-mono text-teal-300 font-bold">هاتف وواتساب: 01210103025</p>
             </div>
 
             <p className="text-[11px] text-slate-400 pt-1">

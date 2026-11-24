@@ -133,23 +133,37 @@ export default function AdminPage() {
   const daknBranch = branches.find(
     (b) => b.code === "BR-DAKN-MEN" || b.name?.includes("دقن") || b.name?.includes("رجالي")
   );
+  const newSkinBranch = branches.find(
+    (b) => b.code === "BR-NEWSKIN" || b.name?.includes("نيو سكين") || b.name?.includes("Skin")
+  );
 
   // Effective Active Branch ID: If not Owner or GM, strictly locked to their branch
   const activeBranchId = isOwnerOrGM ? selectedBranchId : (currentUser?.branchId || branches[0]?.id || "ALL");
 
-  // Women's Spa Theme (Hammam El Basha) vs Men's Theme (Dakn El Basha) vs Central (ALL)
+  // New Skin (Clinic/Laser) vs Women's Spa (Hammam) vs Men's (Dakn) vs Central (ALL)
+  const isNewSkinTheme = Boolean(
+    currentUser?.branch?.name?.includes("نيو سكين") ||
+    currentUser?.branch?.name?.includes("Skin") ||
+    currentUser?.branch?.code === "BR-NEWSKIN" ||
+    currentUser?.username?.includes("skin") ||
+    (newSkinBranch && activeBranchId === newSkinBranch.id) ||
+    (branches.find((b) => b.id === activeBranchId)?.name?.includes("نيو سكين")) ||
+    (branches.find((b) => b.id === activeBranchId)?.code === "BR-NEWSKIN")
+  );
   const isWomenTheme = Boolean(
-    currentUser?.branch?.name?.includes("حمام") ||
-    currentUser?.branch?.name?.includes("حريمي") ||
-    currentUser?.branch?.code === "BR-HAMMAM-WOMEN" ||
-    currentUser?.username?.includes("hammam") ||
-    (hammamBranch && activeBranchId === hammamBranch.id) ||
-    (branches.find((b) => b.id === activeBranchId)?.name?.includes("حمام")) ||
-    (branches.find((b) => b.id === activeBranchId)?.name?.includes("حريمي")) ||
-    (branches.find((b) => b.id === activeBranchId)?.code === "BR-HAMMAM-WOMEN")
+    !isNewSkinTheme && (
+      currentUser?.branch?.name?.includes("حمام") ||
+      currentUser?.branch?.name?.includes("حريمي") ||
+      currentUser?.branch?.code === "BR-HAMMAM-WOMEN" ||
+      currentUser?.username?.includes("hammam") ||
+      (hammamBranch && activeBranchId === hammamBranch.id) ||
+      (branches.find((b) => b.id === activeBranchId)?.name?.includes("حمام")) ||
+      (branches.find((b) => b.id === activeBranchId)?.name?.includes("حريمي")) ||
+      (branches.find((b) => b.id === activeBranchId)?.code === "BR-HAMMAM-WOMEN")
+    )
   );
   const isMenTheme = Boolean(
-    !isWomenTheme && (
+    !isWomenTheme && !isNewSkinTheme && (
       currentUser?.branch?.name?.includes("دقن") ||
       currentUser?.branch?.name?.includes("رجالي") ||
       currentUser?.branch?.code === "BR-DAKN-MEN" ||
@@ -1555,34 +1569,52 @@ export default function AdminPage() {
     router.push("/login");
   };
 
-  // Women Services Categorization
+  // Category ID Definitions
   const womenCategoryIds = ["LADIES_SPA", "LADIES_SKIN", "LADIES_HAIR"];
+  const newSkinCategoryIds = ["NEWSKIN_PEDICURE", "NEWSKIN_MICRO", "NEWSKIN_DERMA", "NEWSKIN_LASER"];
+
+  const isServiceForNewSkin = (srv: any) =>
+    newSkinCategoryIds.includes(srv.category) ||
+    srv.nameAr?.includes("ليزر") ||
+    srv.nameAr?.includes("ديرما") ||
+    srv.nameAr?.includes("ميكرو") ||
+    srv.nameAr?.includes("مايكرو") ||
+    srv.nameAr?.includes("Skin") ||
+    srv.nameAr?.includes("نيو سكين");
+
   const isServiceForWomen = (srv: any) =>
-    womenCategoryIds.includes(srv.category) ||
-    srv.nameAr?.includes("مغربي") ||
-    srv.nameAr?.includes("سويت") ||
-    srv.nameAr?.includes("هيدروفيشل") ||
-    srv.nameAr?.includes("مساج") ||
-    srv.nameAr?.includes("باديكير") ||
-    srv.nameAr?.includes("عرائس") ||
-    srv.nameAr?.includes("سيدات");
+    !isServiceForNewSkin(srv) && (
+      womenCategoryIds.includes(srv.category) ||
+      srv.nameAr?.includes("مغربي") ||
+      srv.nameAr?.includes("سويت") ||
+      srv.nameAr?.includes("هيدروفيشل") ||
+      srv.nameAr?.includes("مساج") ||
+      srv.nameAr?.includes("عرائس") ||
+      srv.nameAr?.includes("سيدات")
+    );
 
   // 1. Filtered Services by Branch / Gender
-  const filteredServices = isWomenTheme
+  const filteredServices = isNewSkinTheme
+    ? services.filter(isServiceForNewSkin)
+    : isWomenTheme
     ? services.filter(isServiceForWomen)
     : isMenTheme
-    ? services.filter((s) => !isServiceForWomen(s))
+    ? services.filter((s) => !isServiceForWomen(s) && !isServiceForNewSkin(s))
     : services;
 
   // 2. Filtered Specialists by Branch
-  const filteredSpecialists = isWomenTheme
+  const filteredSpecialists = isNewSkinTheme
+    ? specialists.filter((s) => s.branchId === activeBranchId || (newSkinBranch && s.branchId === newSkinBranch.id))
+    : isWomenTheme
     ? specialists.filter((s) => s.branchId === activeBranchId || (hammamBranch && s.branchId === hammamBranch.id))
     : isMenTheme
     ? specialists.filter((s) => s.branchId === activeBranchId || (daknBranch && s.branchId === daknBranch.id))
     : specialists;
 
   // 3. Filtered Products & Supplies by Branch
-  const filteredProducts = isWomenTheme
+  const filteredProducts = isNewSkinTheme
+    ? products.filter((p) => p.branchId === activeBranchId || (newSkinBranch && p.branchId === newSkinBranch.id) || !p.branchId)
+    : isWomenTheme
     ? products.filter((p) => p.branchId === activeBranchId || (hammamBranch && p.branchId === hammamBranch.id))
     : isMenTheme
     ? products.filter((p) => p.branchId === activeBranchId || (daknBranch && p.branchId === daknBranch.id) || !p.branchId)
@@ -1792,7 +1824,9 @@ export default function AdminPage() {
               value={activeBranchId}
               onChange={(e) => setSelectedBranchId(e.target.value)}
               className={`py-1.5 px-3 rounded-xl bg-[#181822] border text-xs font-black focus:outline-none transition ${
-                isWomenTheme
+                isNewSkinTheme
+                  ? "border-teal-500/40 text-teal-300 focus:border-teal-400"
+                  : isWomenTheme
                   ? "border-rose-500/40 text-rose-300 focus:border-rose-400"
                   : "border-amber-500/40 text-amber-300 focus:border-amber-400"
               }`}
@@ -1807,13 +1841,15 @@ export default function AdminPage() {
           ) : (
             <div
               className={`py-1.5 px-3 rounded-xl border text-xs font-black flex items-center gap-1.5 shadow-md ${
-                isWomenTheme
+                isNewSkinTheme
+                  ? "bg-teal-500/15 border-teal-500/40 text-teal-300 shadow-teal-950/30"
+                  : isWomenTheme
                   ? "bg-rose-500/15 border-rose-500/40 text-rose-300 shadow-rose-950/30"
                   : "bg-amber-500/15 border-amber-500/40 text-amber-300 shadow-amber-950/30"
               }`}
               title="فرعك المصرح به حصرياً - غير متاح تبديل الفرع"
             >
-              <Lock className={`w-3.5 h-3.5 ${isWomenTheme ? "text-rose-400" : "text-amber-400"}`} />
+              <Lock className={`w-3.5 h-3.5 ${isNewSkinTheme ? "text-teal-400" : isWomenTheme ? "text-rose-400" : "text-amber-400"}`} />
               <span>{branches.find((b) => b.id === activeBranchId)?.name || currentUser?.branch?.name || "فرعك المعتمد"}</span>
               <span className="text-[10px] opacity-75">(فرعك المصرح به 🔒)</span>
             </div>
@@ -3757,18 +3793,22 @@ export default function AdminPage() {
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
               <div>
                 <h3 className="text-base font-black text-white">
-                  {isWomenTheme
+                  {isNewSkinTheme
+                    ? "قائمة خدمات عيادة نيو سكين VIP (حجرة الاسكين & حجرة الليزر 💎)"
+                    : isWomenTheme
                     ? "قائمة خدمات حمام الباشا والسبا النسائي (صالون وسبا العرائس 🧖‍♀️)"
                     : isMenTheme
                     ? "قائمة خدمات صالون دقن الباشا (حلاقة وأناقة الرجل 💈)"
-                    : "دليل الخدمات التجميلية لكافة الفروع (دقن الباشا & حمام الباشا)"}
+                    : "دليل الخدمات التجميلية لكافة الفروع (دقن الباشا & حمام الباشا & نيو سكين)"}
                 </h3>
                 <p className="text-xs text-slate-400">
-                  {isWomenTheme
+                  {isNewSkinTheme
+                    ? "إدارة خدمات عيادة نيو سكين: باديكير سبا، مايكروبليدينج، ديرمابن، وجلسات إزالة الشعر بالليزر 💎"
+                    : isWomenTheme
                     ? "إضافة وتعديل باقات الحمام المغربي، السويت، الهيدروفيشل، المساج، وتصفيف السيدات والعرائس ✨"
                     : isMenTheme
                     ? "إضافة وتعديل خدمات قص الشعر، حلاقة الذقن، تنظيف البشرة، وبروتين الرجال 💈"
-                    : "إدارة وتسعير خدمات الصالون الرجالي والسبا النسائي وتفعيلها على اللاندينج"}
+                    : "إدارة وتسعير خدمات الصالون الرجالي والسبا النسائي وعيادة الليزر وتفعيلها على اللاندينج"}
                 </p>
               </div>
 
@@ -3777,11 +3817,11 @@ export default function AdminPage() {
                   setEditingService(null);
                   setServiceForm({
                     nameAr: "",
-                    category: isWomenTheme ? "LADIES_SPA" : "HAIR",
-                    price: isWomenTheme ? 250 : 150,
-                    durationMinutes: isWomenTheme ? 45 : 30,
+                    category: isNewSkinTheme ? "NEWSKIN_PEDICURE" : isWomenTheme ? "LADIES_SPA" : "HAIR",
+                    price: isNewSkinTheme ? 350 : isWomenTheme ? 250 : 150,
+                    durationMinutes: isNewSkinTheme ? 45 : isWomenTheme ? 45 : 30,
                     description: "",
-                    image: isWomenTheme ? "/ladies/ladies-moroccan-bath.jpg" : "",
+                    image: isNewSkinTheme ? "/newskin-hero.jpg" : isWomenTheme ? "/ladies/ladies-moroccan-bath.jpg" : "",
                     sortOrder: 0,
                     isActive: true,
                   });
@@ -5453,10 +5493,25 @@ export default function AdminPage() {
                     value={serviceForm.category}
                     onChange={(e) => setServiceForm({ ...serviceForm, category: e.target.value })}
                     className={`w-full py-2 px-3 rounded-xl bg-black/60 border border-white/10 text-white focus:outline-none ${
-                      isWomenTheme ? "focus:border-rose-400" : "focus:border-amber-400"
+                      isNewSkinTheme
+                        ? "focus:border-teal-400"
+                        : isWomenTheme
+                        ? "focus:border-rose-400"
+                        : "focus:border-amber-400"
                     }`}
                   >
-                    {isWomenTheme ? (
+                    {isNewSkinTheme ? (
+                      <>
+                        <optgroup label="🧖‍♀️ حجرة الاسكين (Skin Care Room)">
+                          <option value="NEWSKIN_PEDICURE">باديكير سبا إيطالي علاجي 💅</option>
+                          <option value="NEWSKIN_MICRO">مايكروبليدينج وتوريد شفايف ✨</option>
+                          <option value="NEWSKIN_DERMA">ديرمابن وميزوثيرابي نضارة 🔬</option>
+                        </optgroup>
+                        <optgroup label="⚡ حجرة الليزر (Laser Room)">
+                          <option value="NEWSKIN_LASER">إزالة شعر بالليزر البارد ⚡</option>
+                        </optgroup>
+                      </>
+                    ) : isWomenTheme ? (
                       <>
                         <option value="LADIES_SPA">حمام مغربي وسبا ومساج 🧖‍♀️</option>
                         <option value="LADIES_SKIN">تنظيف بشرة وهيدروفيشل الذهب 24K ✨</option>
@@ -5473,6 +5528,12 @@ export default function AdminPage() {
                       </>
                     ) : (
                       <>
+                        <optgroup label="💎 عيادة نيو سكين VIP (ليزر وعناية)">
+                          <option value="NEWSKIN_PEDICURE">باديكير سبا إيطالي علاجي 💅</option>
+                          <option value="NEWSKIN_MICRO">مايكروبليدينج وتوريد شفايف ✨</option>
+                          <option value="NEWSKIN_DERMA">ديرمابن وميزوثيرابي نضارة 🔬</option>
+                          <option value="NEWSKIN_LASER">إزالة شعر بالليزر البارد ⚡</option>
+                        </optgroup>
                         <optgroup label="🧖‍♀️ خدمات حمام الباشا (حريمي وسبا)">
                           <option value="LADIES_SPA">حمام مغربي وسبا ومساج 🧖‍♀️</option>
                           <option value="LADIES_SKIN">تنظيف بشرة وهيدروفيشل الذهب 24K ✨</option>
