@@ -100,6 +100,14 @@ export default function CashierPosPage() {
   const [showTreasuryModal, setShowTreasuryModal] = useState<boolean>(false);
   const [treasurySummary, setTreasurySummary] = useState<any>(null);
 
+  // Customer Edit State for Checkout
+  const [checkoutCustomerName, setCheckoutCustomerName] = useState<string>("");
+  const [checkoutCustomerPhone, setCheckoutCustomerPhone] = useState<string>("");
+
+  // Attendance Punch State
+  const [isCheckedIn, setIsCheckedIn] = useState<boolean>(false);
+  const [punchingAttendance, setPunchingAttendance] = useState<boolean>(false);
+
   // Check Auth
   useEffect(() => {
     try {
@@ -120,10 +128,52 @@ export default function CashierPosPage() {
       }
       setCurrentUser(user);
       if (user.branchId) setSelectedBranchId(user.branchId);
+      checkAttendanceStatus(user.id);
     } catch {
       router.push("/login");
     }
   }, [router]);
+
+  const checkAttendanceStatus = async (uid: string) => {
+    try {
+      const res = await fetch("/api/attendance", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ userId: uid, action: "STATUS" }),
+      });
+      const data = await res.json();
+      if (data.success) {
+        setIsCheckedIn(data.isCheckedIn);
+      }
+    } catch {}
+  };
+
+  const handlePunchAttendance = async (action: "CHECK_IN" | "CHECK_OUT") => {
+    if (!currentUser) return;
+    try {
+      setPunchingAttendance(true);
+      const res = await fetch("/api/attendance", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          userId: currentUser.id,
+          branchId: currentUser.branchId || activeBranchId,
+          action,
+        }),
+      });
+      const data = await res.json();
+      if (data.success) {
+        showToast("success", data.message);
+        checkAttendanceStatus(currentUser.id);
+      } else {
+        showToast("error", data.error || "فشل تسجيل البصمة");
+      }
+    } catch {
+      showToast("error", "حدث خطأ أثناء تسجيل البصمة");
+    } finally {
+      setPunchingAttendance(false);
+    }
+  };
 
   // Privileges & Branch Locking
   const isOwnerOrGM = currentUser?.role === "owner" || currentUser?.role === "general_manager";
@@ -511,6 +561,8 @@ export default function CashierPosPage() {
     setDiscountAmount(0);
     setTipAmount(0);
     setPaymentMethod("CASH");
+    setCheckoutCustomerName(t.customerName?.startsWith("عميل صالة") ? "" : (t.customerName || ""));
+    setCheckoutCustomerPhone(t.customerPhone || "");
   };
 
   // Add Retail Product to Active Ticket
@@ -556,6 +608,8 @@ export default function CashierPosPage() {
           discount: discountAmount,
           tipAmount,
           cashierName: currentUser?.name || "كاشير مجموعة الباشا VIP",
+          customerName: checkoutCustomerName.trim() || selectedTicket.customerName,
+          customerPhone: checkoutCustomerPhone.trim() || selectedTicket.customerPhone,
         }),
       });
 
@@ -772,6 +826,27 @@ export default function CashierPosPage() {
           >
             <Lock className="w-3.5 h-3.5 text-amber-400" />
             <span>إقفال وتسليم الوردية 🔒</span>
+          </button>
+
+          {/* Digital Attendance Punch for Cashier */}
+          <button
+            onClick={() => handlePunchAttendance(isCheckedIn ? "CHECK_OUT" : "CHECK_IN")}
+            disabled={punchingAttendance}
+            className={`py-1.5 px-3 rounded-xl text-xs font-black transition flex items-center gap-1.5 border shadow-sm cursor-pointer ${
+              isCheckedIn
+                ? "bg-emerald-500/15 text-emerald-300 border-emerald-500/40 hover:bg-emerald-500/25"
+                : "bg-rose-500/15 text-rose-300 border-rose-500/40 hover:bg-rose-500/25 animate-pulse"
+            }`}
+            title={isCheckedIn ? "أنت مسجل حضور - انقر لتسجيل الانصراف" : "انقر لتسجيل بصمة حضورك للوردية"}
+          >
+            <Clock className="w-3.5 h-3.5" />
+            <span>
+              {punchingAttendance
+                ? "جاري..."
+                : isCheckedIn
+                ? "حاضر 🟢 (انصراف 🚪)"
+                : "بصمة حضور ⏰"}
+            </span>
           </button>
 
           <button
@@ -1101,7 +1176,7 @@ export default function CashierPosPage() {
                 {/* Client & Specialist Summary */}
                 <div className="p-3 rounded-2xl bg-black/50 border border-white/5 space-y-1">
                   <div className="flex justify-between">
-                    <span className="text-slate-400">العميل:</span>
+                    <span className="text-slate-400">العميل الحالي:</span>
                     <strong className="text-white font-bold">{selectedTicket.customerName}</strong>
                   </div>
                   <div className="flex justify-between">
@@ -1109,6 +1184,40 @@ export default function CashierPosPage() {
                     <span className="text-amber-300 font-bold">
                       {selectedTicket.specialist?.name} (كرسي #{selectedTicket.chairNumber})
                     </span>
+                  </div>
+                </div>
+
+                {/* Cashier Customer Registration Card (Strict: Cashier records name/phone) */}
+                <div className="p-3 rounded-2xl bg-amber-500/10 border border-amber-500/30 space-y-2">
+                  <div className="flex items-center justify-between text-[11px] font-black text-amber-300">
+                    <span>📝 بيانات العميل (تسجيل الكاشير):</span>
+                    {selectedTicket.status === "READY_FOR_CASHIER" && (
+                      <span className="py-0.5 px-2 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 text-[10px] animate-pulse">
+                        جاهز من المتخصص ✂️
+                      </span>
+                    )}
+                  </div>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                    <div>
+                      <label className="text-[10px] text-slate-400 block mb-0.5 font-bold">اسم العميل:</label>
+                      <input
+                        type="text"
+                        value={checkoutCustomerName}
+                        onChange={(e) => setCheckoutCustomerName(e.target.value)}
+                        placeholder={selectedTicket.customerName || "الاسم"}
+                        className="w-full py-1.5 px-2.5 rounded-xl bg-black/60 border border-white/10 text-white text-xs font-bold focus:border-amber-400 outline-none"
+                      />
+                    </div>
+                    <div>
+                      <label className="text-[10px] text-slate-400 block mb-0.5 font-bold">رقم الهاتف:</label>
+                      <input
+                        type="tel"
+                        value={checkoutCustomerPhone}
+                        onChange={(e) => setCheckoutCustomerPhone(e.target.value)}
+                        placeholder="رقم الموبايل"
+                        className="w-full py-1.5 px-2.5 rounded-xl bg-black/60 border border-white/10 text-white text-xs font-bold font-mono focus:border-amber-400 outline-none text-left"
+                      />
+                    </div>
                   </div>
                 </div>
 

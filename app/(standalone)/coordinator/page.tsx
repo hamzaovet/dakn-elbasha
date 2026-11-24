@@ -221,6 +221,7 @@ export default function CoordinatorControlPage() {
       }
       const user = JSON.parse(saved);
       if (
+        user.role !== "booking_dispatcher" &&
         user.role !== "coordinator" &&
         user.role !== "manager" &&
         user.role !== "general_manager" &&
@@ -229,8 +230,8 @@ export default function CoordinatorControlPage() {
         router.push("/login");
         return;
       }
-      // كل منسق فرع أو مدير فرع لازم يكون مربوط بفرع محدد (إدارة كل الفروع للمالك والمدير العام فقط)
-      if ((user.role === "coordinator" || user.role === "manager") && !user.branchId) {
+      // منسق الفرع القديم مربوط بفرع، أما مسئول الحجوزات العام والمالك والمدير العام فيتحكمون في كل الفروع
+      if (user.role === "coordinator" && !user.branchId) {
         router.push("/login");
         return;
       }
@@ -1039,11 +1040,13 @@ export default function CoordinatorControlPage() {
 
   const isGlobalViewer =
     !currentUser?.branchId &&
-    (currentUser?.role === "owner" || currentUser?.role === "general_manager");
+    (currentUser?.role === "owner" ||
+      currentUser?.role === "general_manager" ||
+      currentUser?.role === "booking_dispatcher");
 
   const activeBranchName = useMemo(() => {
     const bId = currentUser?.branchId || (selectedBranchId !== "ALL" ? selectedBranchId : "");
-    if (!bId) return "جميع الفروع";
+    if (!bId) return "كافة الفروع الموحدة (دقن • حمام • نيو سكين)";
     return branches.find((b) => b.id === bId)?.name || currentUser?.branch?.name || "الفرع التابع";
   }, [branches, currentUser, selectedBranchId]);
 
@@ -1061,7 +1064,11 @@ export default function CoordinatorControlPage() {
           <div className="min-w-0">
             <div className="flex flex-wrap items-center gap-2">
               <h1 className="text-sm sm:text-lg font-black text-amber-400 truncate">
-                {isGlobalViewer ? "غرفة المنسق والراوتر 🧭" : `منسق ${activeBranchName} 🧭`}
+                {currentUser?.role === "booking_dispatcher"
+                  ? "شاشة مسئول الحجوزات المركزي لكافة الفروع 📅"
+                  : isGlobalViewer
+                  ? "غرفة التنسيق والراوتر الموحد 🧭"
+                  : `منسق ${activeBranchName} 🧭`}
               </h1>
               <span className="py-0.5 px-2.5 rounded-full bg-amber-500/15 text-amber-300 border border-amber-500/35 text-[10px] font-black">
                 📍 {activeBranchName}

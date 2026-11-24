@@ -30,6 +30,7 @@ model Branch {
   chatMessages    ChatMessage[]
   shifts          CashShift[]
   expenses        TreasuryExpense[]
+  attendances     AttendanceRecord[]
 }
 
 // ----------------------------------------------------
@@ -49,6 +50,7 @@ model User {
   isActive        Boolean            @default(true)
   createdAt       DateTime           @default(now())
   specialistProfile Specialist?
+  attendances     AttendanceRecord[]
 }
 
 // ----------------------------------------------------
@@ -340,5 +342,25 @@ model TreasuryExpense {
   date            DateTime           @default(now())
   createdAt       DateTime           @default(now())
 }
+
+// ----------------------------------------------------
+// 15. DIGITAL ATTENDANCE & PUNCH (بصمة الحضور والانصراف الرقمية)
+// ----------------------------------------------------
+model AttendanceRecord {
+  id            String    @id @default(cuid())
+  userId        String
+  user          User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  branchId      String
+  branch        Branch    @relation(fields: [branchId], references: [id], onDelete: Cascade)
+  date          String    // YYYY-MM-DD
+  checkInTime   DateTime  @default(now())
+  checkOutTime  DateTime?
+  status        String    @default("PRESENT") // PRESENT, LATE, LEFT_EARLY, COMPLETED
+  notes         String?
+  ipAddress     String?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+}
+
 
 

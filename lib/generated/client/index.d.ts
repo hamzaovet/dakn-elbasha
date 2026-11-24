@@ -83,6 +83,11 @@ export type CashShift = $Result.DefaultSelection<Prisma.$CashShiftPayload>
  * 
  */
 export type TreasuryExpense = $Result.DefaultSelection<Prisma.$TreasuryExpensePayload>
+/**
+ * Model AttendanceRecord
+ * 
+ */
+export type AttendanceRecord = $Result.DefaultSelection<Prisma.$AttendanceRecordPayload>
 
 /**
  * ##  Prisma Client ʲˢ
@@ -344,6 +349,16 @@ export class PrismaClient<
     * ```
     */
   get treasuryExpense(): Prisma.TreasuryExpenseDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.attendanceRecord`: Exposes CRUD operations for the **AttendanceRecord** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more AttendanceRecords
+    * const attendanceRecords = await prisma.attendanceRecord.findMany()
+    * ```
+    */
+  get attendanceRecord(): Prisma.AttendanceRecordDelegate<ExtArgs, ClientOptions>;
 }
 
 export namespace Prisma {
@@ -804,7 +819,8 @@ export namespace Prisma {
     Offer: 'Offer',
     ChatMessage: 'ChatMessage',
     CashShift: 'CashShift',
-    TreasuryExpense: 'TreasuryExpense'
+    TreasuryExpense: 'TreasuryExpense',
+    AttendanceRecord: 'AttendanceRecord'
   };
 
   export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -820,7 +836,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "branch" | "user" | "specialist" | "service" | "customer" | "booking" | "ticket" | "product" | "specialistLedger" | "systemSettings" | "offer" | "chatMessage" | "cashShift" | "treasuryExpense"
+      modelProps: "branch" | "user" | "specialist" | "service" | "customer" | "booking" | "ticket" | "product" | "specialistLedger" | "systemSettings" | "offer" | "chatMessage" | "cashShift" | "treasuryExpense" | "attendanceRecord"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -1860,6 +1876,80 @@ export namespace Prisma {
           }
         }
       }
+      AttendanceRecord: {
+        payload: Prisma.$AttendanceRecordPayload<ExtArgs>
+        fields: Prisma.AttendanceRecordFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.AttendanceRecordFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AttendanceRecordPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.AttendanceRecordFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AttendanceRecordPayload>
+          }
+          findFirst: {
+            args: Prisma.AttendanceRecordFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AttendanceRecordPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.AttendanceRecordFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AttendanceRecordPayload>
+          }
+          findMany: {
+            args: Prisma.AttendanceRecordFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AttendanceRecordPayload>[]
+          }
+          create: {
+            args: Prisma.AttendanceRecordCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AttendanceRecordPayload>
+          }
+          createMany: {
+            args: Prisma.AttendanceRecordCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.AttendanceRecordCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AttendanceRecordPayload>[]
+          }
+          delete: {
+            args: Prisma.AttendanceRecordDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AttendanceRecordPayload>
+          }
+          update: {
+            args: Prisma.AttendanceRecordUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AttendanceRecordPayload>
+          }
+          deleteMany: {
+            args: Prisma.AttendanceRecordDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.AttendanceRecordUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.AttendanceRecordUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AttendanceRecordPayload>[]
+          }
+          upsert: {
+            args: Prisma.AttendanceRecordUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AttendanceRecordPayload>
+          }
+          aggregate: {
+            args: Prisma.AttendanceRecordAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateAttendanceRecord>
+          }
+          groupBy: {
+            args: Prisma.AttendanceRecordGroupByArgs<ExtArgs>
+            result: $Utils.Optional<AttendanceRecordGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.AttendanceRecordCountArgs<ExtArgs>
+            result: $Utils.Optional<AttendanceRecordCountAggregateOutputType> | number
+          }
+        }
+      }
     }
   } & {
     other: {
@@ -1997,6 +2087,7 @@ export namespace Prisma {
     chatMessage?: ChatMessageOmit
     cashShift?: CashShiftOmit
     treasuryExpense?: TreasuryExpenseOmit
+    attendanceRecord?: AttendanceRecordOmit
   }
 
   /* Types for Logging */
@@ -2087,6 +2178,7 @@ export namespace Prisma {
     chatMessages: number
     shifts: number
     expenses: number
+    attendances: number
   }
 
   export type BranchCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -2100,6 +2192,7 @@ export namespace Prisma {
     chatMessages?: boolean | BranchCountOutputTypeCountChatMessagesArgs
     shifts?: boolean | BranchCountOutputTypeCountShiftsArgs
     expenses?: boolean | BranchCountOutputTypeCountExpensesArgs
+    attendances?: boolean | BranchCountOutputTypeCountAttendancesArgs
   }
 
   // Custom InputTypes
@@ -2181,6 +2274,44 @@ export namespace Prisma {
    */
   export type BranchCountOutputTypeCountExpensesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: TreasuryExpenseWhereInput
+  }
+
+  /**
+   * BranchCountOutputType without action
+   */
+  export type BranchCountOutputTypeCountAttendancesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: AttendanceRecordWhereInput
+  }
+
+
+  /**
+   * Count Type UserCountOutputType
+   */
+
+  export type UserCountOutputType = {
+    attendances: number
+  }
+
+  export type UserCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    attendances?: boolean | UserCountOutputTypeCountAttendancesArgs
+  }
+
+  // Custom InputTypes
+  /**
+   * UserCountOutputType without action
+   */
+  export type UserCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserCountOutputType
+     */
+    select?: UserCountOutputTypeSelect<ExtArgs> | null
+  }
+
+  /**
+   * UserCountOutputType without action
+   */
+  export type UserCountOutputTypeCountAttendancesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: AttendanceRecordWhereInput
   }
 
 
@@ -2483,6 +2614,7 @@ export namespace Prisma {
     chatMessages?: boolean | Branch$chatMessagesArgs<ExtArgs>
     shifts?: boolean | Branch$shiftsArgs<ExtArgs>
     expenses?: boolean | Branch$expensesArgs<ExtArgs>
+    attendances?: boolean | Branch$attendancesArgs<ExtArgs>
     _count?: boolean | BranchCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["branch"]>
 
@@ -2534,6 +2666,7 @@ export namespace Prisma {
     chatMessages?: boolean | Branch$chatMessagesArgs<ExtArgs>
     shifts?: boolean | Branch$shiftsArgs<ExtArgs>
     expenses?: boolean | Branch$expensesArgs<ExtArgs>
+    attendances?: boolean | Branch$attendancesArgs<ExtArgs>
     _count?: boolean | BranchCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type BranchIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
@@ -2552,6 +2685,7 @@ export namespace Prisma {
       chatMessages: Prisma.$ChatMessagePayload<ExtArgs>[]
       shifts: Prisma.$CashShiftPayload<ExtArgs>[]
       expenses: Prisma.$TreasuryExpensePayload<ExtArgs>[]
+      attendances: Prisma.$AttendanceRecordPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -2967,6 +3101,7 @@ export namespace Prisma {
     chatMessages<T extends Branch$chatMessagesArgs<ExtArgs> = {}>(args?: Subset<T, Branch$chatMessagesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ChatMessagePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     shifts<T extends Branch$shiftsArgs<ExtArgs> = {}>(args?: Subset<T, Branch$shiftsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CashShiftPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     expenses<T extends Branch$expensesArgs<ExtArgs> = {}>(args?: Subset<T, Branch$expensesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TreasuryExpensePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    attendances<T extends Branch$attendancesArgs<ExtArgs> = {}>(args?: Subset<T, Branch$attendancesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$AttendanceRecordPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -3638,6 +3773,30 @@ export namespace Prisma {
   }
 
   /**
+   * Branch.attendances
+   */
+  export type Branch$attendancesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AttendanceRecord
+     */
+    select?: AttendanceRecordSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AttendanceRecord
+     */
+    omit?: AttendanceRecordOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AttendanceRecordInclude<ExtArgs> | null
+    where?: AttendanceRecordWhereInput
+    orderBy?: AttendanceRecordOrderByWithRelationInput | AttendanceRecordOrderByWithRelationInput[]
+    cursor?: AttendanceRecordWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: AttendanceRecordScalarFieldEnum | AttendanceRecordScalarFieldEnum[]
+  }
+
+  /**
    * Branch without action
    */
   export type BranchDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -3870,6 +4029,8 @@ export namespace Prisma {
     createdAt?: boolean
     branch?: boolean | User$branchArgs<ExtArgs>
     specialistProfile?: boolean | User$specialistProfileArgs<ExtArgs>
+    attendances?: boolean | User$attendancesArgs<ExtArgs>
+    _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["user"]>
 
   export type UserSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -3920,6 +4081,8 @@ export namespace Prisma {
   export type UserInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     branch?: boolean | User$branchArgs<ExtArgs>
     specialistProfile?: boolean | User$specialistProfileArgs<ExtArgs>
+    attendances?: boolean | User$attendancesArgs<ExtArgs>
+    _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type UserIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     branch?: boolean | User$branchArgs<ExtArgs>
@@ -3933,6 +4096,7 @@ export namespace Prisma {
     objects: {
       branch: Prisma.$BranchPayload<ExtArgs> | null
       specialistProfile: Prisma.$SpecialistPayload<ExtArgs> | null
+      attendances: Prisma.$AttendanceRecordPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -4342,6 +4506,7 @@ export namespace Prisma {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     branch<T extends User$branchArgs<ExtArgs> = {}>(args?: Subset<T, User$branchArgs<ExtArgs>>): Prisma__BranchClient<$Result.GetResult<Prisma.$BranchPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     specialistProfile<T extends User$specialistProfileArgs<ExtArgs> = {}>(args?: Subset<T, User$specialistProfileArgs<ExtArgs>>): Prisma__SpecialistClient<$Result.GetResult<Prisma.$SpecialistPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    attendances<T extends User$attendancesArgs<ExtArgs> = {}>(args?: Subset<T, User$attendancesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$AttendanceRecordPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -4818,6 +4983,30 @@ export namespace Prisma {
      */
     include?: SpecialistInclude<ExtArgs> | null
     where?: SpecialistWhereInput
+  }
+
+  /**
+   * User.attendances
+   */
+  export type User$attendancesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AttendanceRecord
+     */
+    select?: AttendanceRecordSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AttendanceRecord
+     */
+    omit?: AttendanceRecordOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AttendanceRecordInclude<ExtArgs> | null
+    where?: AttendanceRecordWhereInput
+    orderBy?: AttendanceRecordOrderByWithRelationInput | AttendanceRecordOrderByWithRelationInput[]
+    cursor?: AttendanceRecordWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: AttendanceRecordScalarFieldEnum | AttendanceRecordScalarFieldEnum[]
   }
 
   /**
@@ -19831,6 +20020,1155 @@ export namespace Prisma {
 
 
   /**
+   * Model AttendanceRecord
+   */
+
+  export type AggregateAttendanceRecord = {
+    _count: AttendanceRecordCountAggregateOutputType | null
+    _min: AttendanceRecordMinAggregateOutputType | null
+    _max: AttendanceRecordMaxAggregateOutputType | null
+  }
+
+  export type AttendanceRecordMinAggregateOutputType = {
+    id: string | null
+    userId: string | null
+    branchId: string | null
+    date: string | null
+    checkInTime: Date | null
+    checkOutTime: Date | null
+    status: string | null
+    notes: string | null
+    ipAddress: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type AttendanceRecordMaxAggregateOutputType = {
+    id: string | null
+    userId: string | null
+    branchId: string | null
+    date: string | null
+    checkInTime: Date | null
+    checkOutTime: Date | null
+    status: string | null
+    notes: string | null
+    ipAddress: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type AttendanceRecordCountAggregateOutputType = {
+    id: number
+    userId: number
+    branchId: number
+    date: number
+    checkInTime: number
+    checkOutTime: number
+    status: number
+    notes: number
+    ipAddress: number
+    createdAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type AttendanceRecordMinAggregateInputType = {
+    id?: true
+    userId?: true
+    branchId?: true
+    date?: true
+    checkInTime?: true
+    checkOutTime?: true
+    status?: true
+    notes?: true
+    ipAddress?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type AttendanceRecordMaxAggregateInputType = {
+    id?: true
+    userId?: true
+    branchId?: true
+    date?: true
+    checkInTime?: true
+    checkOutTime?: true
+    status?: true
+    notes?: true
+    ipAddress?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type AttendanceRecordCountAggregateInputType = {
+    id?: true
+    userId?: true
+    branchId?: true
+    date?: true
+    checkInTime?: true
+    checkOutTime?: true
+    status?: true
+    notes?: true
+    ipAddress?: true
+    createdAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type AttendanceRecordAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which AttendanceRecord to aggregate.
+     */
+    where?: AttendanceRecordWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of AttendanceRecords to fetch.
+     */
+    orderBy?: AttendanceRecordOrderByWithRelationInput | AttendanceRecordOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: AttendanceRecordWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` AttendanceRecords from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` AttendanceRecords.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned AttendanceRecords
+    **/
+    _count?: true | AttendanceRecordCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: AttendanceRecordMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: AttendanceRecordMaxAggregateInputType
+  }
+
+  export type GetAttendanceRecordAggregateType<T extends AttendanceRecordAggregateArgs> = {
+        [P in keyof T & keyof AggregateAttendanceRecord]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateAttendanceRecord[P]>
+      : GetScalarType<T[P], AggregateAttendanceRecord[P]>
+  }
+
+
+
+
+  export type AttendanceRecordGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: AttendanceRecordWhereInput
+    orderBy?: AttendanceRecordOrderByWithAggregationInput | AttendanceRecordOrderByWithAggregationInput[]
+    by: AttendanceRecordScalarFieldEnum[] | AttendanceRecordScalarFieldEnum
+    having?: AttendanceRecordScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: AttendanceRecordCountAggregateInputType | true
+    _min?: AttendanceRecordMinAggregateInputType
+    _max?: AttendanceRecordMaxAggregateInputType
+  }
+
+  export type AttendanceRecordGroupByOutputType = {
+    id: string
+    userId: string
+    branchId: string
+    date: string
+    checkInTime: Date
+    checkOutTime: Date | null
+    status: string
+    notes: string | null
+    ipAddress: string | null
+    createdAt: Date
+    updatedAt: Date
+    _count: AttendanceRecordCountAggregateOutputType | null
+    _min: AttendanceRecordMinAggregateOutputType | null
+    _max: AttendanceRecordMaxAggregateOutputType | null
+  }
+
+  type GetAttendanceRecordGroupByPayload<T extends AttendanceRecordGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<AttendanceRecordGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof AttendanceRecordGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], AttendanceRecordGroupByOutputType[P]>
+            : GetScalarType<T[P], AttendanceRecordGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type AttendanceRecordSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    userId?: boolean
+    branchId?: boolean
+    date?: boolean
+    checkInTime?: boolean
+    checkOutTime?: boolean
+    status?: boolean
+    notes?: boolean
+    ipAddress?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+    branch?: boolean | BranchDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["attendanceRecord"]>
+
+  export type AttendanceRecordSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    userId?: boolean
+    branchId?: boolean
+    date?: boolean
+    checkInTime?: boolean
+    checkOutTime?: boolean
+    status?: boolean
+    notes?: boolean
+    ipAddress?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+    branch?: boolean | BranchDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["attendanceRecord"]>
+
+  export type AttendanceRecordSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    userId?: boolean
+    branchId?: boolean
+    date?: boolean
+    checkInTime?: boolean
+    checkOutTime?: boolean
+    status?: boolean
+    notes?: boolean
+    ipAddress?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+    branch?: boolean | BranchDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["attendanceRecord"]>
+
+  export type AttendanceRecordSelectScalar = {
+    id?: boolean
+    userId?: boolean
+    branchId?: boolean
+    date?: boolean
+    checkInTime?: boolean
+    checkOutTime?: boolean
+    status?: boolean
+    notes?: boolean
+    ipAddress?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }
+
+  export type AttendanceRecordOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "userId" | "branchId" | "date" | "checkInTime" | "checkOutTime" | "status" | "notes" | "ipAddress" | "createdAt" | "updatedAt", ExtArgs["result"]["attendanceRecord"]>
+  export type AttendanceRecordInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+    branch?: boolean | BranchDefaultArgs<ExtArgs>
+  }
+  export type AttendanceRecordIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+    branch?: boolean | BranchDefaultArgs<ExtArgs>
+  }
+  export type AttendanceRecordIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+    branch?: boolean | BranchDefaultArgs<ExtArgs>
+  }
+
+  export type $AttendanceRecordPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "AttendanceRecord"
+    objects: {
+      user: Prisma.$UserPayload<ExtArgs>
+      branch: Prisma.$BranchPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      userId: string
+      branchId: string
+      date: string
+      checkInTime: Date
+      checkOutTime: Date | null
+      status: string
+      notes: string | null
+      ipAddress: string | null
+      createdAt: Date
+      updatedAt: Date
+    }, ExtArgs["result"]["attendanceRecord"]>
+    composites: {}
+  }
+
+  type AttendanceRecordGetPayload<S extends boolean | null | undefined | AttendanceRecordDefaultArgs> = $Result.GetResult<Prisma.$AttendanceRecordPayload, S>
+
+  type AttendanceRecordCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<AttendanceRecordFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: AttendanceRecordCountAggregateInputType | true
+    }
+
+  export interface AttendanceRecordDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['AttendanceRecord'], meta: { name: 'AttendanceRecord' } }
+    /**
+     * Find zero or one AttendanceRecord that matches the filter.
+     * @param {AttendanceRecordFindUniqueArgs} args - Arguments to find a AttendanceRecord
+     * @example
+     * // Get one AttendanceRecord
+     * const attendanceRecord = await prisma.attendanceRecord.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends AttendanceRecordFindUniqueArgs>(args: SelectSubset<T, AttendanceRecordFindUniqueArgs<ExtArgs>>): Prisma__AttendanceRecordClient<$Result.GetResult<Prisma.$AttendanceRecordPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one AttendanceRecord that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {AttendanceRecordFindUniqueOrThrowArgs} args - Arguments to find a AttendanceRecord
+     * @example
+     * // Get one AttendanceRecord
+     * const attendanceRecord = await prisma.attendanceRecord.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends AttendanceRecordFindUniqueOrThrowArgs>(args: SelectSubset<T, AttendanceRecordFindUniqueOrThrowArgs<ExtArgs>>): Prisma__AttendanceRecordClient<$Result.GetResult<Prisma.$AttendanceRecordPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first AttendanceRecord that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {AttendanceRecordFindFirstArgs} args - Arguments to find a AttendanceRecord
+     * @example
+     * // Get one AttendanceRecord
+     * const attendanceRecord = await prisma.attendanceRecord.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends AttendanceRecordFindFirstArgs>(args?: SelectSubset<T, AttendanceRecordFindFirstArgs<ExtArgs>>): Prisma__AttendanceRecordClient<$Result.GetResult<Prisma.$AttendanceRecordPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first AttendanceRecord that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {AttendanceRecordFindFirstOrThrowArgs} args - Arguments to find a AttendanceRecord
+     * @example
+     * // Get one AttendanceRecord
+     * const attendanceRecord = await prisma.attendanceRecord.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends AttendanceRecordFindFirstOrThrowArgs>(args?: SelectSubset<T, AttendanceRecordFindFirstOrThrowArgs<ExtArgs>>): Prisma__AttendanceRecordClient<$Result.GetResult<Prisma.$AttendanceRecordPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more AttendanceRecords that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {AttendanceRecordFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all AttendanceRecords
+     * const attendanceRecords = await prisma.attendanceRecord.findMany()
+     * 
+     * // Get first 10 AttendanceRecords
+     * const attendanceRecords = await prisma.attendanceRecord.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const attendanceRecordWithIdOnly = await prisma.attendanceRecord.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends AttendanceRecordFindManyArgs>(args?: SelectSubset<T, AttendanceRecordFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$AttendanceRecordPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a AttendanceRecord.
+     * @param {AttendanceRecordCreateArgs} args - Arguments to create a AttendanceRecord.
+     * @example
+     * // Create one AttendanceRecord
+     * const AttendanceRecord = await prisma.attendanceRecord.create({
+     *   data: {
+     *     // ... data to create a AttendanceRecord
+     *   }
+     * })
+     * 
+     */
+    create<T extends AttendanceRecordCreateArgs>(args: SelectSubset<T, AttendanceRecordCreateArgs<ExtArgs>>): Prisma__AttendanceRecordClient<$Result.GetResult<Prisma.$AttendanceRecordPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many AttendanceRecords.
+     * @param {AttendanceRecordCreateManyArgs} args - Arguments to create many AttendanceRecords.
+     * @example
+     * // Create many AttendanceRecords
+     * const attendanceRecord = await prisma.attendanceRecord.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends AttendanceRecordCreateManyArgs>(args?: SelectSubset<T, AttendanceRecordCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many AttendanceRecords and returns the data saved in the database.
+     * @param {AttendanceRecordCreateManyAndReturnArgs} args - Arguments to create many AttendanceRecords.
+     * @example
+     * // Create many AttendanceRecords
+     * const attendanceRecord = await prisma.attendanceRecord.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many AttendanceRecords and only return the `id`
+     * const attendanceRecordWithIdOnly = await prisma.attendanceRecord.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends AttendanceRecordCreateManyAndReturnArgs>(args?: SelectSubset<T, AttendanceRecordCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$AttendanceRecordPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a AttendanceRecord.
+     * @param {AttendanceRecordDeleteArgs} args - Arguments to delete one AttendanceRecord.
+     * @example
+     * // Delete one AttendanceRecord
+     * const AttendanceRecord = await prisma.attendanceRecord.delete({
+     *   where: {
+     *     // ... filter to delete one AttendanceRecord
+     *   }
+     * })
+     * 
+     */
+    delete<T extends AttendanceRecordDeleteArgs>(args: SelectSubset<T, AttendanceRecordDeleteArgs<ExtArgs>>): Prisma__AttendanceRecordClient<$Result.GetResult<Prisma.$AttendanceRecordPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one AttendanceRecord.
+     * @param {AttendanceRecordUpdateArgs} args - Arguments to update one AttendanceRecord.
+     * @example
+     * // Update one AttendanceRecord
+     * const attendanceRecord = await prisma.attendanceRecord.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends AttendanceRecordUpdateArgs>(args: SelectSubset<T, AttendanceRecordUpdateArgs<ExtArgs>>): Prisma__AttendanceRecordClient<$Result.GetResult<Prisma.$AttendanceRecordPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more AttendanceRecords.
+     * @param {AttendanceRecordDeleteManyArgs} args - Arguments to filter AttendanceRecords to delete.
+     * @example
+     * // Delete a few AttendanceRecords
+     * const { count } = await prisma.attendanceRecord.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends AttendanceRecordDeleteManyArgs>(args?: SelectSubset<T, AttendanceRecordDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more AttendanceRecords.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {AttendanceRecordUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many AttendanceRecords
+     * const attendanceRecord = await prisma.attendanceRecord.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends AttendanceRecordUpdateManyArgs>(args: SelectSubset<T, AttendanceRecordUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more AttendanceRecords and returns the data updated in the database.
+     * @param {AttendanceRecordUpdateManyAndReturnArgs} args - Arguments to update many AttendanceRecords.
+     * @example
+     * // Update many AttendanceRecords
+     * const attendanceRecord = await prisma.attendanceRecord.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more AttendanceRecords and only return the `id`
+     * const attendanceRecordWithIdOnly = await prisma.attendanceRecord.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends AttendanceRecordUpdateManyAndReturnArgs>(args: SelectSubset<T, AttendanceRecordUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$AttendanceRecordPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one AttendanceRecord.
+     * @param {AttendanceRecordUpsertArgs} args - Arguments to update or create a AttendanceRecord.
+     * @example
+     * // Update or create a AttendanceRecord
+     * const attendanceRecord = await prisma.attendanceRecord.upsert({
+     *   create: {
+     *     // ... data to create a AttendanceRecord
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the AttendanceRecord we want to update
+     *   }
+     * })
+     */
+    upsert<T extends AttendanceRecordUpsertArgs>(args: SelectSubset<T, AttendanceRecordUpsertArgs<ExtArgs>>): Prisma__AttendanceRecordClient<$Result.GetResult<Prisma.$AttendanceRecordPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of AttendanceRecords.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {AttendanceRecordCountArgs} args - Arguments to filter AttendanceRecords to count.
+     * @example
+     * // Count the number of AttendanceRecords
+     * const count = await prisma.attendanceRecord.count({
+     *   where: {
+     *     // ... the filter for the AttendanceRecords we want to count
+     *   }
+     * })
+    **/
+    count<T extends AttendanceRecordCountArgs>(
+      args?: Subset<T, AttendanceRecordCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], AttendanceRecordCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a AttendanceRecord.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {AttendanceRecordAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends AttendanceRecordAggregateArgs>(args: Subset<T, AttendanceRecordAggregateArgs>): Prisma.PrismaPromise<GetAttendanceRecordAggregateType<T>>
+
+    /**
+     * Group by AttendanceRecord.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {AttendanceRecordGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends AttendanceRecordGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: AttendanceRecordGroupByArgs['orderBy'] }
+        : { orderBy?: AttendanceRecordGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, AttendanceRecordGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetAttendanceRecordGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the AttendanceRecord model
+   */
+  readonly fields: AttendanceRecordFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for AttendanceRecord.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__AttendanceRecordClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    user<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    branch<T extends BranchDefaultArgs<ExtArgs> = {}>(args?: Subset<T, BranchDefaultArgs<ExtArgs>>): Prisma__BranchClient<$Result.GetResult<Prisma.$BranchPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the AttendanceRecord model
+   */
+  interface AttendanceRecordFieldRefs {
+    readonly id: FieldRef<"AttendanceRecord", 'String'>
+    readonly userId: FieldRef<"AttendanceRecord", 'String'>
+    readonly branchId: FieldRef<"AttendanceRecord", 'String'>
+    readonly date: FieldRef<"AttendanceRecord", 'String'>
+    readonly checkInTime: FieldRef<"AttendanceRecord", 'DateTime'>
+    readonly checkOutTime: FieldRef<"AttendanceRecord", 'DateTime'>
+    readonly status: FieldRef<"AttendanceRecord", 'String'>
+    readonly notes: FieldRef<"AttendanceRecord", 'String'>
+    readonly ipAddress: FieldRef<"AttendanceRecord", 'String'>
+    readonly createdAt: FieldRef<"AttendanceRecord", 'DateTime'>
+    readonly updatedAt: FieldRef<"AttendanceRecord", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * AttendanceRecord findUnique
+   */
+  export type AttendanceRecordFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AttendanceRecord
+     */
+    select?: AttendanceRecordSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AttendanceRecord
+     */
+    omit?: AttendanceRecordOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AttendanceRecordInclude<ExtArgs> | null
+    /**
+     * Filter, which AttendanceRecord to fetch.
+     */
+    where: AttendanceRecordWhereUniqueInput
+  }
+
+  /**
+   * AttendanceRecord findUniqueOrThrow
+   */
+  export type AttendanceRecordFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AttendanceRecord
+     */
+    select?: AttendanceRecordSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AttendanceRecord
+     */
+    omit?: AttendanceRecordOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AttendanceRecordInclude<ExtArgs> | null
+    /**
+     * Filter, which AttendanceRecord to fetch.
+     */
+    where: AttendanceRecordWhereUniqueInput
+  }
+
+  /**
+   * AttendanceRecord findFirst
+   */
+  export type AttendanceRecordFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AttendanceRecord
+     */
+    select?: AttendanceRecordSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AttendanceRecord
+     */
+    omit?: AttendanceRecordOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AttendanceRecordInclude<ExtArgs> | null
+    /**
+     * Filter, which AttendanceRecord to fetch.
+     */
+    where?: AttendanceRecordWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of AttendanceRecords to fetch.
+     */
+    orderBy?: AttendanceRecordOrderByWithRelationInput | AttendanceRecordOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for AttendanceRecords.
+     */
+    cursor?: AttendanceRecordWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` AttendanceRecords from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` AttendanceRecords.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of AttendanceRecords.
+     */
+    distinct?: AttendanceRecordScalarFieldEnum | AttendanceRecordScalarFieldEnum[]
+  }
+
+  /**
+   * AttendanceRecord findFirstOrThrow
+   */
+  export type AttendanceRecordFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AttendanceRecord
+     */
+    select?: AttendanceRecordSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AttendanceRecord
+     */
+    omit?: AttendanceRecordOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AttendanceRecordInclude<ExtArgs> | null
+    /**
+     * Filter, which AttendanceRecord to fetch.
+     */
+    where?: AttendanceRecordWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of AttendanceRecords to fetch.
+     */
+    orderBy?: AttendanceRecordOrderByWithRelationInput | AttendanceRecordOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for AttendanceRecords.
+     */
+    cursor?: AttendanceRecordWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` AttendanceRecords from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` AttendanceRecords.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of AttendanceRecords.
+     */
+    distinct?: AttendanceRecordScalarFieldEnum | AttendanceRecordScalarFieldEnum[]
+  }
+
+  /**
+   * AttendanceRecord findMany
+   */
+  export type AttendanceRecordFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AttendanceRecord
+     */
+    select?: AttendanceRecordSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AttendanceRecord
+     */
+    omit?: AttendanceRecordOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AttendanceRecordInclude<ExtArgs> | null
+    /**
+     * Filter, which AttendanceRecords to fetch.
+     */
+    where?: AttendanceRecordWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of AttendanceRecords to fetch.
+     */
+    orderBy?: AttendanceRecordOrderByWithRelationInput | AttendanceRecordOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing AttendanceRecords.
+     */
+    cursor?: AttendanceRecordWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` AttendanceRecords from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` AttendanceRecords.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of AttendanceRecords.
+     */
+    distinct?: AttendanceRecordScalarFieldEnum | AttendanceRecordScalarFieldEnum[]
+  }
+
+  /**
+   * AttendanceRecord create
+   */
+  export type AttendanceRecordCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AttendanceRecord
+     */
+    select?: AttendanceRecordSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AttendanceRecord
+     */
+    omit?: AttendanceRecordOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AttendanceRecordInclude<ExtArgs> | null
+    /**
+     * The data needed to create a AttendanceRecord.
+     */
+    data: XOR<AttendanceRecordCreateInput, AttendanceRecordUncheckedCreateInput>
+  }
+
+  /**
+   * AttendanceRecord createMany
+   */
+  export type AttendanceRecordCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many AttendanceRecords.
+     */
+    data: AttendanceRecordCreateManyInput | AttendanceRecordCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * AttendanceRecord createManyAndReturn
+   */
+  export type AttendanceRecordCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AttendanceRecord
+     */
+    select?: AttendanceRecordSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the AttendanceRecord
+     */
+    omit?: AttendanceRecordOmit<ExtArgs> | null
+    /**
+     * The data used to create many AttendanceRecords.
+     */
+    data: AttendanceRecordCreateManyInput | AttendanceRecordCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AttendanceRecordIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * AttendanceRecord update
+   */
+  export type AttendanceRecordUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AttendanceRecord
+     */
+    select?: AttendanceRecordSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AttendanceRecord
+     */
+    omit?: AttendanceRecordOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AttendanceRecordInclude<ExtArgs> | null
+    /**
+     * The data needed to update a AttendanceRecord.
+     */
+    data: XOR<AttendanceRecordUpdateInput, AttendanceRecordUncheckedUpdateInput>
+    /**
+     * Choose, which AttendanceRecord to update.
+     */
+    where: AttendanceRecordWhereUniqueInput
+  }
+
+  /**
+   * AttendanceRecord updateMany
+   */
+  export type AttendanceRecordUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update AttendanceRecords.
+     */
+    data: XOR<AttendanceRecordUpdateManyMutationInput, AttendanceRecordUncheckedUpdateManyInput>
+    /**
+     * Filter which AttendanceRecords to update
+     */
+    where?: AttendanceRecordWhereInput
+    /**
+     * Limit how many AttendanceRecords to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * AttendanceRecord updateManyAndReturn
+   */
+  export type AttendanceRecordUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AttendanceRecord
+     */
+    select?: AttendanceRecordSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the AttendanceRecord
+     */
+    omit?: AttendanceRecordOmit<ExtArgs> | null
+    /**
+     * The data used to update AttendanceRecords.
+     */
+    data: XOR<AttendanceRecordUpdateManyMutationInput, AttendanceRecordUncheckedUpdateManyInput>
+    /**
+     * Filter which AttendanceRecords to update
+     */
+    where?: AttendanceRecordWhereInput
+    /**
+     * Limit how many AttendanceRecords to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AttendanceRecordIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * AttendanceRecord upsert
+   */
+  export type AttendanceRecordUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AttendanceRecord
+     */
+    select?: AttendanceRecordSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AttendanceRecord
+     */
+    omit?: AttendanceRecordOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AttendanceRecordInclude<ExtArgs> | null
+    /**
+     * The filter to search for the AttendanceRecord to update in case it exists.
+     */
+    where: AttendanceRecordWhereUniqueInput
+    /**
+     * In case the AttendanceRecord found by the `where` argument doesn't exist, create a new AttendanceRecord with this data.
+     */
+    create: XOR<AttendanceRecordCreateInput, AttendanceRecordUncheckedCreateInput>
+    /**
+     * In case the AttendanceRecord was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<AttendanceRecordUpdateInput, AttendanceRecordUncheckedUpdateInput>
+  }
+
+  /**
+   * AttendanceRecord delete
+   */
+  export type AttendanceRecordDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AttendanceRecord
+     */
+    select?: AttendanceRecordSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AttendanceRecord
+     */
+    omit?: AttendanceRecordOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AttendanceRecordInclude<ExtArgs> | null
+    /**
+     * Filter which AttendanceRecord to delete.
+     */
+    where: AttendanceRecordWhereUniqueInput
+  }
+
+  /**
+   * AttendanceRecord deleteMany
+   */
+  export type AttendanceRecordDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which AttendanceRecords to delete
+     */
+    where?: AttendanceRecordWhereInput
+    /**
+     * Limit how many AttendanceRecords to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * AttendanceRecord without action
+   */
+  export type AttendanceRecordDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AttendanceRecord
+     */
+    select?: AttendanceRecordSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AttendanceRecord
+     */
+    omit?: AttendanceRecordOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AttendanceRecordInclude<ExtArgs> | null
+  }
+
+
+  /**
    * Enums
    */
 
@@ -20128,6 +21466,23 @@ export namespace Prisma {
   export type TreasuryExpenseScalarFieldEnum = (typeof TreasuryExpenseScalarFieldEnum)[keyof typeof TreasuryExpenseScalarFieldEnum]
 
 
+  export const AttendanceRecordScalarFieldEnum: {
+    id: 'id',
+    userId: 'userId',
+    branchId: 'branchId',
+    date: 'date',
+    checkInTime: 'checkInTime',
+    checkOutTime: 'checkOutTime',
+    status: 'status',
+    notes: 'notes',
+    ipAddress: 'ipAddress',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type AttendanceRecordScalarFieldEnum = (typeof AttendanceRecordScalarFieldEnum)[keyof typeof AttendanceRecordScalarFieldEnum]
+
+
   export const SortOrder: {
     asc: 'asc',
     desc: 'desc'
@@ -20246,6 +21601,7 @@ export namespace Prisma {
     chatMessages?: ChatMessageListRelationFilter
     shifts?: CashShiftListRelationFilter
     expenses?: TreasuryExpenseListRelationFilter
+    attendances?: AttendanceRecordListRelationFilter
   }
 
   export type BranchOrderByWithRelationInput = {
@@ -20268,6 +21624,7 @@ export namespace Prisma {
     chatMessages?: ChatMessageOrderByRelationAggregateInput
     shifts?: CashShiftOrderByRelationAggregateInput
     expenses?: TreasuryExpenseOrderByRelationAggregateInput
+    attendances?: AttendanceRecordOrderByRelationAggregateInput
   }
 
   export type BranchWhereUniqueInput = Prisma.AtLeast<{
@@ -20293,6 +21650,7 @@ export namespace Prisma {
     chatMessages?: ChatMessageListRelationFilter
     shifts?: CashShiftListRelationFilter
     expenses?: TreasuryExpenseListRelationFilter
+    attendances?: AttendanceRecordListRelationFilter
   }, "id" | "code">
 
   export type BranchOrderByWithAggregationInput = {
@@ -20342,6 +21700,7 @@ export namespace Prisma {
     createdAt?: DateTimeFilter<"User"> | Date | string
     branch?: XOR<BranchNullableScalarRelationFilter, BranchWhereInput> | null
     specialistProfile?: XOR<SpecialistNullableScalarRelationFilter, SpecialistWhereInput> | null
+    attendances?: AttendanceRecordListRelationFilter
   }
 
   export type UserOrderByWithRelationInput = {
@@ -20358,6 +21717,7 @@ export namespace Prisma {
     createdAt?: SortOrder
     branch?: BranchOrderByWithRelationInput
     specialistProfile?: SpecialistOrderByWithRelationInput
+    attendances?: AttendanceRecordOrderByRelationAggregateInput
   }
 
   export type UserWhereUniqueInput = Prisma.AtLeast<{
@@ -20377,6 +21737,7 @@ export namespace Prisma {
     createdAt?: DateTimeFilter<"User"> | Date | string
     branch?: XOR<BranchNullableScalarRelationFilter, BranchWhereInput> | null
     specialistProfile?: XOR<SpecialistNullableScalarRelationFilter, SpecialistWhereInput> | null
+    attendances?: AttendanceRecordListRelationFilter
   }, "id" | "username">
 
   export type UserOrderByWithAggregationInput = {
@@ -21719,6 +23080,94 @@ export namespace Prisma {
     createdAt?: DateTimeWithAggregatesFilter<"TreasuryExpense"> | Date | string
   }
 
+  export type AttendanceRecordWhereInput = {
+    AND?: AttendanceRecordWhereInput | AttendanceRecordWhereInput[]
+    OR?: AttendanceRecordWhereInput[]
+    NOT?: AttendanceRecordWhereInput | AttendanceRecordWhereInput[]
+    id?: StringFilter<"AttendanceRecord"> | string
+    userId?: StringFilter<"AttendanceRecord"> | string
+    branchId?: StringFilter<"AttendanceRecord"> | string
+    date?: StringFilter<"AttendanceRecord"> | string
+    checkInTime?: DateTimeFilter<"AttendanceRecord"> | Date | string
+    checkOutTime?: DateTimeNullableFilter<"AttendanceRecord"> | Date | string | null
+    status?: StringFilter<"AttendanceRecord"> | string
+    notes?: StringNullableFilter<"AttendanceRecord"> | string | null
+    ipAddress?: StringNullableFilter<"AttendanceRecord"> | string | null
+    createdAt?: DateTimeFilter<"AttendanceRecord"> | Date | string
+    updatedAt?: DateTimeFilter<"AttendanceRecord"> | Date | string
+    user?: XOR<UserScalarRelationFilter, UserWhereInput>
+    branch?: XOR<BranchScalarRelationFilter, BranchWhereInput>
+  }
+
+  export type AttendanceRecordOrderByWithRelationInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    branchId?: SortOrder
+    date?: SortOrder
+    checkInTime?: SortOrder
+    checkOutTime?: SortOrderInput | SortOrder
+    status?: SortOrder
+    notes?: SortOrderInput | SortOrder
+    ipAddress?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    user?: UserOrderByWithRelationInput
+    branch?: BranchOrderByWithRelationInput
+  }
+
+  export type AttendanceRecordWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: AttendanceRecordWhereInput | AttendanceRecordWhereInput[]
+    OR?: AttendanceRecordWhereInput[]
+    NOT?: AttendanceRecordWhereInput | AttendanceRecordWhereInput[]
+    userId?: StringFilter<"AttendanceRecord"> | string
+    branchId?: StringFilter<"AttendanceRecord"> | string
+    date?: StringFilter<"AttendanceRecord"> | string
+    checkInTime?: DateTimeFilter<"AttendanceRecord"> | Date | string
+    checkOutTime?: DateTimeNullableFilter<"AttendanceRecord"> | Date | string | null
+    status?: StringFilter<"AttendanceRecord"> | string
+    notes?: StringNullableFilter<"AttendanceRecord"> | string | null
+    ipAddress?: StringNullableFilter<"AttendanceRecord"> | string | null
+    createdAt?: DateTimeFilter<"AttendanceRecord"> | Date | string
+    updatedAt?: DateTimeFilter<"AttendanceRecord"> | Date | string
+    user?: XOR<UserScalarRelationFilter, UserWhereInput>
+    branch?: XOR<BranchScalarRelationFilter, BranchWhereInput>
+  }, "id">
+
+  export type AttendanceRecordOrderByWithAggregationInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    branchId?: SortOrder
+    date?: SortOrder
+    checkInTime?: SortOrder
+    checkOutTime?: SortOrderInput | SortOrder
+    status?: SortOrder
+    notes?: SortOrderInput | SortOrder
+    ipAddress?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    _count?: AttendanceRecordCountOrderByAggregateInput
+    _max?: AttendanceRecordMaxOrderByAggregateInput
+    _min?: AttendanceRecordMinOrderByAggregateInput
+  }
+
+  export type AttendanceRecordScalarWhereWithAggregatesInput = {
+    AND?: AttendanceRecordScalarWhereWithAggregatesInput | AttendanceRecordScalarWhereWithAggregatesInput[]
+    OR?: AttendanceRecordScalarWhereWithAggregatesInput[]
+    NOT?: AttendanceRecordScalarWhereWithAggregatesInput | AttendanceRecordScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"AttendanceRecord"> | string
+    userId?: StringWithAggregatesFilter<"AttendanceRecord"> | string
+    branchId?: StringWithAggregatesFilter<"AttendanceRecord"> | string
+    date?: StringWithAggregatesFilter<"AttendanceRecord"> | string
+    checkInTime?: DateTimeWithAggregatesFilter<"AttendanceRecord"> | Date | string
+    checkOutTime?: DateTimeNullableWithAggregatesFilter<"AttendanceRecord"> | Date | string | null
+    status?: StringWithAggregatesFilter<"AttendanceRecord"> | string
+    notes?: StringNullableWithAggregatesFilter<"AttendanceRecord"> | string | null
+    ipAddress?: StringNullableWithAggregatesFilter<"AttendanceRecord"> | string | null
+    createdAt?: DateTimeWithAggregatesFilter<"AttendanceRecord"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"AttendanceRecord"> | Date | string
+  }
+
   export type BranchCreateInput = {
     id?: string
     name: string
@@ -21739,6 +23188,7 @@ export namespace Prisma {
     chatMessages?: ChatMessageCreateNestedManyWithoutBranchInput
     shifts?: CashShiftCreateNestedManyWithoutBranchInput
     expenses?: TreasuryExpenseCreateNestedManyWithoutBranchInput
+    attendances?: AttendanceRecordCreateNestedManyWithoutBranchInput
   }
 
   export type BranchUncheckedCreateInput = {
@@ -21761,6 +23211,7 @@ export namespace Prisma {
     chatMessages?: ChatMessageUncheckedCreateNestedManyWithoutBranchInput
     shifts?: CashShiftUncheckedCreateNestedManyWithoutBranchInput
     expenses?: TreasuryExpenseUncheckedCreateNestedManyWithoutBranchInput
+    attendances?: AttendanceRecordUncheckedCreateNestedManyWithoutBranchInput
   }
 
   export type BranchUpdateInput = {
@@ -21783,6 +23234,7 @@ export namespace Prisma {
     chatMessages?: ChatMessageUpdateManyWithoutBranchNestedInput
     shifts?: CashShiftUpdateManyWithoutBranchNestedInput
     expenses?: TreasuryExpenseUpdateManyWithoutBranchNestedInput
+    attendances?: AttendanceRecordUpdateManyWithoutBranchNestedInput
   }
 
   export type BranchUncheckedUpdateInput = {
@@ -21805,6 +23257,7 @@ export namespace Prisma {
     chatMessages?: ChatMessageUncheckedUpdateManyWithoutBranchNestedInput
     shifts?: CashShiftUncheckedUpdateManyWithoutBranchNestedInput
     expenses?: TreasuryExpenseUncheckedUpdateManyWithoutBranchNestedInput
+    attendances?: AttendanceRecordUncheckedUpdateManyWithoutBranchNestedInput
   }
 
   export type BranchCreateManyInput = {
@@ -21856,6 +23309,7 @@ export namespace Prisma {
     createdAt?: Date | string
     branch?: BranchCreateNestedOneWithoutUsersInput
     specialistProfile?: SpecialistCreateNestedOneWithoutUserInput
+    attendances?: AttendanceRecordCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateInput = {
@@ -21871,6 +23325,7 @@ export namespace Prisma {
     isActive?: boolean
     createdAt?: Date | string
     specialistProfile?: SpecialistUncheckedCreateNestedOneWithoutUserInput
+    attendances?: AttendanceRecordUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserUpdateInput = {
@@ -21886,6 +23341,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     branch?: BranchUpdateOneWithoutUsersNestedInput
     specialistProfile?: SpecialistUpdateOneWithoutUserNestedInput
+    attendances?: AttendanceRecordUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateInput = {
@@ -21901,6 +23357,7 @@ export namespace Prisma {
     isActive?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     specialistProfile?: SpecialistUncheckedUpdateOneWithoutUserNestedInput
+    attendances?: AttendanceRecordUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserCreateManyInput = {
@@ -23461,6 +24918,102 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type AttendanceRecordCreateInput = {
+    id?: string
+    date: string
+    checkInTime?: Date | string
+    checkOutTime?: Date | string | null
+    status?: string
+    notes?: string | null
+    ipAddress?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    user: UserCreateNestedOneWithoutAttendancesInput
+    branch: BranchCreateNestedOneWithoutAttendancesInput
+  }
+
+  export type AttendanceRecordUncheckedCreateInput = {
+    id?: string
+    userId: string
+    branchId: string
+    date: string
+    checkInTime?: Date | string
+    checkOutTime?: Date | string | null
+    status?: string
+    notes?: string | null
+    ipAddress?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type AttendanceRecordUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    date?: StringFieldUpdateOperationsInput | string
+    checkInTime?: DateTimeFieldUpdateOperationsInput | Date | string
+    checkOutTime?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    ipAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    user?: UserUpdateOneRequiredWithoutAttendancesNestedInput
+    branch?: BranchUpdateOneRequiredWithoutAttendancesNestedInput
+  }
+
+  export type AttendanceRecordUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    branchId?: StringFieldUpdateOperationsInput | string
+    date?: StringFieldUpdateOperationsInput | string
+    checkInTime?: DateTimeFieldUpdateOperationsInput | Date | string
+    checkOutTime?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    ipAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type AttendanceRecordCreateManyInput = {
+    id?: string
+    userId: string
+    branchId: string
+    date: string
+    checkInTime?: Date | string
+    checkOutTime?: Date | string | null
+    status?: string
+    notes?: string | null
+    ipAddress?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type AttendanceRecordUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    date?: StringFieldUpdateOperationsInput | string
+    checkInTime?: DateTimeFieldUpdateOperationsInput | Date | string
+    checkOutTime?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    ipAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type AttendanceRecordUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    branchId?: StringFieldUpdateOperationsInput | string
+    date?: StringFieldUpdateOperationsInput | string
+    checkInTime?: DateTimeFieldUpdateOperationsInput | Date | string
+    checkOutTime?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    ipAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type StringFilter<$PrismaModel = never> = {
     equals?: string | StringFieldRefInput<$PrismaModel>
     in?: string[] | ListStringFieldRefInput<$PrismaModel>
@@ -23567,6 +25120,12 @@ export namespace Prisma {
     none?: TreasuryExpenseWhereInput
   }
 
+  export type AttendanceRecordListRelationFilter = {
+    every?: AttendanceRecordWhereInput
+    some?: AttendanceRecordWhereInput
+    none?: AttendanceRecordWhereInput
+  }
+
   export type SortOrderInput = {
     sort: SortOrder
     nulls?: NullsOrder
@@ -23609,6 +25168,10 @@ export namespace Prisma {
   }
 
   export type TreasuryExpenseOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type AttendanceRecordOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -24712,6 +26275,53 @@ export namespace Prisma {
     amount?: SortOrder
   }
 
+  export type UserScalarRelationFilter = {
+    is?: UserWhereInput
+    isNot?: UserWhereInput
+  }
+
+  export type AttendanceRecordCountOrderByAggregateInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    branchId?: SortOrder
+    date?: SortOrder
+    checkInTime?: SortOrder
+    checkOutTime?: SortOrder
+    status?: SortOrder
+    notes?: SortOrder
+    ipAddress?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type AttendanceRecordMaxOrderByAggregateInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    branchId?: SortOrder
+    date?: SortOrder
+    checkInTime?: SortOrder
+    checkOutTime?: SortOrder
+    status?: SortOrder
+    notes?: SortOrder
+    ipAddress?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type AttendanceRecordMinOrderByAggregateInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    branchId?: SortOrder
+    date?: SortOrder
+    checkInTime?: SortOrder
+    checkOutTime?: SortOrder
+    status?: SortOrder
+    notes?: SortOrder
+    ipAddress?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
   export type UserCreateNestedManyWithoutBranchInput = {
     create?: XOR<UserCreateWithoutBranchInput, UserUncheckedCreateWithoutBranchInput> | UserCreateWithoutBranchInput[] | UserUncheckedCreateWithoutBranchInput[]
     connectOrCreate?: UserCreateOrConnectWithoutBranchInput | UserCreateOrConnectWithoutBranchInput[]
@@ -24782,6 +26392,13 @@ export namespace Prisma {
     connect?: TreasuryExpenseWhereUniqueInput | TreasuryExpenseWhereUniqueInput[]
   }
 
+  export type AttendanceRecordCreateNestedManyWithoutBranchInput = {
+    create?: XOR<AttendanceRecordCreateWithoutBranchInput, AttendanceRecordUncheckedCreateWithoutBranchInput> | AttendanceRecordCreateWithoutBranchInput[] | AttendanceRecordUncheckedCreateWithoutBranchInput[]
+    connectOrCreate?: AttendanceRecordCreateOrConnectWithoutBranchInput | AttendanceRecordCreateOrConnectWithoutBranchInput[]
+    createMany?: AttendanceRecordCreateManyBranchInputEnvelope
+    connect?: AttendanceRecordWhereUniqueInput | AttendanceRecordWhereUniqueInput[]
+  }
+
   export type UserUncheckedCreateNestedManyWithoutBranchInput = {
     create?: XOR<UserCreateWithoutBranchInput, UserUncheckedCreateWithoutBranchInput> | UserCreateWithoutBranchInput[] | UserUncheckedCreateWithoutBranchInput[]
     connectOrCreate?: UserCreateOrConnectWithoutBranchInput | UserCreateOrConnectWithoutBranchInput[]
@@ -24850,6 +26467,13 @@ export namespace Prisma {
     connectOrCreate?: TreasuryExpenseCreateOrConnectWithoutBranchInput | TreasuryExpenseCreateOrConnectWithoutBranchInput[]
     createMany?: TreasuryExpenseCreateManyBranchInputEnvelope
     connect?: TreasuryExpenseWhereUniqueInput | TreasuryExpenseWhereUniqueInput[]
+  }
+
+  export type AttendanceRecordUncheckedCreateNestedManyWithoutBranchInput = {
+    create?: XOR<AttendanceRecordCreateWithoutBranchInput, AttendanceRecordUncheckedCreateWithoutBranchInput> | AttendanceRecordCreateWithoutBranchInput[] | AttendanceRecordUncheckedCreateWithoutBranchInput[]
+    connectOrCreate?: AttendanceRecordCreateOrConnectWithoutBranchInput | AttendanceRecordCreateOrConnectWithoutBranchInput[]
+    createMany?: AttendanceRecordCreateManyBranchInputEnvelope
+    connect?: AttendanceRecordWhereUniqueInput | AttendanceRecordWhereUniqueInput[]
   }
 
   export type StringFieldUpdateOperationsInput = {
@@ -25008,6 +26632,20 @@ export namespace Prisma {
     deleteMany?: TreasuryExpenseScalarWhereInput | TreasuryExpenseScalarWhereInput[]
   }
 
+  export type AttendanceRecordUpdateManyWithoutBranchNestedInput = {
+    create?: XOR<AttendanceRecordCreateWithoutBranchInput, AttendanceRecordUncheckedCreateWithoutBranchInput> | AttendanceRecordCreateWithoutBranchInput[] | AttendanceRecordUncheckedCreateWithoutBranchInput[]
+    connectOrCreate?: AttendanceRecordCreateOrConnectWithoutBranchInput | AttendanceRecordCreateOrConnectWithoutBranchInput[]
+    upsert?: AttendanceRecordUpsertWithWhereUniqueWithoutBranchInput | AttendanceRecordUpsertWithWhereUniqueWithoutBranchInput[]
+    createMany?: AttendanceRecordCreateManyBranchInputEnvelope
+    set?: AttendanceRecordWhereUniqueInput | AttendanceRecordWhereUniqueInput[]
+    disconnect?: AttendanceRecordWhereUniqueInput | AttendanceRecordWhereUniqueInput[]
+    delete?: AttendanceRecordWhereUniqueInput | AttendanceRecordWhereUniqueInput[]
+    connect?: AttendanceRecordWhereUniqueInput | AttendanceRecordWhereUniqueInput[]
+    update?: AttendanceRecordUpdateWithWhereUniqueWithoutBranchInput | AttendanceRecordUpdateWithWhereUniqueWithoutBranchInput[]
+    updateMany?: AttendanceRecordUpdateManyWithWhereWithoutBranchInput | AttendanceRecordUpdateManyWithWhereWithoutBranchInput[]
+    deleteMany?: AttendanceRecordScalarWhereInput | AttendanceRecordScalarWhereInput[]
+  }
+
   export type UserUncheckedUpdateManyWithoutBranchNestedInput = {
     create?: XOR<UserCreateWithoutBranchInput, UserUncheckedCreateWithoutBranchInput> | UserCreateWithoutBranchInput[] | UserUncheckedCreateWithoutBranchInput[]
     connectOrCreate?: UserCreateOrConnectWithoutBranchInput | UserCreateOrConnectWithoutBranchInput[]
@@ -25148,6 +26786,20 @@ export namespace Prisma {
     deleteMany?: TreasuryExpenseScalarWhereInput | TreasuryExpenseScalarWhereInput[]
   }
 
+  export type AttendanceRecordUncheckedUpdateManyWithoutBranchNestedInput = {
+    create?: XOR<AttendanceRecordCreateWithoutBranchInput, AttendanceRecordUncheckedCreateWithoutBranchInput> | AttendanceRecordCreateWithoutBranchInput[] | AttendanceRecordUncheckedCreateWithoutBranchInput[]
+    connectOrCreate?: AttendanceRecordCreateOrConnectWithoutBranchInput | AttendanceRecordCreateOrConnectWithoutBranchInput[]
+    upsert?: AttendanceRecordUpsertWithWhereUniqueWithoutBranchInput | AttendanceRecordUpsertWithWhereUniqueWithoutBranchInput[]
+    createMany?: AttendanceRecordCreateManyBranchInputEnvelope
+    set?: AttendanceRecordWhereUniqueInput | AttendanceRecordWhereUniqueInput[]
+    disconnect?: AttendanceRecordWhereUniqueInput | AttendanceRecordWhereUniqueInput[]
+    delete?: AttendanceRecordWhereUniqueInput | AttendanceRecordWhereUniqueInput[]
+    connect?: AttendanceRecordWhereUniqueInput | AttendanceRecordWhereUniqueInput[]
+    update?: AttendanceRecordUpdateWithWhereUniqueWithoutBranchInput | AttendanceRecordUpdateWithWhereUniqueWithoutBranchInput[]
+    updateMany?: AttendanceRecordUpdateManyWithWhereWithoutBranchInput | AttendanceRecordUpdateManyWithWhereWithoutBranchInput[]
+    deleteMany?: AttendanceRecordScalarWhereInput | AttendanceRecordScalarWhereInput[]
+  }
+
   export type BranchCreateNestedOneWithoutUsersInput = {
     create?: XOR<BranchCreateWithoutUsersInput, BranchUncheckedCreateWithoutUsersInput>
     connectOrCreate?: BranchCreateOrConnectWithoutUsersInput
@@ -25160,10 +26812,24 @@ export namespace Prisma {
     connect?: SpecialistWhereUniqueInput
   }
 
+  export type AttendanceRecordCreateNestedManyWithoutUserInput = {
+    create?: XOR<AttendanceRecordCreateWithoutUserInput, AttendanceRecordUncheckedCreateWithoutUserInput> | AttendanceRecordCreateWithoutUserInput[] | AttendanceRecordUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: AttendanceRecordCreateOrConnectWithoutUserInput | AttendanceRecordCreateOrConnectWithoutUserInput[]
+    createMany?: AttendanceRecordCreateManyUserInputEnvelope
+    connect?: AttendanceRecordWhereUniqueInput | AttendanceRecordWhereUniqueInput[]
+  }
+
   export type SpecialistUncheckedCreateNestedOneWithoutUserInput = {
     create?: XOR<SpecialistCreateWithoutUserInput, SpecialistUncheckedCreateWithoutUserInput>
     connectOrCreate?: SpecialistCreateOrConnectWithoutUserInput
     connect?: SpecialistWhereUniqueInput
+  }
+
+  export type AttendanceRecordUncheckedCreateNestedManyWithoutUserInput = {
+    create?: XOR<AttendanceRecordCreateWithoutUserInput, AttendanceRecordUncheckedCreateWithoutUserInput> | AttendanceRecordCreateWithoutUserInput[] | AttendanceRecordUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: AttendanceRecordCreateOrConnectWithoutUserInput | AttendanceRecordCreateOrConnectWithoutUserInput[]
+    createMany?: AttendanceRecordCreateManyUserInputEnvelope
+    connect?: AttendanceRecordWhereUniqueInput | AttendanceRecordWhereUniqueInput[]
   }
 
   export type BranchUpdateOneWithoutUsersNestedInput = {
@@ -25186,6 +26852,20 @@ export namespace Prisma {
     update?: XOR<XOR<SpecialistUpdateToOneWithWhereWithoutUserInput, SpecialistUpdateWithoutUserInput>, SpecialistUncheckedUpdateWithoutUserInput>
   }
 
+  export type AttendanceRecordUpdateManyWithoutUserNestedInput = {
+    create?: XOR<AttendanceRecordCreateWithoutUserInput, AttendanceRecordUncheckedCreateWithoutUserInput> | AttendanceRecordCreateWithoutUserInput[] | AttendanceRecordUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: AttendanceRecordCreateOrConnectWithoutUserInput | AttendanceRecordCreateOrConnectWithoutUserInput[]
+    upsert?: AttendanceRecordUpsertWithWhereUniqueWithoutUserInput | AttendanceRecordUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: AttendanceRecordCreateManyUserInputEnvelope
+    set?: AttendanceRecordWhereUniqueInput | AttendanceRecordWhereUniqueInput[]
+    disconnect?: AttendanceRecordWhereUniqueInput | AttendanceRecordWhereUniqueInput[]
+    delete?: AttendanceRecordWhereUniqueInput | AttendanceRecordWhereUniqueInput[]
+    connect?: AttendanceRecordWhereUniqueInput | AttendanceRecordWhereUniqueInput[]
+    update?: AttendanceRecordUpdateWithWhereUniqueWithoutUserInput | AttendanceRecordUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: AttendanceRecordUpdateManyWithWhereWithoutUserInput | AttendanceRecordUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: AttendanceRecordScalarWhereInput | AttendanceRecordScalarWhereInput[]
+  }
+
   export type SpecialistUncheckedUpdateOneWithoutUserNestedInput = {
     create?: XOR<SpecialistCreateWithoutUserInput, SpecialistUncheckedCreateWithoutUserInput>
     connectOrCreate?: SpecialistCreateOrConnectWithoutUserInput
@@ -25194,6 +26874,20 @@ export namespace Prisma {
     delete?: SpecialistWhereInput | boolean
     connect?: SpecialistWhereUniqueInput
     update?: XOR<XOR<SpecialistUpdateToOneWithWhereWithoutUserInput, SpecialistUpdateWithoutUserInput>, SpecialistUncheckedUpdateWithoutUserInput>
+  }
+
+  export type AttendanceRecordUncheckedUpdateManyWithoutUserNestedInput = {
+    create?: XOR<AttendanceRecordCreateWithoutUserInput, AttendanceRecordUncheckedCreateWithoutUserInput> | AttendanceRecordCreateWithoutUserInput[] | AttendanceRecordUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: AttendanceRecordCreateOrConnectWithoutUserInput | AttendanceRecordCreateOrConnectWithoutUserInput[]
+    upsert?: AttendanceRecordUpsertWithWhereUniqueWithoutUserInput | AttendanceRecordUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: AttendanceRecordCreateManyUserInputEnvelope
+    set?: AttendanceRecordWhereUniqueInput | AttendanceRecordWhereUniqueInput[]
+    disconnect?: AttendanceRecordWhereUniqueInput | AttendanceRecordWhereUniqueInput[]
+    delete?: AttendanceRecordWhereUniqueInput | AttendanceRecordWhereUniqueInput[]
+    connect?: AttendanceRecordWhereUniqueInput | AttendanceRecordWhereUniqueInput[]
+    update?: AttendanceRecordUpdateWithWhereUniqueWithoutUserInput | AttendanceRecordUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: AttendanceRecordUpdateManyWithWhereWithoutUserInput | AttendanceRecordUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: AttendanceRecordScalarWhereInput | AttendanceRecordScalarWhereInput[]
   }
 
   export type UserCreateNestedOneWithoutSpecialistProfileInput = {
@@ -25666,6 +27360,34 @@ export namespace Prisma {
     update?: XOR<XOR<BranchUpdateToOneWithWhereWithoutExpensesInput, BranchUpdateWithoutExpensesInput>, BranchUncheckedUpdateWithoutExpensesInput>
   }
 
+  export type UserCreateNestedOneWithoutAttendancesInput = {
+    create?: XOR<UserCreateWithoutAttendancesInput, UserUncheckedCreateWithoutAttendancesInput>
+    connectOrCreate?: UserCreateOrConnectWithoutAttendancesInput
+    connect?: UserWhereUniqueInput
+  }
+
+  export type BranchCreateNestedOneWithoutAttendancesInput = {
+    create?: XOR<BranchCreateWithoutAttendancesInput, BranchUncheckedCreateWithoutAttendancesInput>
+    connectOrCreate?: BranchCreateOrConnectWithoutAttendancesInput
+    connect?: BranchWhereUniqueInput
+  }
+
+  export type UserUpdateOneRequiredWithoutAttendancesNestedInput = {
+    create?: XOR<UserCreateWithoutAttendancesInput, UserUncheckedCreateWithoutAttendancesInput>
+    connectOrCreate?: UserCreateOrConnectWithoutAttendancesInput
+    upsert?: UserUpsertWithoutAttendancesInput
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutAttendancesInput, UserUpdateWithoutAttendancesInput>, UserUncheckedUpdateWithoutAttendancesInput>
+  }
+
+  export type BranchUpdateOneRequiredWithoutAttendancesNestedInput = {
+    create?: XOR<BranchCreateWithoutAttendancesInput, BranchUncheckedCreateWithoutAttendancesInput>
+    connectOrCreate?: BranchCreateOrConnectWithoutAttendancesInput
+    upsert?: BranchUpsertWithoutAttendancesInput
+    connect?: BranchWhereUniqueInput
+    update?: XOR<XOR<BranchUpdateToOneWithWhereWithoutAttendancesInput, BranchUpdateWithoutAttendancesInput>, BranchUncheckedUpdateWithoutAttendancesInput>
+  }
+
   export type NestedStringFilter<$PrismaModel = never> = {
     equals?: string | StringFieldRefInput<$PrismaModel>
     in?: string[] | ListStringFieldRefInput<$PrismaModel>
@@ -25911,6 +27633,7 @@ export namespace Prisma {
     isActive?: boolean
     createdAt?: Date | string
     specialistProfile?: SpecialistCreateNestedOneWithoutUserInput
+    attendances?: AttendanceRecordCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutBranchInput = {
@@ -25925,6 +27648,7 @@ export namespace Prisma {
     isActive?: boolean
     createdAt?: Date | string
     specialistProfile?: SpecialistUncheckedCreateNestedOneWithoutUserInput
+    attendances?: AttendanceRecordUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutBranchInput = {
@@ -26337,6 +28061,42 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type AttendanceRecordCreateWithoutBranchInput = {
+    id?: string
+    date: string
+    checkInTime?: Date | string
+    checkOutTime?: Date | string | null
+    status?: string
+    notes?: string | null
+    ipAddress?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    user: UserCreateNestedOneWithoutAttendancesInput
+  }
+
+  export type AttendanceRecordUncheckedCreateWithoutBranchInput = {
+    id?: string
+    userId: string
+    date: string
+    checkInTime?: Date | string
+    checkOutTime?: Date | string | null
+    status?: string
+    notes?: string | null
+    ipAddress?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type AttendanceRecordCreateOrConnectWithoutBranchInput = {
+    where: AttendanceRecordWhereUniqueInput
+    create: XOR<AttendanceRecordCreateWithoutBranchInput, AttendanceRecordUncheckedCreateWithoutBranchInput>
+  }
+
+  export type AttendanceRecordCreateManyBranchInputEnvelope = {
+    data: AttendanceRecordCreateManyBranchInput | AttendanceRecordCreateManyBranchInput[]
+    skipDuplicates?: boolean
+  }
+
   export type UserUpsertWithWhereUniqueWithoutBranchInput = {
     where: UserWhereUniqueInput
     update: XOR<UserUpdateWithoutBranchInput, UserUncheckedUpdateWithoutBranchInput>
@@ -26702,6 +28462,39 @@ export namespace Prisma {
     createdAt?: DateTimeFilter<"TreasuryExpense"> | Date | string
   }
 
+  export type AttendanceRecordUpsertWithWhereUniqueWithoutBranchInput = {
+    where: AttendanceRecordWhereUniqueInput
+    update: XOR<AttendanceRecordUpdateWithoutBranchInput, AttendanceRecordUncheckedUpdateWithoutBranchInput>
+    create: XOR<AttendanceRecordCreateWithoutBranchInput, AttendanceRecordUncheckedCreateWithoutBranchInput>
+  }
+
+  export type AttendanceRecordUpdateWithWhereUniqueWithoutBranchInput = {
+    where: AttendanceRecordWhereUniqueInput
+    data: XOR<AttendanceRecordUpdateWithoutBranchInput, AttendanceRecordUncheckedUpdateWithoutBranchInput>
+  }
+
+  export type AttendanceRecordUpdateManyWithWhereWithoutBranchInput = {
+    where: AttendanceRecordScalarWhereInput
+    data: XOR<AttendanceRecordUpdateManyMutationInput, AttendanceRecordUncheckedUpdateManyWithoutBranchInput>
+  }
+
+  export type AttendanceRecordScalarWhereInput = {
+    AND?: AttendanceRecordScalarWhereInput | AttendanceRecordScalarWhereInput[]
+    OR?: AttendanceRecordScalarWhereInput[]
+    NOT?: AttendanceRecordScalarWhereInput | AttendanceRecordScalarWhereInput[]
+    id?: StringFilter<"AttendanceRecord"> | string
+    userId?: StringFilter<"AttendanceRecord"> | string
+    branchId?: StringFilter<"AttendanceRecord"> | string
+    date?: StringFilter<"AttendanceRecord"> | string
+    checkInTime?: DateTimeFilter<"AttendanceRecord"> | Date | string
+    checkOutTime?: DateTimeNullableFilter<"AttendanceRecord"> | Date | string | null
+    status?: StringFilter<"AttendanceRecord"> | string
+    notes?: StringNullableFilter<"AttendanceRecord"> | string | null
+    ipAddress?: StringNullableFilter<"AttendanceRecord"> | string | null
+    createdAt?: DateTimeFilter<"AttendanceRecord"> | Date | string
+    updatedAt?: DateTimeFilter<"AttendanceRecord"> | Date | string
+  }
+
   export type BranchCreateWithoutUsersInput = {
     id?: string
     name: string
@@ -26721,6 +28514,7 @@ export namespace Prisma {
     chatMessages?: ChatMessageCreateNestedManyWithoutBranchInput
     shifts?: CashShiftCreateNestedManyWithoutBranchInput
     expenses?: TreasuryExpenseCreateNestedManyWithoutBranchInput
+    attendances?: AttendanceRecordCreateNestedManyWithoutBranchInput
   }
 
   export type BranchUncheckedCreateWithoutUsersInput = {
@@ -26742,6 +28536,7 @@ export namespace Prisma {
     chatMessages?: ChatMessageUncheckedCreateNestedManyWithoutBranchInput
     shifts?: CashShiftUncheckedCreateNestedManyWithoutBranchInput
     expenses?: TreasuryExpenseUncheckedCreateNestedManyWithoutBranchInput
+    attendances?: AttendanceRecordUncheckedCreateNestedManyWithoutBranchInput
   }
 
   export type BranchCreateOrConnectWithoutUsersInput = {
@@ -26796,6 +28591,42 @@ export namespace Prisma {
     create: XOR<SpecialistCreateWithoutUserInput, SpecialistUncheckedCreateWithoutUserInput>
   }
 
+  export type AttendanceRecordCreateWithoutUserInput = {
+    id?: string
+    date: string
+    checkInTime?: Date | string
+    checkOutTime?: Date | string | null
+    status?: string
+    notes?: string | null
+    ipAddress?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    branch: BranchCreateNestedOneWithoutAttendancesInput
+  }
+
+  export type AttendanceRecordUncheckedCreateWithoutUserInput = {
+    id?: string
+    branchId: string
+    date: string
+    checkInTime?: Date | string
+    checkOutTime?: Date | string | null
+    status?: string
+    notes?: string | null
+    ipAddress?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type AttendanceRecordCreateOrConnectWithoutUserInput = {
+    where: AttendanceRecordWhereUniqueInput
+    create: XOR<AttendanceRecordCreateWithoutUserInput, AttendanceRecordUncheckedCreateWithoutUserInput>
+  }
+
+  export type AttendanceRecordCreateManyUserInputEnvelope = {
+    data: AttendanceRecordCreateManyUserInput | AttendanceRecordCreateManyUserInput[]
+    skipDuplicates?: boolean
+  }
+
   export type BranchUpsertWithoutUsersInput = {
     update: XOR<BranchUpdateWithoutUsersInput, BranchUncheckedUpdateWithoutUsersInput>
     create: XOR<BranchCreateWithoutUsersInput, BranchUncheckedCreateWithoutUsersInput>
@@ -26826,6 +28657,7 @@ export namespace Prisma {
     chatMessages?: ChatMessageUpdateManyWithoutBranchNestedInput
     shifts?: CashShiftUpdateManyWithoutBranchNestedInput
     expenses?: TreasuryExpenseUpdateManyWithoutBranchNestedInput
+    attendances?: AttendanceRecordUpdateManyWithoutBranchNestedInput
   }
 
   export type BranchUncheckedUpdateWithoutUsersInput = {
@@ -26847,6 +28679,7 @@ export namespace Prisma {
     chatMessages?: ChatMessageUncheckedUpdateManyWithoutBranchNestedInput
     shifts?: CashShiftUncheckedUpdateManyWithoutBranchNestedInput
     expenses?: TreasuryExpenseUncheckedUpdateManyWithoutBranchNestedInput
+    attendances?: AttendanceRecordUncheckedUpdateManyWithoutBranchNestedInput
   }
 
   export type SpecialistUpsertWithoutUserInput = {
@@ -26902,6 +28735,22 @@ export namespace Prisma {
     ledgers?: SpecialistLedgerUncheckedUpdateManyWithoutSpecialistNestedInput
   }
 
+  export type AttendanceRecordUpsertWithWhereUniqueWithoutUserInput = {
+    where: AttendanceRecordWhereUniqueInput
+    update: XOR<AttendanceRecordUpdateWithoutUserInput, AttendanceRecordUncheckedUpdateWithoutUserInput>
+    create: XOR<AttendanceRecordCreateWithoutUserInput, AttendanceRecordUncheckedCreateWithoutUserInput>
+  }
+
+  export type AttendanceRecordUpdateWithWhereUniqueWithoutUserInput = {
+    where: AttendanceRecordWhereUniqueInput
+    data: XOR<AttendanceRecordUpdateWithoutUserInput, AttendanceRecordUncheckedUpdateWithoutUserInput>
+  }
+
+  export type AttendanceRecordUpdateManyWithWhereWithoutUserInput = {
+    where: AttendanceRecordScalarWhereInput
+    data: XOR<AttendanceRecordUpdateManyMutationInput, AttendanceRecordUncheckedUpdateManyWithoutUserInput>
+  }
+
   export type UserCreateWithoutSpecialistProfileInput = {
     id?: string
     name: string
@@ -26914,6 +28763,7 @@ export namespace Prisma {
     isActive?: boolean
     createdAt?: Date | string
     branch?: BranchCreateNestedOneWithoutUsersInput
+    attendances?: AttendanceRecordCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutSpecialistProfileInput = {
@@ -26928,6 +28778,7 @@ export namespace Prisma {
     permissions?: string | null
     isActive?: boolean
     createdAt?: Date | string
+    attendances?: AttendanceRecordUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutSpecialistProfileInput = {
@@ -26954,6 +28805,7 @@ export namespace Prisma {
     chatMessages?: ChatMessageCreateNestedManyWithoutBranchInput
     shifts?: CashShiftCreateNestedManyWithoutBranchInput
     expenses?: TreasuryExpenseCreateNestedManyWithoutBranchInput
+    attendances?: AttendanceRecordCreateNestedManyWithoutBranchInput
   }
 
   export type BranchUncheckedCreateWithoutSpecialistsInput = {
@@ -26975,6 +28827,7 @@ export namespace Prisma {
     chatMessages?: ChatMessageUncheckedCreateNestedManyWithoutBranchInput
     shifts?: CashShiftUncheckedCreateNestedManyWithoutBranchInput
     expenses?: TreasuryExpenseUncheckedCreateNestedManyWithoutBranchInput
+    attendances?: AttendanceRecordUncheckedCreateNestedManyWithoutBranchInput
   }
 
   export type BranchCreateOrConnectWithoutSpecialistsInput = {
@@ -27143,6 +28996,7 @@ export namespace Prisma {
     isActive?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     branch?: BranchUpdateOneWithoutUsersNestedInput
+    attendances?: AttendanceRecordUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutSpecialistProfileInput = {
@@ -27157,6 +29011,7 @@ export namespace Prisma {
     permissions?: NullableStringFieldUpdateOperationsInput | string | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    attendances?: AttendanceRecordUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type BranchUpsertWithoutSpecialistsInput = {
@@ -27189,6 +29044,7 @@ export namespace Prisma {
     chatMessages?: ChatMessageUpdateManyWithoutBranchNestedInput
     shifts?: CashShiftUpdateManyWithoutBranchNestedInput
     expenses?: TreasuryExpenseUpdateManyWithoutBranchNestedInput
+    attendances?: AttendanceRecordUpdateManyWithoutBranchNestedInput
   }
 
   export type BranchUncheckedUpdateWithoutSpecialistsInput = {
@@ -27210,6 +29066,7 @@ export namespace Prisma {
     chatMessages?: ChatMessageUncheckedUpdateManyWithoutBranchNestedInput
     shifts?: CashShiftUncheckedUpdateManyWithoutBranchNestedInput
     expenses?: TreasuryExpenseUncheckedUpdateManyWithoutBranchNestedInput
+    attendances?: AttendanceRecordUncheckedUpdateManyWithoutBranchNestedInput
   }
 
   export type BookingUpsertWithWhereUniqueWithoutSpecialistInput = {
@@ -27458,6 +29315,7 @@ export namespace Prisma {
     chatMessages?: ChatMessageCreateNestedManyWithoutBranchInput
     shifts?: CashShiftCreateNestedManyWithoutBranchInput
     expenses?: TreasuryExpenseCreateNestedManyWithoutBranchInput
+    attendances?: AttendanceRecordCreateNestedManyWithoutBranchInput
   }
 
   export type BranchUncheckedCreateWithoutBookingsInput = {
@@ -27479,6 +29337,7 @@ export namespace Prisma {
     chatMessages?: ChatMessageUncheckedCreateNestedManyWithoutBranchInput
     shifts?: CashShiftUncheckedCreateNestedManyWithoutBranchInput
     expenses?: TreasuryExpenseUncheckedCreateNestedManyWithoutBranchInput
+    attendances?: AttendanceRecordUncheckedCreateNestedManyWithoutBranchInput
   }
 
   export type BranchCreateOrConnectWithoutBookingsInput = {
@@ -27610,6 +29469,7 @@ export namespace Prisma {
     chatMessages?: ChatMessageUpdateManyWithoutBranchNestedInput
     shifts?: CashShiftUpdateManyWithoutBranchNestedInput
     expenses?: TreasuryExpenseUpdateManyWithoutBranchNestedInput
+    attendances?: AttendanceRecordUpdateManyWithoutBranchNestedInput
   }
 
   export type BranchUncheckedUpdateWithoutBookingsInput = {
@@ -27631,6 +29491,7 @@ export namespace Prisma {
     chatMessages?: ChatMessageUncheckedUpdateManyWithoutBranchNestedInput
     shifts?: CashShiftUncheckedUpdateManyWithoutBranchNestedInput
     expenses?: TreasuryExpenseUncheckedUpdateManyWithoutBranchNestedInput
+    attendances?: AttendanceRecordUncheckedUpdateManyWithoutBranchNestedInput
   }
 
   export type SpecialistUpsertWithoutBookingsInput = {
@@ -27705,6 +29566,7 @@ export namespace Prisma {
     chatMessages?: ChatMessageCreateNestedManyWithoutBranchInput
     shifts?: CashShiftCreateNestedManyWithoutBranchInput
     expenses?: TreasuryExpenseCreateNestedManyWithoutBranchInput
+    attendances?: AttendanceRecordCreateNestedManyWithoutBranchInput
   }
 
   export type BranchUncheckedCreateWithoutTicketsInput = {
@@ -27726,6 +29588,7 @@ export namespace Prisma {
     chatMessages?: ChatMessageUncheckedCreateNestedManyWithoutBranchInput
     shifts?: CashShiftUncheckedCreateNestedManyWithoutBranchInput
     expenses?: TreasuryExpenseUncheckedCreateNestedManyWithoutBranchInput
+    attendances?: AttendanceRecordUncheckedCreateNestedManyWithoutBranchInput
   }
 
   export type BranchCreateOrConnectWithoutTicketsInput = {
@@ -27851,6 +29714,7 @@ export namespace Prisma {
     chatMessages?: ChatMessageUpdateManyWithoutBranchNestedInput
     shifts?: CashShiftUpdateManyWithoutBranchNestedInput
     expenses?: TreasuryExpenseUpdateManyWithoutBranchNestedInput
+    attendances?: AttendanceRecordUpdateManyWithoutBranchNestedInput
   }
 
   export type BranchUncheckedUpdateWithoutTicketsInput = {
@@ -27872,6 +29736,7 @@ export namespace Prisma {
     chatMessages?: ChatMessageUncheckedUpdateManyWithoutBranchNestedInput
     shifts?: CashShiftUncheckedUpdateManyWithoutBranchNestedInput
     expenses?: TreasuryExpenseUncheckedUpdateManyWithoutBranchNestedInput
+    attendances?: AttendanceRecordUncheckedUpdateManyWithoutBranchNestedInput
   }
 
   export type SpecialistUpsertWithoutTicketsInput = {
@@ -27993,6 +29858,7 @@ export namespace Prisma {
     chatMessages?: ChatMessageCreateNestedManyWithoutBranchInput
     shifts?: CashShiftCreateNestedManyWithoutBranchInput
     expenses?: TreasuryExpenseCreateNestedManyWithoutBranchInput
+    attendances?: AttendanceRecordCreateNestedManyWithoutBranchInput
   }
 
   export type BranchUncheckedCreateWithoutProductsInput = {
@@ -28014,6 +29880,7 @@ export namespace Prisma {
     chatMessages?: ChatMessageUncheckedCreateNestedManyWithoutBranchInput
     shifts?: CashShiftUncheckedCreateNestedManyWithoutBranchInput
     expenses?: TreasuryExpenseUncheckedCreateNestedManyWithoutBranchInput
+    attendances?: AttendanceRecordUncheckedCreateNestedManyWithoutBranchInput
   }
 
   export type BranchCreateOrConnectWithoutProductsInput = {
@@ -28051,6 +29918,7 @@ export namespace Prisma {
     chatMessages?: ChatMessageUpdateManyWithoutBranchNestedInput
     shifts?: CashShiftUpdateManyWithoutBranchNestedInput
     expenses?: TreasuryExpenseUpdateManyWithoutBranchNestedInput
+    attendances?: AttendanceRecordUpdateManyWithoutBranchNestedInput
   }
 
   export type BranchUncheckedUpdateWithoutProductsInput = {
@@ -28072,6 +29940,7 @@ export namespace Prisma {
     chatMessages?: ChatMessageUncheckedUpdateManyWithoutBranchNestedInput
     shifts?: CashShiftUncheckedUpdateManyWithoutBranchNestedInput
     expenses?: TreasuryExpenseUncheckedUpdateManyWithoutBranchNestedInput
+    attendances?: AttendanceRecordUncheckedUpdateManyWithoutBranchNestedInput
   }
 
   export type SpecialistCreateWithoutLedgersInput = {
@@ -28140,6 +30009,7 @@ export namespace Prisma {
     chatMessages?: ChatMessageCreateNestedManyWithoutBranchInput
     shifts?: CashShiftCreateNestedManyWithoutBranchInput
     expenses?: TreasuryExpenseCreateNestedManyWithoutBranchInput
+    attendances?: AttendanceRecordCreateNestedManyWithoutBranchInput
   }
 
   export type BranchUncheckedCreateWithoutLedgersInput = {
@@ -28161,6 +30031,7 @@ export namespace Prisma {
     chatMessages?: ChatMessageUncheckedCreateNestedManyWithoutBranchInput
     shifts?: CashShiftUncheckedCreateNestedManyWithoutBranchInput
     expenses?: TreasuryExpenseUncheckedCreateNestedManyWithoutBranchInput
+    attendances?: AttendanceRecordUncheckedCreateNestedManyWithoutBranchInput
   }
 
   export type BranchCreateOrConnectWithoutLedgersInput = {
@@ -28251,6 +30122,7 @@ export namespace Prisma {
     chatMessages?: ChatMessageUpdateManyWithoutBranchNestedInput
     shifts?: CashShiftUpdateManyWithoutBranchNestedInput
     expenses?: TreasuryExpenseUpdateManyWithoutBranchNestedInput
+    attendances?: AttendanceRecordUpdateManyWithoutBranchNestedInput
   }
 
   export type BranchUncheckedUpdateWithoutLedgersInput = {
@@ -28272,6 +30144,7 @@ export namespace Prisma {
     chatMessages?: ChatMessageUncheckedUpdateManyWithoutBranchNestedInput
     shifts?: CashShiftUncheckedUpdateManyWithoutBranchNestedInput
     expenses?: TreasuryExpenseUncheckedUpdateManyWithoutBranchNestedInput
+    attendances?: AttendanceRecordUncheckedUpdateManyWithoutBranchNestedInput
   }
 
   export type BranchCreateWithoutOffersInput = {
@@ -28293,6 +30166,7 @@ export namespace Prisma {
     chatMessages?: ChatMessageCreateNestedManyWithoutBranchInput
     shifts?: CashShiftCreateNestedManyWithoutBranchInput
     expenses?: TreasuryExpenseCreateNestedManyWithoutBranchInput
+    attendances?: AttendanceRecordCreateNestedManyWithoutBranchInput
   }
 
   export type BranchUncheckedCreateWithoutOffersInput = {
@@ -28314,6 +30188,7 @@ export namespace Prisma {
     chatMessages?: ChatMessageUncheckedCreateNestedManyWithoutBranchInput
     shifts?: CashShiftUncheckedCreateNestedManyWithoutBranchInput
     expenses?: TreasuryExpenseUncheckedCreateNestedManyWithoutBranchInput
+    attendances?: AttendanceRecordUncheckedCreateNestedManyWithoutBranchInput
   }
 
   export type BranchCreateOrConnectWithoutOffersInput = {
@@ -28351,6 +30226,7 @@ export namespace Prisma {
     chatMessages?: ChatMessageUpdateManyWithoutBranchNestedInput
     shifts?: CashShiftUpdateManyWithoutBranchNestedInput
     expenses?: TreasuryExpenseUpdateManyWithoutBranchNestedInput
+    attendances?: AttendanceRecordUpdateManyWithoutBranchNestedInput
   }
 
   export type BranchUncheckedUpdateWithoutOffersInput = {
@@ -28372,6 +30248,7 @@ export namespace Prisma {
     chatMessages?: ChatMessageUncheckedUpdateManyWithoutBranchNestedInput
     shifts?: CashShiftUncheckedUpdateManyWithoutBranchNestedInput
     expenses?: TreasuryExpenseUncheckedUpdateManyWithoutBranchNestedInput
+    attendances?: AttendanceRecordUncheckedUpdateManyWithoutBranchNestedInput
   }
 
   export type BranchCreateWithoutChatMessagesInput = {
@@ -28393,6 +30270,7 @@ export namespace Prisma {
     offers?: OfferCreateNestedManyWithoutBranchInput
     shifts?: CashShiftCreateNestedManyWithoutBranchInput
     expenses?: TreasuryExpenseCreateNestedManyWithoutBranchInput
+    attendances?: AttendanceRecordCreateNestedManyWithoutBranchInput
   }
 
   export type BranchUncheckedCreateWithoutChatMessagesInput = {
@@ -28414,6 +30292,7 @@ export namespace Prisma {
     offers?: OfferUncheckedCreateNestedManyWithoutBranchInput
     shifts?: CashShiftUncheckedCreateNestedManyWithoutBranchInput
     expenses?: TreasuryExpenseUncheckedCreateNestedManyWithoutBranchInput
+    attendances?: AttendanceRecordUncheckedCreateNestedManyWithoutBranchInput
   }
 
   export type BranchCreateOrConnectWithoutChatMessagesInput = {
@@ -28451,6 +30330,7 @@ export namespace Prisma {
     offers?: OfferUpdateManyWithoutBranchNestedInput
     shifts?: CashShiftUpdateManyWithoutBranchNestedInput
     expenses?: TreasuryExpenseUpdateManyWithoutBranchNestedInput
+    attendances?: AttendanceRecordUpdateManyWithoutBranchNestedInput
   }
 
   export type BranchUncheckedUpdateWithoutChatMessagesInput = {
@@ -28472,6 +30352,7 @@ export namespace Prisma {
     offers?: OfferUncheckedUpdateManyWithoutBranchNestedInput
     shifts?: CashShiftUncheckedUpdateManyWithoutBranchNestedInput
     expenses?: TreasuryExpenseUncheckedUpdateManyWithoutBranchNestedInput
+    attendances?: AttendanceRecordUncheckedUpdateManyWithoutBranchNestedInput
   }
 
   export type BranchCreateWithoutShiftsInput = {
@@ -28493,6 +30374,7 @@ export namespace Prisma {
     offers?: OfferCreateNestedManyWithoutBranchInput
     chatMessages?: ChatMessageCreateNestedManyWithoutBranchInput
     expenses?: TreasuryExpenseCreateNestedManyWithoutBranchInput
+    attendances?: AttendanceRecordCreateNestedManyWithoutBranchInput
   }
 
   export type BranchUncheckedCreateWithoutShiftsInput = {
@@ -28514,6 +30396,7 @@ export namespace Prisma {
     offers?: OfferUncheckedCreateNestedManyWithoutBranchInput
     chatMessages?: ChatMessageUncheckedCreateNestedManyWithoutBranchInput
     expenses?: TreasuryExpenseUncheckedCreateNestedManyWithoutBranchInput
+    attendances?: AttendanceRecordUncheckedCreateNestedManyWithoutBranchInput
   }
 
   export type BranchCreateOrConnectWithoutShiftsInput = {
@@ -28551,6 +30434,7 @@ export namespace Prisma {
     offers?: OfferUpdateManyWithoutBranchNestedInput
     chatMessages?: ChatMessageUpdateManyWithoutBranchNestedInput
     expenses?: TreasuryExpenseUpdateManyWithoutBranchNestedInput
+    attendances?: AttendanceRecordUpdateManyWithoutBranchNestedInput
   }
 
   export type BranchUncheckedUpdateWithoutShiftsInput = {
@@ -28572,6 +30456,7 @@ export namespace Prisma {
     offers?: OfferUncheckedUpdateManyWithoutBranchNestedInput
     chatMessages?: ChatMessageUncheckedUpdateManyWithoutBranchNestedInput
     expenses?: TreasuryExpenseUncheckedUpdateManyWithoutBranchNestedInput
+    attendances?: AttendanceRecordUncheckedUpdateManyWithoutBranchNestedInput
   }
 
   export type BranchCreateWithoutExpensesInput = {
@@ -28593,6 +30478,7 @@ export namespace Prisma {
     offers?: OfferCreateNestedManyWithoutBranchInput
     chatMessages?: ChatMessageCreateNestedManyWithoutBranchInput
     shifts?: CashShiftCreateNestedManyWithoutBranchInput
+    attendances?: AttendanceRecordCreateNestedManyWithoutBranchInput
   }
 
   export type BranchUncheckedCreateWithoutExpensesInput = {
@@ -28614,6 +30500,7 @@ export namespace Prisma {
     offers?: OfferUncheckedCreateNestedManyWithoutBranchInput
     chatMessages?: ChatMessageUncheckedCreateNestedManyWithoutBranchInput
     shifts?: CashShiftUncheckedCreateNestedManyWithoutBranchInput
+    attendances?: AttendanceRecordUncheckedCreateNestedManyWithoutBranchInput
   }
 
   export type BranchCreateOrConnectWithoutExpensesInput = {
@@ -28651,6 +30538,7 @@ export namespace Prisma {
     offers?: OfferUpdateManyWithoutBranchNestedInput
     chatMessages?: ChatMessageUpdateManyWithoutBranchNestedInput
     shifts?: CashShiftUpdateManyWithoutBranchNestedInput
+    attendances?: AttendanceRecordUpdateManyWithoutBranchNestedInput
   }
 
   export type BranchUncheckedUpdateWithoutExpensesInput = {
@@ -28672,6 +30560,187 @@ export namespace Prisma {
     offers?: OfferUncheckedUpdateManyWithoutBranchNestedInput
     chatMessages?: ChatMessageUncheckedUpdateManyWithoutBranchNestedInput
     shifts?: CashShiftUncheckedUpdateManyWithoutBranchNestedInput
+    attendances?: AttendanceRecordUncheckedUpdateManyWithoutBranchNestedInput
+  }
+
+  export type UserCreateWithoutAttendancesInput = {
+    id?: string
+    name: string
+    username: string
+    passwordHash: string
+    pin?: string
+    phone?: string | null
+    role?: string
+    permissions?: string | null
+    isActive?: boolean
+    createdAt?: Date | string
+    branch?: BranchCreateNestedOneWithoutUsersInput
+    specialistProfile?: SpecialistCreateNestedOneWithoutUserInput
+  }
+
+  export type UserUncheckedCreateWithoutAttendancesInput = {
+    id?: string
+    name: string
+    username: string
+    passwordHash: string
+    pin?: string
+    phone?: string | null
+    role?: string
+    branchId?: string | null
+    permissions?: string | null
+    isActive?: boolean
+    createdAt?: Date | string
+    specialistProfile?: SpecialistUncheckedCreateNestedOneWithoutUserInput
+  }
+
+  export type UserCreateOrConnectWithoutAttendancesInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutAttendancesInput, UserUncheckedCreateWithoutAttendancesInput>
+  }
+
+  export type BranchCreateWithoutAttendancesInput = {
+    id?: string
+    name: string
+    code: string
+    address: string
+    phone: string
+    whatsapp?: string | null
+    googleMapsUrl?: string | null
+    isActive?: boolean
+    createdAt?: Date | string
+    users?: UserCreateNestedManyWithoutBranchInput
+    specialists?: SpecialistCreateNestedManyWithoutBranchInput
+    bookings?: BookingCreateNestedManyWithoutBranchInput
+    tickets?: TicketCreateNestedManyWithoutBranchInput
+    products?: ProductCreateNestedManyWithoutBranchInput
+    ledgers?: SpecialistLedgerCreateNestedManyWithoutBranchInput
+    offers?: OfferCreateNestedManyWithoutBranchInput
+    chatMessages?: ChatMessageCreateNestedManyWithoutBranchInput
+    shifts?: CashShiftCreateNestedManyWithoutBranchInput
+    expenses?: TreasuryExpenseCreateNestedManyWithoutBranchInput
+  }
+
+  export type BranchUncheckedCreateWithoutAttendancesInput = {
+    id?: string
+    name: string
+    code: string
+    address: string
+    phone: string
+    whatsapp?: string | null
+    googleMapsUrl?: string | null
+    isActive?: boolean
+    createdAt?: Date | string
+    users?: UserUncheckedCreateNestedManyWithoutBranchInput
+    specialists?: SpecialistUncheckedCreateNestedManyWithoutBranchInput
+    bookings?: BookingUncheckedCreateNestedManyWithoutBranchInput
+    tickets?: TicketUncheckedCreateNestedManyWithoutBranchInput
+    products?: ProductUncheckedCreateNestedManyWithoutBranchInput
+    ledgers?: SpecialistLedgerUncheckedCreateNestedManyWithoutBranchInput
+    offers?: OfferUncheckedCreateNestedManyWithoutBranchInput
+    chatMessages?: ChatMessageUncheckedCreateNestedManyWithoutBranchInput
+    shifts?: CashShiftUncheckedCreateNestedManyWithoutBranchInput
+    expenses?: TreasuryExpenseUncheckedCreateNestedManyWithoutBranchInput
+  }
+
+  export type BranchCreateOrConnectWithoutAttendancesInput = {
+    where: BranchWhereUniqueInput
+    create: XOR<BranchCreateWithoutAttendancesInput, BranchUncheckedCreateWithoutAttendancesInput>
+  }
+
+  export type UserUpsertWithoutAttendancesInput = {
+    update: XOR<UserUpdateWithoutAttendancesInput, UserUncheckedUpdateWithoutAttendancesInput>
+    create: XOR<UserCreateWithoutAttendancesInput, UserUncheckedCreateWithoutAttendancesInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutAttendancesInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutAttendancesInput, UserUncheckedUpdateWithoutAttendancesInput>
+  }
+
+  export type UserUpdateWithoutAttendancesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    username?: StringFieldUpdateOperationsInput | string
+    passwordHash?: StringFieldUpdateOperationsInput | string
+    pin?: StringFieldUpdateOperationsInput | string
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    role?: StringFieldUpdateOperationsInput | string
+    permissions?: NullableStringFieldUpdateOperationsInput | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    branch?: BranchUpdateOneWithoutUsersNestedInput
+    specialistProfile?: SpecialistUpdateOneWithoutUserNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutAttendancesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    username?: StringFieldUpdateOperationsInput | string
+    passwordHash?: StringFieldUpdateOperationsInput | string
+    pin?: StringFieldUpdateOperationsInput | string
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    role?: StringFieldUpdateOperationsInput | string
+    branchId?: NullableStringFieldUpdateOperationsInput | string | null
+    permissions?: NullableStringFieldUpdateOperationsInput | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    specialistProfile?: SpecialistUncheckedUpdateOneWithoutUserNestedInput
+  }
+
+  export type BranchUpsertWithoutAttendancesInput = {
+    update: XOR<BranchUpdateWithoutAttendancesInput, BranchUncheckedUpdateWithoutAttendancesInput>
+    create: XOR<BranchCreateWithoutAttendancesInput, BranchUncheckedCreateWithoutAttendancesInput>
+    where?: BranchWhereInput
+  }
+
+  export type BranchUpdateToOneWithWhereWithoutAttendancesInput = {
+    where?: BranchWhereInput
+    data: XOR<BranchUpdateWithoutAttendancesInput, BranchUncheckedUpdateWithoutAttendancesInput>
+  }
+
+  export type BranchUpdateWithoutAttendancesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    code?: StringFieldUpdateOperationsInput | string
+    address?: StringFieldUpdateOperationsInput | string
+    phone?: StringFieldUpdateOperationsInput | string
+    whatsapp?: NullableStringFieldUpdateOperationsInput | string | null
+    googleMapsUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    users?: UserUpdateManyWithoutBranchNestedInput
+    specialists?: SpecialistUpdateManyWithoutBranchNestedInput
+    bookings?: BookingUpdateManyWithoutBranchNestedInput
+    tickets?: TicketUpdateManyWithoutBranchNestedInput
+    products?: ProductUpdateManyWithoutBranchNestedInput
+    ledgers?: SpecialistLedgerUpdateManyWithoutBranchNestedInput
+    offers?: OfferUpdateManyWithoutBranchNestedInput
+    chatMessages?: ChatMessageUpdateManyWithoutBranchNestedInput
+    shifts?: CashShiftUpdateManyWithoutBranchNestedInput
+    expenses?: TreasuryExpenseUpdateManyWithoutBranchNestedInput
+  }
+
+  export type BranchUncheckedUpdateWithoutAttendancesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    code?: StringFieldUpdateOperationsInput | string
+    address?: StringFieldUpdateOperationsInput | string
+    phone?: StringFieldUpdateOperationsInput | string
+    whatsapp?: NullableStringFieldUpdateOperationsInput | string | null
+    googleMapsUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    users?: UserUncheckedUpdateManyWithoutBranchNestedInput
+    specialists?: SpecialistUncheckedUpdateManyWithoutBranchNestedInput
+    bookings?: BookingUncheckedUpdateManyWithoutBranchNestedInput
+    tickets?: TicketUncheckedUpdateManyWithoutBranchNestedInput
+    products?: ProductUncheckedUpdateManyWithoutBranchNestedInput
+    ledgers?: SpecialistLedgerUncheckedUpdateManyWithoutBranchNestedInput
+    offers?: OfferUncheckedUpdateManyWithoutBranchNestedInput
+    chatMessages?: ChatMessageUncheckedUpdateManyWithoutBranchNestedInput
+    shifts?: CashShiftUncheckedUpdateManyWithoutBranchNestedInput
+    expenses?: TreasuryExpenseUncheckedUpdateManyWithoutBranchNestedInput
   }
 
   export type UserCreateManyBranchInput = {
@@ -28839,6 +30908,19 @@ export namespace Prisma {
     createdAt?: Date | string
   }
 
+  export type AttendanceRecordCreateManyBranchInput = {
+    id?: string
+    userId: string
+    date: string
+    checkInTime?: Date | string
+    checkOutTime?: Date | string | null
+    status?: string
+    notes?: string | null
+    ipAddress?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
   export type UserUpdateWithoutBranchInput = {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
@@ -28851,6 +30933,7 @@ export namespace Prisma {
     isActive?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     specialistProfile?: SpecialistUpdateOneWithoutUserNestedInput
+    attendances?: AttendanceRecordUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutBranchInput = {
@@ -28865,6 +30948,7 @@ export namespace Prisma {
     isActive?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     specialistProfile?: SpecialistUncheckedUpdateOneWithoutUserNestedInput
+    attendances?: AttendanceRecordUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateManyWithoutBranchInput = {
@@ -29340,6 +31424,97 @@ export namespace Prisma {
     recordedBy?: StringFieldUpdateOperationsInput | string
     date?: DateTimeFieldUpdateOperationsInput | Date | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type AttendanceRecordUpdateWithoutBranchInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    date?: StringFieldUpdateOperationsInput | string
+    checkInTime?: DateTimeFieldUpdateOperationsInput | Date | string
+    checkOutTime?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    ipAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    user?: UserUpdateOneRequiredWithoutAttendancesNestedInput
+  }
+
+  export type AttendanceRecordUncheckedUpdateWithoutBranchInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    date?: StringFieldUpdateOperationsInput | string
+    checkInTime?: DateTimeFieldUpdateOperationsInput | Date | string
+    checkOutTime?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    ipAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type AttendanceRecordUncheckedUpdateManyWithoutBranchInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    date?: StringFieldUpdateOperationsInput | string
+    checkInTime?: DateTimeFieldUpdateOperationsInput | Date | string
+    checkOutTime?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    ipAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type AttendanceRecordCreateManyUserInput = {
+    id?: string
+    branchId: string
+    date: string
+    checkInTime?: Date | string
+    checkOutTime?: Date | string | null
+    status?: string
+    notes?: string | null
+    ipAddress?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type AttendanceRecordUpdateWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    date?: StringFieldUpdateOperationsInput | string
+    checkInTime?: DateTimeFieldUpdateOperationsInput | Date | string
+    checkOutTime?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    ipAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    branch?: BranchUpdateOneRequiredWithoutAttendancesNestedInput
+  }
+
+  export type AttendanceRecordUncheckedUpdateWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    branchId?: StringFieldUpdateOperationsInput | string
+    date?: StringFieldUpdateOperationsInput | string
+    checkInTime?: DateTimeFieldUpdateOperationsInput | Date | string
+    checkOutTime?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    ipAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type AttendanceRecordUncheckedUpdateManyWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    branchId?: StringFieldUpdateOperationsInput | string
+    date?: StringFieldUpdateOperationsInput | string
+    checkInTime?: DateTimeFieldUpdateOperationsInput | Date | string
+    checkOutTime?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    ipAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type BookingCreateManySpecialistInput = {

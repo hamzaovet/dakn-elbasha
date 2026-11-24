@@ -30,25 +30,27 @@ model Branch {
   chatMessages  ChatMessage[]
   shifts        CashShift[]
   expenses      TreasuryExpense[]
+  attendances   AttendanceRecord[]
 }
 
 // ----------------------------------------------------
 // 2. STAFF & USERS RBAC (المستخدمين والصلاحيات)
 // ----------------------------------------------------
 model User {
-  id                String      @id @default(cuid())
+  id                String             @id @default(cuid())
   name              String
-  username          String      @unique // maestro, hadayek-mgr, nasr-mgr, cashier1, etc.
+  username          String             @unique // maestro, hadayek-mgr, nasr-mgr, cashier1, etc.
   passwordHash      String // 123456789
-  pin               String      @default("157230") // PIN Code
+  pin               String             @default("157230") // PIN Code
   phone             String?
-  role              String      @default("owner") // owner, general_manager, manager, cashier, specialist, worker
+  role              String             @default("owner") // owner, general_manager, manager, cashier, specialist, worker
   branchId          String?
-  branch            Branch?     @relation(fields: [branchId], references: [id], onDelete: SetNull)
+  branch            Branch?            @relation(fields: [branchId], references: [id], onDelete: SetNull)
   permissions       String? // JSON array
-  isActive          Boolean     @default(true)
-  createdAt         DateTime    @default(now())
+  isActive          Boolean            @default(true)
+  createdAt         DateTime           @default(now())
   specialistProfile Specialist?
+  attendances       AttendanceRecord[]
 }
 
 // ----------------------------------------------------
@@ -339,4 +341,23 @@ model TreasuryExpense {
   recordedBy    String   @default("الكاشير")
   date          DateTime @default(now())
   createdAt     DateTime @default(now())
+}
+
+// ----------------------------------------------------
+// 15. DIGITAL ATTENDANCE & PUNCH (بصمة الحضور والانصراف الرقمية)
+// ----------------------------------------------------
+model AttendanceRecord {
+  id           String    @id @default(cuid())
+  userId       String
+  user         User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  branchId     String
+  branch       Branch    @relation(fields: [branchId], references: [id], onDelete: Cascade)
+  date         String // YYYY-MM-DD
+  checkInTime  DateTime  @default(now())
+  checkOutTime DateTime?
+  status       String    @default("PRESENT") // PRESENT, LATE, LEFT_EARLY, COMPLETED
+  notes        String?
+  ipAddress    String?
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
 }

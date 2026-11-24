@@ -340,12 +340,14 @@ export async function PATCH(req: Request) {
 
     // 5. SETTLE CASHIER (Cashier takes payment, prints thermal receipt)
     if (action === "SETTLE_CASHIER") {
-      const { paymentMethod, discount, tipAmount, cashierName, notes } = body;
+      const { paymentMethod, discount, tipAmount, cashierName, notes, customerName, customerPhone } = body;
       const discountNum = Number(discount || 0);
       const tipNum = Number(tipAmount || 0);
       const finalTotal = Math.max(0, ticket.servicesTotal + ticket.retailTotal - discountNum + tipNum);
 
       const endTime = ticket.endTime || new Date();
+      const finalCustName = (customerName && customerName.trim()) || ticket.customerName;
+      const finalCustPhone = (customerPhone && customerPhone.trim()) || ticket.customerPhone;
 
       const updated = await prisma.ticket.update({
         where: { id: ticketId },
@@ -358,6 +360,8 @@ export async function PATCH(req: Request) {
           cashierName: cashierName || "كاشير مجموعة الباشا VIP",
           notes: notes || null,
           endTime,
+          customerName: finalCustName,
+          customerPhone: finalCustPhone,
         },
       });
 

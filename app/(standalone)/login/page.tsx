@@ -61,6 +61,7 @@ export default function StaffLoginPage() {
         } else if (data.user.role === "cashier") {
           router.push("/pos");
         } else if (
+          data.user.role === "booking_dispatcher" ||
           data.user.role === "coordinator" ||
           data.user.role === "receptionist"
         ) {

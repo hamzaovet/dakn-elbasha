@@ -4,6 +4,7 @@ import React, { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import CardQRModal from "@/components/CardQRModal";
+import AttendanceManagementTab from "@/components/AttendanceManagementTab";
 import {
   LayoutDashboard,
   Scissors,
@@ -89,6 +90,7 @@ export default function AdminPage() {
     | "users"
     | "branches"
     | "settings"
+    | "attendance"
   >("overview");
 
   // Data States
@@ -377,13 +379,16 @@ export default function AdminPage() {
       if (
         user.role !== "owner" &&
         user.role !== "general_manager" &&
-        user.role !== "manager"
+        user.role !== "manager" &&
+        user.role !== "warehouse_manager"
       ) {
         router.push("/login");
         return;
       }
       setCurrentUser(user);
-      if (user.branchId && user.role === "manager") {
+      if (user.role === "warehouse_manager") {
+        setActiveTab("inventory");
+      } else if (user.branchId && user.role === "manager") {
         setSelectedBranchId(user.branchId);
       }
     } catch {
@@ -1689,6 +1694,7 @@ export default function AdminPage() {
       label: isWomenTheme ? "مخزن ومستحضرات السبا 🛍️" : "المخزن والتجميل 🛍️",
       icon: ShoppingBag,
     },
+    { id: "attendance", label: "بصمة الحضور والانصراف ⏰", icon: Clock },
     { id: "customers", label: "قاعدة العملاء 👥", icon: Users },
     ...(isOwnerOrGM
       ? [
@@ -4327,11 +4333,13 @@ export default function AdminPage() {
                         }`}>
                           {u.role === "owner" && "المالك (Maestro) 👑"}
                           {u.role === "general_manager" && "المدير العام 🏢"}
+                          {u.role === "booking_dispatcher" && "مسئول الحجوزات المركزي 📅"}
+                          {u.role === "warehouse_manager" && "مسئول المخزن العام 📦"}
                           {u.role === "manager" && "مدير فرع 👔"}
                           {u.role === "cashier" && "كاشير POS 💳"}
                           {u.role === "specialist" && "متخصص / خبيرة ✂️"}
                           {u.role === "worker" && "عامل ضيافة ☕"}
-                          {!["owner", "general_manager", "manager", "cashier", "specialist", "worker"].includes(u.role) && u.role}
+                          {!["owner", "general_manager", "booking_dispatcher", "warehouse_manager", "manager", "cashier", "specialist", "worker"].includes(u.role) && u.role}
                         </span>
                       </td>
                       <td className="p-3.5 text-slate-400">{u.branchName}</td>
@@ -4860,6 +4868,19 @@ export default function AdminPage() {
             </form>
           </div>
         )}
+
+        {/* 13. ATTENDANCE & STAFF PUNCH TAB */}
+        {activeTab === "attendance" && (
+          <AttendanceManagementTab
+            branches={branches}
+            users={users}
+            isWomenTheme={isWomenTheme}
+            isNewSkinTheme={isNewSkinTheme}
+            activeBranchId={activeBranchId}
+            showToast={showToast}
+            currentUser={currentUser}
+          />
+        )}
       </main>
 
       {/* ─────────────────────────────────────────────────────────────
@@ -5099,7 +5120,9 @@ export default function AdminPage() {
                     className="w-full py-2 px-3 rounded-xl bg-black/60 border border-white/10 text-white focus:outline-none focus:border-amber-400"
                   >
                     <option value="owner">المالك (Maestro)</option>
-                    <option value="general_manager">المدير العام</option>
+                    <option value="general_manager">المدير العام للمجموعة</option>
+                    <option value="booking_dispatcher">مسئول الحجوزات المركزي لكافة الفروع</option>
+                    <option value="warehouse_manager">مسئول المخزن العام ومستلزمات الفروع</option>
                     <option value="manager">مدير فرع</option>
                     <option value="cashier">كاشير نقطة البيع POS</option>
                     <option value="specialist">متخصص / خبيرة (حلاقة أو سبا)</option>

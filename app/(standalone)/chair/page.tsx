@@ -64,6 +64,11 @@ export default function SpecialistChairPage() {
   // Elapsed time on chair
   const [elapsedMinutes, setElapsedMinutes] = useState(0);
 
+  // Digital Attendance State (بصمة الحضور والانصراف الرقمية)
+  const [isCheckedIn, setIsCheckedIn] = useState<boolean>(false);
+  const [attendanceRecord, setAttendanceRecord] = useState<any>(null);
+  const [punchingAttendance, setPunchingAttendance] = useState<boolean>(false);
+
   // Action status
   const [actionLoading, setActionLoading] = useState(false);
 
@@ -81,10 +86,85 @@ export default function SpecialistChairPage() {
         return;
       }
       setCurrentUser(user);
+      checkAttendanceStatus(user.id);
     } catch {
       router.push("/login");
     }
   }, [router]);
+
+  const checkAttendanceStatus = async (uid: string) => {
+    try {
+      const res = await fetch("/api/attendance", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ userId: uid, action: "STATUS" }),
+      });
+      const data = await res.json();
+      if (data.success) {
+        setIsCheckedIn(data.isCheckedIn);
+        setAttendanceRecord(data.activeRecord);
+      }
+    } catch {}
+  };
+
+  const handlePunchAttendance = async (action: "CHECK_IN" | "CHECK_OUT") => {
+    if (!currentUser) return;
+    try {
+      setPunchingAttendance(true);
+      const res = await fetch("/api/attendance", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          userId: currentUser.id,
+          branchId: specialist?.branchId || currentUser.branchId,
+          action,
+        }),
+      });
+      const data = await res.json();
+      if (data.success) {
+        notify("success", data.message);
+        checkAttendanceStatus(currentUser.id);
+      } else {
+        notify("error", data.error || "فشل تسجيل البصمة");
+      }
+    } catch {
+      notify("error", "حدث خطأ أثناء تسجيل البصمة");
+    } finally {
+      setPunchingAttendance(false);
+    }
+  };
+
+  // One-Tap Direct Seating: Zero typing required! Specialist does NOT enter name or phone!
+  const handleStartDirectWalkIn = async () => {
+    if (!specialist) return;
+    try {
+      setStartingTicket(true);
+      const chairName = isWomenTheme ? `محطة #${specialist.chairNumber || 1}` : `كرسي #${specialist.chairNumber || 1}`;
+      const res = await fetch("/api/tickets", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          specialistId: specialist.id,
+          branchId: specialist.branchId,
+          customerName: `عميل صالة (${chairName})`,
+          customerPhone: null,
+        }),
+      });
+
+      const data = await res.json();
+      if (data.success && data.ticket) {
+        setActiveTicket(data.ticket);
+        fetchChairData();
+        notify("success", `تم إجلاس العميل وبدء الجلسة فوراً على الكرسي 💺✨`);
+      } else {
+        notify("error", data.error || "فشل بدء التذكرة");
+      }
+    } catch {
+      notify("error", "تعذر الاتصال بالخادم");
+    } finally {
+      setStartingTicket(false);
+    }
+  };
 
   // Load Specialist Profile, Active Ticket & Services
   const fetchChairData = async () => {
@@ -505,6 +585,27 @@ export default function SpecialistChairPage() {
 
         {/* Chair Status & Actions */}
         <div className="flex items-center gap-2 sm:gap-3">
+          {/* Digital Attendance Punch */}
+          <button
+            onClick={() => handlePunchAttendance(isCheckedIn ? "CHECK_OUT" : "CHECK_IN")}
+            disabled={punchingAttendance}
+            className={`py-1.5 px-3 rounded-xl text-xs font-black transition flex items-center gap-1.5 border shadow-sm ${
+              isCheckedIn
+                ? "bg-emerald-500/15 text-emerald-300 border-emerald-500/40 hover:bg-emerald-500/25"
+                : "bg-rose-500/15 text-rose-300 border-rose-500/40 hover:bg-rose-500/25 animate-pulse"
+            }`}
+            title={isCheckedIn ? "أنت حاضر حالياً - انقر لتسجيل الانصراف" : "انقر لتسجيل بصمة حضور الوردية"}
+          >
+            <Clock className="w-3.5 h-3.5" />
+            <span>
+              {punchingAttendance
+                ? "جاري المعالجة..."
+                : isCheckedIn
+                ? "حاضر 🟢 (تسجيل انصراف 🚪)"
+                : "تسجيل بصمة حضور ⏰"}
+            </span>
+          </button>
+
           {waitingLoungeTickets.length > 0 && (
             <span className="py-1 px-3 rounded-full text-xs font-black bg-sky-500/20 text-sky-300 border border-sky-500/30 flex items-center gap-1 animate-pulse">
               <span>🛋️</span>
@@ -571,13 +672,21 @@ export default function SpecialistChairPage() {
                 </p>
               </div>
 
-              <div className="flex flex-wrap items-center justify-center gap-3 pt-2">
+              <div className="flex flex-col sm:flex-row items-center justify-center gap-3 pt-4">
+                <button
+                  onClick={handleStartDirectWalkIn}
+                  disabled={startingTicket}
+                  className="w-full sm:w-auto py-3.5 px-8 rounded-2xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-black font-black text-sm transition flex items-center justify-center gap-2.5 shadow-xl shadow-amber-500/20 active:scale-95"
+                >
+                  <Scissors className="w-5 h-5 text-black" />
+                  <span>{startingTicket ? "جاري فتح الجلسة..." : "إجلاس عميل صالة فوراً وبدء الجلسة 💺✨"}</span>
+                </button>
                 <button
                   onClick={() => setShowWalkInModal(true)}
-                  className="py-2.5 px-6 rounded-2xl bg-white/5 hover:bg-white/10 text-slate-300 hover:text-white font-bold text-xs transition flex items-center gap-2 border border-white/10"
+                  className="w-full sm:w-auto py-3 px-5 rounded-2xl bg-white/5 hover:bg-white/10 text-slate-300 hover:text-white font-bold text-xs transition flex items-center justify-center gap-2 border border-white/10"
                 >
                   <Plus className="w-4 h-4 text-amber-400" />
-                  <span>إجلاس عميل يدوي مباشر (اختياري) ✂️</span>
+                  <span>إدخال اسم عميل مخصص (اختياري)</span>
                 </button>
               </div>
             </div>
