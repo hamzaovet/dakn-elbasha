@@ -1199,10 +1199,10 @@ export default function HomePage() {
           <button
             onClick={() => setShowQrModal(true)}
             className="py-1.5 px-3 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-slate-300 text-xs font-bold transition flex items-center gap-1.5 shrink-0 cursor-pointer"
-            title="كارت الـ 2 كيو آر كود"
+            title="كارت الـ QR الشامل"
           >
             <QrCode className={`w-4 h-4 ${themeAccentText} shrink-0`} />
-            <span className="hidden lg:inline">كارت الـ 2 QR 🪪</span>
+            <span className="hidden lg:inline">كارت الـ QR الملكي 🪪</span>
           </button>
 
           {/* STAFF LOGIN BUTTON */}
