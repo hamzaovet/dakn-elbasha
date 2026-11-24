@@ -62,6 +62,16 @@ export default function CashierPosPage() {
   const [admittingClient, setAdmittingClient] = useState<boolean>(false);
   const [loading, setLoading] = useState(true);
 
+  // Initial Services Selected by Cashier in Admit Modal
+  const [admitSelectedServices, setAdmitSelectedServices] = useState<any[]>([]);
+  const [servicesCatalog, setServicesCatalog] = useState<any[]>([]);
+  const [admitServiceCategory, setAdmitServiceCategory] = useState<string>("ALL");
+
+  // Supervisor Cancellation Request Modal State
+  const [showCancelRequestModal, setShowCancelRequestModal] = useState<any>(null); // ticket
+  const [cancelReason, setCancelReason] = useState<string>("");
+  const [submittingCancelRequest, setSubmittingCancelRequest] = useState<boolean>(false);
+
   // Active Ticket Selected for Checkout
   const [selectedTicket, setSelectedTicket] = useState<any>(null);
 
@@ -257,57 +267,85 @@ export default function CashierPosPage() {
     )
   );
 
-  // Load Data
-  const fetchPosData = async () => {
+  const isFetchingRef = useRef<boolean>(false);
+
+  // 1. Static Data (Branches, Products, Settings, Services Catalog)
+  const fetchStaticData = async () => {
     try {
-      const [resB, resT, resP, resSpec, resSet] = await Promise.all([
+      const [resB, resP, resSet, resSrv] = await Promise.all([
         fetch("/api/branches", { cache: "no-store" }),
-        fetch(`/api/tickets?branchId=${activeBranchId || "ALL"}&activeOnly=true`, { cache: "no-store" }),
         fetch(`/api/products?branchId=${activeBranchId || "ALL"}`, { cache: "no-store" }),
-        fetch(`/api/specialists?branchId=${activeBranchId || "ALL"}`, { cache: "no-store" }),
         fetch("/api/settings", { cache: "no-store" }),
+        fetch("/api/services", { cache: "no-store" }),
       ]);
 
-      const [dataB, dataT, dataP, dataSpec, dataSet] = await Promise.all([
+      const [dataB, dataP, dataSet, dataSrv] = await Promise.all([
         resB.json(),
-        resT.json(),
         resP.json(),
-        resSpec.json(),
         resSet.json(),
+        resSrv.json(),
       ]);
 
       if (dataSet.success && dataSet.settings) {
         setSettings(dataSet.settings);
       }
-
       if (dataB.success && dataB.branches) {
         setBranches(dataB.branches);
         if (!selectedBranchId && dataB.branches.length > 0) {
           setSelectedBranchId(dataB.branches[0].id);
         }
       }
+      if (dataP.success && dataP.products) {
+        setRetailProducts(dataP.products);
+      }
+      if (dataSrv.success && dataSrv.services) {
+        setServicesCatalog(dataSrv.services);
+      }
+    } catch (e) {
+      console.error("Static data fetch error:", e);
+    }
+  };
+
+  // 2. High-Speed Dynamic Polling (Only Active Tickets & Specialist Statuses)
+  const fetchDynamicPosData = async () => {
+    if (isFetchingRef.current) return;
+    // Pause polling if tab is hidden or modal is open to eliminate any UI lag or database lock
+    if (typeof document !== "undefined" && document.hidden) return;
+    if (showReceiptModal || showCloseShiftModal || showAdmitModal || showTreasuryModal || showAdvanceModal || showCancelRequestModal) return;
+
+    try {
+      isFetchingRef.current = true;
+      const [resT, resSpec] = await Promise.all([
+        fetch(`/api/tickets?branchId=${activeBranchId || "ALL"}&activeOnly=true`, { cache: "no-store" }),
+        fetch(`/api/specialists?branchId=${activeBranchId || "ALL"}`, { cache: "no-store" }),
+      ]);
+
+      const [dataT, dataSpec] = await Promise.all([resT.json(), resSpec.json()]);
 
       if (dataT.success && dataT.tickets) {
         setTickets(dataT.tickets);
-        // If a ticket is currently selected, keep it updated
+        // If a ticket is currently selected, update only if changed
         if (selectedTicket) {
           const fresh = dataT.tickets.find((t: any) => t.id === selectedTicket.id);
-          if (fresh) setSelectedTicket(fresh);
+          if (fresh && (fresh.status !== selectedTicket.status || fresh.servicesTotal !== selectedTicket.servicesTotal)) {
+            setSelectedTicket(fresh);
+          }
         }
-      }
-
-      if (dataP.success && dataP.products) {
-        setRetailProducts(dataP.products);
       }
 
       if (dataSpec.success && dataSpec.specialists) {
         setSpecialists(dataSpec.specialists);
       }
     } catch (e) {
-      console.error(e);
+      console.error("Dynamic POS fetch error:", e);
     } finally {
+      isFetchingRef.current = false;
       setLoading(false);
     }
+  };
+
+  const fetchPosData = async () => {
+    await Promise.all([fetchStaticData(), fetchDynamicPosData()]);
   };
 
   const handleQuickShiftStatus = async (specId: string, status: string, reason: string) => {
@@ -366,6 +404,7 @@ export default function CashierPosPage() {
           customerName: admitCustomerName.trim(),
           customerPhone: admitCustomerPhone.trim() || null,
           status: finalMode,
+          initialServices: admitSelectedServices,
           waitingMode: isFirstAvailable ? "FIRST_AVAILABLE" : "SPECIFIC_SPECIALIST",
           notes: isFirstAvailable
             ? "🛋️ صالة الاستراحة: في انتظار أول كابتن يفضى"
@@ -385,7 +424,8 @@ export default function CashierPosPage() {
         setShowAdmitModal(false);
         setAdmitCustomerName("");
         setAdmitCustomerPhone("");
-        await fetchPosData();
+        setAdmitSelectedServices([]);
+        await fetchDynamicPosData();
       } else {
         showToast("error", data.error || "فشل تسجيل العميل");
       }
@@ -393,6 +433,37 @@ export default function CashierPosPage() {
       showToast("error", "تعذر الاتصال بالخادم");
     } finally {
       setAdmittingClient(false);
+    }
+  };
+
+  // Submit Cancellation Request to General Supervisor (Ahmed) or Branch Manager
+  const handleSubmitCancelRequest = async () => {
+    if (!showCancelRequestModal) return;
+    try {
+      setSubmittingCancelRequest(true);
+      const res = await fetch("/api/tickets", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          action: "REQUEST_CANCELLATION",
+          ticketId: showCancelRequestModal.id,
+          reason: cancelReason.trim() || "طلب إلغاء من الكاشير",
+          requestedBy: currentUser?.name || "كاشير الصالون",
+        }),
+      });
+      const data = await res.json();
+      if (data.success) {
+        showToast("info", "تم إرسال طلب إلغاء الفاتورة للمشرف العام (أ/ أحمد) بنجاح ⏳");
+        setShowCancelRequestModal(null);
+        setCancelReason("");
+        await fetchDynamicPosData();
+      } else {
+        showToast("error", data.error || "فشل إرسال طلب الإلغاء");
+      }
+    } catch {
+      showToast("error", "تعذر الاتصال بالخادم");
+    } finally {
+      setSubmittingCancelRequest(false);
     }
   };
 
@@ -579,8 +650,9 @@ export default function CashierPosPage() {
 
   useEffect(() => {
     if (currentUser) {
-      fetchPosData();
-      const interval = setInterval(fetchPosData, 4000);
+      fetchStaticData();
+      fetchDynamicPosData();
+      const interval = setInterval(fetchDynamicPosData, 7500);
       return () => clearInterval(interval);
     }
   }, [currentUser, selectedBranchId, activeBranchId]);
@@ -1378,6 +1450,268 @@ ${servicesText ? `*الخدمات:* \n${servicesText}\n` : ""}${productsText ? `
     window.open(`https://wa.me/${cleanPhone}?text=${encodeURIComponent(message)}`, "_blank");
   };
 
+  // 4. Shift Handover Z-Report Thermal 80mm Print Engine (Xprinter)
+  const executePrintShiftZReport = (shiftData: any, stats: any) => {
+    const s = shiftData || openShift;
+    const st = stats || shiftStats;
+    if (!s) return;
+
+    const printWin = window.open("", "_blank", "width=420,height=680");
+    if (!printWin) {
+      window.print();
+      return;
+    }
+
+    const branchName = s.branch?.name || currentUser?.branchName || (isWomenTheme ? "فرع حمام الباشا VIP" : "فرع صالون دقن الباشا VIP");
+    const openTimeStr = s.openedAt ? new Date(s.openedAt).toLocaleString("ar-EG") : "الآن";
+    const closeTimeStr = new Date().toLocaleString("ar-EG");
+
+    printWin.document.write(`
+      <!DOCTYPE html>
+      <html dir="rtl" lang="ar">
+      <head>
+        <meta charset="utf-8" />
+        <title>تقرير إقفال الوردية Z-Report #${s.shiftNumber || 1}</title>
+        <style>
+          @page { size: 80mm auto; margin: 0; }
+          * { box-sizing: border-box; margin: 0; padding: 0; }
+          body {
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Tahoma, Arial, sans-serif;
+            width: 76mm;
+            margin: 0 auto;
+            padding: 4mm 2.5mm;
+            color: #000;
+            background: #fff;
+            font-size: 11px;
+            line-height: 1.35;
+          }
+          .text-center { text-align: center; }
+          .bold { font-weight: bold; }
+          .black { font-weight: 900; }
+          .dashed { border-bottom: 1.5px dashed #000; margin: 6px 0; }
+          .double { border-bottom: 2.5px double #000; margin: 6px 0; }
+          .row { display: flex; justify-content: space-between; margin: 2px 0; }
+          .box { border: 2px solid #000; padding: 6px; margin: 6px 0; background: #fafafa; font-weight: bold; }
+          table { width: 100%; border-collapse: collapse; font-size: 10.5px; }
+          th, td { padding: 3px 2px; }
+        </style>
+      </head>
+      <body>
+        <div class="text-center">
+          <div style="font-size: 22px;">👑</div>
+          <div class="black" style="font-size: 14px;">مجموعة صالونات وسبا الباشا VIP</div>
+          <div class="bold" style="font-size: 12px; margin-top: 1px;">تقرير تقفيل الوردية اليومي (Z-REPORT)</div>
+          <div style="font-size: 10px; margin-top: 2px;">${branchName}</div>
+        </div>
+
+        <div class="dashed"></div>
+
+        <div style="font-size: 10.5px;">
+          <div class="row"><span>رقم الوردية:</span><span class="bold">#${s.shiftNumber || 1}</span></div>
+          <div class="row"><span>الكاشير المسئول:</span><span class="bold">${s.openedBy || currentUser?.name || "كاشير الباشا"}</span></div>
+          <div class="row"><span>المستلم المعتمد:</span><span>${shiftForm.handedTo}</span></div>
+          <div class="row"><span>بدء الوردية:</span><span style="font-family: monospace;">${openTimeStr}</span></div>
+          <div class="row"><span>إقفال الوردية:</span><span style="font-family: monospace;">${closeTimeStr}</span></div>
+        </div>
+
+        <div class="dashed"></div>
+
+        <div style="font-size: 11px;">
+          <div class="bold" style="margin-bottom: 3px;">📊 تفصيل الإيرادات:</div>
+          <div class="row"><span>إيراد الخدمات والحلاقة:</span><span style="font-family: monospace;" class="bold">${st?.servicesTotal || 0} ج.م</span></div>
+          <div class="row"><span>إيراد مبيعات المنتجات:</span><span style="font-family: monospace;" class="bold">${st?.retailTotal || 0} ج.م</span></div>
+          <div class="row"><span>إجمالي الخصومات:</span><span style="font-family: monospace; color: #b00;">-${st?.discountTotal || 0} ج.م</span></div>
+          <div class="row"><span>إجمالي الإكرامية والخدمة:</span><span style="font-family: monospace;">+${st?.tipTotal || 0} ج.م</span></div>
+        </div>
+
+        <div class="box">
+          <div class="row" style="font-size: 13px;">
+            <span>إجمالي الدخل الصافي:</span>
+            <span style="font-family: monospace; font-size: 14px;">${st?.netTotal || 0} ج.م</span>
+          </div>
+        </div>
+
+        <div class="dashed"></div>
+
+        <div style="font-size: 10.5px;">
+          <div class="bold" style="margin-bottom: 3px;">💳 تفقيط وسائل الدفع:</div>
+          <div class="row"><span>نقداً (كاش الدرج):</span><span class="bold" style="font-family: monospace;">${st?.cashRevenue || 0} ج.م</span></div>
+          <div class="row"><span>بطاقة بنكية (فيزا):</span><span style="font-family: monospace;">${st?.cardRevenue || 0} ج.م</span></div>
+          <div class="row"><span>انستاباي (InstaPay):</span><span style="font-family: monospace;">${st?.instapayRevenue || 0} ج.م</span></div>
+          <div class="row"><span>فودافون كاش / محافظ:</span><span style="font-family: monospace;">${st?.vodafoneRevenue || 0} ج.م</span></div>
+        </div>
+
+        <div class="dashed"></div>
+
+        <div style="font-size: 10.5px;">
+          <div class="bold" style="margin-bottom: 3px;">💸 الخصومات النقدية من الدرج:</div>
+          <div class="row"><span>سلف الكباتن المصروفة:</span><span style="font-family: monospace;">-${st?.advancesTotal || 0} ج.م</span></div>
+          <div class="row"><span>مصروفات نثرية:</span><span style="font-family: monospace;">-${st?.expensesTotal || 0} ج.م</span></div>
+        </div>
+
+        <div class="box" style="background: #f0fff4; border-color: #000;">
+          <div class="row" style="font-size: 13px;">
+            <span>صافي النقدية المسلمة للعهدة:</span>
+            <span style="font-family: monospace; font-size: 15px;">${shiftForm.actualCash || (st?.expectedCash || 0)} ج.م</span>
+          </div>
+        </div>
+
+        <div class="dashed"></div>
+
+        <div style="margin-top: 10px; font-size: 9.5px;">
+          <div class="row" style="margin-top: 6px;">
+            <div style="width: 48%; text-align: center; border-top: 1px solid #000; padding-top: 4px;">
+              توقيع الكاشير المسلّم<br/>(${s.openedBy || currentUser?.name})
+            </div>
+            <div style="width: 48%; text-align: center; border-top: 1px solid #000; padding-top: 4px;">
+              توقيع المستلم والاعتماد<br/>(${shiftForm.handedTo})
+            </div>
+          </div>
+        </div>
+
+        <div class="text-center" style="font-size: 8.5px; color: #555; margin-top: 10px;">
+          تم إقفال الوردية بنجاح • صالونات وسبا الباشا VIP 👑<br/>
+          تطوير شركة أوركا للحلول البرمجية (Orca Tech) 🐬
+        </div>
+
+        <script>
+          window.onload = function() {
+            window.focus();
+            window.print();
+            setTimeout(function() { window.close(); }, 1200);
+          };
+        </script>
+      </body>
+      </html>
+    `);
+    printWin.document.close();
+  };
+
+  // 5. Shift Handover A4 Full Corporate Audit Report
+  const executePrintShiftA4Report = (shiftData: any, stats: any) => {
+    const s = shiftData || openShift;
+    const st = stats || shiftStats;
+    if (!s) return;
+
+    const printWin = window.open("", "_blank", "width=850,height=950");
+    if (!printWin) {
+      window.print();
+      return;
+    }
+
+    const branchName = s.branch?.name || currentUser?.branchName || (isWomenTheme ? "فرع حمام الباشا VIP" : "فرع صالون دقن الباشا VIP");
+    const openTimeStr = s.openedAt ? new Date(s.openedAt).toLocaleString("ar-EG") : "الآن";
+    const closeTimeStr = new Date().toLocaleString("ar-EG");
+
+    printWin.document.write(`
+      <!DOCTYPE html>
+      <html dir="rtl" lang="ar">
+      <head>
+        <meta charset="utf-8" />
+        <title>تقرير تقفيل وردية رسمي A4 #${s.shiftNumber || 1}</title>
+        <style>
+          @page { size: A4 portrait; margin: 12mm 15mm; }
+          * { box-sizing: border-box; margin: 0; padding: 0; }
+          body {
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Tahoma, Arial, sans-serif;
+            color: #000;
+            background: #fff;
+            padding: 10mm;
+            font-size: 13px;
+            line-height: 1.5;
+          }
+          .header { display: flex; justify-content: space-between; align-items: center; border-bottom: 2.5px solid #d4af37; padding-bottom: 12px; margin-bottom: 16px; }
+          .title { font-size: 20px; font-weight: 900; color: #111; }
+          .badge { display: inline-block; padding: 4px 12px; background: #fdf6e2; border: 1px solid #d4af37; border-radius: 8px; font-weight: bold; font-size: 13px; }
+          .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 16px; }
+          .card { border: 1px solid #ddd; border-radius: 10px; padding: 12px; background: #fafafa; }
+          table { width: 100%; border-collapse: collapse; margin-bottom: 16px; font-size: 12.5px; }
+          th { background: #1a1a24; color: #fff; padding: 8px; text-align: right; }
+          td { border: 1px solid #ddd; padding: 8px; }
+          .stamps { display: flex; justify-content: space-between; margin-top: 35px; }
+          .stamp-box { width: 30%; border: 1px dashed #666; border-radius: 10px; padding: 12px; text-align: center; min-height: 90px; }
+        </style>
+      </head>
+      <body>
+        <div class="header">
+          <div>
+            <div class="title">مجموعة صالونات وسبا وعيادات الباشا VIP 👑</div>
+            <div style="font-weight: bold; font-size: 14px; color: #555;">تقرير تسليم الوردية وإيراد الخزينة المعتمد (SHIFT AUDIT REPORT)</div>
+            <div style="font-size: 12px; color: #777;">${branchName} • 73 ترعة الجبل أمام مستشفى سان بول</div>
+          </div>
+          <div style="text-align: left;">
+            <div class="badge">وردية #${s.shiftNumber || 1}</div>
+            <div style="font-size: 11px; margin-top: 4px; font-family: monospace;">تاريخ الإقفال: ${new Date().toLocaleDateString("ar-EG")}</div>
+          </div>
+        </div>
+
+        <div class="grid">
+          <div class="card">
+            <div style="font-weight: bold; margin-bottom: 6px; border-bottom: 1px solid #eee; padding-bottom: 4px;">بيانات الوردية والكاشير:</div>
+            <div>الكاشير المسئول: <strong>${s.openedBy || currentUser?.name}</strong></div>
+            <div>المشرف / الإدارة المستلمة: <strong>${shiftForm.handedTo}</strong></div>
+            <div>توقيت بدء الوردية: <span style="font-family: monospace;">${openTimeStr}</span></div>
+            <div>توقيت إقفال الوردية: <span style="font-family: monospace;">${closeTimeStr}</span></div>
+          </div>
+          <div class="card">
+            <div style="font-weight: bold; margin-bottom: 6px; border-bottom: 1px solid #eee; padding-bottom: 4px;">ملخص الخزينة والنقدية:</div>
+            <div>إجمالي الدخل الصافي: <strong>${st?.netTotal || 0} ج.م</strong></div>
+            <div>نقدية الكاش المتوقعة بالدرج: <strong>${st?.expectedCash || 0} ج.م</strong></div>
+            <div>النقدية الفعلية المسلمة: <strong style="color: #008000; font-size: 15px;">${shiftForm.actualCash || (st?.expectedCash || 0)} ج.م</strong></div>
+            <div>ملاحظات التسليم: <em>${shiftForm.notes || "لا توجد ملاحظات"}</em></div>
+          </div>
+        </div>
+
+        <table>
+          <thead>
+            <tr>
+              <th>بند الإيراد / المعاملة</th>
+              <th style="text-align: center;">طريقة الدفع</th>
+              <th style="text-align: left;">المبلغ بالجنيه</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>إجمالي خدمات الصالون والحلاقة والسبا</td><td style="text-align: center;">كافة الوسائل</td><td style="text-align: left; font-family: monospace; font-weight: bold;">${st?.servicesTotal || 0} ج.م</td></tr>
+            <tr><td>إجمالي مبيعات مستحضرات التجميل والمنتجات</td><td style="text-align: center;">كافة الوسائل</td><td style="text-align: left; font-family: monospace; font-weight: bold;">${st?.retailTotal || 0} ج.م</td></tr>
+            <tr><td>إجمالي الخصومات المصرح بها</td><td style="text-align: center;">خصم فواتير</td><td style="text-align: left; font-family: monospace; color: #b00;">-${st?.discountTotal || 0} ج.م</td></tr>
+            <tr><td>إجمالي الإكرامية وخدمة الصالون</td><td style="text-align: center;">إكراميات</td><td style="text-align: left; font-family: monospace;">+${st?.tipTotal || 0} ج.م</td></tr>
+            <tr style="background: #fdf6e2; font-weight: bold;"><td>صافي الإيراد المحقق</td><td style="text-align: center;">الإجمالي العام</td><td style="text-align: left; font-family: monospace; font-size: 14px;">${st?.netTotal || 0} ج.م</td></tr>
+            <tr><td>تحصيلات كاش نقدية بالدرج</td><td style="text-align: center;">نقداً (كاش)</td><td style="text-align: left; font-family: monospace;">${st?.cashRevenue || 0} ج.م</td></tr>
+            <tr><td>تحصيلات بطاقات ائتمان وفيزا</td><td style="text-align: center;">فيزا POS</td><td style="text-align: left; font-family: monospace;">${st?.cardRevenue || 0} ج.م</td></tr>
+            <tr><td>تحصيلات شبكة انستاباي InstaPay</td><td style="text-align: center;">انستاباي</td><td style="text-align: left; font-family: monospace;">${st?.instapayRevenue || 0} ج.م</td></tr>
+            <tr><td>تحصيلات فودافون كاش والمحافظ</td><td style="text-align: center;">محافظ إلكترونية</td><td style="text-align: left; font-family: monospace;">${st?.vodafoneRevenue || 0} ج.م</td></tr>
+            <tr><td>إجمالي سلف الكباتن والمصروفات المخصومة من الدرج</td><td style="text-align: center;">صرف فوري</td><td style="text-align: left; font-family: monospace; color: #b00;">-${(st?.advancesTotal || 0) + (st?.expensesTotal || 0)} ج.م</td></tr>
+          </tbody>
+        </table>
+
+        <div class="stamps">
+          <div class="stamp-box">
+            <div>توقيع الكاشير المسلّم</div>
+            <div style="margin-top: 30px; font-weight: bold;">${s.openedBy || currentUser?.name}</div>
+          </div>
+          <div class="stamp-box">
+            <div>توقيع المستلم المعتمد</div>
+            <div style="margin-top: 30px; font-weight: bold;">${shiftForm.handedTo}</div>
+          </div>
+          <div class="stamp-box">
+            <div>خاتم الإدارة والاعتماد</div>
+            <div style="margin-top: 30px; font-weight: bold; color: #b8860b;">خاتم مجموعة الباشا VIP 👑</div>
+          </div>
+        </div>
+
+        <script>
+          window.onload = function() {
+            window.focus();
+            window.print();
+            setTimeout(function() { window.close(); }, 1500);
+          };
+        </script>
+      </body>
+      </html>
+    `);
+    printWin.document.close();
+  };
+
   const handleLogout = () => {
     localStorage.removeItem("basha_staff_user");
     localStorage.removeItem("saddam_staff_user");
@@ -2118,6 +2452,23 @@ ${servicesText ? `*الخدمات:* \n${servicesText}\n` : ""}${productsText ? `
                     {settlingTicket ? "جارٍ التحصيل..." : `تحصيل ${calculatedFinal} ج.م وطباعة الإيصال 🖨️`}
                   </span>
                 </button>
+
+                {/* Supervisor Cancellation Request Option */}
+                <div className="pt-2 border-t border-white/5 flex items-center justify-between">
+                  <button
+                    type="button"
+                    onClick={() => setShowCancelRequestModal(selectedTicket)}
+                    className="py-1.5 px-3 rounded-xl bg-rose-500/10 hover:bg-rose-500/20 text-rose-300 border border-rose-500/30 text-[11px] font-bold transition flex items-center gap-1.5 cursor-pointer"
+                  >
+                    <span>⚠️</span>
+                    <span>طلب إلغاء / تعديل الفاتورة من المشرف العام</span>
+                  </button>
+                  {selectedTicket.notes?.includes("طلب إلغاء معلق") && (
+                    <span className="text-[10px] text-amber-400 font-bold animate-pulse">
+                      ⏳ قيد مراجعة المشرف
+                    </span>
+                  )}
+                </div>
               </div>
             )}
           </div>
@@ -2319,6 +2670,99 @@ ${servicesText ? `*الخدمات:* \n${servicesText}\n` : ""}${productsText ? `
                     </option>
                   ))}
                 </select>
+              </div>
+
+              {/* Cashier Initial Services Selection */}
+              <div className="space-y-2 border-t border-white/10 pt-3">
+                <div className="flex items-center justify-between">
+                  <label className="text-slate-300 font-bold block text-xs">
+                    الخدمات المطلوبة مبدئياً للزبون (تظهر فوراً عند الكابتن على الكرسي ✂️):
+                  </label>
+                  {admitSelectedServices.length > 0 && (
+                    <button
+                      type="button"
+                      onClick={() => setAdmitSelectedServices([])}
+                      className="text-[10px] text-rose-400 hover:text-rose-300 underline cursor-pointer"
+                    >
+                      مسح المحدد ({admitSelectedServices.length})
+                    </button>
+                  )}
+                </div>
+
+                {/* Category tabs */}
+                <div className="flex items-center gap-1.5 overflow-x-auto pb-1 scrollbar-thin">
+                  {["ALL", ...Array.from(new Set(servicesCatalog.map((s) => s.category || "عام")))].slice(0, 8).map((cat) => (
+                    <button
+                      key={cat}
+                      type="button"
+                      onClick={() => setAdmitServiceCategory(cat)}
+                      className={`py-1 px-2.5 rounded-lg text-[10px] font-bold shrink-0 transition cursor-pointer ${
+                        admitServiceCategory === cat
+                          ? "bg-amber-500 text-slate-950 font-black shadow"
+                          : "bg-white/5 hover:bg-white/10 text-slate-300"
+                      }`}
+                    >
+                      {cat === "ALL" ? "الكل" : cat}
+                    </button>
+                  ))}
+                </div>
+
+                {/* Services chips grid */}
+                <div className="grid grid-cols-2 gap-1.5 max-h-36 overflow-y-auto pr-1">
+                  {servicesCatalog
+                    .filter((s) => admitServiceCategory === "ALL" || s.category === admitServiceCategory)
+                    .slice(0, 30)
+                    .map((svc) => {
+                      const isSelected = admitSelectedServices.some((s) => s.id === svc.id);
+                      return (
+                        <button
+                          key={svc.id}
+                          type="button"
+                          onClick={() => {
+                            if (isSelected) {
+                              setAdmitSelectedServices(admitSelectedServices.filter((s) => s.id !== svc.id));
+                            } else {
+                              setAdmitSelectedServices([
+                                ...admitSelectedServices,
+                                {
+                                  id: svc.id,
+                                  nameAr: svc.nameAr,
+                                  price: svc.price,
+                                  durationMinutes: svc.durationMinutes || 30,
+                                  category: svc.category,
+                                  addedBy: "CASHIER",
+                                },
+                              ]);
+                            }
+                          }}
+                          className={`p-2 rounded-xl text-right border transition flex flex-col justify-between cursor-pointer ${
+                            isSelected
+                              ? "bg-amber-500/20 border-amber-500/60 text-amber-200 font-bold"
+                              : "bg-white/5 border-white/5 hover:border-white/20 text-slate-300"
+                          }`}
+                        >
+                          <div className="flex items-center justify-between gap-1">
+                            <span className="text-[11px] truncate">{svc.nameAr}</span>
+                            {isSelected && <span className="text-amber-400 text-xs shrink-0 font-bold">✓</span>}
+                          </div>
+                          <span className="text-[10px] font-mono font-bold text-amber-400/90 pt-1">
+                            {svc.price} ج.م
+                          </span>
+                        </button>
+                      );
+                    })}
+                </div>
+
+                {admitSelectedServices.length > 0 && (
+                  <div className="p-2 rounded-xl bg-amber-500/10 border border-amber-500/30 flex items-center justify-between text-xs">
+                    <span className="text-amber-300 font-bold truncate max-w-[200px]">
+                      {admitSelectedServices.length} خدمات محددة: {admitSelectedServices.map((s) => s.nameAr).join(" + ")}
+                    </span>
+                    <span className="font-mono font-black text-amber-400 shrink-0">
+                      {admitSelectedServices.reduce((sum, s) => sum + (Number(s.price) || 0), 0)} ج.م
+                    </span>
+                  </div>
+                )}
               </div>
 
               {/* Dynamic Logic Explanations & Seating Mode Selection */}
@@ -3141,7 +3585,99 @@ ${servicesText ? `*الخدمات:* \n${servicesText}\n` : ""}${productsText ? `
                   <Lock className="w-4 h-4" />
                   <span>{closingShift ? "جاري الإقفال..." : "إقفال الوردية وطباعة إيصال التسليم 🔒🖨️"}</span>
                 </button>
+
+                {/* Z-Report & Audit Print Shortcuts */}
+                <div className="pt-2 border-t border-white/10 space-y-2">
+                  <div className="text-[11px] font-bold text-slate-400">خيارات طباعة تقارير الوردية واليومية (Z-Report):</div>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                    <button
+                      type="button"
+                      onClick={() => executePrintShiftZReport(openShift, shiftStats)}
+                      className="py-2.5 px-3 rounded-xl bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 border border-amber-500/40 text-xs font-bold transition flex items-center justify-center gap-2 cursor-pointer"
+                    >
+                      <Printer className="w-4 h-4" />
+                      <span>طباعة Z-Report رول (80mm Xprinter)</span>
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => executePrintShiftA4Report(openShift, shiftStats)}
+                      className="py-2.5 px-3 rounded-xl bg-sky-500/20 hover:bg-sky-500/30 text-sky-300 border border-sky-500/40 text-xs font-bold transition flex items-center justify-center gap-2 cursor-pointer"
+                    >
+                      <FileText className="w-4 h-4" />
+                      <span>طباعة تقرير تفصيلي رسمي (A4)</span>
+                    </button>
+                  </div>
+                </div>
               </form>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ─────────────────────────────────────────────────────────────
+          SUPERVISOR CANCELLATION REQUEST MODAL (طلب إلغاء من المشرف العام)
+         ───────────────────────────────────────────────────────────── */}
+      {showCancelRequestModal && (
+        <div
+          className="fixed inset-0 z-50 overflow-y-auto bg-black/85 backdrop-blur-md flex items-center justify-center p-4 font-sans no-print"
+          dir="rtl"
+        >
+          <div className="relative w-full max-w-md bg-[#12121a] border border-rose-500/40 rounded-3xl p-6 shadow-2xl space-y-4">
+            <div className="flex items-center justify-between border-b border-white/10 pb-3">
+              <div className="flex items-center gap-2.5">
+                <div className="w-10 h-10 rounded-2xl bg-rose-500/20 border border-rose-500/40 text-rose-400 flex items-center justify-center text-lg">
+                  ⚠️
+                </div>
+                <div>
+                  <h3 className="text-sm font-black text-white">طلب إلغاء فاتورة من المشرف العام</h3>
+                  <p className="text-[11px] text-slate-400">
+                    تذكرة #{showCancelRequestModal.ticketNumber} • {showCancelRequestModal.customerName}
+                  </p>
+                </div>
+              </div>
+              <button
+                type="button"
+                onClick={() => setShowCancelRequestModal(null)}
+                className="w-8 h-8 rounded-full bg-white/5 hover:bg-white/10 text-slate-400 hover:text-white flex items-center justify-center text-sm font-bold cursor-pointer"
+              >
+                ✕
+              </button>
+            </div>
+
+            <div className="space-y-3 text-xs">
+              <div className="p-3 rounded-2xl bg-rose-500/10 border border-rose-500/20 text-rose-300 text-[11px] leading-relaxed">
+                وفقاً لتعليمات إدارة صالونات وسبا الباشا: لا يمتلك الكاشير صلاحية الحذف المباشر للفواتير. يتم رفع الطلب فوراً إلى المشرف العام <strong>(أحمد عبد الرحيم)</strong> أو مدير الفرع للمراجعة والاعتماد.
+              </div>
+
+              <div>
+                <label className="text-slate-300 font-bold block mb-1">سبب طلب الإلغاء أو التعديل *:</label>
+                <textarea
+                  required
+                  rows={3}
+                  value={cancelReason}
+                  onChange={(e) => setCancelReason(e.target.value)}
+                  placeholder="مثال: الزبون اعتذر لظرف طارئ قبل بدء الخدمة، أو تم تسجيل الكرسي بالخطأ..."
+                  className="w-full p-2.5 rounded-xl bg-black/60 border border-white/10 text-white font-sans text-xs focus:outline-none focus:border-rose-400"
+                />
+              </div>
+
+              <div className="flex items-center gap-2 pt-2">
+                <button
+                  type="button"
+                  onClick={handleSubmitCancelRequest}
+                  disabled={submittingCancelRequest || !cancelReason.trim()}
+                  className="flex-1 py-3 rounded-xl bg-rose-600 hover:bg-rose-500 text-white font-black text-xs transition shadow-lg shadow-rose-600/20 disabled:opacity-50 cursor-pointer"
+                >
+                  {submittingCancelRequest ? "جاري الإرسال للمشرف..." : "إرسال طلب الإلغاء للاعتماد 📤"}
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setShowCancelRequestModal(null)}
+                  className="py-3 px-4 rounded-xl bg-white/5 hover:bg-white/10 text-slate-300 text-xs font-bold cursor-pointer"
+                >
+                  تراجع
+                </button>
+              </div>
             </div>
           </div>
         </div>

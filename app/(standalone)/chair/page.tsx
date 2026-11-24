@@ -955,9 +955,22 @@ export default function SpecialistChairPage() {
 
                 {/* Services List Recorded on Chair */}
                 <div className="space-y-2 max-h-60 overflow-y-auto pr-1">
-                  <p className="text-xs font-bold text-slate-400">
-                    الخدمات المنفذة ({ticketServices.length}):
-                  </p>
+                  <div className="flex items-center justify-between">
+                    <p className="text-xs font-bold text-slate-400">
+                      الخدمات المنفذة ({ticketServices.length}):
+                    </p>
+                    {ticketServices.some((s) => s.addedBy === "CASHIER" || s.source === "CASHIER") && (
+                      <span className="text-[10px] text-amber-300 font-bold bg-amber-500/10 px-2 py-0.5 rounded-full border border-amber-500/20">
+                        📌 بها طلبات من الكاشير
+                      </span>
+                    )}
+                  </div>
+
+                  {ticketServices.some((s) => s.addedBy === "CASHIER" || s.source === "CASHIER") && (
+                    <div className="p-2 rounded-xl bg-amber-500/10 border border-amber-500/20 text-[10px] text-amber-200/90 leading-tight">
+                      💡 حدد الكاشير خدمات مبدئية بناءً على طلب الزبون. يمكنك زيادتها أو إنقاصها حسب ما تم إنجازه فعلياً ✂️
+                    </div>
+                  )}
 
                   {ticketServices.length === 0 ? (
                     <p className="text-center py-6 text-xs text-slate-500 font-bold">
@@ -970,8 +983,15 @@ export default function SpecialistChairPage() {
                         className="p-2.5 rounded-xl bg-black/40 border border-white/5 flex items-center justify-between text-xs"
                       >
                         <div>
-                          <p className="font-bold text-white">{it.nameAr}</p>
-                          <span className="text-[10px] text-slate-500 font-mono">{it.addedAt}</span>
+                          <div className="flex items-center gap-1.5">
+                            <p className="font-bold text-white">{it.nameAr}</p>
+                            {(it.addedBy === "CASHIER" || it.source === "CASHIER") && (
+                              <span className="text-[9px] bg-amber-500/20 text-amber-300 border border-amber-500/30 px-1.5 py-0.5 rounded font-bold">
+                                من الكاشير
+                              </span>
+                            )}
+                          </div>
+                          <span className="text-[10px] text-slate-500 font-mono">{it.addedAt || "طلب الزبون"}</span>
                         </div>
 
                         <div className="flex items-center gap-2">
@@ -979,7 +999,7 @@ export default function SpecialistChairPage() {
                           <button
                             onClick={() => handleRemoveService(idx)}
                             disabled={actionLoading}
-                            className="p-1 rounded-lg text-rose-400 hover:bg-rose-500/20 transition"
+                            className="p-1 rounded-lg text-rose-400 hover:bg-rose-500/20 transition cursor-pointer"
                             title="حذف الخدمة"
                           >
                             <Trash2 className="w-3.5 h-3.5" />

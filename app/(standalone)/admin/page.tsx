@@ -388,7 +388,8 @@ export default function AdminPage() {
         user.role !== "general_manager" &&
         user.role !== "manager" &&
         user.role !== "warehouse_manager" &&
-        user.role !== "booking_dispatcher"
+        user.role !== "booking_dispatcher" &&
+        user.role !== "marketing"
       ) {
         router.push("/login");
         return;
@@ -398,6 +399,8 @@ export default function AdminPage() {
         setActiveTab("inventory");
       } else if (user.role === "booking_dispatcher") {
         setActiveTab("bookings");
+      } else if (user.role === "marketing") {
+        setActiveTab("services");
       } else if (user.branchId && user.role === "manager") {
         setSelectedBranchId(user.branchId);
       }
@@ -406,15 +409,31 @@ export default function AdminPage() {
     }
   }, [router]);
 
-  // Tab Protection: Only Owner and GM can access CCTV Surveillance, Settings, or Branches
+  // Tab Protection: Strict role security
   useEffect(() => {
-    if (!isOwnerOrGM && activeTab === "cctv") {
-      setActiveTab("overview");
+    if (currentUser?.role === "marketing") {
+      if (
+        activeTab === "treasury" ||
+        activeTab === "overview" ||
+        activeTab === "users" ||
+        activeTab === "settings" ||
+        activeTab === "cctv" ||
+        activeTab === "branches" ||
+        activeTab === "specialists" ||
+        activeTab === "inventory" ||
+        activeTab === "hr"
+      ) {
+        setActiveTab("services");
+      }
+    } else {
+      if (!isOwnerOrGM && activeTab === "cctv") {
+        setActiveTab("overview");
+      }
+      if (isBranchManager && (activeTab === "branches" || activeTab === "settings")) {
+        setActiveTab("overview");
+      }
     }
-    if (isBranchManager && (activeTab === "branches" || activeTab === "settings")) {
-      setActiveTab("overview");
-    }
-  }, [isBranchManager, isOwnerOrGM, activeTab]);
+  }, [isBranchManager, isOwnerOrGM, activeTab, currentUser]);
 
   // Audio Alarm Logic (Web Audio API Synthesizer - Royal Chime)
   const startAlarmSound = () => {
@@ -649,6 +668,64 @@ export default function AdminPage() {
       return () => clearInterval(interval);
     }
   }, [currentUser, selectedBranchId, activeBranchId]);
+
+  // Supervisor Ticket Cancellation Handlers (Ahmed / Nada / Sara / Maestro)
+  const [processingCancellationId, setProcessingCancellationId] = useState<string | null>(null);
+
+  const handleSupervisorApproveCancel = async (ticketId: string) => {
+    try {
+      setProcessingCancellationId(ticketId);
+      const res = await fetch("/api/tickets", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          action: "APPROVE_CANCELLATION",
+          ticketId,
+          approvedBy: currentUser?.name || "المشرف العام",
+        }),
+      });
+      const data = await res.json();
+      if (data.success) {
+        showToast("success", "تم اعتماد إلغاء التذكرة وإخلاء الكرسي بنجاح ✓");
+        loadAllData();
+      } else {
+        showToast("error", data.error || "فشل الاعتماد");
+      }
+    } catch {
+      showToast("error", "تعذر الاتصال بالخادم");
+    } finally {
+      setProcessingCancellationId(null);
+    }
+  };
+
+  const handleSupervisorRejectCancel = async (ticketId: string) => {
+    const rejectionReason = prompt("يرجى كتابة سبب رفض الإلغاء:");
+    if (rejectionReason === null) return;
+    try {
+      setProcessingCancellationId(ticketId);
+      const res = await fetch("/api/tickets", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          action: "REJECT_CANCELLATION",
+          ticketId,
+          rejectedBy: currentUser?.name || "المشرف العام",
+          rejectionReason: rejectionReason.trim() || "غير مطابق للسياسة",
+        }),
+      });
+      const data = await res.json();
+      if (data.success) {
+        showToast("info", "تم رفض طلب الإلغاء وبقاء الفاتورة سارية");
+        loadAllData();
+      } else {
+        showToast("error", data.error || "فشل الرفض");
+      }
+    } catch {
+      showToast("error", "تعذر الاتصال بالخادم");
+    } finally {
+      setProcessingCancellationId(null);
+    }
+  };
 
   // Master Kill Switch Toggle
   const handleToggleKillSwitch = async () => {
@@ -1698,6 +1775,22 @@ export default function AdminPage() {
         { id: "customers", label: "قاعدة العملاء 👥", icon: Users },
         { id: "attendance", label: "بصمة الحضور والانصراف ⏰", icon: Clock },
       ]
+    : currentUser?.role === "marketing"
+    ? [
+        {
+          id: "services",
+          label: isWomenTheme ? "خدمات السبا والأسعار 🧖‍♀️" : "الخدمات والأسعار 💈",
+          icon: Award,
+        },
+        { id: "offers", label: "العروض الملكية والبكجات 👑", icon: Sparkles },
+        { id: "customers", label: "قاعدة العملاء والحملات 👥", icon: Users },
+        {
+          id: "chat",
+          label: `شات العملاء 💬 ${unreadChatTotal > 0 ? `(${unreadChatTotal})` : ""}`,
+          icon: MessageSquare,
+        },
+        { id: "attendance", label: "بصمة الحضور والانصراف ⏰", icon: Clock },
+      ]
     : [
     { id: "overview", label: "نظرة عامة 📊", icon: LayoutDashboard },
     { id: "treasury", label: "الخزنة والحسابات 💰", icon: DollarSign },
@@ -2013,6 +2106,84 @@ export default function AdminPage() {
            ======================================================== */}
         {activeTab === "overview" && (
           <div className="space-y-6 animate-fade-in">
+            {/* Supervisor Cancellation Approval Banner */}
+            {(() => {
+              const pendingCancelTickets = filteredTickets.filter(
+                (t) => t.notes && t.notes.includes("⚠️ [طلب إلغاء معلق للمشرف:") && t.status !== "CANCELLED"
+              );
+              if (pendingCancelTickets.length === 0) return null;
+              return (
+                <div className="p-4 sm:p-5 rounded-3xl bg-rose-950/40 border-2 border-rose-500/50 space-y-3 shadow-2xl">
+                  <div className="flex flex-wrap items-center justify-between gap-2 border-b border-rose-500/20 pb-3">
+                    <div className="flex items-center gap-2.5">
+                      <div className="w-9 h-9 rounded-xl bg-rose-500/20 text-rose-400 flex items-center justify-center text-lg font-bold">
+                        ⚠️
+                      </div>
+                      <div>
+                        <h4 className="font-black text-rose-200 text-sm">
+                          طلبات إلغاء فواتير معلقة بانتظار اعتماد المشرف ({pendingCancelTickets.length}):
+                        </h4>
+                        <p className="text-[11px] text-slate-300">
+                          قام الكاشير بطلب إلغاء أو تعديل الفواتير التالية. الصلاحية حصراً للمشرف العام والمدير للاعتماد أو الرفض.
+                        </p>
+                      </div>
+                    </div>
+                    <span className="py-1 px-3 rounded-full bg-rose-500/20 text-rose-300 text-xs font-mono font-bold animate-pulse">
+                      {pendingCancelTickets.length} تذكرة معلقة
+                    </span>
+                  </div>
+
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+                    {pendingCancelTickets.map((ticket) => {
+                      const match = ticket.notes?.match(/⚠️ \[طلب إلغاء معلق للمشرف:\s*(.*?)\s*\]/);
+                      const reason = match ? match[1] : "طلب إلغاء من الكاشير";
+                      return (
+                        <div
+                          key={ticket.id}
+                          className="p-3.5 rounded-2xl bg-[#14141e] border border-rose-500/30 space-y-2 text-xs flex flex-col justify-between"
+                        >
+                          <div className="space-y-1.5">
+                            <div className="flex justify-between items-start">
+                              <div>
+                                <span className="font-mono font-black text-amber-400">#{ticket.ticketNumber}</span>
+                                <strong className="text-white block pt-0.5 text-sm">{ticket.customerName}</strong>
+                                <span className="text-[10px] text-slate-400">
+                                  {ticket.branch?.name || "فرع الصالون"} • كرسي #{ticket.chairNumber || "-"}
+                                </span>
+                              </div>
+                              <span className="font-mono font-black text-rose-400 text-base">{ticket.finalAmount} ج.م</span>
+                            </div>
+
+                            <div className="p-2 rounded-xl bg-rose-500/10 border border-rose-500/20 text-[11px] text-rose-200">
+                              <span className="font-bold">السبب المذكور:</span> {reason}
+                            </div>
+                          </div>
+
+                          <div className="flex items-center gap-2 pt-2 border-t border-white/5">
+                            <button
+                              type="button"
+                              disabled={processingCancellationId === ticket.id}
+                              onClick={() => handleSupervisorApproveCancel(ticket.id)}
+                              className="flex-1 py-2 px-3 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-black text-xs transition shadow cursor-pointer disabled:opacity-50 text-center"
+                            >
+                              ✓ اعتماد الإلغاء
+                            </button>
+                            <button
+                              type="button"
+                              disabled={processingCancellationId === ticket.id}
+                              onClick={() => handleSupervisorRejectCancel(ticket.id)}
+                              className="flex-1 py-2 px-3 rounded-xl bg-rose-600/30 hover:bg-rose-600/50 text-rose-200 border border-rose-500/40 font-bold text-xs transition cursor-pointer disabled:opacity-50 text-center"
+                            >
+                              ✕ رفض الإلغاء
+                            </button>
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+              );
+            })()}
             <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
               <div className={`p-4 rounded-3xl border space-y-2 transition-colors ${
                 isWomenTheme ? "bg-[#180815] border-rose-500/35 shadow-rose-950/30" : "bg-[#14141e] border-amber-500/30"

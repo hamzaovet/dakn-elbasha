@@ -249,6 +249,81 @@ export async function PATCH(req: Request) {
       return NextResponse.json({ success: true, ticket: updated });
     }
 
+    // 1.1 BULK UPDATE SERVICES (Called by Barber on chair pad or Cashier)
+    if (action === "UPDATE_SERVICES") {
+      const { services: newServicesList } = body;
+      const sList = Array.isArray(newServicesList) ? newServicesList : [];
+      const servicesTotal = sList.reduce((sum: number, s: any) => sum + Number(s.price || 0), 0);
+      const retailTotal = retailItems.reduce((sum: number, r: any) => sum + Number(r.total || 0), 0);
+      const finalAmount = Math.max(0, servicesTotal + retailTotal - Number(ticket.discount || 0) + Number(ticket.tipAmount || 0));
+
+      const updated = await prisma.ticket.update({
+        where: { id: ticketId },
+        data: {
+          services: JSON.stringify(sList),
+          servicesTotal,
+          finalAmount,
+        },
+        include: {
+          specialist: {
+            select: { id: true, name: true, photo: true, chairNumber: true, status: true, commissionRate: true },
+          },
+          branch: { select: { id: true, name: true, code: true } },
+          customer: { select: { id: true, name: true, phone: true } },
+        },
+      });
+
+      return NextResponse.json({ success: true, ticket: updated });
+    }
+
+    // 1.2 SUPERVISOR APPROVAL WORKFLOW FOR CANCELLATION
+    if (action === "REQUEST_CANCELLATION") {
+      const { reason, requestedBy } = body;
+      const cancelNote = `⚠️ [طلب إلغاء معلق للمشرف: ${reason || "تعديل بالخطأ"}] - مقدم الطلب: ${requestedBy || "الكاشير"}`;
+      const updated = await prisma.ticket.update({
+        where: { id: ticketId },
+        data: {
+          notes: ticket.notes ? `${ticket.notes} | ${cancelNote}` : cancelNote,
+        },
+      });
+      return NextResponse.json({
+        success: true,
+        ticket: updated,
+        message: "تم إرسال طلب الإلغاء للمشرف العام والمدير بنجاح",
+      });
+    }
+
+    if (action === "APPROVE_CANCELLATION") {
+      const { approvedBy } = body;
+      const updated = await prisma.ticket.update({
+        where: { id: ticketId },
+        data: {
+          status: "CANCELLED",
+          notes: `${ticket.notes || ""} | [تم اعتماد الإلغاء رسمياً بواسطة: ${approvedBy || "المشرف العام"}]`,
+          endTime: new Date(),
+        },
+      });
+      if (ticket.status === "IN_CHAIR" && ticket.specialistId) {
+        await prisma.specialist.update({
+          where: { id: ticket.specialistId },
+          data: { status: "AVAILABLE" },
+        });
+      }
+      return NextResponse.json({ success: true, ticket: updated, message: "تم اعتماد إلغاء التذكرة بنجاح" });
+    }
+
+    if (action === "REJECT_CANCELLATION") {
+      const { rejectedBy, rejectionReason } = body;
+      const cleanedNote = (ticket.notes || "").replace(/⚠️ \[طلب إلغاء معلق.*?\]/g, "").trim();
+      const updated = await prisma.ticket.update({
+        where: { id: ticketId },
+        data: {
+          notes: `${cleanedNote} | [تم رفض طلب الإلغاء: ${rejectionReason || "غير مصرح"} - بواسطة: ${rejectedBy || "المشرف"}]`,
+        },
+      });
+      return NextResponse.json({ success: true, ticket: updated, message: "تم رفض طلب الإلغاء وبقاء الفاتورة سارية" });
+    }
+
     // 2. REMOVE SERVICE
     if (action === "REMOVE_SERVICE") {
       const { index } = body;
