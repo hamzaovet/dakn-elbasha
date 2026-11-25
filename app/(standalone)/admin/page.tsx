@@ -8,6 +8,7 @@ import AttendanceManagementTab from "@/components/AttendanceManagementTab";
 import CentralWarehouseTab from "@/components/CentralWarehouseTab";
 import CCTVMonitoringTab from "@/components/CCTVMonitoringTab";
 import StaffArchiveManagementTab from "@/components/StaffArchiveManagementTab";
+import PrinterDiagnosticsTool from "@/components/PrinterDiagnosticsTool";
 import {
   FolderArchive,
   Video,
@@ -57,6 +58,7 @@ import {
   Upload,
   FileText,
   Printer,
+  Zap,
   ArrowDownLeft,
   ArrowUpRight,
   Receipt,
@@ -124,6 +126,10 @@ export default function AdminPage() {
   const [selectedLedgerSpecialistId, setSelectedLedgerSpecialistId] = useState<string>("");
   const selectedLedgerSpecialistIdRef = useRef<string>("");
   const [specialistSubView, setSpecialistSubView] = useState<"CARDS" | "STATEMENT">("CARDS");
+
+  // Printer Diagnostics State
+  const [showPrinterDiagnosticsModal, setShowPrinterDiagnosticsModal] = useState<boolean>(false);
+  const [settingsSubSection, setSettingsSubSection] = useState<"general" | "printers">("general");
 
   const handleSelectLedgerSpecialist = (id: string) => {
     selectedLedgerSpecialistIdRef.current = id;
@@ -2036,6 +2042,20 @@ export default function AdminPage() {
           >
             نقطة البيع POS 💰
           </Link>
+
+          {/* Quick Printer Diagnostics Button */}
+          <button
+            onClick={() => setShowPrinterDiagnosticsModal(true)}
+            className={`py-1.5 px-3 rounded-xl border text-xs font-black transition flex items-center gap-1.5 shadow-md cursor-pointer ${
+              isWomenTheme
+                ? "bg-slate-900 hover:bg-slate-800 text-rose-300 border-rose-500/30"
+                : "bg-slate-900 hover:bg-slate-800 text-amber-300 border-amber-500/30"
+            }`}
+            title="مركز الفحص الذكي وإدارة طابعات الفواتير والـ POS"
+          >
+            <Printer className="w-3.5 h-3.5 text-amber-400" />
+            <span className="hidden sm:inline">فاحص الطابعة 🖨️</span>
+          </button>
 
           {/* Card 2 QR */}
           <button
@@ -4698,8 +4718,63 @@ export default function AdminPage() {
               </button>
             </div>
 
-            <form onSubmit={handleSaveSettings} className="space-y-6">
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            {/* Sub-Section Navigation: General Settings vs Printer Management Suite */}
+            <div className="flex items-center gap-2 border-b border-white/10 pb-3">
+              <button
+                type="button"
+                onClick={() => setSettingsSubSection("general")}
+                className={`py-2 px-5 rounded-2xl font-black text-xs transition flex items-center gap-2 cursor-pointer ${
+                  settingsSubSection === "general"
+                    ? "bg-amber-500 text-slate-950 shadow-lg shadow-amber-500/25"
+                    : "bg-[#14141e] hover:bg-[#1c1c28] text-slate-300 border border-white/10"
+                }`}
+              >
+                <Settings className="w-4 h-4" />
+                <span>إعدادات الهوية والمنظومة العامة ⚙️</span>
+              </button>
+
+              <button
+                type="button"
+                onClick={() => setSettingsSubSection("printers")}
+                className={`py-2 px-5 rounded-2xl font-black text-xs transition flex items-center gap-2 cursor-pointer ${
+                  settingsSubSection === "printers"
+                    ? "bg-amber-500 text-slate-950 shadow-lg shadow-amber-500/25"
+                    : "bg-[#14141e] hover:bg-[#1c1c28] text-slate-300 border border-white/10"
+                }`}
+              >
+                <Printer className="w-4 h-4 text-amber-400" />
+                <span>مركز فحص وإدارة الطابعات الحرارية والـ POS 🖨️</span>
+                <span className="py-0.5 px-2 rounded-full bg-amber-500/20 text-amber-300 text-[10px] font-mono">
+                  جديد ⚡
+                </span>
+              </button>
+            </div>
+
+            {settingsSubSection === "printers" ? (
+              <PrinterDiagnosticsTool isModal={false} defaultBranch={activeBranchId} />
+            ) : (
+              <form onSubmit={handleSaveSettings} className="space-y-6">
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                  {/* Quick Shortcut Card to Printer Diagnostics */}
+                  <div className="col-span-1 lg:col-span-2 p-4 rounded-3xl bg-gradient-to-r from-amber-500/15 via-[#181824] to-[#141420] border border-amber-500/30 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 shadow-lg">
+                    <div className="flex items-center gap-3">
+                      <div className="w-10 h-10 rounded-2xl bg-amber-500/20 border border-amber-500/40 flex items-center justify-center text-amber-400 shadow-md">
+                        <Printer className="w-5 h-5" />
+                      </div>
+                      <div>
+                        <h4 className="font-black text-white text-xs">هل تواجه مشكلة في طابعة فواتير الكاشير بالفرع أو ترغب في تنزيل تعريف Xprinter؟</h4>
+                        <p className="text-[11px] text-slate-400">استخدم أداة الفحص الذكي لكشف الطابعات المتصلة، فك تعليق المنافذ، وتنزيل أحدث التعريفات المعتمدة.</p>
+                      </div>
+                    </div>
+                    <button
+                      type="button"
+                      onClick={() => setSettingsSubSection("printers")}
+                      className="py-2 px-4 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-black text-xs transition flex items-center gap-1.5 shadow-md shadow-amber-500/20 cursor-pointer shrink-0"
+                    >
+                      <Zap className="w-3.5 h-3.5" />
+                      <span>فتح مركز فحص الطابعات 🖨️</span>
+                    </button>
+                  </div>
                 {/* 1. BRAND & IDENTITY */}
                 <div className="p-6 rounded-3xl bg-[#14141e] border border-amber-500/30 space-y-4 shadow-xl">
                   <div className="flex items-center gap-2 pb-3 border-b border-white/10 text-amber-400 font-black text-sm">
@@ -5096,6 +5171,7 @@ export default function AdminPage() {
                 </button>
               </div>
             </form>
+            )}
           </div>
         )}
 
@@ -6762,6 +6838,15 @@ export default function AdminPage() {
         nasrCityPhone={settings?.nasrCityPhone || "01121537537"}
         hotline={settings?.hotline || "01121537537"}
       />
+
+      {/* 9. PRINTER MANAGEMENT & DIAGNOSTICS MODAL */}
+      {showPrinterDiagnosticsModal && (
+        <PrinterDiagnosticsTool
+          isModal={true}
+          onClose={() => setShowPrinterDiagnosticsModal(false)}
+          defaultBranch={activeBranchId}
+        />
+      )}
     </div>
   );
 }

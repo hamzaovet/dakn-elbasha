@@ -38,6 +38,7 @@ import {
 import QRCode from "qrcode";
 import { generateCode128Svg } from "@/lib/barcode-svg";
 import { playAttendanceChime } from "@/lib/attendance-sound";
+import PrinterDiagnosticsTool from "@/components/PrinterDiagnosticsTool";
 
 export default function CashierPosPage() {
   const router = useRouter();
@@ -53,6 +54,7 @@ export default function CashierPosPage() {
   const [specialists, setSpecialists] = useState<any[]>([]);
   const [settings, setSettings] = useState<any>(null);
   const [showShiftModal, setShowShiftModal] = useState<boolean>(false);
+  const [showPrinterModal, setShowPrinterModal] = useState<boolean>(false);
   const [showAdmitModal, setShowAdmitModal] = useState<boolean>(false);
   const [admitCustomerName, setAdmitCustomerName] = useState<string>("");
   const [admitCustomerPhone, setAdmitCustomerPhone] = useState<string>("");
@@ -1954,6 +1956,15 @@ ${servicesText ? `*الخدمات:* \n${servicesText}\n` : ""}${productsText ? `
             title="تحديث"
           >
             <RefreshCw className="w-4 h-4" />
+          </button>
+
+          <button
+            onClick={() => setShowPrinterModal(true)}
+            className="py-1.5 px-3 rounded-xl bg-slate-800 hover:bg-slate-700 border border-amber-500/35 text-amber-300 text-xs font-bold transition flex items-center gap-1.5 shadow-sm cursor-pointer"
+            title="مركز الفحص الذكي وإدارة طابعات الفواتير وإصلاح الأعطال"
+          >
+            <Printer className="w-3.5 h-3.5 text-amber-400" />
+            <span className="hidden sm:inline">فاحص الطابعة 🖨️</span>
           </button>
 
           <Link
@@ -4431,6 +4442,15 @@ ${servicesText ? `*الخدمات:* \n${servicesText}\n` : ""}${productsText ? `
             </button>
           </div>
         </div>
+      )}
+
+      {/* 9. PRINTER MANAGEMENT & DIAGNOSTICS MODAL */}
+      {showPrinterModal && (
+        <PrinterDiagnosticsTool
+          isModal={true}
+          onClose={() => setShowPrinterModal(false)}
+          defaultBranch={activeBranchId}
+        />
       )}
     </div>
   );
