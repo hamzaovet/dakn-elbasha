@@ -1689,12 +1689,14 @@ export default function AdminPage() {
     "BODY_MASKS",
     "LADIES_HAIR",
     "LADIES_COLOR",
+    "LADIES_TREATMENT",
     "LADIES_SKIN",
     "BROWS_LASHES",
     "NAILS",
     "EXTENSIONS",
     "WAX_SWEET",
     "MAKEUP",
+    "LADIES_MASSAGE",
   ];
 
   const newSkinCategoryIds = [
