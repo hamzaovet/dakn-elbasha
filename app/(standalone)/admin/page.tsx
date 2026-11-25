@@ -1686,17 +1686,19 @@ export default function AdminPage() {
 
   const womenCategoryIds = [
     "LADIES_SPA",
-    "BODY_MASKS",
     "LADIES_HAIR",
+    "EXTENSIONS",
     "LADIES_COLOR",
     "LADIES_TREATMENT",
-    "LADIES_SKIN",
     "BROWS_LASHES",
-    "NAILS",
-    "EXTENSIONS",
-    "WAX_SWEET",
+    "LADIES_SKIN_CARE",
+    "LADIES_FACIAL",
+    "BODY_MASKS",
     "MAKEUP",
+    "WAX_SWEET",
+    "NAILS",
     "LADIES_MASSAGE",
+    "LADIES_SKIN",
   ];
 
   const newSkinCategoryIds = [

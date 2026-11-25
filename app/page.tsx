@@ -491,16 +491,17 @@ export default function HomePage() {
   // Services Filtered by Mode & Category
   const womenCategoryIds = [
     "LADIES_SPA",
-    "BODY_MASKS",
     "LADIES_HAIR",
+    "EXTENSIONS",
     "LADIES_COLOR",
     "LADIES_TREATMENT",
-    "LADIES_SKIN",
     "BROWS_LASHES",
-    "NAILS",
-    "EXTENSIONS",
-    "WAX_SWEET",
+    "LADIES_SKIN_CARE",
+    "LADIES_FACIAL",
+    "BODY_MASKS",
     "MAKEUP",
+    "WAX_SWEET",
+    "NAILS",
     "LADIES_MASSAGE",
   ];
   const newSkinCategoryIds = ["NEWSKIN_PEDICURE", "NEWSKIN_MICRO", "NEWSKIN_DERMA", "NEWSKIN_LASER"];
@@ -801,18 +802,20 @@ export default function HomePage() {
       NEWSKIN_MICRO: "حجرة الاسكين • ميكرو ✨",
       NEWSKIN_DERMA: "حجرة الاسكين • ديرمابن 🔬",
       NEWSKIN_LASER: "حجرة الليزر • إزالة الشعر ⚡",
-      LADIES_SPA: "حمام مغربي وسبا 🧖‍♀️",
-      LADIES_SKIN: "بشرة وهيدروفيشل ✨",
-      LADIES_HAIR: "شعر وتسريحات 💇‍♀️",
-      LADIES_COLOR: "صبغات وهايلايت 🎨",
-      LADIES_TREATMENT: "كافيار وعلاجات 🧴",
-      EXTENSIONS: "اكستنشن وتركيب ✨",
+      LADIES_SPA: "حمام مغربي وملكي 🧖‍♀️",
+      LADIES_HAIR: "الشعر 💇‍♀️",
+      EXTENSIONS: "تركيب شعر ✨",
+      LADIES_COLOR: "صبغات 🎨",
+      LADIES_TREATMENT: "علاج شعر 🧴",
       BROWS_LASHES: "حواجب ورموش 👁️",
-      BODY_MASKS: "دلكة ومسكات 🌸",
-      NAILS: "باديكير وأظافر 💅",
-      MAKEUP: "ميكاب وسوارية 💄",
-      LADIES_MASSAGE: "مساج واستجمام 💆‍♀️",
-      WAX_SWEET: "سويت وواكس 🍯",
+      LADIES_SKIN_CARE: "عناية بالبشرة 🧖‍♀️",
+      LADIES_FACIAL: "تنظيف بشرة ✨",
+      BODY_MASKS: "مسكات إضافية 🍯",
+      MAKEUP: "ميكاب 💄",
+      WAX_SWEET: "واكس وسويت 🍯",
+      NAILS: "مانيكير وباديكير 💅",
+      LADIES_MASSAGE: "مساج 💆‍♀️",
+      LADIES_SKIN: "بشرة وهيدروفيشل ✨",
       HAIR: "قص وتصفيف ✂️",
       BEARD: "حلاقة وتحديد دقن 🧔",
       BODY_CARE: "Body Care • باديكير 💅",
@@ -841,19 +844,20 @@ export default function HomePage() {
       ]
     : isWomen
     ? [
-        { id: "ALL", label: "جميع خدمات السبا والحمام 🌸" },
-        { id: "LADIES_SPA", label: "الحمامات الملكية الـ 12 🧖‍♀️" },
-        { id: "LADIES_HAIR", label: "الشعر والتسريحات 💇‍♀️" },
-        { id: "EXTENSIONS", label: "تركيب الشعر والاكستنشن ✨" },
-        { id: "LADIES_COLOR", label: "الصبغات والهايلايت 🎨" },
-        { id: "LADIES_TREATMENT", label: "علاجات الشعر والكافيار 🧴" },
+        { id: "ALL", label: "جميع الأقسام والخدمات 🌸" },
+        { id: "LADIES_SPA", label: "الحمامات الملكية والمغربية (12 حمام) 🧖‍♀️" },
+        { id: "LADIES_HAIR", label: "الشعر 💇‍♀️" },
+        { id: "EXTENSIONS", label: "تركيب الشعر ✨" },
+        { id: "LADIES_COLOR", label: "الصبغات 🎨" },
+        { id: "LADIES_TREATMENT", label: "Treatment hair (علاجات شعر) 🧴" },
         { id: "BROWS_LASHES", label: "الحواجب والرموش 👁️" },
-        { id: "LADIES_SKIN", label: "العناية بالبشرة والفيشل 🌸" },
-        { id: "BODY_MASKS", label: "مسكات الجسم والدلكة 🍯" },
-        { id: "MAKEUP", label: "ميكاب وعرائس 💄" },
-        { id: "NAILS", label: "مانيكير & باديكير 💅" },
-        { id: "LADIES_MASSAGE", label: "المساج والاستجمام 💆‍♀️" },
+        { id: "LADIES_SKIN_CARE", label: "العناية بالبشرة 🧖‍♀️" },
+        { id: "LADIES_FACIAL", label: "تنظيف البشرة ✨" },
+        { id: "BODY_MASKS", label: "المسكات الإضافية 🍯" },
+        { id: "MAKEUP", label: "الميكاب 💄" },
         { id: "WAX_SWEET", label: "الواكس والسويت 🍯" },
+        { id: "NAILS", label: "مانيكير & باديكير 💅" },
+        { id: "LADIES_MASSAGE", label: "المساج 💆‍♀️" },
       ]
     : [
         { id: "ALL", label: "جميع خدمات دقن الباشا 💈" },
@@ -2119,7 +2123,17 @@ export default function HomePage() {
                   <div className="relative h-36 w-full overflow-hidden bg-black">
                     {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img
-                      src={srv.image || "/services/service-styling.webp"}
+                      src={
+                        isWomen
+                          ? (!srv.image || srv.image.includes("/services/service-") || srv.image.includes("dakn")
+                              ? "/ladies/ladies-moroccan-bath.jpg"
+                              : srv.image)
+                          : isNewSkin
+                          ? (!srv.image || srv.image.includes("/services/service-")
+                              ? "/newskin-hero.jpg"
+                              : srv.image)
+                          : srv.image || "/services/service-styling.webp"
+                      }
                       alt={srv.nameAr}
                       className="w-full h-full object-cover group-hover:scale-110 transition duration-500"
                     />
