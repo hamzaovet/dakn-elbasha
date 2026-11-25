@@ -223,6 +223,71 @@ export async function PATCH(req: Request) {
     const body = await req.json();
 
     // Support Bulk Actions
+    if (body.action === "apply_dvr_config") {
+      const {
+        dvrIp = "192.168.1.108",
+        dvrPort = 80,
+        dvrUser = "admin",
+        dvrPass = "",
+        dvrBrand = "hikvision",
+        mode = "SNAPSHOT_PROXY",
+      } = body;
+
+      const cameras = await (prisma as any).securityCamera.findMany({
+        orderBy: { sortOrder: "asc" },
+      });
+
+      for (let i = 0; i < cameras.length; i++) {
+        const cam = cameras[i];
+        const channelNum = cam.channelNumber || i + 1;
+
+        if (mode === "SNAPSHOT_PROXY") {
+          await (prisma as any).securityCamera.update({
+            where: { id: cam.id },
+            data: {
+              feedType: "SNAPSHOT",
+              feedUrl: null,
+              snapshotUrl: `/api/cctv/proxy?action=snapshot&ip=${dvrIp}&port=${dvrPort}&user=${encodeURIComponent(
+                dvrUser
+              )}&pass=${encodeURIComponent(dvrPass)}&channel=${channelNum}&type=${dvrBrand}`,
+              ipAddress: dvrIp,
+              port: parseInt(dvrPort.toString()) || 80,
+              rtspUrl: `rtsp://${dvrUser}:${dvrPass}@${dvrIp}:554/Streaming/Channels/${channelNum}01`,
+            },
+          });
+        } else if (mode === "DIRECT_WEB") {
+          await (prisma as any).securityCamera.update({
+            where: { id: cam.id },
+            data: {
+              feedType: "IFRAME",
+              feedUrl: `http://${dvrIp}:${dvrPort}`,
+              snapshotUrl: null,
+              ipAddress: dvrIp,
+              port: parseInt(dvrPort.toString()) || 80,
+            },
+          });
+        } else if (mode === "SIMULATION") {
+          await (prisma as any).securityCamera.update({
+            where: { id: cam.id },
+            data: {
+              feedType: "SIMULATION",
+              feedUrl: null,
+              snapshotUrl: null,
+              ipAddress: dvrIp,
+            },
+          });
+        }
+      }
+
+      return NextResponse.json({
+        success: true,
+        message:
+          mode === "SIMULATION"
+            ? "تم العودة لوضع العرض الافتراضي الفاخر بنجاح 👑"
+            : `تم ربط وتحديث قنوات الـ DVR (${dvrIp}) لجميع الكاميرات بنجاح ⚡`,
+      });
+    }
+
     if (body.action === "bulk_apply_go2rtc") {
       const hostIp = body.hostIp || "localhost";
       const cameras = await (prisma as any).securityCamera.findMany({

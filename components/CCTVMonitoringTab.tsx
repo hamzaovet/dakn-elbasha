@@ -36,6 +36,9 @@ import {
   Clock,
   Layers,
   MapPin,
+  RotateCcw,
+  Zap,
+  Search,
 } from "lucide-react";
 
 interface SecurityCamera {
@@ -127,10 +130,16 @@ export default function CCTVMonitoringTab({
     notes: "",
   });
 
-  // DVR Connection Guide Form
+  // DVR Connection State
   const [dvrIp, setDvrIp] = useState("192.168.1.108");
-  const [dvrBrand, setDvrBrand] = useState("HIKVISION");
+  const [dvrPort, setDvrPort] = useState(80);
   const [dvrUsername, setDvrUsername] = useState("admin");
+  const [dvrPassword, setDvrPassword] = useState("");
+  const [dvrBrand, setDvrBrand] = useState<"hikvision" | "dahua">("hikvision");
+  const [dvrMode, setDvrMode] = useState<"SNAPSHOT_PROXY" | "DIRECT_WEB" | "SIMULATION">("SNAPSHOT_PROXY");
+  const [testingDvr, setTestingDvr] = useState(false);
+  const [dvrTestResult, setDvrTestResult] = useState<{ reachable: boolean; message: string } | null>(null);
+  const [brokenFeedsMap, setBrokenFeedsMap] = useState<Record<string, boolean>>({});
 
   // Fetch Cameras
   const fetchCameras = async () => {
@@ -396,23 +405,60 @@ export default function CCTVMonitoringTab({
     }
   };
 
-  // Bulk Apply go2rtc Live WebRTC Feeds
-  const handleBulkApplyGo2rtc = async () => {
+  // Test Live DVR Network Connection via TCP / Ping
+  const handleTestDvr = async () => {
     try {
+      setTestingDvr(true);
+      setDvrTestResult(null);
+      const res = await fetch(`/api/cctv/proxy?action=ping&ip=${dvrIp}&port=${dvrPort}`);
+      const data = await res.json();
+      if (data.success) {
+        setDvrTestResult({ reachable: data.reachable, message: data.message });
+        if (data.reachable) {
+          showToast("success", "تم الاتصال بجهاز الـ DVR بنجاح 🟢");
+        } else {
+          showToast("error", "الجهاز لا يستجيب، راجع الـ IP واتصال الشبكة 🔴");
+        }
+      } else {
+        showToast("error", data.error || "فشل اختبار الاتصال");
+      }
+    } catch {
+      showToast("error", "تعذر الاتصال بخادم الفحص");
+    } finally {
+      setTestingDvr(false);
+    }
+  };
+
+  // Bulk Apply DVR Configuration to All Cameras
+  const handleApplyDvrConfig = async () => {
+    try {
+      setSavingCamera(true);
       const res = await fetch("/api/cctv", {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ action: "bulk_apply_go2rtc", hostIp: "localhost" }),
+        body: JSON.stringify({
+          action: "apply_dvr_config",
+          dvrIp,
+          dvrPort,
+          dvrUser: dvrUsername,
+          dvrPass: dvrPassword,
+          dvrBrand,
+          mode: dvrMode,
+        }),
       });
       const data = await res.json();
       if (data.success) {
-        showToast("success", "تم تفعيل روابط WebRTC الحية من سيرفر go2rtc لجميع الكاميرات 🚀");
+        showToast("success", data.message || "تم ربط وتحديث قنوات الـ DVR لجميع الكاميرات بنجاح ⚡");
+        setBrokenFeedsMap({});
+        setShowDvrConnectModal(false);
         fetchCameras();
       } else {
-        showToast("error", data.error || "فشل تفعيل الروابط");
+        showToast("error", data.error || "فشل تطبيق الإعدادات");
       }
     } catch {
-      showToast("error", "فشل تفعيل الروابط التلقائية");
+      showToast("error", "تعذر حفظ إعدادات الـ DVR");
+    } finally {
+      setSavingCamera(false);
     }
   };
 
@@ -426,7 +472,8 @@ export default function CCTVMonitoringTab({
       });
       const data = await res.json();
       if (data.success) {
-        showToast("success", "تم العودة للعرض الذكي الافتراضي 👑");
+        showToast("success", "تم العودة للعرض الذكي الافتراضي السليم بنجاح 👑");
+        setBrokenFeedsMap({});
         fetchCameras();
       } else {
         showToast("error", data.error || "فشل إعادة الضبط");
@@ -542,14 +589,36 @@ export default function CCTVMonitoringTab({
               <Maximize2 className="w-4 h-4 text-amber-400" />
             </button>
 
+            {/* Reset to Clean View Button */}
+            <button
+              onClick={handleBulkResetSimulation}
+              className="px-3 py-2.5 rounded-2xl bg-white/5 hover:bg-white/10 border border-white/10 text-slate-300 hover:text-amber-300 text-xs font-bold transition flex items-center gap-1.5 cursor-pointer"
+              title="إعادة ضبط العرض التوضيحي السليم فوراً"
+            >
+              <RotateCcw className="w-3.5 h-3.5 text-amber-400" />
+              <span className="hidden md:inline">إعادة ضبط 🔄</span>
+            </button>
+
             {/* Direct DVR Connect Modal Button */}
             <button
               onClick={() => setShowDvrConnectModal(true)}
               className="px-3.5 py-2.5 rounded-2xl bg-indigo-600/30 hover:bg-indigo-600/50 border border-indigo-400/40 text-indigo-200 text-xs font-bold transition flex items-center gap-1.5 cursor-pointer shadow-lg"
             >
               <Tv className="w-4 h-4 text-indigo-400" />
-              <span>ربط سيرفر الـ DVR ⚙️</span>
+              <span>ربط سيرفر الـ DVR ⚡</span>
             </button>
+
+            {/* Direct Web GUI Link */}
+            <a
+              href={`http://${dvrIp}:${dvrPort}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="px-3 py-2.5 rounded-2xl bg-indigo-500/15 hover:bg-indigo-500/30 border border-indigo-500/30 text-indigo-300 text-xs font-bold transition flex items-center gap-1.5 cursor-pointer"
+              title="فتح لوحة تحكم هيكفيجن أو داهوا في متصفحك مباشرة"
+            >
+              <ExternalLink className="w-3.5 h-3.5 text-indigo-400" />
+              <span className="hidden sm:inline">لوحة الـ DVR 🌐</span>
+            </a>
 
             {/* Add Camera Button */}
             <button
@@ -717,24 +786,26 @@ export default function CCTVMonitoringTab({
                 {/* ─── VIDEO / SIMULATION SCREEN AREA ─── */}
                 <div className="relative w-full aspect-video bg-[#0a0a0f] overflow-hidden select-none">
                   {/* Visual Content: Stream, Iframe, Snapshot or Simulated Live Cam */}
-                  {cam.feedType === "IFRAME" && cam.feedUrl ? (
+                  {!brokenFeedsMap[cam.id] && cam.feedType === "IFRAME" && cam.feedUrl ? (
                     <iframe
                       src={cam.feedUrl}
                       title={cam.name}
                       className="w-full h-full border-0"
                       allow="autoplay; encrypted-media"
+                      onError={() => setBrokenFeedsMap((prev) => ({ ...prev, [cam.id]: true }))}
                     />
-                  ) : cam.feedType === "STREAM" && cam.feedUrl ? (
+                  ) : !brokenFeedsMap[cam.id] && cam.feedType === "STREAM" && cam.feedUrl ? (
                     <video
                       src={cam.feedUrl}
                       autoPlay
                       muted={!isAudioActive}
                       loop
                       playsInline
+                      onError={() => setBrokenFeedsMap((prev) => ({ ...prev, [cam.id]: true }))}
                       className="w-full h-full object-cover"
                     />
                   ) : (
-                    /* High-End Simulated VIP CCTV Feed with Motion and Scanlines */
+                    /* High-End Simulated VIP CCTV Feed with Motion and Scanlines (100% Bulletproof Fallback) */
                     <div
                       className="relative w-full h-full transition-all duration-300 ease-out"
                       style={{
@@ -746,8 +817,18 @@ export default function CCTVMonitoringTab({
                     >
                       {/* eslint-disable-next-line @next/next/no-img-element */}
                       <img
-                        src={cam.snapshotUrl || fallbackImage}
+                        src={
+                          !brokenFeedsMap[cam.id] && cam.snapshotUrl
+                            ? cam.snapshotUrl
+                            : fallbackImage
+                        }
                         alt={cam.name}
+                        onError={(e: any) => {
+                          setBrokenFeedsMap((prev) => ({ ...prev, [cam.id]: true }));
+                          if (e.currentTarget.src !== fallbackImage) {
+                            e.currentTarget.src = fallbackImage;
+                          }
+                        }}
                         className="w-full h-full object-cover select-none pointer-events-none"
                       />
 
@@ -764,6 +845,22 @@ export default function CCTVMonitoringTab({
                       {/* Green Phosphor Ambient Tint if Night Vision */}
                       {isNightVision && (
                         <div className="absolute inset-0 bg-emerald-500/15 mix-blend-color pointer-events-none" />
+                      )}
+
+                      {/* Status Overlay Badge if DVR is Simulated or Reconnecting */}
+                      {(cam.feedType === "SIMULATION" || brokenFeedsMap[cam.id]) && (
+                        <div className="absolute top-12 right-3 z-20">
+                          <button
+                            type="button"
+                            onClick={() => setShowDvrConnectModal(true)}
+                            className="py-1 px-2.5 rounded-lg bg-black/80 hover:bg-black/95 border border-amber-500/40 text-amber-300 text-[10px] font-mono font-bold flex items-center gap-1.5 shadow-lg backdrop-blur-sm cursor-pointer transition"
+                            title="انقر لربط أو فحص جهاز الـ DVR"
+                          >
+                            <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+                            <span>VIP LIVE FEED</span>
+                            <Settings className="w-3 h-3 text-amber-400" />
+                          </button>
+                        </div>
                       )}
                     </div>
                   )}
@@ -1191,198 +1288,201 @@ export default function CCTVMonitoringTab({
       )}
 
       {/* ─────────────────────────────────────────────────────────────
-          5. DVR / NVR HARDWARE CONNECTION GUIDE MODAL (HIKVISION VIP)
+          5. DVR / NVR HARDWARE CONNECTION MODAL (CLEAN & DIRECT)
          ───────────────────────────────────────────────────────────── */}
       {showDvrConnectModal && (
         <div
-          className="fixed inset-0 z-50 overflow-y-auto bg-black/85 backdrop-blur-md flex items-center justify-center p-3 sm:p-4 font-sans"
+          className="fixed inset-0 z-50 overflow-y-auto bg-black/85 backdrop-blur-md flex items-center justify-center p-3 sm:p-5 font-sans"
           dir="rtl"
         >
-          <div className="relative w-full max-w-2xl bg-[#12121a] border-2 border-indigo-500/40 rounded-3xl p-5 sm:p-7 shadow-2xl space-y-4 max-h-[92vh] overflow-y-auto">
+          <div className="relative w-full max-w-xl bg-[#12121c] border-2 border-indigo-500/50 rounded-3xl p-5 sm:p-7 shadow-2xl space-y-4 max-h-[92vh] overflow-y-auto">
             {/* Header */}
             <div className="flex items-center justify-between border-b border-white/10 pb-3">
-              <div className="flex items-center gap-2">
-                <div className="w-9 h-9 rounded-xl bg-indigo-500/20 border border-indigo-400 flex items-center justify-center text-indigo-300">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-2xl bg-indigo-500/20 border border-indigo-400/40 flex items-center justify-center text-indigo-300 shadow-md">
                   <Tv className="w-5 h-5" />
                 </div>
                 <div>
-                  <h3 className="text-base font-black text-white">دليل وخريطة ربط كاميرات هيكفيجن (Hikvision VIP) 📹</h3>
-                  <p className="text-[11px] text-slate-400">إرشادات الربط المباشر والأمان التام ضد أي محاولات اختراق</p>
+                  <h3 className="text-base font-black text-white flex items-center gap-2">
+                    <span>إعداد وربط كاميرات الـ DVR بالصالون</span>
+                    <span className="py-0.5 px-2 rounded-full bg-emerald-500/20 text-emerald-300 text-[10px] font-mono border border-emerald-500/30">
+                      مباشر ⚡
+                    </span>
+                  </h3>
+                  <p className="text-xs text-slate-400">
+                    أدخل بيانات جهاز الـ DVR الخاص بالصالون لربط البث المباشر فوراً بدون برامج خارجية
+                  </p>
                 </div>
               </div>
               <button
+                type="button"
                 onClick={() => setShowDvrConnectModal(false)}
-                className="text-slate-400 hover:text-white p-1 rounded-lg bg-white/5 transition cursor-pointer"
+                className="w-8 h-8 rounded-xl bg-white/5 hover:bg-white/10 text-slate-400 hover:text-white flex items-center justify-center transition cursor-pointer"
               >
                 ✕
               </button>
             </div>
 
-            {/* Quick Answer Cards */}
-            <div className="space-y-3.5 text-xs text-slate-200">
-              {/* Question 1: What is the password and where to get it? */}
-              <div className="p-3.5 rounded-2xl bg-amber-500/10 border border-amber-500/30 space-y-1.5">
-                <div className="flex items-center gap-2 text-amber-300 font-bold text-sm">
-                  <span>🔑</span>
-                  <span>1. ما هو اسم المستخدم وكلمة المرور ومن أين أحصل عليهما؟</span>
-                </div>
-                <ul className="space-y-1 text-slate-300 text-[11px] list-disc list-inside pr-1">
-                  <li>
-                    <strong className="text-white">اسم المستخدم (Username):</strong> دائمًا هو <code className="text-amber-400 bg-black/50 px-1.5 py-0.5 rounded font-mono">admin</code> (بحروف صغيرة).
-                  </li>
-                  <li>
-                    <strong className="text-white">كلمة المرور (Password):</strong> هي كلمة السر التي وضعها الفني/المهندس الذي قام بتركيب جهاز التسجيل الـ DVR في الصالون أول مرة (تكون مثلاً: رقم هاتف، أو كود خاص مثل <code>Admin@123</code>). إذا كنت لا تعرفها، يمكنك مراجعة الفني الذي ركب الجهاز ليخبرك بها في ثوانٍ.
-                  </li>
-                  <li>
-                    <strong className="text-white">كود التحقق المشفر (Verification Code):</strong> لو بتستخدم البث السحابي Hik-Connect، ستجد كود سري من 6 حروف إنجليزية كابيتال (مثل: <code>ABCDEF</code>) مطبوع على استيكر أسفل جهاز الـ DVR، أو تجده في شاشة الجهاز تحت: <em>(الإعدادات ⚙️ ⭠ الشبكة ⭠ الوصول للمنصة Platform Access)</em>.
-                  </li>
-                </ul>
-              </div>
-
-              {/* Question 2: What is the link and where does it go? */}
-              <div className="p-3.5 rounded-2xl bg-emerald-500/10 border border-emerald-500/30 space-y-2">
-                <div className="flex items-center gap-2 text-emerald-300 font-bold text-sm">
-                  <span>🔗</span>
-                  <span>2. ما هو الرابط وأين يوضع في السيستم؟</span>
-                </div>
-                <p className="text-[11px] text-slate-300 leading-relaxed">
-                  الرابط الذي تراه هو رابط الـ <strong>RTSP</strong> للبث الحي عالي الجودة المباشر من جهاز الـ DVR. يوضع هذا الرابط داخل إعدادات أي كاميرا عند الضغط على <em>(تعديل الكاميرا ⚙️)</em> أو <em>(إضافة كاميرا جديدة ➕)</em>:
-                </p>
-
-                {/* Interactive Generator */}
-                <div className="p-3 rounded-xl bg-black/70 border border-white/10 space-y-2">
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-[11px]">
-                    <div>
-                      <label className="text-slate-400 block mb-0.5">عنوان IP جهاز الـ DVR بالصالون:</label>
-                      <input
-                        type="text"
-                        value={dvrIp}
-                        onChange={(e) => setDvrIp(e.target.value)}
-                        placeholder="192.168.1.108"
-                        className="w-full py-1.5 px-2.5 rounded-lg bg-black/60 border border-white/20 text-white font-mono"
-                      />
-                    </div>
-                    <div>
-                      <label className="text-slate-400 block mb-0.5">كلمة سر جهاز الـ DVR:</label>
-                      <input
-                        type="text"
-                        value={dvrUsername}
-                        onChange={(e) => setDvrUsername(e.target.value)}
-                        placeholder="كلمة السر الخاصة بك"
-                        className="w-full py-1.5 px-2.5 rounded-lg bg-black/60 border border-white/20 text-white font-mono"
-                      />
-                    </div>
-                  </div>
-
-                  <div className="pt-1">
-                    <span className="text-[10px] text-slate-400 block mb-1">الرابط الجاهز للنسخ المباشر للكاميرا 1 (القناة 1):</span>
-                    <div className="flex items-center gap-2">
-                      <code className="flex-1 p-2 rounded-lg bg-black border border-emerald-500/40 text-emerald-400 font-mono text-[11px] break-all select-all">
-                        rtsp://admin:{dvrUsername || "PASSWORD"}@{dvrIp || "192.168.1.108"}:554/Streaming/Channels/101
-                      </code>
-                      <button
-                        type="button"
-                        onClick={() => {
-                          const link = `rtsp://admin:${dvrUsername || "PASSWORD"}@{dvrIp || "192.168.1.108"}:554/Streaming/Channels/101`;
-                          navigator.clipboard.writeText(link);
-                          showToast("success", "تم نسخ رابط الكاميرا 1 بنجاح للحافظة 📋");
-                        }}
-                        className="px-3 py-2 rounded-lg bg-emerald-500 hover:bg-emerald-400 text-black font-bold shrink-0 transition cursor-pointer text-xs"
-                      >
-                        نسخ الرابط
-                      </button>
-                    </div>
-                    <span className="text-[10px] text-slate-400 block mt-1">
-                      💡 ملاحظة: الرقم <strong>101</strong> هو للكاميرا الأولى، الكاميرا 2 رقمها <strong>201</strong>، والكاميرا 3 رقمها <strong>301</strong> وهكذا.
-                    </span>
-                  </div>
-                </div>
-              </div>
-
-              {/* Question 3: Do we need to install any software? */}
-              <div className="p-3.5 rounded-2xl bg-blue-500/10 border border-blue-500/30 space-y-1.5">
-                <div className="flex items-center gap-2 text-blue-300 font-bold text-sm">
-                  <span>💻</span>
-                  <span>3. هل سنحتاج لتثبيت أي برامج؟</span>
-                </div>
-                <div className="space-y-1.5 text-[11px] text-slate-300 leading-relaxed">
-                  <p>
-                    <strong className="text-white">أ) بدون تثبيت أي برامج نهائياً:</strong> متصفح الويب (كروم/إيدج) يدعم فتح لوحة تحكم جهاز الـ DVR مباشرة بمجرد الضغط على زر <em>(فتح لوحة تحكم الـ DVR)</em> طالما أنت متصل بنفس شبكة الصالون (الواي فاي). كما يمكنك استخدام تطبيق <strong>Hik-Connect</strong> الرسمي المجاني على الهاتف.
-                  </p>
-                  <p>
-                    <strong className="text-white">ب) لتشغيل بث الفيديو المباشر الحي داخل صفحتنا على الفور:</strong> متصفحات الويب الحديثة لا تشغل بروتوكول RTSP مباشرة لأسباب برمجية. إذا أردت تحويل البث إلى فيديو مباشر تفاعلي (WebRTC) داخل شاشة السيستم دون أي تأخير، يوجد برنامج مجاني عبقري صغير جداً حجمه <strong>10 ميجابايت فقط</strong> يسمى <code className="text-amber-300">go2rtc</code> (بدون تثبيت أو إعدادات معقدة، ملف تنفيذي يعمل في الخلفية بصمت كخدمة).
-                  </p>
-                </div>
-              </div>
-
-              {/* Question 4: Maximum Anti-Hacking Security */}
-              <div className="p-3.5 rounded-2xl bg-rose-500/10 border border-rose-500/30 space-y-1.5">
-                <div className="flex items-center gap-2 text-rose-300 font-bold text-sm">
-                  <span>🛡️</span>
-                  <span>4. الأمان والحماية التامة: كيف نضمن عدم اختراق الكاميرات؟</span>
-                </div>
-                <div className="space-y-1 text-[11px] text-slate-300 leading-relaxed">
-                  <p className="text-white font-bold">اتبع هذه القواعد الذهبية لحماية المنظومة 100%:</p>
-                  <ul className="list-disc list-inside space-y-0.5 pr-1">
-                    <li>
-                      <strong className="text-rose-300">ممنوع فتح بورتات في الراوتر (No Port Forwarding):</strong> لا تطلب من فني النت فتح بورت 554 أو 80 في الراوتر للخارج، لأن الهاكرز يفحصون هذه البورتات.
-                    </li>
-                    <li>
-                      <strong className="text-emerald-300">استخدم البث السحابي Hik-Connect:</strong> يعتمد على سيرفرات سحابية مشفرة بتشفير البنوك (AES-128 Cloud Tunnel) ويعمل بدون أي ثغرات في الراوتر.
-                    </li>
-                    <li>
-                      <strong className="text-amber-300">تغيير كلمة المرور الافتراضية:</strong> اجعل كلمة سر الـ DVR قوية تحتوي حروفاً كبيرة وصغيرة وأرقاماً ورموزاً (مثال: <code>Basha@Secure#2026</code>).
-                    </li>
-                    <li>
-                      <strong className="text-blue-300">تفعيل تشفير البث (Stream Encryption):</strong> في إعدادات Hikvision، قم بتفعيل تشفير البث بحيث حتى لو استطاع أحد اعتراض الإشارة لن يستطيع فك شفرة الصورة إلا بكود التحقق الخاص بك.
-                    </li>
-                  </ul>
-                </div>
-              </div>
-
-              {/* 1-Click go2rtc Sync Buttons */}
-              <div className="p-3 rounded-2xl bg-gradient-to-r from-emerald-500/10 to-teal-500/10 border border-emerald-500/30 flex items-center justify-between flex-wrap gap-2">
+            {/* Inputs Grid */}
+            <div className="space-y-3.5">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
                 <div>
-                  <span className="text-white font-bold block text-xs">🚀 تحويل كروت الكاميرات في السيستم إلى بث go2rtc المباشر:</span>
-                  <span className="text-[10px] text-slate-400">بمجرد تشغيل السيرفر من ملف سطح المكتب، اضغط لتفعيل البث الحي في كروت شاشتنا فوراً:</span>
+                  <label className="text-slate-300 font-bold block mb-1">
+                    عنوان IP جهاز الـ DVR بالصالون:
+                  </label>
+                  <input
+                    type="text"
+                    value={dvrIp}
+                    onChange={(e) => setDvrIp(e.target.value)}
+                    placeholder="192.168.1.108"
+                    className="w-full py-2 px-3 rounded-xl bg-black/60 border border-white/15 text-emerald-300 font-mono font-bold text-xs focus:border-indigo-400 focus:outline-none"
+                  />
                 </div>
-                <div className="flex items-center gap-2">
-                  <button
-                    type="button"
-                    onClick={handleBulkApplyGo2rtc}
-                    className="px-3.5 py-2 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-black font-black transition cursor-pointer text-xs shadow-lg shadow-emerald-500/20"
-                  >
-                    ⚡ ربط وتفعيل بث go2rtc المباشر
-                  </button>
-                  <button
-                    type="button"
-                    onClick={handleBulkResetSimulation}
-                    className="px-3 py-2 rounded-xl bg-white/10 hover:bg-white/20 text-slate-300 font-bold transition cursor-pointer text-xs"
-                    title="إعادة الكاميرات للوضع الافتراضي"
-                  >
-                    إعادة ضبط
-                  </button>
+
+                <div>
+                  <label className="text-slate-300 font-bold block mb-1">
+                    منفذ الويب (HTTP Port):
+                  </label>
+                  <input
+                    type="number"
+                    value={dvrPort}
+                    onChange={(e) => setDvrPort(Number(e.target.value) || 80)}
+                    placeholder="80"
+                    className="w-full py-2 px-3 rounded-xl bg-black/60 border border-white/15 text-white font-mono text-xs focus:border-indigo-400 focus:outline-none"
+                  />
+                </div>
+
+                <div>
+                  <label className="text-slate-300 font-bold block mb-1">
+                    اسم المستخدم (Username):
+                  </label>
+                  <input
+                    type="text"
+                    value={dvrUsername}
+                    onChange={(e) => setDvrUsername(e.target.value)}
+                    placeholder="admin"
+                    className="w-full py-2 px-3 rounded-xl bg-black/60 border border-white/15 text-white font-mono text-xs focus:border-indigo-400 focus:outline-none"
+                  />
+                </div>
+
+                <div>
+                  <label className="text-slate-300 font-bold block mb-1">
+                    كلمة المرور (Password):
+                  </label>
+                  <input
+                    type="password"
+                    value={dvrPassword}
+                    onChange={(e) => setDvrPassword(e.target.value)}
+                    placeholder="كلمة سر الـ DVR"
+                    className="w-full py-2 px-3 rounded-xl bg-black/60 border border-white/15 text-white font-mono text-xs focus:border-indigo-400 focus:outline-none"
+                  />
                 </div>
               </div>
 
-              {/* Direct DVR Local Web Open */}
-              <div className="pt-2 flex items-center justify-between flex-wrap gap-2">
+              {/* DVR Brand & Streaming Mode */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+                <div>
+                  <label className="text-slate-300 font-bold block mb-1">
+                    نوع جهاز التسجيل:
+                  </label>
+                  <select
+                    value={dvrBrand}
+                    onChange={(e) => setDvrBrand(e.target.value as any)}
+                    className="w-full py-2 px-3 rounded-xl bg-black/60 border border-white/15 text-amber-300 font-bold text-xs focus:border-indigo-400 focus:outline-none"
+                  >
+                    <option value="hikvision">هيكفيجن (Hikvision VIP 🛡️)</option>
+                    <option value="dahua">داهوا (Dahua Technology)</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label className="text-slate-300 font-bold block mb-1">
+                    طريقة العرض في الشاشة:
+                  </label>
+                  <select
+                    value={dvrMode}
+                    onChange={(e) => setDvrMode(e.target.value as any)}
+                    className="w-full py-2 px-3 rounded-xl bg-black/60 border border-white/15 text-sky-300 font-bold text-xs focus:border-indigo-400 focus:outline-none"
+                  >
+                    <option value="SNAPSHOT_PROXY">بث لقطات حية فوري (Live Snapshot) 🌟 موصى به</option>
+                    <option value="DIRECT_WEB">لوحة الـ DVR الرسمية المدمجة (Web GUI)</option>
+                    <option value="SIMULATION">العرض التوضيحي السليم (VIP Simulated Mode)</option>
+                  </select>
+                </div>
+              </div>
+
+              {/* Ping / Connection Test Result Box */}
+              {dvrTestResult && (
+                <div
+                  className={`p-3 rounded-xl border flex items-center gap-2 text-xs font-bold ${
+                    dvrTestResult.reachable
+                      ? "bg-emerald-950/40 border-emerald-500/50 text-emerald-300"
+                      : "bg-rose-950/40 border-rose-500/50 text-rose-300"
+                  }`}
+                >
+                  {dvrTestResult.reachable ? (
+                    <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
+                  ) : (
+                    <AlertTriangle className="w-4 h-4 text-rose-400 shrink-0" />
+                  )}
+                  <span>{dvrTestResult.message}</span>
+                </div>
+              )}
+
+              {/* Test Button & Direct Link */}
+              <div className="flex items-center gap-2 pt-1">
+                <button
+                  type="button"
+                  onClick={handleTestDvr}
+                  disabled={testingDvr}
+                  className="flex-1 py-2 px-3 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 border border-white/15 text-xs font-bold transition flex items-center justify-center gap-1.5 cursor-pointer disabled:opacity-50"
+                >
+                  <Search className={`w-3.5 h-3.5 ${testingDvr ? "animate-spin text-amber-400" : ""}`} />
+                  <span>{testingDvr ? "جاري الفحص..." : "فحص الاتصال بجهاز الـ DVR 🔍"}</span>
+                </button>
+
                 <a
-                  href={`http://${dvrIp}`}
+                  href={`http://${dvrIp}:${dvrPort}`}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="px-4 py-2.5 rounded-xl bg-indigo-500 hover:bg-indigo-400 text-white font-bold transition flex items-center gap-2 cursor-pointer shadow-lg text-xs"
+                  className="py-2 px-3 rounded-xl bg-indigo-500/20 hover:bg-indigo-500/30 border border-indigo-500/40 text-indigo-300 text-xs font-bold transition flex items-center gap-1 cursor-pointer"
+                  title="فتح شاشة تحكم هيكفيجن الرسمية في نافذة جديدة"
                 >
-                  <ExternalLink className="w-4 h-4" />
-                  <span>فتح لوحة تحكم جهاز الـ DVR هيكفيجن مباشرة ({dvrIp})</span>
+                  <ExternalLink className="w-3.5 h-3.5" />
+                  <span>فتح شاشة الـ DVR 🌐</span>
                 </a>
+              </div>
+            </div>
 
+            {/* Bottom Actions */}
+            <div className="pt-3 border-t border-white/10 flex flex-col sm:flex-row items-center justify-between gap-2.5">
+              <button
+                type="button"
+                onClick={handleBulkResetSimulation}
+                className="w-full sm:w-auto py-2.5 px-4 rounded-xl bg-white/5 hover:bg-white/10 text-slate-300 text-xs font-bold transition flex items-center justify-center gap-1.5 cursor-pointer"
+                title="إعادة الكاميرات فوراً لوضع العرض التوضيحي السليم"
+              >
+                <RotateCcw className="w-3.5 h-3.5 text-amber-400" />
+                <span>إعادة ضبط العرض الافتراضي 👑</span>
+              </button>
+
+              <div className="flex items-center gap-2 w-full sm:w-auto">
                 <button
                   type="button"
                   onClick={() => setShowDvrConnectModal(false)}
-                  className="px-4 py-2.5 rounded-xl bg-white/10 hover:bg-white/20 text-slate-200 font-bold transition cursor-pointer text-xs"
+                  className="py-2.5 px-4 rounded-xl bg-white/5 hover:bg-white/10 text-slate-300 text-xs font-bold transition cursor-pointer"
                 >
-                  فهمت وأغلِق الدليل ✓
+                  إلغاء
+                </button>
+
+                <button
+                  type="button"
+                  onClick={handleApplyDvrConfig}
+                  disabled={savingCamera}
+                  className="flex-1 sm:flex-none py-2.5 px-6 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 text-xs font-black transition flex items-center justify-center gap-1.5 shadow-xl shadow-amber-500/25 cursor-pointer disabled:opacity-50"
+                >
+                  <Zap className="w-4 h-4" />
+                  <span>{savingCamera ? "جاري التطبيق..." : "ربط وتفعيل كافة الكاميرات ⚡"}</span>
                 </button>
               </div>
             </div>
