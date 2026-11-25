@@ -515,6 +515,9 @@ export default function HomePage() {
     if (isServiceWomen || isServiceNewSkin) return false;
 
     if (activeCategory === "ALL") return true;
+    if (activeCategory === "HAIR_BEARD") {
+      return ["HAIR", "BEARD", "COLOR_KERATIN"].includes(s.category);
+    }
     return s.category === activeCategory;
   });
 
@@ -789,7 +792,12 @@ export default function HomePage() {
       LADIES_SKIN: "بشرة وهيدروفيشل ✨",
       LADIES_HAIR: "شعر وبروتين 💇‍♀️",
       HAIR: "قص وتصفيف ✂️",
-      BEARD: "تحديد دقن 🧔",
+      BEARD: "حلاقة وتحديد دقن 🧔",
+      BODY_CARE: "Body Care • باديكير 💅",
+      TREATMENT_HAIR: "علاج شعر وكافيار 🧴",
+      WAXING: "واكس ونظافة 🍯",
+      MEN_SPA: "حمام ملكي VIP 👑",
+      MASSAGE: "مساج واستجمام 💆‍♂️",
       VIP_PACKAGES: "باقة VIP 👑",
       SKIN_CARE: "بشرة وبخار 🧖",
       COLOR_KERATIN: "صبغة ومعالج 🎨",
@@ -818,12 +826,13 @@ export default function HomePage() {
       ]
     : [
         { id: "ALL", label: "جميع خدمات دقن الباشا 💈" },
-        { id: "HAIR", label: "شعر وهيبة الباشا ✂️" },
-        { id: "BEARD", label: "دقن وموس إيطالي 🧔" },
-        { id: "VIP_PACKAGES", label: "بكجات VIP ملكية 👑" },
-        { id: "SKIN_CARE", label: "عناية بالبشرة وبخار 🧖" },
-        { id: "COLOR_KERATIN", label: "فرد وصبغة 🎨" },
-        { id: "KIDS", label: "أطفال 👦" },
+        { id: "HAIR_BEARD", label: "الحلاقة والذقن ✂️" },
+        { id: "SKIN_CARE", label: "العناية بالبشرة 🧖" },
+        { id: "BODY_CARE", label: "Body Care (باديكير) 💅" },
+        { id: "TREATMENT_HAIR", label: "Treatment Hair (علاجات شعر) 🧴" },
+        { id: "WAXING", label: "واكس 🍯" },
+        { id: "MEN_SPA", label: "الحمامات الملكية 👑" },
+        { id: "MASSAGE", label: "مساج واستجمام 💆‍♂️" },
       ];
 
   return (
