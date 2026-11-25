@@ -978,34 +978,25 @@ export default function HomePage() {
                 }}
                 className="group relative rounded-3xl overflow-hidden border-2 border-amber-500/30 hover:border-amber-400 bg-gradient-to-b from-slate-900/90 to-black p-5 sm:p-6 cursor-pointer transition-all duration-300 hover:scale-[1.02] hover:shadow-2xl hover:shadow-amber-500/20 flex flex-col justify-between"
               >
-                {/* Card Image Cover */}
-                <div className="h-40 sm:h-48 w-full rounded-2xl overflow-hidden relative mb-4">
+                {/* Card Logo Cover */}
+                <div className="h-48 sm:h-56 w-full rounded-2xl overflow-hidden relative mb-4 bg-gradient-to-b from-[#1c1208] to-black border border-amber-500/30 flex items-center justify-center p-2.5 shadow-inner">
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img
-                    src="/dakn-hero.jpg"
-                    alt="دقن الباشا"
-                    className="w-full h-full object-cover group-hover:scale-105 transition duration-500"
+                    src="/dakn-logo.jpg"
+                    alt="شعار صالون دقن الباشا"
+                    className="w-full h-full object-contain group-hover:scale-105 transition duration-500 rounded-xl"
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black via-black/30 to-transparent" />
-                  <div className="absolute top-3 right-3 flex items-center gap-1.5 bg-black/80 backdrop-blur-md px-3 py-1 rounded-full border border-amber-500/40 text-[11px] font-black text-amber-300">
+                  <div className="absolute top-3 right-3 flex items-center gap-1.5 bg-black/85 backdrop-blur-md px-3 py-1 rounded-full border border-amber-500/50 text-[11px] font-black text-amber-300 shadow-md">
                     <Scissors className="w-3.5 h-3.5" />
                     <span>رجالي VIP</span>
-                  </div>
-                  <div className="absolute bottom-3 right-3 left-3 flex items-center gap-3">
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img
-                      src="/dakn-logo.jpg"
-                      alt="شعار دقن الباشا"
-                      className="w-11 h-11 rounded-xl object-cover border-2 border-amber-400 bg-black shrink-0 shadow-lg"
-                    />
-                    <div className="text-white">
-                      <h3 className="font-black text-base sm:text-lg text-amber-300 leading-tight">صالون دقن الباشا</h3>
-                      <p className="text-[11px] text-slate-300">73 شارع ترعة الجبل، حدائق القبة</p>
-                    </div>
                   </div>
                 </div>
 
                 <div className="space-y-4">
+                  <div className="text-right pb-1 border-b border-amber-500/10">
+                    <h3 className="font-black text-lg sm:text-xl text-amber-300 leading-tight">صالون دقن الباشا</h3>
+                    <p className="text-xs text-slate-400 mt-0.5">73 شارع ترعة الجبل، أمام مستشفى سان بول</p>
+                  </div>
                   <p className="text-xs text-slate-300 leading-relaxed">
                     خدمات الحلاقة الملكية، العناية بالبشرة، الاستشوار، وعلاجات الشعر بأعلى درجات الرفاهية والخصوصية.
                   </p>
@@ -1028,34 +1019,25 @@ export default function HomePage() {
                 }}
                 className="group relative rounded-3xl overflow-hidden border-2 border-rose-500/30 hover:border-rose-400 bg-gradient-to-b from-slate-900/90 to-black p-5 sm:p-6 cursor-pointer transition-all duration-300 hover:scale-[1.02] hover:shadow-2xl hover:shadow-rose-500/20 flex flex-col justify-between"
               >
-                {/* Card Image Cover */}
-                <div className="h-40 sm:h-48 w-full rounded-2xl overflow-hidden relative mb-4">
+                {/* Card Logo Cover */}
+                <div className="h-48 sm:h-56 w-full rounded-2xl overflow-hidden relative mb-4 bg-gradient-to-b from-[#220716] to-black border border-rose-500/30 flex items-center justify-center p-2.5 shadow-inner">
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img
-                    src="/hammam-hero.jpg"
-                    alt="حمام الباشا"
-                    className="w-full h-full object-cover group-hover:scale-105 transition duration-500"
+                    src="/hammam-logo.jpg"
+                    alt="شعار حمام الباشا الملكي"
+                    className="w-full h-full object-contain group-hover:scale-105 transition duration-500 rounded-xl"
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black via-black/30 to-transparent" />
-                  <div className="absolute top-3 right-3 flex items-center gap-1.5 bg-black/80 backdrop-blur-md px-3 py-1 rounded-full border border-rose-500/40 text-[11px] font-black text-rose-300">
+                  <div className="absolute top-3 right-3 flex items-center gap-1.5 bg-black/85 backdrop-blur-md px-3 py-1 rounded-full border border-rose-500/50 text-[11px] font-black text-rose-300 shadow-md">
                     <Sparkles className="w-3.5 h-3.5" />
                     <span>حريمي وسبا VIP</span>
-                  </div>
-                  <div className="absolute bottom-3 right-3 left-3 flex items-center gap-3">
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img
-                      src="/hammam-logo.jpg"
-                      alt="شعار حمام الباشا"
-                      className="w-11 h-11 rounded-xl object-cover border-2 border-rose-400 bg-black shrink-0 shadow-lg"
-                    />
-                    <div className="text-white">
-                      <h3 className="font-black text-base sm:text-lg text-rose-300 leading-tight">حمام الباشا الملكي</h3>
-                      <p className="text-[11px] text-slate-300">84 ترعة الجبل، كينج بارك مول</p>
-                    </div>
                   </div>
                 </div>
 
                 <div className="space-y-4">
+                  <div className="text-right pb-1 border-b border-rose-500/10">
+                    <h3 className="font-black text-lg sm:text-xl text-rose-300 leading-tight">حمام الباشا الملكي</h3>
+                    <p className="text-xs text-slate-400 mt-0.5">84 ترعة الجبل، كينج بارك مول</p>
+                  </div>
                   <p className="text-xs text-slate-300 leading-relaxed">
                     الحمام المغربي الملكي، السبا، تجهيز العرائس، العناية بالبشرة والمساج مع طاقم نسائي متخصص بالكامل.
                   </p>
@@ -1078,34 +1060,25 @@ export default function HomePage() {
                 }}
                 className="group relative rounded-3xl overflow-hidden border-2 border-teal-500/30 hover:border-teal-400 bg-gradient-to-b from-[#081e28] to-black p-5 sm:p-6 cursor-pointer transition-all duration-300 hover:scale-[1.02] hover:shadow-2xl hover:shadow-teal-500/20 flex flex-col justify-between"
               >
-                {/* Card Image Cover */}
-                <div className="h-40 sm:h-48 w-full rounded-2xl overflow-hidden relative mb-4">
+                {/* Card Logo Cover */}
+                <div className="h-48 sm:h-56 w-full rounded-2xl overflow-hidden relative mb-4 bg-gradient-to-b from-[#081e28] to-black border border-teal-500/30 flex items-center justify-center p-2.5 shadow-inner">
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img
-                    src="/newskin-hero.jpg"
-                    alt="نيو سكين New Skin VIP"
-                    className="w-full h-full object-cover group-hover:scale-105 transition duration-500"
+                    src="/newskin-logo.jpg"
+                    alt="شعار عيادة نيو سكين"
+                    className="w-full h-full object-contain group-hover:scale-105 transition duration-500 rounded-xl"
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black via-black/30 to-transparent" />
-                  <div className="absolute top-3 right-3 flex items-center gap-1.5 bg-black/80 backdrop-blur-md px-3 py-1 rounded-full border border-teal-500/40 text-[11px] font-black text-teal-300">
+                  <div className="absolute top-3 right-3 flex items-center gap-1.5 bg-black/85 backdrop-blur-md px-3 py-1 rounded-full border border-teal-500/50 text-[11px] font-black text-teal-300 shadow-md">
                     <Sparkles className="w-3.5 h-3.5" />
                     <span>عيادة وليزر VIP</span>
-                  </div>
-                  <div className="absolute bottom-3 right-3 left-3 flex items-center gap-3">
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img
-                      src="/newskin-logo.jpg"
-                      alt="شعار نيو سكين"
-                      className="w-11 h-11 rounded-xl object-cover border-2 border-teal-400 bg-black shrink-0 shadow-lg"
-                    />
-                    <div className="text-white">
-                      <h3 className="font-black text-base sm:text-lg text-teal-300 leading-tight">نيو سكين New Skin</h3>
-                      <p className="text-[11px] text-slate-300">73 شارع ترعة الجبل، حدائق القبة</p>
-                    </div>
                   </div>
                 </div>
 
                 <div className="space-y-4">
+                  <div className="text-right pb-1 border-b border-teal-500/10">
+                    <h3 className="font-black text-lg sm:text-xl text-teal-300 leading-tight">نيو سكين New Skin</h3>
+                    <p className="text-xs text-slate-400 mt-0.5">73 شارع ترعة الجبل، حدائق القبة</p>
+                  </div>
                   <div className="p-2.5 rounded-2xl bg-black/50 border border-teal-500/20 text-xs text-slate-300 leading-relaxed space-y-1">
                     <p className="text-teal-300 font-bold flex items-center gap-1.5 text-[11px]">
                       <span>🧖‍♀️ حجرة الاسكين:</span>

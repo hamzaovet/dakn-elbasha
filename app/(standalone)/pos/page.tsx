@@ -2601,7 +2601,7 @@ ${servicesText ? `*الخدمات:* \n${servicesText}\n` : ""}${productsText ? `
           className="fixed inset-0 z-50 overflow-y-auto bg-black/85 backdrop-blur-md flex justify-center items-start sm:items-center py-4 sm:py-6 px-3 sm:px-6 font-sans no-print"
           dir="rtl"
         >
-          <div className="relative w-full max-w-5xl my-auto bg-[#12121a] border border-amber-500/40 rounded-3xl p-5 sm:p-7 shadow-2xl space-y-4 max-h-[94vh] flex flex-col">
+          <div className="relative w-full max-w-7xl my-auto bg-[#101018] border border-amber-500/40 rounded-3xl p-5 sm:p-7 shadow-2xl space-y-4 max-h-[94vh] flex flex-col">
             <div className="flex items-center justify-between border-b border-white/10 pb-3 shrink-0">
               <div className="flex items-center gap-3">
                 <div className="w-10 h-10 rounded-2xl bg-amber-500/20 border border-amber-400/40 text-amber-400 flex items-center justify-center">
@@ -2624,9 +2624,9 @@ ${servicesText ? `*الخدمات:* \n${servicesText}\n` : ""}${productsText ? `
             <form onSubmit={handleAdmitCustomerToChair} className="overflow-y-auto pr-1 flex-1 text-xs">
               <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 items-start">
                 {/* ──────────────────────────────────────────
-                    RIGHT COLUMN: CUSTOMER & CHAIR DETAILS (5 COLS)
+                    RIGHT COLUMN: CUSTOMER & CHAIR DETAILS (4 COLS)
                    ────────────────────────────────────────── */}
-                <div className="lg:col-span-5 space-y-3.5 bg-black/40 p-4 rounded-2xl border border-white/5">
+                <div className="lg:col-span-4 space-y-3.5 bg-black/40 p-4 rounded-2xl border border-white/5">
                   <h4 className="font-bold text-amber-400 text-xs flex items-center gap-1.5 pb-1 border-b border-white/5">
                     <span>👤</span>
                     <span>بيانات العميل والكرسي</span>
@@ -2763,11 +2763,46 @@ ${servicesText ? `*الخدمات:* \n${servicesText}\n` : ""}${productsText ? `
                 </div>
 
                 {/* ──────────────────────────────────────────
-                    LEFT COLUMN: SERVICES CATALOG & ARABIC CATEGORIES (7 COLS)
+                    LEFT COLUMN: SERVICES CATALOG & ARABIC CATEGORIES (8 COLS)
                    ────────────────────────────────────────── */}
-                <div className="lg:col-span-7 space-y-3 bg-black/40 p-4 rounded-2xl border border-white/5 flex flex-col">
-                  {/* Category dictionary mapping helper */}
+                <div className="lg:col-span-8 space-y-3 bg-black/40 p-4 rounded-2xl border border-white/5 flex flex-col">
+                  {/* Category dictionary & branch-aware filter */}
                   {(() => {
+                    // 1. Precise Category Lists per Branch / Entity
+                    const MEN_CATEGORIES = [
+                      "HAIR",
+                      "BEARD",
+                      "COLOR_KERATIN",
+                      "SKIN_CARE",
+                      "BODY_CARE",
+                      "TREATMENT_HAIR",
+                      "WAXING",
+                      "MEN_SPA",
+                      "VIP_PACKAGES",
+                      "KIDS",
+                    ];
+
+                    const WOMEN_CATEGORIES = [
+                      "LADIES_SPA",
+                      "BODY_MASKS",
+                      "LADIES_HAIR",
+                      "LADIES_COLOR",
+                      "LADIES_SKIN",
+                      "BROWS_LASHES",
+                      "NAILS",
+                      "EXTENSIONS",
+                      "WAX_SWEET",
+                      "MAKEUP",
+                      "MASSAGE",
+                    ];
+
+                    const NEWSKIN_CATEGORIES = [
+                      "NEWSKIN_LASER",
+                      "NEWSKIN_DERMA",
+                      "NEWSKIN_MICRO",
+                      "NEWSKIN_PEDICURE",
+                    ];
+
                     const ARABIC_CATS: Record<string, string> = {
                       ALL: "كل الأقسام 👑",
                       HAIR: "قصات الشعر 💈",
@@ -2778,6 +2813,8 @@ ${servicesText ? `*الخدمات:* \n${servicesText}\n` : ""}${productsText ? `
                       TREATMENT_HAIR: "معالجات شعر وكافيار 💆‍♂️",
                       WAXING: "واكس رجالي 🍯",
                       MEN_SPA: "حمامات رجالية ملكية 🛁",
+                      VIP_PACKAGES: "عروض وبكجات VIP 👑",
+                      KIDS: "أطفال 👦",
                       LADIES_SPA: "حمامات سبا حريمي 🧖‍♀️",
                       LADIES_HAIR: "تصفيف وتسريحات حريمي 💇‍♀️",
                       EXTENSIONS: "إكستنشن وتركيبات 🎀",
@@ -2795,8 +2832,262 @@ ${servicesText ? `*الخدمات:* \n${servicesText}\n` : ""}${productsText ? `
                       NEWSKIN_PEDICURE: "باديكير سبا إيطالي 🇮🇹",
                     };
 
-                    const rawCats = ["ALL", ...Array.from(new Set(servicesCatalog.map((s) => s.category || "عام")))];
-                    const filteredServices = servicesCatalog.filter((svc) => {
+                    // 2. Distinct Color Themes & Icons per Category for High-End Interactive Tiles
+                    const CATEGORY_STYLES: Record<string, { bg: string; border: string; activeBorder: string; activeBg: string; text: string; badgeBg: string; icon: string }> = {
+                      HAIR: {
+                        bg: "from-amber-950/40 via-[#18120d] to-black",
+                        border: "border-amber-500/25 hover:border-amber-400",
+                        activeBorder: "border-amber-400 ring-2 ring-amber-400/50 shadow-lg shadow-amber-500/25",
+                        activeBg: "bg-gradient-to-br from-amber-500/30 via-amber-950/50 to-black",
+                        text: "text-amber-300",
+                        badgeBg: "bg-amber-500/20 text-amber-300 border-amber-500/30",
+                        icon: "💈",
+                      },
+                      BEARD: {
+                        bg: "from-cyan-950/40 via-[#0d1618] to-black",
+                        border: "border-cyan-500/25 hover:border-cyan-400",
+                        activeBorder: "border-cyan-400 ring-2 ring-cyan-400/50 shadow-lg shadow-cyan-500/25",
+                        activeBg: "bg-gradient-to-br from-cyan-500/30 via-cyan-950/50 to-black",
+                        text: "text-cyan-300",
+                        badgeBg: "bg-cyan-500/20 text-cyan-300 border-cyan-500/30",
+                        icon: "🪒",
+                      },
+                      SKIN_CARE: {
+                        bg: "from-emerald-950/40 via-[#0d1814] to-black",
+                        border: "border-emerald-500/25 hover:border-emerald-400",
+                        activeBorder: "border-emerald-400 ring-2 ring-emerald-400/50 shadow-lg shadow-emerald-500/25",
+                        activeBg: "bg-gradient-to-br from-emerald-500/30 via-emerald-950/50 to-black",
+                        text: "text-emerald-300",
+                        badgeBg: "bg-emerald-500/20 text-emerald-300 border-emerald-500/30",
+                        icon: "🧖‍♂️",
+                      },
+                      BODY_CARE: {
+                        bg: "from-blue-950/40 via-[#0d1318] to-black",
+                        border: "border-blue-500/25 hover:border-blue-400",
+                        activeBorder: "border-blue-400 ring-2 ring-blue-400/50 shadow-lg shadow-blue-500/25",
+                        activeBg: "bg-gradient-to-br from-blue-500/30 via-blue-950/50 to-black",
+                        text: "text-blue-300",
+                        badgeBg: "bg-blue-500/20 text-blue-300 border-blue-500/30",
+                        icon: "🧼",
+                      },
+                      TREATMENT_HAIR: {
+                        bg: "from-orange-950/40 via-[#18130d] to-black",
+                        border: "border-orange-500/25 hover:border-orange-400",
+                        activeBorder: "border-orange-400 ring-2 ring-orange-400/50 shadow-lg shadow-orange-500/25",
+                        activeBg: "bg-gradient-to-br from-orange-500/30 via-orange-950/50 to-black",
+                        text: "text-orange-300",
+                        badgeBg: "bg-orange-500/20 text-orange-300 border-orange-500/30",
+                        icon: "💆‍♂️",
+                      },
+                      COLOR_KERATIN: {
+                        bg: "from-purple-950/40 via-[#160d18] to-black",
+                        border: "border-purple-500/25 hover:border-purple-400",
+                        activeBorder: "border-purple-400 ring-2 ring-purple-400/50 shadow-lg shadow-purple-500/25",
+                        activeBg: "bg-gradient-to-br from-purple-500/30 via-purple-950/50 to-black",
+                        text: "text-purple-300",
+                        badgeBg: "bg-purple-500/20 text-purple-300 border-purple-500/30",
+                        icon: "✨",
+                      },
+                      WAXING: {
+                        bg: "from-yellow-950/40 via-[#18170d] to-black",
+                        border: "border-yellow-500/25 hover:border-yellow-400",
+                        activeBorder: "border-yellow-400 ring-2 ring-yellow-400/50 shadow-lg shadow-yellow-500/25",
+                        activeBg: "bg-gradient-to-br from-yellow-500/30 via-yellow-950/50 to-black",
+                        text: "text-yellow-300",
+                        badgeBg: "bg-yellow-500/20 text-yellow-300 border-yellow-500/30",
+                        icon: "🍯",
+                      },
+                      MEN_SPA: {
+                        bg: "from-amber-900/40 via-[#20150b] to-black",
+                        border: "border-amber-400/30 hover:border-amber-300",
+                        activeBorder: "border-amber-300 ring-2 ring-amber-300/50 shadow-lg shadow-amber-500/30",
+                        activeBg: "bg-gradient-to-br from-amber-400/35 via-amber-950/60 to-black",
+                        text: "text-amber-200",
+                        badgeBg: "bg-amber-400/20 text-amber-200 border-amber-400/40",
+                        icon: "🛁",
+                      },
+                      VIP_PACKAGES: {
+                        bg: "from-yellow-900/45 via-[#231a08] to-black",
+                        border: "border-yellow-400/40 hover:border-yellow-300",
+                        activeBorder: "border-yellow-300 ring-2 ring-yellow-300/60 shadow-lg shadow-yellow-500/35",
+                        activeBg: "bg-gradient-to-br from-yellow-400/40 via-yellow-950/60 to-black",
+                        text: "text-yellow-200",
+                        badgeBg: "bg-yellow-400/25 text-yellow-200 border-yellow-400/50",
+                        icon: "👑",
+                      },
+                      KIDS: {
+                        bg: "from-lime-950/40 via-[#13180d] to-black",
+                        border: "border-lime-500/25 hover:border-lime-400",
+                        activeBorder: "border-lime-400 ring-2 ring-lime-400/50 shadow-lg shadow-lime-500/25",
+                        activeBg: "bg-gradient-to-br from-lime-500/30 via-lime-950/50 to-black",
+                        text: "text-lime-300",
+                        badgeBg: "bg-lime-500/20 text-lime-300 border-lime-500/30",
+                        icon: "👦",
+                      },
+                      LADIES_SPA: {
+                        bg: "from-rose-950/40 via-[#1c0d15] to-black",
+                        border: "border-rose-500/25 hover:border-rose-400",
+                        activeBorder: "border-rose-400 ring-2 ring-rose-400/50 shadow-lg shadow-rose-500/25",
+                        activeBg: "bg-gradient-to-br from-rose-500/30 via-rose-950/50 to-black",
+                        text: "text-rose-300",
+                        badgeBg: "bg-rose-500/20 text-rose-300 border-rose-500/30",
+                        icon: "🧖‍♀️",
+                      },
+                      BODY_MASKS: {
+                        bg: "from-pink-950/40 via-[#1a0d17] to-black",
+                        border: "border-pink-500/25 hover:border-pink-400",
+                        activeBorder: "border-pink-400 ring-2 ring-pink-400/50 shadow-lg shadow-pink-500/25",
+                        activeBg: "bg-gradient-to-br from-pink-500/30 via-pink-950/50 to-black",
+                        text: "text-pink-300",
+                        badgeBg: "bg-pink-500/20 text-pink-300 border-pink-500/30",
+                        icon: "🌺",
+                      },
+                      LADIES_HAIR: {
+                        bg: "from-fuchsia-950/40 via-[#180d19] to-black",
+                        border: "border-fuchsia-500/25 hover:border-fuchsia-400",
+                        activeBorder: "border-fuchsia-400 ring-2 ring-fuchsia-400/50 shadow-lg shadow-fuchsia-500/25",
+                        activeBg: "bg-gradient-to-br from-fuchsia-500/30 via-fuchsia-950/50 to-black",
+                        text: "text-fuchsia-300",
+                        badgeBg: "bg-fuchsia-500/20 text-fuchsia-300 border-fuchsia-500/30",
+                        icon: "💇‍♀️",
+                      },
+                      LADIES_COLOR: {
+                        bg: "from-violet-950/40 via-[#140d1a] to-black",
+                        border: "border-violet-500/25 hover:border-violet-400",
+                        activeBorder: "border-violet-400 ring-2 ring-violet-400/50 shadow-lg shadow-violet-500/25",
+                        activeBg: "bg-gradient-to-br from-violet-500/30 via-violet-950/50 to-black",
+                        text: "text-violet-300",
+                        badgeBg: "bg-violet-500/20 text-violet-300 border-violet-500/30",
+                        icon: "🎨",
+                      },
+                      LADIES_SKIN: {
+                        bg: "from-rose-950/40 via-[#1b0d13] to-black",
+                        border: "border-rose-400/25 hover:border-rose-300",
+                        activeBorder: "border-rose-300 ring-2 ring-rose-300/50 shadow-lg shadow-rose-500/25",
+                        activeBg: "bg-gradient-to-br from-rose-400/30 via-rose-950/50 to-black",
+                        text: "text-rose-200",
+                        badgeBg: "bg-rose-400/20 text-rose-200 border-rose-400/30",
+                        icon: "🌸",
+                      },
+                      BROWS_LASHES: {
+                        bg: "from-purple-950/40 via-[#150d19] to-black",
+                        border: "border-purple-400/25 hover:border-purple-300",
+                        activeBorder: "border-purple-300 ring-2 ring-purple-300/50 shadow-lg shadow-purple-500/25",
+                        activeBg: "bg-gradient-to-br from-purple-400/30 via-purple-950/50 to-black",
+                        text: "text-purple-200",
+                        badgeBg: "bg-purple-400/20 text-purple-200 border-purple-400/30",
+                        icon: "👁️",
+                      },
+                      NAILS: {
+                        bg: "from-pink-950/40 via-[#1c0d16] to-black",
+                        border: "border-pink-400/25 hover:border-pink-300",
+                        activeBorder: "border-pink-300 ring-2 ring-pink-300/50 shadow-lg shadow-pink-500/25",
+                        activeBg: "bg-gradient-to-br from-pink-400/30 via-pink-950/50 to-black",
+                        text: "text-pink-200",
+                        badgeBg: "bg-pink-400/20 text-pink-200 border-pink-400/30",
+                        icon: "💅",
+                      },
+                      EXTENSIONS: {
+                        bg: "from-red-950/40 via-[#1a0d10] to-black",
+                        border: "border-red-500/25 hover:border-red-400",
+                        activeBorder: "border-red-400 ring-2 ring-red-400/50 shadow-lg shadow-red-500/25",
+                        activeBg: "bg-gradient-to-br from-red-500/30 via-red-950/50 to-black",
+                        text: "text-red-300",
+                        badgeBg: "bg-red-500/20 text-red-300 border-red-500/30",
+                        icon: "🎀",
+                      },
+                      WAX_SWEET: {
+                        bg: "from-amber-950/40 via-[#18130d] to-black",
+                        border: "border-amber-400/25 hover:border-amber-300",
+                        activeBorder: "border-amber-300 ring-2 ring-amber-300/50 shadow-lg shadow-amber-500/25",
+                        activeBg: "bg-gradient-to-br from-amber-400/30 via-amber-950/50 to-black",
+                        text: "text-amber-200",
+                        badgeBg: "bg-amber-400/20 text-amber-200 border-amber-400/30",
+                        icon: "🍯",
+                      },
+                      MAKEUP: {
+                        bg: "from-rose-950/40 via-[#1c0d12] to-black",
+                        border: "border-rose-600/30 hover:border-rose-400",
+                        activeBorder: "border-rose-400 ring-2 ring-rose-400/50 shadow-lg shadow-rose-500/25",
+                        activeBg: "bg-gradient-to-br from-rose-600/30 via-rose-950/50 to-black",
+                        text: "text-rose-200",
+                        badgeBg: "bg-rose-600/20 text-rose-200 border-rose-600/30",
+                        icon: "💄",
+                      },
+                      MASSAGE: {
+                        bg: "from-teal-950/40 via-[#0d1816] to-black",
+                        border: "border-teal-500/25 hover:border-teal-400",
+                        activeBorder: "border-teal-400 ring-2 ring-teal-400/50 shadow-lg shadow-teal-500/25",
+                        activeBg: "bg-gradient-to-br from-teal-500/30 via-teal-950/50 to-black",
+                        text: "text-teal-300",
+                        badgeBg: "bg-teal-500/20 text-teal-300 border-teal-500/30",
+                        icon: "💆‍♀️",
+                      },
+                      NEWSKIN_LASER: {
+                        bg: "from-cyan-950/40 via-[#09181d] to-black",
+                        border: "border-cyan-400/30 hover:border-cyan-300",
+                        activeBorder: "border-cyan-300 ring-2 ring-cyan-300/60 shadow-lg shadow-cyan-500/30",
+                        activeBg: "bg-gradient-to-br from-cyan-400/30 via-cyan-950/50 to-black",
+                        text: "text-cyan-200",
+                        badgeBg: "bg-cyan-400/20 text-cyan-200 border-cyan-400/40",
+                        icon: "⚡",
+                      },
+                      NEWSKIN_MICRO: {
+                        bg: "from-amber-950/40 via-[#18150d] to-black",
+                        border: "border-amber-400/30 hover:border-amber-300",
+                        activeBorder: "border-amber-300 ring-2 ring-amber-300/50 shadow-lg shadow-amber-500/25",
+                        activeBg: "bg-gradient-to-br from-amber-400/30 via-amber-950/50 to-black",
+                        text: "text-amber-200",
+                        badgeBg: "bg-amber-400/20 text-amber-200 border-amber-400/40",
+                        icon: "🌟",
+                      },
+                      NEWSKIN_DERMA: {
+                        bg: "from-teal-950/40 via-[#0d1a18] to-black",
+                        border: "border-teal-400/30 hover:border-teal-300",
+                        activeBorder: "border-teal-300 ring-2 ring-teal-300/50 shadow-lg shadow-teal-500/25",
+                        activeBg: "bg-gradient-to-br from-teal-400/30 via-teal-950/50 to-black",
+                        text: "text-teal-200",
+                        badgeBg: "bg-teal-400/20 text-teal-200 border-teal-400/40",
+                        icon: "🩺",
+                      },
+                      NEWSKIN_PEDICURE: {
+                        bg: "from-emerald-950/40 via-[#0d1914] to-black",
+                        border: "border-emerald-400/30 hover:border-emerald-300",
+                        activeBorder: "border-emerald-300 ring-2 ring-emerald-300/50 shadow-lg shadow-emerald-500/25",
+                        activeBg: "bg-gradient-to-br from-emerald-400/30 via-emerald-950/50 to-black",
+                        text: "text-emerald-200",
+                        badgeBg: "bg-emerald-400/20 text-emerald-200 border-emerald-400/40",
+                        icon: "🇮🇹",
+                      },
+                    };
+
+                    const defaultStyle = {
+                      bg: "from-slate-900 via-slate-950 to-black",
+                      border: "border-white/10 hover:border-amber-400/50",
+                      activeBorder: "border-amber-400 ring-2 ring-amber-400/50 shadow-lg shadow-amber-500/20",
+                      activeBg: "bg-gradient-to-br from-amber-500/25 to-black",
+                      text: "text-slate-200",
+                      badgeBg: "bg-white/10 text-slate-300 border-white/10",
+                      icon: "✨",
+                    };
+
+                    // 3. Strictly Filter Services Catalog by Branch
+                    const allowedBranchCategories = isNewSkinTheme
+                      ? NEWSKIN_CATEGORIES
+                      : isWomenTheme
+                      ? WOMEN_CATEGORIES
+                      : MEN_CATEGORIES;
+
+                    const branchServices = (activeBranchId === "ALL" && isOwnerOrGM)
+                      ? servicesCatalog
+                      : servicesCatalog.filter((svc) => allowedBranchCategories.includes(svc.category));
+
+                    const rawCats = [
+                      "ALL",
+                      ...allowedBranchCategories.filter((cat) => branchServices.some((s) => s.category === cat)),
+                    ];
+
+                    const filteredServices = branchServices.filter((svc) => {
                       const matchCat = admitServiceCategory === "ALL" || svc.category === admitServiceCategory;
                       const matchSearch =
                         !admitServiceSearch.trim() ||
@@ -2807,39 +3098,49 @@ ${servicesText ? `*الخدمات:* \n${servicesText}\n` : ""}${productsText ? `
                     return (
                       <>
                         <div className="flex items-center justify-between pb-1 border-b border-white/5">
-                          <div>
-                            <span className="font-bold text-amber-300 text-xs block">
+                          <div className="flex items-center gap-2">
+                            <span className="font-black text-amber-300 text-sm block">
                               قائمة الخدمات المطلوبة مبدئياً ✂️
                             </span>
-                            <span className="text-[10px] text-slate-400">
-                              تظهر مباشرة عند الكابتن على تابلت الكرسي
+                            <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-amber-500/15 text-amber-300 border border-amber-500/30">
+                              {isNewSkinTheme
+                                ? "💎 عيادة نيو سكين VIP"
+                                : isWomenTheme
+                                ? "🌸 حمام وسبا الباشا"
+                                : "💈 صالون دقن الباشا (رجالي)"}
                             </span>
                           </div>
                           {admitSelectedServices.length > 0 && (
                             <button
                               type="button"
                               onClick={() => setAdmitSelectedServices([])}
-                              className="text-[11px] text-rose-400 hover:text-rose-300 underline font-bold cursor-pointer"
+                              className="text-xs text-rose-400 hover:text-rose-300 underline font-bold cursor-pointer"
                             >
                               إلغاء تحديد ({admitSelectedServices.length}) ✕
                             </button>
                           )}
                         </div>
 
-                        {/* Search and Quick Filters */}
+                        {/* Search Bar */}
                         <div className="relative">
                           <input
                             type="text"
                             value={admitServiceSearch}
                             onChange={(e) => setAdmitServiceSearch(e.target.value)}
-                            placeholder="🔍 ابحث عن أي خدمة بالاسم (مثال: حلاقة، كافيار، مغربي، ليزر)..."
-                            className="w-full py-2 px-3 rounded-xl bg-black/60 border border-white/10 text-white text-xs font-bold focus:border-amber-400 outline-none placeholder:text-slate-500"
+                            placeholder={
+                              isNewSkinTheme
+                                ? "🔍 ابحث في خدمات عيادة نيو سكين (ليزر، ديرما، باديكير سبا، مايكرو)..."
+                                : isWomenTheme
+                                ? "🔍 ابحث في خدمات حمام الباشا (حمام مغربي، دلكة، سيشوار، أظافر، مساج)..."
+                                : "🔍 ابحث في خدمات دقن الباشا (حلاقة شعر، لحية، تنظيف بشرة، معالجات، بكجات)..."
+                            }
+                            className="w-full py-2.5 px-3.5 rounded-xl bg-black/60 border border-white/10 text-white text-xs font-bold focus:border-amber-400 outline-none placeholder:text-slate-500"
                           />
                           {admitServiceSearch && (
                             <button
                               type="button"
                               onClick={() => setAdmitServiceSearch("")}
-                              className="absolute left-2.5 top-2 text-slate-400 hover:text-white text-xs font-bold"
+                              className="absolute left-2.5 top-2.5 text-slate-400 hover:text-white text-xs font-bold"
                             >
                               ✕
                             </button>
@@ -2856,7 +3157,7 @@ ${servicesText ? `*الخدمات:* \n${servicesText}\n` : ""}${productsText ? `
                                 key={cat}
                                 type="button"
                                 onClick={() => setAdmitServiceCategory(cat)}
-                                className={`py-1 px-2.5 rounded-lg text-[11px] font-bold transition shrink-0 cursor-pointer ${
+                                className={`py-1.5 px-3 rounded-xl text-xs font-bold transition shrink-0 cursor-pointer ${
                                   isSelected
                                     ? "bg-amber-500 text-slate-950 font-black shadow-md shadow-amber-500/30 ring-1 ring-amber-300 scale-105"
                                     : "bg-white/5 hover:bg-white/10 text-slate-300 border border-white/5"
@@ -2868,15 +3169,17 @@ ${servicesText ? `*الخدمات:* \n${servicesText}\n` : ""}${productsText ? `
                           })}
                         </div>
 
-                        {/* Services Grid (Spacious 2 columns) */}
-                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 max-h-[38vh] overflow-y-auto pr-1">
+                        {/* Interactive Square Tiles Grid (Responsive 2 to 5 columns) */}
+                        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 xl:grid-cols-5 gap-2.5 max-h-[50vh] overflow-y-auto pr-1.5 custom-scrollbar">
                           {filteredServices.length === 0 ? (
-                            <div className="col-span-2 py-8 text-center text-slate-500 text-xs font-bold">
-                              لا توجد خدمات مطابقة لبحثك 🔎
+                            <div className="col-span-full py-12 text-center text-slate-500 text-xs font-bold">
+                              لا توجد خدمات مطابقة لبحثك في هذا القسم 🔎
                             </div>
                           ) : (
                             filteredServices.map((svc) => {
                               const isSelected = admitSelectedServices.some((s) => s.id === svc.id);
+                              const style = CATEGORY_STYLES[svc.category] || defaultStyle;
+
                               return (
                                 <button
                                   key={svc.id}
@@ -2898,30 +3201,45 @@ ${servicesText ? `*الخدمات:* \n${servicesText}\n` : ""}${productsText ? `
                                       ]);
                                     }
                                   }}
-                                  className={`p-2.5 rounded-xl text-right border transition flex flex-col justify-between cursor-pointer ${
+                                  className={`relative group rounded-2xl p-2.5 sm:p-3 text-right border-2 transition-all duration-200 flex flex-col justify-between cursor-pointer select-none overflow-hidden aspect-square ${
                                     isSelected
-                                      ? "bg-amber-500/20 border-amber-500/70 text-amber-200 font-bold shadow-sm"
-                                      : "bg-white/5 border-white/5 hover:border-amber-500/30 text-slate-300 hover:bg-white/10"
+                                      ? `${style.activeBorder} ${style.activeBg} scale-[1.03]`
+                                      : `bg-gradient-to-br ${style.bg} ${style.border} hover:scale-[1.02] hover:shadow-lg`
                                   }`}
                                 >
-                                  <div className="flex items-start justify-between gap-1.5">
-                                    <span className="font-bold text-xs text-white leading-snug">
-                                      {svc.nameAr}
+                                  {/* Top Row: Category Icon Badge & Selection Checkmark */}
+                                  <div className="flex items-center justify-between w-full shrink-0">
+                                    <span className={`text-[11px] px-2 py-0.5 rounded-full border font-bold ${style.badgeBg}`}>
+                                      {style.icon}
                                     </span>
                                     <div
-                                      className={`w-4 h-4 rounded-md border flex items-center justify-center shrink-0 text-[10px] ${
+                                      className={`w-5 h-5 rounded-lg border-2 flex items-center justify-center text-xs font-black transition ${
                                         isSelected
-                                          ? "bg-amber-500 border-amber-400 text-slate-950 font-black"
-                                          : "border-white/20 bg-black/40"
+                                          ? "bg-amber-400 border-amber-300 text-slate-950 shadow-md"
+                                          : "border-white/20 bg-black/60 text-transparent"
                                       }`}
                                     >
-                                      {isSelected && "✓"}
+                                      ✓
                                     </div>
                                   </div>
-                                  <div className="flex items-center justify-between pt-2 text-[10px] border-t border-white/5 mt-1.5">
-                                    <span className="text-slate-400">⏱️ {svc.durationMinutes || 30} د</span>
-                                    <span className="font-mono font-black text-amber-400 text-xs">
-                                      {svc.price} ج.م
+
+                                  {/* Center: Service Name */}
+                                  <div className="my-auto py-1">
+                                    <h5
+                                      className={`font-black text-xs sm:text-[13px] leading-snug line-clamp-2 ${
+                                        isSelected ? "text-white" : style.text
+                                      }`}
+                                      title={svc.nameAr}
+                                    >
+                                      {svc.nameAr}
+                                    </h5>
+                                  </div>
+
+                                  {/* Bottom Row: Duration & Price */}
+                                  <div className="flex items-center justify-between pt-1 border-t border-white/10 w-full text-[10px] shrink-0">
+                                    <span className="text-slate-400 font-medium">⏱️ {svc.durationMinutes || 30} د</span>
+                                    <span className="font-mono font-black text-xs sm:text-sm text-amber-300">
+                                      {svc.price} <span className="text-[10px]">ج</span>
                                     </span>
                                   </div>
                                 </button>
@@ -2930,20 +3248,23 @@ ${servicesText ? `*الخدمات:* \n${servicesText}\n` : ""}${productsText ? `
                           )}
                         </div>
 
-                        {/* Selected Services Counter & Preview Bar */}
+                        {/* Selected Services Counter & Real-Time Total Bar */}
                         {admitSelectedServices.length > 0 && (
-                          <div className="p-2.5 rounded-xl bg-amber-500/15 border border-amber-500/40 flex items-center justify-between text-xs">
+                          <div className="p-3 rounded-2xl bg-amber-500/15 border border-amber-500/40 flex items-center justify-between text-xs shrink-0 shadow-lg">
                             <div className="flex items-center gap-2 overflow-hidden">
-                              <span className="w-5 h-5 rounded-full bg-amber-500 text-slate-950 flex items-center justify-center font-black text-[10px] shrink-0">
+                              <span className="w-6 h-6 rounded-full bg-amber-500 text-slate-950 flex items-center justify-center font-black text-xs shrink-0 shadow">
                                 {admitSelectedServices.length}
                               </span>
                               <span className="text-amber-200 font-bold truncate">
                                 {admitSelectedServices.map((s) => s.nameAr).join(" • ")}
                               </span>
                             </div>
-                            <span className="font-mono font-black text-amber-400 text-sm shrink-0 mr-2">
-                              {admitSelectedServices.reduce((sum, s) => sum + (Number(s.price) || 0), 0)} ج.م
-                            </span>
+                            <div className="flex items-center gap-2 shrink-0 mr-2">
+                              <span className="text-[11px] text-slate-400 font-bold">الإجمالي المبدئي:</span>
+                              <span className="font-mono font-black text-amber-300 text-sm sm:text-base">
+                                {admitSelectedServices.reduce((sum, s) => sum + (Number(s.price) || 0), 0)} ج.م
+                              </span>
+                            </div>
                           </div>
                         )}
                       </>

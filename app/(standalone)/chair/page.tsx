@@ -893,38 +893,66 @@ export default function SpecialistChairPage() {
               {/* Regular Services Grid */}
               {selectedCategory !== "OFFERS" && (
                 <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 animate-fade-in">
-                  {services
-                    .filter((s) => selectedCategory === "ALL" || s.category === selectedCategory)
-                    .map((srv) => (
-                      <button
-                        key={srv.id}
-                        onClick={() => handleAddService(srv)}
-                        disabled={actionLoading}
-                        className="p-4 rounded-2xl bg-[#14141e] hover:bg-amber-500/15 border border-amber-500/20 hover:border-amber-400 transition text-right space-y-1.5 shadow-md flex flex-col justify-between group active:scale-95 disabled:opacity-50"
-                      >
-                        <div className="flex items-center justify-between w-full">
-                          <span className="w-7 h-7 rounded-lg bg-amber-500/10 text-amber-400 flex items-center justify-center text-xs font-bold group-hover:bg-amber-500 group-hover:text-black transition">
-                            +
-                          </span>
-                          <span className="text-[10px] text-slate-400 font-bold font-mono">
-                            {srv.durationMinutes || 30} د
-                          </span>
-                        </div>
+                  {(() => {
+                    const MEN_CATEGORIES = [
+                      "HAIR", "BEARD", "COLOR_KERATIN", "SKIN_CARE", "BODY_CARE", "TREATMENT_HAIR", "WAXING", "MEN_SPA", "VIP_PACKAGES", "KIDS"
+                    ];
+                    const WOMEN_CATEGORIES = [
+                      "LADIES_SPA", "BODY_MASKS", "LADIES_HAIR", "LADIES_COLOR", "LADIES_SKIN", "BROWS_LASHES", "NAILS", "EXTENSIONS", "WAX_SWEET", "MAKEUP", "MASSAGE"
+                    ];
+                    const NEWSKIN_CATEGORIES = [
+                      "NEWSKIN_LASER", "NEWSKIN_DERMA", "NEWSKIN_MICRO", "NEWSKIN_PEDICURE"
+                    ];
 
-                        <div>
-                          <span className="text-[9px] text-amber-300/80 font-bold block mb-0.5">
-                            {srv.category}
-                          </span>
-                          <h4 className="font-black text-xs sm:text-sm text-white group-hover:text-amber-300 transition line-clamp-2">
-                            {srv.nameAr}
-                          </h4>
-                        </div>
+                    const isLadies = Boolean(
+                      specialist?.gender === "FEMALE" ||
+                      specialist?.branch?.code === "BR-HAMMAM-WOMEN" ||
+                      specialist?.branch?.name?.includes("حمام") ||
+                      specialist?.branch?.name?.includes("حريمي") ||
+                      currentUser?.branch?.code === "BR-HAMMAM-WOMEN"
+                    );
+                    const isNewSkin = Boolean(
+                      specialist?.branch?.code === "BR-NEWSKIN" ||
+                      specialist?.branch?.name?.includes("نيو سكين") ||
+                      currentUser?.branch?.code === "BR-NEWSKIN"
+                    );
 
-                        <span className="font-mono text-amber-400 font-black text-sm block">
-                          {srv.price} ج.م
-                        </span>
-                      </button>
-                    ))}
+                    const allowed = isNewSkin ? NEWSKIN_CATEGORIES : isLadies ? WOMEN_CATEGORIES : MEN_CATEGORIES;
+                    const branchServices = services.filter((s) => allowed.includes(s.category));
+
+                    return branchServices
+                      .filter((s) => selectedCategory === "ALL" || s.category === selectedCategory)
+                      .map((srv) => (
+                        <button
+                          key={srv.id}
+                          onClick={() => handleAddService(srv)}
+                          disabled={actionLoading}
+                          className="p-4 rounded-2xl bg-[#14141e] hover:bg-amber-500/15 border border-amber-500/20 hover:border-amber-400 transition text-right space-y-1.5 shadow-md flex flex-col justify-between group active:scale-95 disabled:opacity-50"
+                        >
+                          <div className="flex items-center justify-between w-full">
+                            <span className="w-7 h-7 rounded-lg bg-amber-500/10 text-amber-400 flex items-center justify-center text-xs font-bold group-hover:bg-amber-500 group-hover:text-black transition">
+                              +
+                            </span>
+                            <span className="text-[10px] text-slate-400 font-bold font-mono">
+                              {srv.durationMinutes || 30} د
+                            </span>
+                          </div>
+
+                          <div>
+                            <span className="text-[9px] text-amber-300/80 font-bold block mb-0.5">
+                              {srv.category}
+                            </span>
+                            <h4 className="font-black text-xs sm:text-sm text-white group-hover:text-amber-300 transition line-clamp-2">
+                              {srv.nameAr}
+                            </h4>
+                          </div>
+
+                          <span className="font-mono text-amber-400 font-black text-sm block">
+                            {srv.price} ج.م
+                          </span>
+                        </button>
+                      ));
+                  })()}
                 </div>
               )}
             </div>
