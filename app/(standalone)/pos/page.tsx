@@ -66,6 +66,7 @@ export default function CashierPosPage() {
   const [admitSelectedServices, setAdmitSelectedServices] = useState<any[]>([]);
   const [servicesCatalog, setServicesCatalog] = useState<any[]>([]);
   const [admitServiceCategory, setAdmitServiceCategory] = useState<string>("ALL");
+  const [admitServiceSearch, setAdmitServiceSearch] = useState<string>("");
 
   // Supervisor Cancellation Request Modal State
   const [showCancelRequestModal, setShowCancelRequestModal] = useState<any>(null); // ticket
@@ -2593,25 +2594,26 @@ ${servicesText ? `*الخدمات:* \n${servicesText}\n` : ""}${productsText ? `
       )}
 
       {/* ─────────────────────────────────────────────────────────────
-          CASHIER ADMIT WALK-IN CUSTOMER TO CHAIR OR WAITING LOUNGE MODAL
+          CASHIER ADMIT WALK-IN CUSTOMER TO CHAIR OR WAITING LOUNGE MODAL (SPACIOUS 2-COLUMNS WITH ARABIC CATEGORIES)
          ───────────────────────────────────────────────────────────── */}
       {showAdmitModal && (
         <div
-          className="fixed inset-0 z-50 overflow-y-auto bg-black/85 backdrop-blur-md flex justify-center items-start sm:items-center py-6 sm:py-10 px-3 font-sans no-print"
+          className="fixed inset-0 z-50 overflow-y-auto bg-black/85 backdrop-blur-md flex justify-center items-start sm:items-center py-4 sm:py-6 px-3 sm:px-6 font-sans no-print"
           dir="rtl"
         >
-          <div className="relative w-full max-w-md my-auto bg-[#12121a] border border-amber-500/40 rounded-3xl p-5 sm:p-6 shadow-2xl space-y-4 max-h-[92vh] flex flex-col">
+          <div className="relative w-full max-w-5xl my-auto bg-[#12121a] border border-amber-500/40 rounded-3xl p-5 sm:p-7 shadow-2xl space-y-4 max-h-[94vh] flex flex-col">
             <div className="flex items-center justify-between border-b border-white/10 pb-3 shrink-0">
-              <div className="flex items-center gap-2.5">
-                <div className="w-9 h-9 rounded-xl bg-amber-500/20 border border-amber-400/40 text-amber-400 flex items-center justify-center">
-                  <Scissors className="w-4 h-4" />
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-2xl bg-amber-500/20 border border-amber-400/40 text-amber-400 flex items-center justify-center">
+                  <Scissors className="w-5 h-5" />
                 </div>
                 <div>
-                  <h3 className="text-sm font-black text-white">استقبال وإجلاس زبون بالصالون 💺</h3>
-                  <p className="text-[11px] text-slate-400">إجلاس فوري على الكرسي أو إضافة لصالة الاستراحة وقائمة الانتظار</p>
+                  <h3 className="text-base font-black text-white">استقبال وإجلاس زبون وتحديد الخدمات 💺✨</h3>
+                  <p className="text-xs text-slate-400">إجلاس فوري على الكرسي أو إضافة لصالة الاستراحة مع اختيار الخدمات المبدئية</p>
                 </div>
               </div>
               <button
+                type="button"
                 onClick={() => setShowAdmitModal(false)}
                 className="w-8 h-8 rounded-full bg-white/5 hover:bg-white/10 text-slate-400 hover:text-white flex items-center justify-center text-sm cursor-pointer"
               >
@@ -2619,229 +2621,336 @@ ${servicesText ? `*الخدمات:* \n${servicesText}\n` : ""}${productsText ? `
               </button>
             </div>
 
-            <form onSubmit={handleAdmitCustomerToChair} className="overflow-y-auto pr-1 space-y-3 flex-1 text-xs">
-              <div>
-                <label className="text-slate-300 font-bold block mb-1">اسم العميل *:</label>
-                <input
-                  type="text"
-                  required
-                  value={admitCustomerName}
-                  onChange={(e) => setAdmitCustomerName(e.target.value)}
-                  placeholder="مثال: محمد مصطفى"
-                  className="w-full py-2.5 px-3 rounded-xl bg-black/60 border border-white/10 text-white focus:outline-none focus:border-amber-400 font-bold"
-                />
-              </div>
+            <form onSubmit={handleAdmitCustomerToChair} className="overflow-y-auto pr-1 flex-1 text-xs">
+              <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 items-start">
+                {/* ──────────────────────────────────────────
+                    RIGHT COLUMN: CUSTOMER & CHAIR DETAILS (5 COLS)
+                   ────────────────────────────────────────── */}
+                <div className="lg:col-span-5 space-y-3.5 bg-black/40 p-4 rounded-2xl border border-white/5">
+                  <h4 className="font-bold text-amber-400 text-xs flex items-center gap-1.5 pb-1 border-b border-white/5">
+                    <span>👤</span>
+                    <span>بيانات العميل والكرسي</span>
+                  </h4>
 
-              <div>
-                <label className="text-slate-300 font-bold block mb-1">رقم هاتف العميل (اختياري للـ CRM وسجل الزيارات):</label>
-                <input
-                  type="text"
-                  value={admitCustomerPhone}
-                  onChange={(e) => setAdmitCustomerPhone(e.target.value)}
-                  placeholder="010XXXXXXXX"
-                  className="w-full py-2 px-3 rounded-xl bg-black/60 border border-white/10 text-white font-mono focus:outline-none focus:border-amber-400"
-                />
-              </div>
+                  <div>
+                    <label className="text-slate-300 font-bold block mb-1">اسم العميل *:</label>
+                    <input
+                      type="text"
+                      required
+                      value={admitCustomerName}
+                      onChange={(e) => setAdmitCustomerName(e.target.value)}
+                      placeholder="مثال: محمد مصطفى"
+                      className="w-full py-2.5 px-3 rounded-xl bg-black/60 border border-white/10 text-white focus:outline-none focus:border-amber-400 font-bold text-xs"
+                    />
+                  </div>
 
-              <div>
-                <label className="text-slate-300 font-bold block mb-1">تفضيل المتخصص والكرسي:</label>
-                <select
-                  required
-                  value={admitSpecialistId}
-                  onChange={(e) => {
-                    setAdmitSpecialistId(e.target.value);
-                    if (e.target.value === "FIRST_AVAILABLE") {
-                      setAdmitMode("WAITING");
-                    } else {
-                      const spec = specialists.find((s) => s.id === e.target.value);
-                      if (spec && spec.status !== "AVAILABLE") {
-                        setAdmitMode("WAITING");
-                      }
-                    }
-                  }}
-                  className="w-full py-2.5 px-3 rounded-xl bg-black/60 border border-white/10 text-white font-bold"
-                >
-                  <option value="FIRST_AVAILABLE">
-                    {isWomenTheme ? "⏳ في انتظار أول خبيرة سبا تفضى (بدون تفضيل)" : "⏳ في انتظار أول كابتن يفضى (بدون تفضيل)"}
-                  </option>
-                  {filteredSpecialists.map((spec) => (
-                    <option key={spec.id} value={spec.id}>
-                      {spec.name} • كرسي #{spec.chairNumber} ({spec.status === "AVAILABLE" ? "متاح فوراً 🟢" : "مشغول على الكرسي 🔴"})
-                    </option>
-                  ))}
-                </select>
-              </div>
+                  <div>
+                    <label className="text-slate-300 font-bold block mb-1">رقم الهاتف (اختياري للـ CRM وسجل الزيارات):</label>
+                    <input
+                      type="tel"
+                      value={admitCustomerPhone}
+                      onChange={(e) => setAdmitCustomerPhone(e.target.value)}
+                      placeholder="010XXXXXXXX"
+                      className="w-full py-2.5 px-3 rounded-xl bg-black/60 border border-white/10 text-white font-mono focus:outline-none focus:border-amber-400 text-xs text-left"
+                    />
+                  </div>
 
-              {/* Cashier Initial Services Selection */}
-              <div className="space-y-2 border-t border-white/10 pt-3">
-                <div className="flex items-center justify-between">
-                  <label className="text-slate-300 font-bold block text-xs">
-                    الخدمات المطلوبة مبدئياً للزبون (تظهر فوراً عند الكابتن على الكرسي ✂️):
-                  </label>
-                  {admitSelectedServices.length > 0 && (
-                    <button
-                      type="button"
-                      onClick={() => setAdmitSelectedServices([])}
-                      className="text-[10px] text-rose-400 hover:text-rose-300 underline cursor-pointer"
+                  <div>
+                    <label className="text-slate-300 font-bold block mb-1">تفضيل الكابتن والكرسي:</label>
+                    <select
+                      required
+                      value={admitSpecialistId}
+                      onChange={(e) => {
+                        setAdmitSpecialistId(e.target.value);
+                        if (e.target.value === "FIRST_AVAILABLE") {
+                          setAdmitMode("WAITING");
+                        } else {
+                          const spec = specialists.find((s) => s.id === e.target.value);
+                          if (spec && spec.status !== "AVAILABLE") {
+                            setAdmitMode("WAITING");
+                          }
+                        }
+                      }}
+                      className="w-full py-2.5 px-3 rounded-xl bg-black/60 border border-white/10 text-white font-bold text-xs"
                     >
-                      مسح المحدد ({admitSelectedServices.length})
-                    </button>
-                  )}
-                </div>
+                      <option value="FIRST_AVAILABLE">
+                        {isWomenTheme ? "⏳ في انتظار أول خبيرة سبا تفضى (بدون تفضيل)" : "⏳ في انتظار أول كابتن يفضى (بدون تفضيل)"}
+                      </option>
+                      {filteredSpecialists.map((spec) => (
+                        <option key={spec.id} value={spec.id}>
+                          {spec.name} • كرسي #{spec.chairNumber} ({spec.status === "AVAILABLE" ? "متاح فوراً 🟢" : "مشغول على الكرسي 🔴"})
+                        </option>
+                      ))}
+                    </select>
+                  </div>
 
-                {/* Category tabs */}
-                <div className="flex items-center gap-1.5 overflow-x-auto pb-1 scrollbar-thin">
-                  {["ALL", ...Array.from(new Set(servicesCatalog.map((s) => s.category || "عام")))].slice(0, 8).map((cat) => (
-                    <button
-                      key={cat}
-                      type="button"
-                      onClick={() => setAdmitServiceCategory(cat)}
-                      className={`py-1 px-2.5 rounded-lg text-[10px] font-bold shrink-0 transition cursor-pointer ${
-                        admitServiceCategory === cat
-                          ? "bg-amber-500 text-slate-950 font-black shadow"
-                          : "bg-white/5 hover:bg-white/10 text-slate-300"
-                      }`}
-                    >
-                      {cat === "ALL" ? "الكل" : cat}
-                    </button>
-                  ))}
-                </div>
+                  {/* Seating Mode Selection */}
+                  {(() => {
+                    const isFirst = admitSpecialistId === "FIRST_AVAILABLE" || !admitSpecialistId;
+                    const chosenSpec = specialists.find((s) => s.id === admitSpecialistId);
+                    const isSpecBusy = chosenSpec && chosenSpec.status !== "AVAILABLE";
 
-                {/* Services chips grid */}
-                <div className="grid grid-cols-2 gap-1.5 max-h-36 overflow-y-auto pr-1">
-                  {servicesCatalog
-                    .filter((s) => admitServiceCategory === "ALL" || s.category === admitServiceCategory)
-                    .slice(0, 30)
-                    .map((svc) => {
-                      const isSelected = admitSelectedServices.some((s) => s.id === svc.id);
+                    if (isFirst) {
                       return (
-                        <button
-                          key={svc.id}
-                          type="button"
-                          onClick={() => {
-                            if (isSelected) {
-                              setAdmitSelectedServices(admitSelectedServices.filter((s) => s.id !== svc.id));
-                            } else {
-                              setAdmitSelectedServices([
-                                ...admitSelectedServices,
-                                {
-                                  id: svc.id,
-                                  nameAr: svc.nameAr,
-                                  price: svc.price,
-                                  durationMinutes: svc.durationMinutes || 30,
-                                  category: svc.category,
-                                  addedBy: "CASHIER",
-                                },
-                              ]);
-                            }
-                          }}
-                          className={`p-2 rounded-xl text-right border transition flex flex-col justify-between cursor-pointer ${
-                            isSelected
-                              ? "bg-amber-500/20 border-amber-500/60 text-amber-200 font-bold"
-                              : "bg-white/5 border-white/5 hover:border-white/20 text-slate-300"
-                          }`}
-                        >
-                          <div className="flex items-center justify-between gap-1">
-                            <span className="text-[11px] truncate">{svc.nameAr}</span>
-                            {isSelected && <span className="text-amber-400 text-xs shrink-0 font-bold">✓</span>}
+                        <div className="p-3 rounded-xl bg-sky-500/10 border border-sky-500/20 text-sky-300 text-[11px] space-y-1">
+                          <div className="font-bold flex items-center gap-1">
+                            <span>🛋️</span>
+                            <span>صالة الاستراحة وقائمة الانتظار VIP</span>
                           </div>
-                          <span className="text-[10px] font-mono font-bold text-amber-400/90 pt-1">
-                            {svc.price} ج.م
-                          </span>
-                        </button>
+                          <p className="text-slate-300 text-[10px] leading-relaxed">
+                            سيتم تسجيل الزبون في قائمة الانتظار، وبمجرد فراغ أي كابتن ستتمكن من إجلاسه فوراً بنقرة زر واحدة.
+                          </p>
+                        </div>
                       );
-                    })}
+                    }
+
+                    if (isSpecBusy) {
+                      return (
+                        <div className="p-3 rounded-xl bg-amber-500/15 border border-amber-500/30 text-amber-300 text-[11px] space-y-1">
+                          <div className="font-black flex items-center gap-1">
+                            <span>⚠️</span>
+                            <span>الكابتن ({chosenSpec?.name}) مشغول حالياً على الكرسي #{chosenSpec?.chairNumber}</span>
+                          </div>
+                          <p className="text-slate-300 text-[10px] leading-relaxed">
+                            الزبون اختار هذا الكابتن بالاسم ومستعد للانتظار بصالة الاستراحة 👑
+                          </p>
+                        </div>
+                      );
+                    }
+
+                    return (
+                      <div className="space-y-1.5 pt-1">
+                        <label className="text-slate-300 font-bold block">طريقة التوجيه المطلوبة:</label>
+                        <div className="grid grid-cols-2 gap-2">
+                          <button
+                            type="button"
+                            onClick={() => setAdmitMode("CHAIR")}
+                            className={`p-2.5 rounded-xl border text-center font-bold text-xs transition cursor-pointer ${
+                              admitMode === "CHAIR"
+                                ? "bg-emerald-500 text-slate-950 border-emerald-400 font-black shadow-md shadow-emerald-500/20"
+                                : "bg-white/5 hover:bg-white/10 border-white/10 text-slate-300"
+                            }`}
+                          >
+                            💺 إجلاس فوري
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => setAdmitMode("WAITING")}
+                            className={`p-2.5 rounded-xl border text-center font-bold text-xs transition cursor-pointer ${
+                              admitMode === "WAITING"
+                                ? "bg-sky-500 text-slate-950 border-sky-400 font-black shadow-md shadow-sky-500/20"
+                                : "bg-white/5 hover:bg-white/10 border-white/10 text-slate-300"
+                            }`}
+                          >
+                            🛋️ استراحة (ينتظر)
+                          </button>
+                        </div>
+                      </div>
+                    );
+                  })()}
+
+                  <button
+                    type="submit"
+                    disabled={admittingClient}
+                    className="w-full py-3.5 rounded-2xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-black text-xs transition shadow-lg shadow-amber-500/20 disabled:opacity-50 cursor-pointer pt-2 mt-2"
+                  >
+                    {admittingClient
+                      ? "جاري التسجيل..."
+                      : admitMode === "CHAIR" && admitSpecialistId !== "FIRST_AVAILABLE"
+                      ? "توجيه الزبون للكرسي وبدء الخدمة 🚀"
+                      : "تسجيل الزبون بصالة الاستراحة وقائمة الانتظار 🛋️"}
+                  </button>
                 </div>
 
-                {admitSelectedServices.length > 0 && (
-                  <div className="p-2 rounded-xl bg-amber-500/10 border border-amber-500/30 flex items-center justify-between text-xs">
-                    <span className="text-amber-300 font-bold truncate max-w-[200px]">
-                      {admitSelectedServices.length} خدمات محددة: {admitSelectedServices.map((s) => s.nameAr).join(" + ")}
-                    </span>
-                    <span className="font-mono font-black text-amber-400 shrink-0">
-                      {admitSelectedServices.reduce((sum, s) => sum + (Number(s.price) || 0), 0)} ج.م
-                    </span>
-                  </div>
-                )}
+                {/* ──────────────────────────────────────────
+                    LEFT COLUMN: SERVICES CATALOG & ARABIC CATEGORIES (7 COLS)
+                   ────────────────────────────────────────── */}
+                <div className="lg:col-span-7 space-y-3 bg-black/40 p-4 rounded-2xl border border-white/5 flex flex-col">
+                  {/* Category dictionary mapping helper */}
+                  {(() => {
+                    const ARABIC_CATS: Record<string, string> = {
+                      ALL: "كل الأقسام 👑",
+                      HAIR: "قصات الشعر 💈",
+                      BEARD: "حلاقة ولحية 🪒",
+                      COLOR_KERATIN: "صبغات وفرد رجالي ✨",
+                      SKIN_CARE: "تنظيف بشرة وهيدرافيشال 🧖‍♂️",
+                      BODY_CARE: "باديكير وعناية رجالي 🧼",
+                      TREATMENT_HAIR: "معالجات شعر وكافيار 💆‍♂️",
+                      WAXING: "واكس رجالي 🍯",
+                      MEN_SPA: "حمامات رجالية ملكية 🛁",
+                      LADIES_SPA: "حمامات سبا حريمي 🧖‍♀️",
+                      LADIES_HAIR: "تصفيف وتسريحات حريمي 💇‍♀️",
+                      EXTENSIONS: "إكستنشن وتركيبات 🎀",
+                      LADIES_COLOR: "صبغات وهايلايت حريمي 🎨",
+                      BROWS_LASHES: "حواجب ورموش 👁️",
+                      LADIES_SKIN: "بشرة وتنظيف وجه حريمي 🌸",
+                      BODY_MASKS: "ماسكات ودلكة الجسم 🌺",
+                      MAKEUP: "ميكاب وسواريه 💄",
+                      WAX_SWEET: "سويت وواكس حريمي 🍯",
+                      NAILS: "أظافر وباديكير 💅",
+                      MASSAGE: "مساج واستجمام 💆‍♀️",
+                      NEWSKIN_LASER: "ليزر نيو سكين ⚡",
+                      NEWSKIN_MICRO: "مايكروبليدينج 🌟",
+                      NEWSKIN_DERMA: "ديرما وميزوثيرابي 🩺",
+                      NEWSKIN_PEDICURE: "باديكير سبا إيطالي 🇮🇹",
+                    };
+
+                    const rawCats = ["ALL", ...Array.from(new Set(servicesCatalog.map((s) => s.category || "عام")))];
+                    const filteredServices = servicesCatalog.filter((svc) => {
+                      const matchCat = admitServiceCategory === "ALL" || svc.category === admitServiceCategory;
+                      const matchSearch =
+                        !admitServiceSearch.trim() ||
+                        svc.nameAr?.toLowerCase().includes(admitServiceSearch.trim().toLowerCase());
+                      return matchCat && matchSearch;
+                    });
+
+                    return (
+                      <>
+                        <div className="flex items-center justify-between pb-1 border-b border-white/5">
+                          <div>
+                            <span className="font-bold text-amber-300 text-xs block">
+                              قائمة الخدمات المطلوبة مبدئياً ✂️
+                            </span>
+                            <span className="text-[10px] text-slate-400">
+                              تظهر مباشرة عند الكابتن على تابلت الكرسي
+                            </span>
+                          </div>
+                          {admitSelectedServices.length > 0 && (
+                            <button
+                              type="button"
+                              onClick={() => setAdmitSelectedServices([])}
+                              className="text-[11px] text-rose-400 hover:text-rose-300 underline font-bold cursor-pointer"
+                            >
+                              إلغاء تحديد ({admitSelectedServices.length}) ✕
+                            </button>
+                          )}
+                        </div>
+
+                        {/* Search and Quick Filters */}
+                        <div className="relative">
+                          <input
+                            type="text"
+                            value={admitServiceSearch}
+                            onChange={(e) => setAdmitServiceSearch(e.target.value)}
+                            placeholder="🔍 ابحث عن أي خدمة بالاسم (مثال: حلاقة، كافيار، مغربي، ليزر)..."
+                            className="w-full py-2 px-3 rounded-xl bg-black/60 border border-white/10 text-white text-xs font-bold focus:border-amber-400 outline-none placeholder:text-slate-500"
+                          />
+                          {admitServiceSearch && (
+                            <button
+                              type="button"
+                              onClick={() => setAdmitServiceSearch("")}
+                              className="absolute left-2.5 top-2 text-slate-400 hover:text-white text-xs font-bold"
+                            >
+                              ✕
+                            </button>
+                          )}
+                        </div>
+
+                        {/* Arabic Categories Wrap */}
+                        <div className="flex flex-wrap items-center gap-1.5 max-h-24 overflow-y-auto pr-1">
+                          {rawCats.map((cat) => {
+                            const label = ARABIC_CATS[cat] || cat;
+                            const isSelected = admitServiceCategory === cat;
+                            return (
+                              <button
+                                key={cat}
+                                type="button"
+                                onClick={() => setAdmitServiceCategory(cat)}
+                                className={`py-1 px-2.5 rounded-lg text-[11px] font-bold transition shrink-0 cursor-pointer ${
+                                  isSelected
+                                    ? "bg-amber-500 text-slate-950 font-black shadow-md shadow-amber-500/30 ring-1 ring-amber-300 scale-105"
+                                    : "bg-white/5 hover:bg-white/10 text-slate-300 border border-white/5"
+                                }`}
+                              >
+                                {label}
+                              </button>
+                            );
+                          })}
+                        </div>
+
+                        {/* Services Grid (Spacious 2 columns) */}
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 max-h-[38vh] overflow-y-auto pr-1">
+                          {filteredServices.length === 0 ? (
+                            <div className="col-span-2 py-8 text-center text-slate-500 text-xs font-bold">
+                              لا توجد خدمات مطابقة لبحثك 🔎
+                            </div>
+                          ) : (
+                            filteredServices.map((svc) => {
+                              const isSelected = admitSelectedServices.some((s) => s.id === svc.id);
+                              return (
+                                <button
+                                  key={svc.id}
+                                  type="button"
+                                  onClick={() => {
+                                    if (isSelected) {
+                                      setAdmitSelectedServices(admitSelectedServices.filter((s) => s.id !== svc.id));
+                                    } else {
+                                      setAdmitSelectedServices([
+                                        ...admitSelectedServices,
+                                        {
+                                          id: svc.id,
+                                          nameAr: svc.nameAr,
+                                          price: svc.price,
+                                          durationMinutes: svc.durationMinutes || 30,
+                                          category: svc.category,
+                                          addedBy: "CASHIER",
+                                        },
+                                      ]);
+                                    }
+                                  }}
+                                  className={`p-2.5 rounded-xl text-right border transition flex flex-col justify-between cursor-pointer ${
+                                    isSelected
+                                      ? "bg-amber-500/20 border-amber-500/70 text-amber-200 font-bold shadow-sm"
+                                      : "bg-white/5 border-white/5 hover:border-amber-500/30 text-slate-300 hover:bg-white/10"
+                                  }`}
+                                >
+                                  <div className="flex items-start justify-between gap-1.5">
+                                    <span className="font-bold text-xs text-white leading-snug">
+                                      {svc.nameAr}
+                                    </span>
+                                    <div
+                                      className={`w-4 h-4 rounded-md border flex items-center justify-center shrink-0 text-[10px] ${
+                                        isSelected
+                                          ? "bg-amber-500 border-amber-400 text-slate-950 font-black"
+                                          : "border-white/20 bg-black/40"
+                                      }`}
+                                    >
+                                      {isSelected && "✓"}
+                                    </div>
+                                  </div>
+                                  <div className="flex items-center justify-between pt-2 text-[10px] border-t border-white/5 mt-1.5">
+                                    <span className="text-slate-400">⏱️ {svc.durationMinutes || 30} د</span>
+                                    <span className="font-mono font-black text-amber-400 text-xs">
+                                      {svc.price} ج.م
+                                    </span>
+                                  </div>
+                                </button>
+                              );
+                            })
+                          )}
+                        </div>
+
+                        {/* Selected Services Counter & Preview Bar */}
+                        {admitSelectedServices.length > 0 && (
+                          <div className="p-2.5 rounded-xl bg-amber-500/15 border border-amber-500/40 flex items-center justify-between text-xs">
+                            <div className="flex items-center gap-2 overflow-hidden">
+                              <span className="w-5 h-5 rounded-full bg-amber-500 text-slate-950 flex items-center justify-center font-black text-[10px] shrink-0">
+                                {admitSelectedServices.length}
+                              </span>
+                              <span className="text-amber-200 font-bold truncate">
+                                {admitSelectedServices.map((s) => s.nameAr).join(" • ")}
+                              </span>
+                            </div>
+                            <span className="font-mono font-black text-amber-400 text-sm shrink-0 mr-2">
+                              {admitSelectedServices.reduce((sum, s) => sum + (Number(s.price) || 0), 0)} ج.م
+                            </span>
+                          </div>
+                        )}
+                      </>
+                    );
+                  })()}
+                </div>
               </div>
-
-              {/* Dynamic Logic Explanations & Seating Mode Selection */}
-              {(() => {
-                const isFirst = admitSpecialistId === "FIRST_AVAILABLE" || !admitSpecialistId;
-                const chosenSpec = specialists.find((s) => s.id === admitSpecialistId);
-                const isSpecBusy = chosenSpec && chosenSpec.status !== "AVAILABLE";
-
-                if (isFirst) {
-                  return (
-                    <div className="p-3 rounded-2xl bg-sky-500/10 border border-sky-500/20 text-sky-300 text-[11px] space-y-1">
-                      <div className="font-bold flex items-center gap-1">
-                        <span>🛋️</span>
-                        <span>صالة الاستراحة وقائمة الانتظار VIP</span>
-                      </div>
-                      <p className="text-slate-300 text-[10px] leading-relaxed">
-                        سيتم تسجيل الزبون في قائمة الانتظار، وبمجرد فراغ أي كابتن بالصالون ستتمكن من إجلاسه فوراً بنقرة زر واحدة.
-                      </p>
-                    </div>
-                  );
-                }
-
-                if (isSpecBusy) {
-                  return (
-                    <div className="p-3 rounded-2xl bg-amber-500/15 border border-amber-500/30 text-amber-300 text-[11px] space-y-1">
-                      <div className="font-black flex items-center gap-1">
-                        <span>⚠️</span>
-                        <span>الكابتن ({chosenSpec?.name}) مشغول حالياً على الكرسي #{chosenSpec?.chairNumber}</span>
-                      </div>
-                      <p className="text-slate-300 text-[10px] leading-relaxed">
-                        الزبون اختار هذا الكابتن بالاسم ومستعد للانتظار. سيتم إدراج الزبون في "صالة الاستراحة وقائمة الانتظار"، وعند انتهاء الكابتن ستتمكن من إجلاسه فوراً 👑
-                      </p>
-                    </div>
-                  );
-                }
-
-                // Specialist is AVAILABLE
-                return (
-                  <div className="space-y-2 pt-1">
-                    <label className="text-slate-300 font-bold block mb-1">طريقة التوجيه المطلوبة:</label>
-                    <div className="grid grid-cols-2 gap-2">
-                      <button
-                        type="button"
-                        onClick={() => setAdmitMode("CHAIR")}
-                        className={`p-2.5 rounded-xl border text-center font-bold text-xs transition cursor-pointer ${
-                          admitMode === "CHAIR"
-                            ? "bg-emerald-500 text-slate-950 border-emerald-400 font-black shadow-md shadow-emerald-500/20"
-                            : "bg-white/5 hover:bg-white/10 border-white/10 text-slate-300"
-                        }`}
-                      >
-                        💺 إجلاس فوري على الكرسي
-                      </button>
-                      <button
-                        type="button"
-                        onClick={() => setAdmitMode("WAITING")}
-                        className={`p-2.5 rounded-xl border text-center font-bold text-xs transition cursor-pointer ${
-                          admitMode === "WAITING"
-                            ? "bg-sky-500 text-slate-950 border-sky-400 font-black shadow-md shadow-sky-500/20"
-                            : "bg-white/5 hover:bg-white/10 border-white/10 text-slate-300"
-                        }`}
-                      >
-                        🛋️ صالة الاستراحة (ينتظر)
-                      </button>
-                    </div>
-                  </div>
-                );
-              })()}
-
-              <button
-                type="submit"
-                disabled={admittingClient}
-                className="w-full py-3 rounded-2xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-black text-xs transition shadow-lg shadow-amber-500/20 disabled:opacity-50 cursor-pointer pt-2"
-              >
-                {admittingClient
-                  ? "جاري التسجيل..."
-                  : admitMode === "CHAIR" && admitSpecialistId !== "FIRST_AVAILABLE"
-                  ? "توجيه الزبون للكرسي وبدء الحلاقة 🚀"
-                  : "تسجيل الزبون بصالة الاستراحة وقائمة الانتظار 🛋️"}
-              </button>
             </form>
           </div>
         </div>

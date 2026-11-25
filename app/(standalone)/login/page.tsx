@@ -92,18 +92,18 @@ export default function StaffLoginPage() {
       <div className="relative w-full max-w-md bg-[#12121a]/95 border-2 border-amber-500/30 rounded-3xl p-6 sm:p-8 shadow-2xl space-y-6">
         {/* Triple Logos and Brand Header */}
         <div className="text-center space-y-3">
-          <div className="flex items-center justify-center gap-3">
-            <div className="w-13 h-13 sm:w-14 sm:h-14 rounded-2xl overflow-hidden border-2 border-amber-400 bg-black shadow-lg shadow-amber-500/20" title="صالون دقن الباشا (رجالي VIP)">
+          <div className="flex items-center justify-center gap-3.5">
+            <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl overflow-hidden border-2 border-amber-400/80 bg-black shadow-xl shadow-amber-500/25 p-0.5 hover:scale-105 transition" title="صالون دقن الباشا (رجالي VIP)">
               {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src="/dakn-logo.jpg" alt="دقن الباشا" className="w-full h-full object-cover" />
+              <img src="/dakn-logo.jpg" alt="دقن الباشا" className="w-full h-full object-cover rounded-xl" />
             </div>
-            <div className="w-13 h-13 sm:w-14 sm:h-14 rounded-2xl overflow-hidden border-2 border-rose-400 bg-black shadow-lg shadow-rose-500/20" title="حمام وسبا الباشا (حريمي VIP)">
+            <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl overflow-hidden border-2 border-rose-400/80 bg-black shadow-xl shadow-rose-500/25 p-0.5 hover:scale-105 transition" title="حمام وسبا الباشا (حريمي VIP)">
               {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src="/hammam-logo.jpg" alt="حمام الباشا" className="w-full h-full object-cover" />
+              <img src="/hammam-logo.jpg" alt="حمام الباشا" className="w-full h-full object-cover rounded-xl" />
             </div>
-            <div className="w-13 h-13 sm:w-14 sm:h-14 rounded-2xl overflow-hidden border-2 border-teal-400 bg-black shadow-lg shadow-teal-500/20" title="عيادة نيو سكين VIP (ليزر وتجميل)">
+            <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl overflow-hidden border-2 border-amber-200/80 bg-black shadow-xl shadow-pink-500/25 p-0.5 hover:scale-105 transition" title="عيادة نيو سكين VIP (New Skin Clinic)">
               {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src="/newskin-logo.jpg" alt="نيو سكين New Skin VIP" className="w-full h-full object-cover" />
+              <img src="/newskin-logo.png" alt="نيو سكين New Skin VIP" className="w-full h-full object-cover rounded-xl" />
             </div>
           </div>
 

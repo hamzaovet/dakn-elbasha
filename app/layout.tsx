@@ -1,11 +1,17 @@
 import type { Metadata, Viewport } from "next";
 import "./globals.css";
+import MobilePwaPrompt from "@/components/MobilePwaPrompt";
 
 export const metadata: Metadata = {
-  title: "مجموعة صالونات وسبا الباشا VIP | دقن الباشا & حمام الباشا",
+  title: "مجموعة صالونات وسبا وعيادات الباشا VIP | دقن الباشا • حمام الباشا • نيو سكين",
   description:
-    "مجموعة الباشا VIP: صالون دقن الباشا للحلاقة الرجالية الفاخرة • مركز حمام الباشا للحمام المغربي والسبا والتجميل النسائي بحدائق القبة",
+    "مجموعة الباشا VIP: صالون دقن الباشا للحلاقة الرجالية الفاخرة • مركز حمام الباشا للحمام المغربي والسبا النسائي • عيادات نيو سكين التخصصية",
   manifest: "/manifest.json",
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: "black-translucent",
+    title: "الباشا VIP",
+  },
   icons: {
     icon: "/dakn-logo.jpg",
     apple: "/dakn-logo.jpg",
@@ -37,6 +43,7 @@ export default function RootLayout({
       </head>
       <body className="min-h-screen bg-[#0a0a0e] text-slate-100 antialiased selection:bg-amber-500 selection:text-black font-sans">
         {children}
+        <MobilePwaPrompt />
       </body>
     </html>
   );
