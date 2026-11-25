@@ -38,6 +38,7 @@ import {
   Crown,
   Menu,
   Monitor,
+  Smartphone,
   Download,
   RefreshCw,
   Zap,
@@ -934,14 +935,30 @@ export default function HomePage() {
             </div>
 
             <div className="flex items-center gap-2">
+              {/* Mobile Install App Button (Visible on mobile screens) */}
+              <button
+                type="button"
+                onClick={() => {
+                  window.dispatchEvent(new CustomEvent("trigger-basha-pwa-install"));
+                }}
+                className="flex sm:hidden py-1.5 px-3 rounded-xl bg-gradient-to-r from-amber-500 to-amber-400 text-slate-950 font-black text-xs transition items-center gap-1.5 shadow-md shadow-amber-500/25 animate-pulse cursor-pointer"
+                title="تثبيت التطبيق على هاتفك"
+              >
+                <Smartphone className="w-3.5 h-3.5" />
+                <span>تثبيت التطبيق 📱</span>
+              </button>
+
+              {/* Desktop Batch Installer (Visible on larger screens) */}
               <a
                 href="/api/desktop-installer"
                 download="Install-DaknElBasha.bat"
-                className="py-1.5 px-3 rounded-xl bg-white/10 hover:bg-white/15 border border-white/20 text-white text-xs font-black transition flex items-center gap-1.5"
+                className="hidden sm:flex py-1.5 px-3 rounded-xl bg-white/10 hover:bg-white/15 border border-white/20 text-white text-xs font-black transition items-center gap-1.5"
+                title="تنزيل اختصار سطح المكتب للكمبيوتر"
               >
                 <Monitor className="w-3.5 h-3.5" />
-                <span className="hidden sm:inline">نسخة الكمبيوتر</span>
+                <span>نسخة الكمبيوتر 💻</span>
               </a>
+
               <Link
                 href="/login"
                 className="py-1.5 px-3 rounded-xl bg-amber-500/10 hover:bg-amber-500/20 border border-amber-500/30 text-amber-300 text-xs font-black transition flex items-center gap-1"
@@ -1341,18 +1358,20 @@ export default function HomePage() {
               <ChevronLeft className="w-4 h-4 text-slate-400 rtl:rotate-0 ltr:rotate-180" />
             </button>
 
-            <a
-              href="/api/desktop-installer"
-              download="Install-DaknElBasha.bat"
-              onClick={() => setMobileMenuOpen(false)}
-              className="w-full flex items-center justify-between p-2.5 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-white text-xs font-bold"
+            <button
+              type="button"
+              onClick={() => {
+                setMobileMenuOpen(false);
+                window.dispatchEvent(new CustomEvent("trigger-basha-pwa-install"));
+              }}
+              className="w-full flex items-center justify-between p-2.5 rounded-xl bg-gradient-to-r from-amber-500/20 to-amber-400/10 border border-amber-500/30 text-amber-300 text-xs font-black shadow-sm"
             >
               <div className="flex items-center gap-2">
-                <Monitor className="w-4 h-4 text-amber-400" />
-                <span>تثبيت نسخة الكمبيوتر (.bat) 💻</span>
+                <Smartphone className="w-4 h-4 text-amber-400 animate-pulse" />
+                <span>تثبيت تطبيق الباشا على هاتفك (PWA) 📱</span>
               </div>
               <Download className="w-4 h-4 text-amber-400" />
-            </a>
+            </button>
 
             <button
               type="button"

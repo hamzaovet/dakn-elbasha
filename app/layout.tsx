@@ -13,8 +13,8 @@ export const metadata: Metadata = {
     title: "الباشا VIP",
   },
   icons: {
-    icon: "/dakn-logo.jpg",
-    apple: "/dakn-logo.jpg",
+    icon: "/icon-192.png",
+    apple: "/apple-touch-icon.png",
   },
 };
 

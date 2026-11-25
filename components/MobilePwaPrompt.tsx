@@ -1,13 +1,24 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { Smartphone, Download, Share2, PlusSquare, X, Sparkles, CheckCircle2 } from "lucide-react";
+import {
+  Smartphone,
+  Download,
+  Share2,
+  PlusSquare,
+  X,
+  Sparkles,
+  CheckCircle2,
+  ExternalLink,
+  ChevronLeft,
+} from "lucide-react";
 
 export default function MobilePwaPrompt() {
   const [deferredPrompt, setDeferredPrompt] = useState<any>(null);
   const [isStandalone, setIsStandalone] = useState<boolean>(false);
   const [isIos, setIsIos] = useState<boolean>(false);
   const [isAndroid, setIsAndroid] = useState<boolean>(false);
+  const [isInAppBrowser, setIsInAppBrowser] = useState<boolean>(false);
   const [showPrompt, setShowPrompt] = useState<boolean>(false);
   const [installedSuccess, setInstalledSuccess] = useState<boolean>(false);
 
@@ -18,8 +29,10 @@ export default function MobilePwaPrompt() {
     if ("serviceWorker" in navigator) {
       navigator.serviceWorker
         .register("/sw.js", { scope: "/" })
-        .then((reg) => console.log("[Basha PWA] SW registered:", reg.scope))
-        .catch((err) => console.warn("[Basha PWA] SW failed:", err));
+        .then((reg) => {
+          console.log("[Basha PWA] SW registered successfully on scope:", reg.scope);
+        })
+        .catch((err) => console.warn("[Basha PWA] SW registration failed:", err));
     }
 
     // 2. Check if already installed & running in standalone app mode
@@ -29,165 +42,240 @@ export default function MobilePwaPrompt() {
       document.referrer.includes("android-app://");
 
     setIsStandalone(standalone);
-    if (standalone) return; // Don't show prompt if already installed
+    if (standalone) return;
 
-    // 3. Detect platform
+    // 3. Platform & Browser detection
     const ua = window.navigator.userAgent.toLowerCase();
     const isApple = /iphone|ipad|ipod/.test(ua);
     const isDroid = /android/.test(ua);
+    const inApp = /fban|fbav|instagram|threads|whatsapp|tiktok|snapchat|line|micromessenger/.test(ua);
+
     setIsIos(isApple);
     setIsAndroid(isDroid);
+    setIsInAppBrowser(inApp);
 
-    // 4. Check if user came from QR scan (?source=basha_app_install or ?source=pwa)
+    // 4. Check if user arrived via QR Code scan (?source=basha_app_install)
     const urlParams = new URLSearchParams(window.location.search);
     const isFromQr =
       urlParams.get("source") === "basha_app_install" ||
       urlParams.get("source") === "pwa" ||
+      urlParams.get("source") === "qr" ||
       urlParams.get("install") === "true";
 
-    // 5. Listen for Android Chrome native prompt
+    // 5. Capture Android Chrome beforeinstallprompt event
     const handleBeforeInstall = (e: Event) => {
       e.preventDefault();
       setDeferredPrompt(e);
-      // Auto-show prompt if scanned from QR or on mobile
-      setShowPrompt(true);
+      // If scanned from QR or on mobile, show the prompt
+      if (isFromQr || isDroid) {
+        setShowPrompt(true);
+      }
     };
 
     window.addEventListener("beforeinstallprompt", handleBeforeInstall);
 
+    // 6. Native App Installed event
     window.addEventListener("appinstalled", () => {
       setInstalledSuccess(true);
       setShowPrompt(false);
       setDeferredPrompt(null);
-      setTimeout(() => setInstalledSuccess(false), 6000);
+      setTimeout(() => setInstalledSuccess(false), 7000);
     });
 
-    // If on iOS or mobile and scanned from QR, show prompt immediately
-    if (isFromQr || isApple || isDroid) {
+    // 7. Listen for explicit UI triggers (e.g. clicking "تثبيت التطبيق 📱" in header)
+    const handleCustomTrigger = () => {
+      setShowPrompt(true);
+      if (deferredPrompt) {
+        try {
+          deferredPrompt.prompt();
+        } catch (err) {
+          console.warn("Auto prompt failed:", err);
+        }
+      }
+    };
+    window.addEventListener("trigger-basha-pwa-install", handleCustomTrigger);
+
+    // 8. Auto-open if arriving directly from the mobile app QR code
+    if (isFromQr) {
       setShowPrompt(true);
     }
 
     return () => {
       window.removeEventListener("beforeinstallprompt", handleBeforeInstall);
+      window.removeEventListener("trigger-basha-pwa-install", handleCustomTrigger);
     };
-  }, []);
+  }, [deferredPrompt]);
 
   const handleInstallClick = async () => {
     if (deferredPrompt) {
-      deferredPrompt.prompt();
-      const choiceResult = await deferredPrompt.userChoice;
-      if (choiceResult.outcome === "accepted") {
-        setInstalledSuccess(true);
-        setShowPrompt(false);
+      try {
+        deferredPrompt.prompt();
+        const choiceResult = await deferredPrompt.userChoice;
+        if (choiceResult?.outcome === "accepted") {
+          setInstalledSuccess(true);
+          setShowPrompt(false);
+        }
+        setDeferredPrompt(null);
+      } catch (err) {
+        console.warn("[Basha PWA] Install error:", err);
       }
-      setDeferredPrompt(null);
-    } else if (isIos) {
-      // iOS doesn't support programmatic install; guide is displayed
+    } else {
+      // If deferredPrompt is not yet ready or supported on this browser
+      // Instructions will remain visibly highlighted in the sheet
     }
   };
 
-  if (isStandalone || (!showPrompt && !installedSuccess)) return null;
+  if (isStandalone && !installedSuccess) return null;
+  if (!showPrompt && !installedSuccess) return null;
 
   return (
     <>
-      {/* Success Notification */}
+      {/* ─────────────────────────────────────────────────────────────
+          SUCCESS NOTIFICATION AFTER INSTALLATION
+         ───────────────────────────────────────────────────────────── */}
       {installedSuccess && (
-        <div className="fixed top-4 left-4 right-4 z-50 max-w-md mx-auto p-4 rounded-2xl bg-emerald-500 text-slate-950 font-bold shadow-2xl flex items-center gap-3 animate-bounce">
-          <CheckCircle2 className="w-6 h-6 shrink-0" />
+        <div className="fixed top-4 left-4 right-4 z-50 max-w-md mx-auto p-4 rounded-3xl bg-emerald-500 text-slate-950 font-bold shadow-2xl flex items-center gap-3 animate-bounce border-2 border-emerald-300" dir="rtl">
+          <CheckCircle2 className="w-8 h-8 shrink-0 text-slate-950" />
           <div className="text-xs">
-            <p className="font-black text-sm">تم تثبيت تطبيق الباشا بنجاح! 👑</p>
-            <p>يمكنك الآن فتح التطبيق مباشرة من شاشة هاتفك الرئيسية في أي وقت بدون إنترنت.</p>
+            <p className="font-black text-sm">تم تثبيت تطبيق صالونات وسبا الباشا بنجاح! 👑</p>
+            <p className="text-emerald-950 font-medium">أيقونة التطبيق الآن جاهزة على شاشة هاتفك الرئيسية، يمكنك فتحه في أي وقت مباشرة.</p>
           </div>
         </div>
       )}
 
-      {/* Floating Bottom Sheet for Mobile PWA Installation */}
+      {/* ─────────────────────────────────────────────────────────────
+          SMART MOBILE PWA INSTALL MODAL / BOTTOM SHEET
+         ───────────────────────────────────────────────────────────── */}
       {showPrompt && (
-        <aside
-          aria-label="تثبيت تطبيق الباشا VIP"
-          className="fixed bottom-4 left-3 right-3 sm:left-auto sm:right-6 sm:max-w-md z-50 bg-[#12121a]/95 border-2 border-amber-500/50 backdrop-blur-xl rounded-3xl p-5 shadow-2xl space-y-3.5 text-white font-sans text-xs"
-          dir="rtl"
-        >
-          <div className="flex items-start justify-between gap-3">
-            <div className="flex items-center gap-3">
-              <div className="w-12 h-12 rounded-2xl overflow-hidden border-2 border-amber-400 bg-black shadow-md shadow-amber-500/20 shrink-0">
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src="/dakn-logo.jpg" alt="الباشا VIP" className="w-full h-full object-cover" />
-              </div>
-              <div>
-                <div className="flex items-center gap-1.5">
-                  <h4 className="font-black text-white text-sm">تطبيق صالونات وسبا الباشا VIP 👑</h4>
-                  <span className="py-0.5 px-2 rounded-full bg-amber-500/20 text-amber-300 text-[10px] font-bold">
-                    PWA
+        <div className="fixed inset-0 z-50 bg-black/75 backdrop-blur-sm flex items-end sm:items-center justify-center p-3 sm:p-4 no-print animate-fade-in" dir="rtl">
+          <aside
+            aria-label="تثبيت تطبيق الباشا VIP على الهاتف"
+            className="w-full max-w-md bg-[#111119] border-2 border-amber-500/60 rounded-3xl p-5 sm:p-6 shadow-2xl space-y-4 text-white font-sans text-xs relative max-h-[92vh] overflow-y-auto"
+          >
+            {/* Header */}
+            <div className="flex items-start justify-between gap-3 border-b border-white/10 pb-3.5">
+              <div className="flex items-center gap-3">
+                <div className="w-14 h-14 rounded-2xl overflow-hidden border-2 border-amber-400 bg-black shadow-lg shadow-amber-500/25 shrink-0 p-0.5">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img src="/dakn-logo.jpg" alt="الباشا VIP" className="w-full h-full object-contain rounded-xl" />
+                </div>
+                <div>
+                  <div className="flex items-center gap-1.5">
+                    <h3 className="font-black text-white text-base">تطبيق صالونات وسبا الباشا VIP 👑</h3>
+                  </div>
+                  <span className="inline-block mt-0.5 py-0.5 px-2 rounded-full bg-amber-500/20 text-amber-300 text-[10px] font-black border border-amber-500/30">
+                    تطبيق ويب تقدمي (PWA رسمي)
                   </span>
                 </div>
-                <p className="text-[11px] text-slate-400">
-                  ثبت التطبيق على هاتفك مجاناً لحجز أسرع وتنبيهات فورية بدون متجر تطبيقات!
+              </div>
+              <button
+                type="button"
+                onClick={() => setShowPrompt(false)}
+                className="w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 text-slate-300 hover:text-white flex items-center justify-center shrink-0 cursor-pointer transition"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+
+            <p className="text-xs text-slate-300 leading-relaxed">
+              احصل على تجربة حجز ملكية كاملة مباشرة من شاشة هاتفك مع إشعارات المواعيد الفورية بدون الحاجة لمتجر تطبيقات!
+            </p>
+
+            {/* In-App Browser Warning (e.g., opened in WhatsApp/Instagram) */}
+            {isInAppBrowser && (
+              <div className="p-3 rounded-2xl bg-rose-500/15 border border-rose-500/40 text-rose-300 text-xs space-y-1">
+                <p className="font-black flex items-center gap-1.5">
+                  <span>⚠️</span>
+                  <span>المتصفح الداخلي لا يدعم التثبيت المباشر:</span>
+                </p>
+                <p className="text-[11px] text-slate-300 leading-relaxed">
+                  اضغط على الثلاث نقاط (⋮) واختر <strong>&quot;فتح في المتصفح Chrome / Safari&quot;</strong> لتثبيت التطبيق على هاتفك بنقرة واحدة.
                 </p>
               </div>
-            </div>
-            <button
-              onClick={() => setShowPrompt(false)}
-              className="w-7 h-7 rounded-full bg-white/5 hover:bg-white/10 text-slate-400 hover:text-white flex items-center justify-center text-xs shrink-0 cursor-pointer"
-            >
-              <X className="w-4 h-4" />
-            </button>
-          </div>
+            )}
 
-          {/* Android Chrome Install Button */}
-          {deferredPrompt && (
-            <button
-              onClick={handleInstallClick}
-              className="w-full py-3 px-4 rounded-2xl bg-gradient-to-r from-amber-500 to-amber-400 hover:from-amber-400 hover:to-amber-300 text-slate-950 font-black text-xs transition shadow-xl shadow-amber-500/25 flex items-center justify-center gap-2 cursor-pointer active:scale-95"
-            >
-              <Download className="w-4 h-4" />
-              <span>📱 تثبيت التطبيق على الهاتف الآن (بنقرة واحدة)</span>
-            </button>
-          )}
+            {/* 1. Android One-Click Native Install Button */}
+            {deferredPrompt && (
+              <button
+                type="button"
+                onClick={handleInstallClick}
+                className="w-full py-3.5 px-4 rounded-2xl bg-gradient-to-r from-amber-500 via-amber-400 to-yellow-400 hover:from-amber-400 hover:to-amber-300 text-slate-950 font-black text-sm transition shadow-xl shadow-amber-500/30 flex items-center justify-center gap-2 cursor-pointer active:scale-95 animate-pulse"
+              >
+                <Download className="w-5 h-5" />
+                <span>📱 تثبيت التطبيق على الهاتف الآن (بنقرة واحدة)</span>
+              </button>
+            )}
 
-          {/* iOS Safari Guide (When deferredPrompt is not supported) */}
-          {isIos && !deferredPrompt && (
-            <div className="p-3 rounded-2xl bg-amber-500/10 border border-amber-500/30 space-y-2 text-[11px] text-amber-200">
-              <p className="font-black text-xs text-amber-300 flex items-center gap-1.5">
-                <span>🍏 خطوات تثبيت التطبيق على الآيفون (Safari):</span>
-              </p>
-              <div className="space-y-1.5 pr-2">
-                <div className="flex items-center gap-2">
-                  <span className="w-5 h-5 rounded-full bg-amber-500/20 text-amber-300 font-bold flex items-center justify-center text-[10px] shrink-0">
-                    1
-                  </span>
-                  <span>اضغط على زر المشاركة أسفل متصفح سفاري (أيقونة المربع وسهم لأعلى <Share2 className="w-3.5 h-3.5 inline text-amber-400" />).</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <span className="w-5 h-5 rounded-full bg-amber-500/20 text-amber-300 font-bold flex items-center justify-center text-[10px] shrink-0">
-                    2
-                  </span>
-                  <span>اختر من القائمة <strong>&quot;إضافة إلى الشاشة الرئيسية&quot;</strong> (<PlusSquare className="w-3.5 h-3.5 inline text-amber-400" /> Add to Home Screen).</span>
+            {/* 2. iOS Safari Step-by-Step Guide */}
+            {isIos && (
+              <div className="p-3.5 rounded-2xl bg-amber-500/10 border border-amber-500/30 space-y-2.5 text-xs text-amber-200">
+                <p className="font-black text-amber-300 flex items-center gap-2 text-sm">
+                  <span>🍏 خطوات تثبيت التطبيق على الآيفون (Safari):</span>
+                </p>
+                <div className="space-y-2 pr-1 text-[11px] text-slate-200">
+                  <div className="flex items-center gap-2.5 bg-black/40 p-2 rounded-xl border border-white/5">
+                    <span className="w-6 h-6 rounded-full bg-amber-500 text-slate-950 font-black flex items-center justify-center text-xs shrink-0">
+                      1
+                    </span>
+                    <span>اضغط على زر المشاركة أسفل متصفح Safari (أيقونة المربع وسهم لأعلى <Share2 className="w-4 h-4 inline text-amber-400 mx-1" />).</span>
+                  </div>
+                  <div className="flex items-center gap-2.5 bg-black/40 p-2 rounded-xl border border-white/5">
+                    <span className="w-6 h-6 rounded-full bg-amber-500 text-slate-950 font-black flex items-center justify-center text-xs shrink-0">
+                      2
+                    </span>
+                    <span>مرر للأسفل واختر <strong>&quot;إضافة إلى الشاشة الرئيسية&quot;</strong> (<PlusSquare className="w-4 h-4 inline text-amber-400 mx-1" /> Add to Home Screen).</span>
+                  </div>
                 </div>
               </div>
-            </div>
-          )}
+            )}
 
-          {/* Android Chrome Manual Guide (Fallback) */}
-          {isAndroid && !deferredPrompt && (
-            <div className="p-3 rounded-2xl bg-amber-500/10 border border-amber-500/30 space-y-2 text-[11px] text-amber-200">
-              <p className="font-black text-xs text-amber-300 flex items-center gap-1.5">
-                <span>🤖 تثبيت التطبيق على هاتف أندرويد:</span>
-              </p>
-              <p>اضغط على الثلاث نقاط أعلى المتصفح (⋮) ثم اختر <strong>&quot;تثبيت التطبيق&quot;</strong> أو <strong>&quot;إضافة إلى الشاشة الرئيسية&quot;</strong>.</p>
-            </div>
-          )}
+            {/* 3. Android Chrome Step-by-Step Guide (if native prompt was dismissed or not yet ready) */}
+            {isAndroid && !deferredPrompt && (
+              <div className="p-3.5 rounded-2xl bg-amber-500/10 border border-amber-500/30 space-y-2.5 text-xs text-amber-200">
+                <p className="font-black text-amber-300 flex items-center gap-2 text-sm">
+                  <span>🤖 خطوات تثبيت التطبيق على هاتف الأندرويد:</span>
+                </p>
+                <div className="space-y-2 pr-1 text-[11px] text-slate-200">
+                  <div className="flex items-center gap-2.5 bg-black/40 p-2 rounded-xl border border-white/5">
+                    <span className="w-6 h-6 rounded-full bg-amber-500 text-slate-950 font-black flex items-center justify-center text-xs shrink-0">
+                      1
+                    </span>
+                    <span>اضغط على الثلاث نقاط أعلى يسار/يمين متصفح كروم (⋮).</span>
+                  </div>
+                  <div className="flex items-center gap-2.5 bg-black/40 p-2 rounded-xl border border-white/5">
+                    <span className="w-6 h-6 rounded-full bg-amber-500 text-slate-950 font-black flex items-center justify-center text-xs shrink-0">
+                      2
+                    </span>
+                    <span>اختر من القائمة <strong>&quot;تثبيت التطبيق&quot;</strong> أو <strong>&quot;إضافة إلى الشاشة الرئيسية 📲&quot;</strong>.</span>
+                  </div>
+                </div>
+              </div>
+            )}
 
-          <div className="flex items-center justify-between text-[10px] text-slate-400 pt-1 border-t border-white/5">
-            <span>متوافق مع أندرويد وآيفون iOS</span>
-            <button
-              onClick={() => setShowPrompt(false)}
-              className="text-slate-400 hover:text-white underline cursor-pointer"
-            >
-              لاحقاً
-            </button>
-          </div>
-        </aside>
+            {/* General Desktop/Laptop View Guide if opened on computer */}
+            {!isAndroid && !isIos && !deferredPrompt && (
+              <div className="p-3 rounded-2xl bg-white/5 border border-white/10 space-y-2 text-xs text-slate-300">
+                <p className="font-bold text-amber-300">💻 لتثبيت التطبيق على الكمبيوتر:</p>
+                <p className="text-[11px]">اضغط على أيقونة التثبيت أعلى شريط العنوان في متصفحك (بجوار زر النجمة ⭐) أو اختر تثبيت من قائمة المتصفح.</p>
+              </div>
+            )}
+
+            {/* Footer */}
+            <div className="flex items-center justify-between text-[11px] text-slate-400 pt-2 border-t border-white/10">
+              <span className="flex items-center gap-1.5">
+                <Sparkles className="w-3.5 h-3.5 text-amber-400" />
+                <span>متوافق تماماً مع أندرويد وآيفون iOS</span>
+              </span>
+              <button
+                type="button"
+                onClick={() => setShowPrompt(false)}
+                className="text-slate-400 hover:text-white underline cursor-pointer font-bold"
+              >
+                تصفح الموقع أولاً ✕
+              </button>
+            </div>
+          </aside>
+        </div>
       )}
     </>
   );
