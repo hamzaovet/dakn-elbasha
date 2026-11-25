@@ -103,7 +103,7 @@ export default function StaffLoginPage() {
             </div>
             <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl overflow-hidden border-2 border-amber-200/80 bg-black shadow-xl shadow-pink-500/25 p-0.5 hover:scale-105 transition" title="عيادة نيو سكين VIP (New Skin Clinic)">
               {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src="/newskin-logo.png" alt="نيو سكين New Skin VIP" className="w-full h-full object-cover rounded-xl" />
+              <img src="/newskin-logo.jpg" alt="نيو سكين New Skin VIP" className="w-full h-full object-cover rounded-xl" />
             </div>
           </div>
 

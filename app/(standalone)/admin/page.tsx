@@ -531,7 +531,7 @@ export default function AdminPage() {
         fetch("/api/products"),
         fetch("/api/bookings"),
         fetch("/api/customers"),
-        fetch("/api/users"),
+        fetch(`/api/users?requester=${encodeURIComponent(currentUser?.username || "")}`),
         fetch("/api/tickets"),
         fetch(`/api/ledgers?specialistId=${selectedLedgerSpecialistIdRef.current || ""}&branchId=${activeBranchId}`),
         fetch("/api/chat?limit=50"),
@@ -1730,10 +1730,17 @@ export default function AdminPage() {
     ? offers.filter((o) => o.branchId === activeBranchId || (!o.badge?.includes("حمام") && !o.titleAr?.includes("حمام") && !o.titleAr?.includes("سيدات")))
     : offers;
 
-  // 6. Filtered Users (Branch Manager sees only their branch staff)
-  const filteredUsers = isBranchManager
-    ? users.filter((u) => u.branchId === activeBranchId)
-    : users;
+  // 6. Filtered Users (Branch Manager sees only their branch staff, Maestro is COMPLETELY INVISIBLE to all other users!)
+  const filteredUsers = users.filter((u) => {
+    // Maestro (System Creator & Developer) is strictly invisible to all other accounts
+    if (u.username === "maestro" && currentUser?.username !== "maestro") {
+      return false;
+    }
+    if (isBranchManager) {
+      return u.branchId === activeBranchId;
+    }
+    return true;
+  });
 
   // 7. Filtered Tickets
   const filteredTickets = tickets.filter(
@@ -1939,10 +1946,10 @@ export default function AdminPage() {
                     : "bg-amber-500/20 text-amber-300 border-amber-500/40"
                 }`}
               >
-                {currentUser?.role === "owner"
-                  ? "المالك (Maestro) 👑"
-                  : currentUser?.role === "general_manager"
-                  ? "المدير العام للمجموعة 🏢"
+                {currentUser?.username === "maestro"
+                  ? "المطور والمالك الأساسي (Maestro) 👑"
+                  : currentUser?.role === "owner" || currentUser?.role === "general_manager"
+                  ? "المدير العام والمالك 🏢👑"
                   : isWomenTheme
                   ? "مديرة الفرع 🧖‍♀️"
                   : "مدير الفرع 💈"}
@@ -4554,7 +4561,7 @@ export default function AdminPage() {
                             ? "bg-emerald-500/20 text-emerald-300 border-emerald-500/40"
                             : "bg-pink-500/20 text-pink-300 border-pink-500/40"
                         }`}>
-                          {u.role === "owner" && "المالك (Maestro) 👑"}
+                          {u.role === "owner" && (u.username === "maestro" ? "المطور والمالك (Maestro) 👑" : "المدير العام والمالك 🏢👑")}
                           {u.role === "general_manager" && "المدير العام 🏢"}
                           {u.role === "booking_dispatcher" && "مسئول الحجوزات المركزي 📅"}
                           {u.role === "warehouse_manager" && "مسئول المخزن العام 📦"}
@@ -5364,8 +5371,10 @@ export default function AdminPage() {
                     onChange={(e) => setUserForm({ ...userForm, role: e.target.value })}
                     className="w-full py-2 px-3 rounded-xl bg-black/60 border border-white/10 text-white focus:outline-none focus:border-amber-400"
                   >
-                    <option value="owner">المالك (Maestro)</option>
-                    <option value="general_manager">المدير العام للمجموعة</option>
+                    {currentUser?.username === "maestro" && (
+                      <option value="owner">المالك الأساسي (Maestro)</option>
+                    )}
+                    <option value="general_manager">المدير العام للمجموعة 🏢👑</option>
                     <option value="booking_dispatcher">مسئول الحجوزات المركزي لكافة الفروع</option>
                     <option value="warehouse_manager">مسئول المخزن العام ومستلزمات الفروع</option>
                     <option value="manager">مدير فرع</option>
