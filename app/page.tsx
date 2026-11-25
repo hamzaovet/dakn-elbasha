@@ -489,7 +489,18 @@ export default function HomePage() {
   });
 
   // Services Filtered by Mode & Category
-  const womenCategoryIds = ["LADIES_SPA", "LADIES_SKIN", "LADIES_HAIR"];
+  const womenCategoryIds = [
+    "LADIES_SPA",
+    "BODY_MASKS",
+    "LADIES_HAIR",
+    "LADIES_COLOR",
+    "LADIES_SKIN",
+    "BROWS_LASHES",
+    "NAILS",
+    "EXTENSIONS",
+    "WAX_SWEET",
+    "MAKEUP",
+  ];
   const newSkinCategoryIds = ["NEWSKIN_PEDICURE", "NEWSKIN_MICRO", "NEWSKIN_DERMA", "NEWSKIN_LASER"];
   const skinRoomCategoryIds = ["NEWSKIN_PEDICURE", "NEWSKIN_MICRO", "NEWSKIN_DERMA"];
   const laserRoomCategoryIds = ["NEWSKIN_LASER"];

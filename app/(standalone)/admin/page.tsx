@@ -1671,8 +1671,38 @@ export default function AdminPage() {
   };
 
   // Category ID Definitions
-  const womenCategoryIds = ["LADIES_SPA", "LADIES_SKIN", "LADIES_HAIR"];
-  const newSkinCategoryIds = ["NEWSKIN_PEDICURE", "NEWSKIN_MICRO", "NEWSKIN_DERMA", "NEWSKIN_LASER"];
+  const menCategoryIds = [
+    "HAIR",
+    "BEARD",
+    "COLOR_KERATIN",
+    "SKIN_CARE",
+    "BODY_CARE",
+    "TREATMENT_HAIR",
+    "WAXING",
+    "MEN_SPA",
+    "VIP_PACKAGES",
+    "KIDS",
+  ];
+
+  const womenCategoryIds = [
+    "LADIES_SPA",
+    "BODY_MASKS",
+    "LADIES_HAIR",
+    "LADIES_COLOR",
+    "LADIES_SKIN",
+    "BROWS_LASHES",
+    "NAILS",
+    "EXTENSIONS",
+    "WAX_SWEET",
+    "MAKEUP",
+  ];
+
+  const newSkinCategoryIds = [
+    "NEWSKIN_PEDICURE",
+    "NEWSKIN_MICRO",
+    "NEWSKIN_DERMA",
+    "NEWSKIN_LASER",
+  ];
 
   const isServiceForNewSkin = (srv: any) =>
     newSkinCategoryIds.includes(srv.category) ||
@@ -1686,13 +1716,22 @@ export default function AdminPage() {
   const isServiceForWomen = (srv: any) =>
     !isServiceForNewSkin(srv) && (
       womenCategoryIds.includes(srv.category) ||
-      srv.nameAr?.includes("مغربي") ||
-      srv.nameAr?.includes("سويت") ||
-      srv.nameAr?.includes("هيدروفيشل") ||
-      srv.nameAr?.includes("مساج") ||
+      srv.nameAr?.includes("سيدات") ||
+      srv.nameAr?.includes("حريمي") ||
       srv.nameAr?.includes("عرائس") ||
-      srv.nameAr?.includes("سيدات")
+      srv.nameAr?.includes("عروسة") ||
+      srv.nameAr?.includes("سويت") ||
+      srv.nameAr?.includes("ميكاب")
     );
+
+  const isServiceForMen = (srv: any) =>
+    !isServiceForWomen(srv) &&
+    !isServiceForNewSkin(srv) &&
+    (menCategoryIds.includes(srv.category) ||
+      srv.category === "MASSAGE" ||
+      srv.nameAr?.includes("رجالي") ||
+      srv.nameAr?.includes("دقن") ||
+      srv.nameAr?.includes("حلاقة"));
 
   // 1. Filtered Services by Branch / Gender
   const filteredServices = isNewSkinTheme
@@ -1700,7 +1739,7 @@ export default function AdminPage() {
     : isWomenTheme
     ? services.filter(isServiceForWomen)
     : isMenTheme
-    ? services.filter((s) => !isServiceForWomen(s) && !isServiceForNewSkin(s))
+    ? services.filter(isServiceForMen)
     : services;
 
   // 2. Filtered Specialists by Branch
